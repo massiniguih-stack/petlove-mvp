@@ -125,3 +125,30 @@ create policy "pet_delete_own" on public.pet
 
 create policy "servico_read_all" on public.servico
   for select using (true);
+
+create policy "peso_historico_select_own" on public.peso_historico
+  for select using (
+    exists (
+      select 1 from public.pet
+      where pet.id = peso_historico.pet_id
+      and pet.tutor_id = auth.uid()
+    )
+  );
+
+create policy "vacina_select_own" on public.vacina
+  for select using (
+    exists (
+      select 1 from public.pet
+      where pet.id = vacina.pet_id
+      and pet.tutor_id = auth.uid()
+    )
+  );
+
+create policy "recomendacao_racao_select_own" on public.recomendacao_racao
+  for select using (
+    exists (
+      select 1 from public.pet
+      where pet.id = recomendacao_racao.pet_id
+      and pet.tutor_id = auth.uid()
+    )
+  );
