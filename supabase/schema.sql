@@ -1,12 +1,13 @@
--- PetLove MVP - Schema inicial
+-- PetLove MVP - Schema com Supabase Auth
 
--- Tabela de tutores
+-- Tabela de tutor (atualizada para Supabase Auth)
 create table public.tutor (
-  id uuid primary key default gen_random_uuid(),
+  id uuid primary key references auth.users(id) on delete cascade,
   nome text not null,
-  email text unique not null,
-  senha_hash text not null,
-  localizacao_preferencia text,
+  email text not null,
+  telefone text,
+  endereco text,
+  cidade text,
   consentimento_marketing boolean default false,
   consentimento_localizacao boolean default false,
   data_exclusao timestamp,
@@ -77,6 +78,24 @@ create table public.recomendacao_racao (
   data timestamp default now() not null
 );
 
+-- Trigger para criar tutor automaticamente
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.tutor (id, nome, email)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'nome', new.raw_user_meta_data->>'full_name', ''),
+    new.email
+  );
+  return new;
+end;
+$$ language plpgsql security definer;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
 -- RLS (Row Level Security)
 alter table public.tutor enable row level security;
 alter table public.pet enable row level security;
@@ -85,7 +104,24 @@ alter table public.vacina enable row level security;
 alter table public.servico enable row level security;
 alter table public.recomendacao_racao enable row level security;
 
--- Políticas básicas (para MVP, ajustar depois)
-create policy "tutor_read_own" on public.tutor for select using (auth.uid() = id);
-create policy "pet_read_own" on public.pet for select using (auth.uid() = tutor_id);
-create policy "servico_read_all" on public.servico for select using (true);
+-- Políticas RLS
+create policy "tutor_select_own" on public.tutor
+  for select using (auth.uid() = id);
+
+create policy "tutor_update_own" on public.tutor
+  for update using (auth.uid() = id);
+
+create policy "pet_select_own" on public.pet
+  for select using (auth.uid() = tutor_id);
+
+create policy "pet_insert_own" on public.pet
+  for insert with check (auth.uid() = tutor_id);
+
+create policy "pet_update_own" on public.pet
+  for update using (auth.uid() = tutor_id);
+
+create policy "pet_delete_own" on public.pet
+  for delete using (auth.uid() = tutor_id);
+
+create policy "servico_read_all" on public.servico
+  for select using (true);

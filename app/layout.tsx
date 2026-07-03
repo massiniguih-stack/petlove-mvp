@@ -1,22 +1,21 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import { AuthProvider } from '@/providers/AuthProvider'
+import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] });
-
-export const metadata: Metadata = {
-  title: 'PetLove - Acompanhamento do seu cachorro',
-  description: 'Acompanhe o desenvolvimento do seu pet, encontre serviços e receba recomendações de ração personalizadas.',
-};
+export const metadata = {
+  title: 'PetLove - Cuidados para seu pet',
+  description: 'Encontre os melhores serviços para seu animal de estimação',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
-  );
+  )
 }
