@@ -1,4 +1,4 @@
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 const protectedRoutes = ['/dashboard', '/mapa', '/racao']
@@ -12,11 +12,15 @@ export async function middleware(request: NextRequest) {
   const isLoggedIn = !!sessionCookie
 
   if (authRoutes.includes(path) && isLoggedIn) {
-    return Response.redirect(new URL('/dashboard', request.url))
+    const redirectResponse = NextResponse.redirect(new URL('/dashboard', request.url))
+    response.cookies.getAll().forEach(c => redirectResponse.cookies.set(c))
+    return redirectResponse
   }
 
   if (protectedRoutes.includes(path) && !isLoggedIn) {
-    return Response.redirect(new URL('/login', request.url))
+    const redirectResponse = NextResponse.redirect(new URL('/login', request.url))
+    response.cookies.getAll().forEach(c => redirectResponse.cookies.set(c))
+    return redirectResponse
   }
 
   return response
