@@ -77,7 +77,7 @@ export default function HomePage() {
 
   if (!mounted) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
         <Navbar />
         <main className="flex-1" />
         <Footer />
@@ -87,12 +87,12 @@ export default function HomePage() {
 
   if (pet) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
         <Navbar />
         <main className="flex-1">
           <div className="mx-auto max-w-5xl px-4 py-12">
             <div className="mb-10 text-center">
-              <h1 className="text-5xl font-black tracking-tight text-slate-900 md:text-6xl">
+              <h1 className="text-5xl font-black tracking-tight text-slate-900 dark:text-white md:text-6xl">
                 Olá, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">{pet.nome}</span>! 👋
               </h1>
             </div>
@@ -200,19 +200,19 @@ export default function HomePage() {
 
               <Link
                 href="/onboarding"
-                className="group relative overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-white p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-lg hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-white p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-lg hover:-translate-y-1 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600"
               >
-                <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-slate-50 transition group-hover:scale-110" />
-                <div className="absolute -bottom-8 -right-8 h-40 w-40 rounded-full bg-slate-50/50" />
+                <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-slate-50 transition group-hover:scale-110 dark:bg-slate-800" />
+                <div className="absolute -bottom-8 -right-8 h-40 w-40 rounded-full bg-slate-50/50 dark:bg-slate-800/50" />
                 <div className="relative">
                   <div className="flex h-16 w-16 items-center justify-center">
                     <GearIcon3D size={56} />
                   </div>
-                  <h3 className="mt-3 text-xl font-black text-slate-700">Editar perfil</h3>
-                  <p className="mt-1.5 text-sm text-slate-500">
+                  <h3 className="mt-3 text-xl font-black text-slate-700 dark:text-slate-200">Editar perfil</h3>
+                  <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
                     Atualize dados, raça, peso e objetivo de {pet.nome}.
                   </p>
-                  <div className="mt-4 inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">
+                  <div className="mt-4 inline-flex items-center gap-1 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                     Editar
                   </div>
                 </div>
@@ -226,7 +226,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
         <section className="mx-auto max-w-5xl px-4 py-16 md:py-24">
@@ -234,7 +234,7 @@ export default function HomePage() {
             <div className="flex justify-center">
               <div className="relative">
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-2xl" />
-                <div className="relative rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 p-8">
+                <div className="relative rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 p-8 dark:from-amber-950 dark:to-orange-950">
                   <DogIcon size={72} />
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function HomePage() {
             <p className="mt-3 text-sm font-bold tracking-[0.3em] text-slate-400 uppercase">
               Cuidados premium para seu melhor amigo
             </p>
-            <p className="mt-6 max-w-md mx-auto text-base text-slate-500 leading-relaxed">
+            <p className="mt-6 max-w-md mx-auto text-base text-slate-500 leading-relaxed dark:text-slate-400">
               Saúde, atividades, nutrição e serviços — tudo em um só lugar.
             </p>
           </div>
@@ -254,13 +254,13 @@ export default function HomePage() {
           {/* Auth Forms */}
           <div className="mx-auto mt-12 max-w-md">
             {/* Tabs */}
-            <div className="mb-6 flex rounded-2xl bg-slate-100 p-1">
+            <div className="mb-6 flex rounded-2xl bg-slate-100 p-1 dark:bg-slate-800">
               <button
                 onClick={() => setActiveTab('signup')}
                 className={`flex-1 rounded-xl py-3 text-sm font-bold transition ${
                   activeTab === 'signup'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700'
+                    ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white'
+                    : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
                 Criar conta
@@ -269,8 +269,8 @@ export default function HomePage() {
                 onClick={() => setActiveTab('login')}
                 className={`flex-1 rounded-xl py-3 text-sm font-bold transition ${
                   activeTab === 'login'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700'
+                    ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white'
+                    : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
                 Entrar
@@ -278,32 +278,32 @@ export default function HomePage() {
             </div>
 
             {/* Form Card */}
-            <div className="rounded-3xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
+            <div className="rounded-3xl bg-white p-8 shadow-xl ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
               {activeTab === 'signup' ? <SignupForm /> : <LoginForm />}
 
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200"></div>
+                  <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-3 text-slate-400 text-xs font-medium">ou</span>
+                  <span className="bg-white px-3 text-slate-400 text-xs font-medium dark:bg-slate-900">ou</span>
                 </div>
               </div>
 
               <GoogleButton />
 
-              <p className="mt-6 text-center text-sm text-slate-500">
+              <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
                 {activeTab === 'signup' ? (
                   <>
                     Já tem conta?{' '}
-                    <button onClick={() => setActiveTab('login')} className="font-semibold text-amber-600 hover:text-amber-700 transition">
+                    <button onClick={() => setActiveTab('login')} className="font-semibold text-amber-600 hover:text-amber-700 transition dark:text-amber-400 dark:hover:text-amber-300">
                       Entrar
                     </button>
                   </>
                 ) : (
                   <>
                     Não tem conta?{' '}
-                    <button onClick={() => setActiveTab('signup')} className="font-semibold text-amber-600 hover:text-amber-700 transition">
+                    <button onClick={() => setActiveTab('signup')} className="font-semibold text-amber-600 hover:text-amber-700 transition dark:text-amber-400 dark:hover:text-amber-300">
                       Criar conta
                     </button>
                   </>
