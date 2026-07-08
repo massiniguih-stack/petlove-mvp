@@ -135,8 +135,26 @@ create policy "peso_historico_select_own" on public.peso_historico
     )
   );
 
+create policy "peso_historico_insert_own" on public.peso_historico
+  for insert with check (
+    exists (
+      select 1 from public.pet
+      where pet.id = peso_historico.pet_id
+      and pet.tutor_id = auth.uid()
+    )
+  );
+
 create policy "vacina_select_own" on public.vacina
   for select using (
+    exists (
+      select 1 from public.pet
+      where pet.id = vacina.pet_id
+      and pet.tutor_id = auth.uid()
+    )
+  );
+
+create policy "vacina_insert_own" on public.vacina
+  for insert with check (
     exists (
       select 1 from public.pet
       where pet.id = vacina.pet_id

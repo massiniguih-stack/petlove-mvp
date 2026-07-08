@@ -1,26 +1,30 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
-const protectedRoutes = ['/dashboard', '/mapa', '/racao']
-const authRoutes = ['/login', '/cadastro', '/verificar-email', '/recuperar-senha']
+const protectedRoutes = ['/dashboard', '/mapa', '/racao', '/atividades', '/vida', '/desempenho']
+const adminRoutes = ['/admin']
+const adminEmails = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
+const authRoutes = ['/login', '/cadastro', '/verificar-email', '/recuperar-senha', '/recuperar-senha/nova-senha']
 
 export async function middleware(request: NextRequest) {
-  const response = await updateSession(request)
+  const { response, isLoggedIn, email } = await updateSession(request)
   const path = request.nextUrl.pathname
 
-  const sessionCookie = response.cookies.get('sb-access-token')
-  const isLoggedIn = !!sessionCookie
-
   if (authRoutes.includes(path) && isLoggedIn) {
-    const redirectResponse = NextResponse.redirect(new URL('/dashboard', request.url))
-    response.cookies.getAll().forEach(c => redirectResponse.cookies.set(c))
-    return redirectResponse
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  if (adminRoutes.some((r) => path.startsWith(r))) {
+    if (!isLoggedIn) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    if (!email || !adminEmails.includes(email)) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   if (protectedRoutes.includes(path) && !isLoggedIn) {
-    const redirectResponse = NextResponse.redirect(new URL('/login', request.url))
-    response.cookies.getAll().forEach(c => redirectResponse.cookies.set(c))
-    return redirectResponse
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   return response

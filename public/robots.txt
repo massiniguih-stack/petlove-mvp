@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /login
+Allow: /cadastro
+Allow: /planos
+Allow: /recuperar-senha
+Allow: /politica-de-privacidade
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /onboarding
+Disallow: /mapa
+Disallow: /racao
+Disallow: /atividades
+Disallow: /vida
+Disallow: /desempenho
+Disallow: /parceiros
+
+Sitemap: https://petlove.vercel.app/sitemap.xml

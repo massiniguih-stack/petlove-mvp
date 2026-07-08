@@ -1,12 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 
-export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({
-    request: { headers: request.headers },
-  })
-
-  const supabase = createServerClient(
+function createSupabaseClient(request: NextRequest, response: NextResponse) {
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -15,36 +11,26 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-          response = NextResponse.next({
-            request: { headers: request.headers },
-          })
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          })
+          request.cookies.set({ name, value, ...options })
+          response.cookies.set({ name, value, ...options })
         },
         remove(name: string, options: CookieOptions) {
           request.cookies.set({ name, value: '', ...options })
-          response = NextResponse.next({
-            request: { headers: request.headers },
-          })
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
+          response.cookies.set({ name, value: '', ...options })
         },
       },
     }
   )
+}
 
-  await supabase.auth.getUser()
+export async function updateSession(request: NextRequest) {
+  let response = NextResponse.next({
+    request: { headers: request.headers },
+  })
 
-  return response
+  const supabase = createSupabaseClient(request, response)
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  return { response, isLoggedIn: !!user, email: user?.email || null }
 }

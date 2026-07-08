@@ -1,38 +1,113 @@
+'use client'
+
 import { SignupForm } from '@/components/auth/SignupForm'
 import { GoogleButton } from '@/components/auth/GoogleButton'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
+
+function DogPawIcon({ size = 48 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+      <defs>
+        <linearGradient id="pawGradSignup" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#f472b6"/>
+          <stop offset="100%" stopColor="#ec4899"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="20" cy="18" rx="6" ry="7" fill="url(#pawGradSignup)"/>
+      <ellipse cx="44" cy="18" rx="6" ry="7" fill="url(#pawGradSignup)"/>
+      <ellipse cx="12" cy="32" rx="5" ry="6" fill="url(#pawGradSignup)"/>
+      <ellipse cx="52" cy="32" rx="5" ry="6" fill="url(#pawGradSignup)"/>
+      <ellipse cx="32" cy="44" rx="14" ry="12" fill="url(#pawGradSignup)"/>
+    </svg>
+  )
+}
 
 export default function CadastroPage() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-pink-50 via-white to-rose-50">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-pink-500 border-t-transparent" />
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">🐕 PetLove</h1>
-          <p className="text-gray-600 mt-2">Crie sua conta</p>
-        </div>
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-pink-50 via-white to-rose-50">
+      {/* Background decoration */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-gradient-to-br from-pink-400/20 to-rose-400/20 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-amber-400/10 to-orange-400/10 blur-3xl" />
+      </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <SignupForm />
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+      <main className="relative flex flex-1 items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="mb-8 text-center">
+            <div className="flex justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-pink-400 to-rose-500 opacity-20 blur-2xl" />
+                <div className="relative rounded-3xl bg-gradient-to-br from-pink-50 to-rose-50 p-6 shadow-xl ring-1 ring-pink-100/50">
+                  <DogPawIcon size={56} />
+                </div>
+              </div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">ou</span>
-            </div>
+            <h1 className="mt-6 text-4xl font-black tracking-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Pet</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-600">Love</span>
+            </h1>
+            <p className="mt-2 text-sm font-medium text-slate-400">
+              Crie sua conta e comece a cuidar 🐕
+            </p>
           </div>
 
-          <GoogleButton />
+          {/* Signup Card */}
+          <div className="rounded-3xl bg-white/80 p-8 shadow-2xl shadow-slate-200/50 ring-1 ring-slate-200/60 backdrop-blur-sm">
+            <SignupForm />
 
-          <p className="text-center mt-6 text-sm text-gray-600">
-            Já tem conta?{' '}
-            <Link href="/login" className="text-orange-500 hover:underline font-medium">
-              Entrar
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="bg-white/80 px-3 text-xs font-medium text-slate-400">ou cadastre-se com</span>
+              </div>
+            </div>
+
+            <GoogleButton />
+
+            <p className="mt-6 text-center text-sm text-slate-500">
+              Já tem conta?{' '}
+              <Link
+                href="/login"
+                className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500 transition hover:from-amber-600 hover:to-orange-600"
+              >
+                Entrar
+              </Link>
+            </p>
+          </div>
+
+          {/* Back to home */}
+          <div className="mt-6 text-center">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition hover:text-slate-600"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Voltar para o início
             </Link>
-          </p>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

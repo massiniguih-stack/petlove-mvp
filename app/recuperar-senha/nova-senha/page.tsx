@@ -1,18 +1,77 @@
+'use client'
+
 import { NewPassword } from '@/components/auth/NewPassword'
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
+
+function ShieldIcon() {
+  return (
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <polyline points="9 12 11 14 15 10"/>
+    </svg>
+  )
+}
 
 export default function NovaSenhaPage() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">🐕 PetLove</h1>
-          <p className="text-gray-600 mt-2">Crie sua nova senha</p>
-        </div>
+  const [mounted, setMounted] = useState(false)
 
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <NewPassword />
-        </div>
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-amber-50 via-white to-orange-50">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
       </div>
+    )
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-amber-50 via-white to-orange-50">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-gradient-to-br from-amber-400/20 to-orange-400/20 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-gradient-to-br from-pink-400/10 to-rose-400/10 blur-3xl" />
+      </div>
+
+      <main className="relative flex flex-1 items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="mb-8 text-center">
+            <div className="flex justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-2xl" />
+                <div className="relative rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-xl ring-1 ring-amber-100/50">
+                  <ShieldIcon />
+                </div>
+              </div>
+            </div>
+            <h1 className="mt-6 text-3xl font-black tracking-tight text-slate-900">
+              Nova senha
+            </h1>
+            <p className="mt-2 text-sm text-slate-400">
+              Crie uma senha forte e segura
+            </p>
+          </div>
+
+          <div className="rounded-3xl bg-white/80 p-8 shadow-2xl shadow-slate-200/50 ring-1 ring-slate-200/60 backdrop-blur-sm">
+            <NewPassword />
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition hover:text-slate-600"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Voltar para o login
+            </Link>
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

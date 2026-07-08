@@ -5,147 +5,107 @@ import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
 
 export function SignupForm() {
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    password: '',
-    telefone: '',
-    endereco: '',
-    cidade: ''
-  })
+  const [nome, setNome] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const { signUp } = useAuth()
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
-    const { error } = await signUp(formData.email, formData.password, {
-      nome: formData.nome,
-      telefone: formData.telefone,
-      endereco: formData.endereco,
-      cidade: formData.cidade
-    })
+    const { error } = await signUp(email, password, { nome })
 
     if (error) {
       setError(error === 'User already registered' ? 'Este email já está cadastrado' : error)
+    } else {
+      setSuccess(true)
     }
     setLoading(false)
   }
 
+  if (success) {
+    return (
+      <div className="text-center space-y-4">
+        <div className="text-6xl">📧</div>
+        <h2 className="text-2xl font-bold text-slate-900">Verifique seu email</h2>
+        <p className="text-slate-600">
+          Enviamos um link de verificação para <strong>{email}</strong>
+        </p>
+        <p className="text-sm text-slate-500">
+          Não recebeu? Verifique sua caixa de spam.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="nome" className="block text-sm font-medium text-gray-700 mb-1">
-          Nome completo
+      <div className="animate-slide-up">
+        <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+          <span className="text-lg">👤</span> Nome ou email
         </label>
         <input
-          id="nome"
-          name="nome"
           type="text"
-          value={formData.nome}
-          onChange={handleChange}
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
           required
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
-          placeholder="Seu nome"
+          maxLength={100}
+          className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 transition-all duration-200 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:scale-[1.01]"
+          placeholder="Seu nome ou email"
         />
       </div>
 
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          Email
+      <div className="animate-slide-up-delay-1">
+        <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+          <span className="text-lg">📧</span> Email
         </label>
         <input
-          id="email"
-          name="email"
           type="email"
-          value={formData.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+          maxLength={254}
+          className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 transition-all duration-200 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:scale-[1.01]"
           placeholder="seu@email.com"
         />
       </div>
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-          Senha
+      <div className="animate-slide-up-delay-2">
+        <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+          <span className="text-lg">🔒</span> Senha
         </label>
         <input
-          id="password"
-          name="password"
           type="password"
-          value={formData.password}
-          onChange={handleChange}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+          maxLength={128}
+          className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 transition-all duration-200 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:scale-[1.01]"
           placeholder="••••••••"
         />
       </div>
 
-      <div>
-        <label htmlFor="telefone" className="block text-sm font-medium text-gray-700 mb-1">
-          Telefone
-        </label>
-        <input
-          id="telefone"
-          name="telefone"
-          type="tel"
-          value={formData.telefone}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
-          placeholder="(11) 99999-9999"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="endereco" className="block text-sm font-medium text-gray-700 mb-1">
-          Endereço
-        </label>
-        <input
-          id="endereco"
-          name="endereco"
-          type="text"
-          value={formData.endereco}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
-          placeholder="Rua, número, bairro"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="cidade" className="block text-sm font-medium text-gray-700 mb-1">
-          Cidade
-        </label>
-        <input
-          id="cidade"
-          name="cidade"
-          type="text"
-          value={formData.cidade}
-          onChange={handleChange}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
-          placeholder="São Paulo"
-        />
-      </div>
-
       {error && (
-        <div className="text-red-600 text-sm">{error}</div>
+        <div className="animate-scale-in rounded-xl bg-red-50 p-3 text-sm font-medium text-red-600 ring-1 ring-red-100">
+          {error}
+        </div>
       )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-orange-500 text-white font-medium py-3 rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
-      >
-        {loading ? 'Cadastrando...' : 'Cadastrar'}
-      </button>
+      <div className="animate-slide-up-delay-3">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition-all duration-200 hover:shadow-xl hover:shadow-amber-500/40 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
+        >
+          {loading ? 'Criando conta...' : '✨ Criar conta'}
+        </button>
+      </div>
     </form>
   )
 }
