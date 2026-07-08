@@ -311,11 +311,11 @@ export default function AtividadesPage() {
 
   if (!pet) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
         <Navbar />
         <main className="flex-1">
           <div className="mx-auto max-w-2xl px-4 py-12 text-center">
-            <p className="text-slate-600">Cadastre um pet primeiro para ver atividades personalizadas.</p>
+            <p className="text-slate-600 dark:text-slate-400">Cadastre um pet primeiro para ver atividades personalizadas.</p>
           </div>
         </main>
         <Footer />
@@ -347,57 +347,57 @@ export default function AtividadesPage() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <header className="mb-8">
             <BackButton href="/dashboard" />
-            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
               <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
               {atividadesFiltradas.length} atividades disponíveis
             </div>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900">
+            <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
               Atividades para <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">{pet.nome}</span>
             </h1>
-            <p className="mt-2 text-lg text-slate-600">
+            <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">
               Exercícios e dicas personalizadas para manter seu pet saudável e ativo
             </p>
           </header>
 
           <div className="grid gap-6 lg:grid-cols-4">
             <div className="lg:col-span-3 space-y-6">
-              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h2 className="text-lg font-bold text-slate-900">Perfil do pet</h2>
+              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100">
+                  <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
                     <span className="text-2xl">🐕</span>
-                    <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
-                    <p className="text-sm font-bold text-slate-900">{pet.raca}</p>
+                    <p className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400">Raça</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100">
+                  <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950 dark:ring-blue-900">
                     <span className="text-2xl">⚖️</span>
-                    <p className="mt-2 text-xs font-medium text-blue-600">Peso</p>
-                    <p className="text-sm font-bold text-slate-900">{pet.peso} kg</p>
+                    <p className="mt-2 text-xs font-medium text-blue-600 dark:text-blue-400">Peso</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 text-center ring-1 ring-emerald-100">
+                  <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950 dark:ring-emerald-900">
                     <span className="text-2xl">🌱</span>
-                    <p className="mt-2 text-xs font-medium text-emerald-600">Fase</p>
-                    <p className="text-sm font-bold text-slate-900">{fase}</p>
+                    <p className="mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">Fase</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{fase}</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 text-center ring-1 ring-purple-100">
+                  <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950 dark:ring-purple-900">
                     <span className="text-2xl">📏</span>
-                    <p className="mt-2 text-xs font-medium text-purple-600">Porte</p>
-                    <p className="text-sm font-bold text-slate-900">{porte}</p>
+                    <p className="mt-2 text-xs font-medium text-purple-600 dark:text-purple-400">Porte</p>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{porte}</p>
                   </div>
                 </div>
               </section>
 
-              <section className="rounded-3xl bg-gradient-to-br from-white to-blue-50/30 p-6 shadow-lg ring-1 ring-slate-100">
+              <section className="rounded-3xl bg-gradient-to-br from-white to-blue-50/30 p-6 shadow-lg ring-1 ring-slate-100 dark:from-slate-900 dark:to-blue-950/30 dark:ring-slate-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-black text-slate-900">Atividades recomendadas</h2>
-                    <p className="mt-1 text-sm text-slate-500">Filtre por categoria e intensidade</p>
+                    <h2 className="text-xl font-black text-slate-900 dark:text-white">Atividades recomendadas</h2>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Filtre por categoria e intensidade</p>
                   </div>
                   <span className="rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-3 py-1 text-xs font-bold text-white shadow-md">
                     {atividadesFiltradas.length} atividades
@@ -415,7 +415,7 @@ export default function AtividadesPage() {
                         className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
                           isActive
                             ? 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg scale-105'
-                            : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200'
+                            : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-700'
                         }`}
                       >
                         <span className="text-lg">{info.icone}</span>
@@ -436,7 +436,7 @@ export default function AtividadesPage() {
                         className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
                           isActive
                             ? 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg scale-105'
-                            : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200'
+                            : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-700'
                         }`}
                       >
                         {info.label}
@@ -456,8 +456,8 @@ export default function AtividadesPage() {
                         key={atividade.id}
                         className={`group rounded-2xl border transition-all duration-300 ${
                           isExpandida
-                            ? 'border-blue-200 bg-gradient-to-br from-blue-50/50 to-white shadow-xl ring-2 ring-blue-100'
-                            : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-lg'
+                            ? 'border-blue-200 bg-gradient-to-br from-blue-50/50 to-white shadow-xl ring-2 ring-blue-100 dark:border-blue-800 dark:from-blue-950/50 dark:to-slate-900 dark:ring-blue-900'
+                            : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700'
                         }`}
                       >
                         <div
@@ -476,10 +476,10 @@ export default function AtividadesPage() {
                                 {intInfo.label}
                               </span>
                             </div>
-                            <h3 className="mt-2 text-lg font-black text-slate-900 group-hover:text-slate-950">{atividade.nome}</h3>
-                            <p className="mt-1 text-sm text-slate-500 line-clamp-2">{atividade.descricao}</p>
+                            <h3 className="mt-2 text-lg font-black text-slate-900 group-hover:text-slate-950 dark:text-white dark:group-hover:text-white">{atividade.nome}</h3>
+                            <p className="mt-1 text-sm text-slate-500 line-clamp-2 dark:text-slate-400">{atividade.descricao}</p>
                             <div className="mt-2.5 flex items-center gap-3">
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <circle cx="12" cy="12" r="10"/>
                                   <polyline points="12 6 12 12 16 14"/>
@@ -499,9 +499,9 @@ export default function AtividadesPage() {
                         </div>
 
                         {isExpandida && (
-                          <div className="border-t border-slate-100 px-5 pb-5 pt-5 space-y-4 animate-slide-up">
-                            <div className="rounded-xl bg-emerald-50 p-4">
-                              <p className="flex items-center gap-1.5 text-xs font-bold text-emerald-700">
+                          <div className="border-t border-slate-100 dark:border-slate-800 px-5 pb-5 pt-5 space-y-4 animate-slide-up">
+                            <div className="rounded-xl bg-emerald-50 p-4 dark:bg-emerald-950">
+                              <p className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                                   <polyline points="22 4 12 14.01 9 11.01"/>
@@ -510,12 +510,12 @@ export default function AtividadesPage() {
                               </p>
                               <div className="mt-2 flex flex-wrap gap-1.5">
                                 {atividade.beneficios.map((b) => (
-                                  <span key={b} className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">{b}</span>
+                                  <span key={b} className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">{b}</span>
                                 ))}
                               </div>
                             </div>
-                            <div className="rounded-xl bg-amber-50 p-4">
-                              <p className="flex items-center gap-1.5 text-xs font-bold text-amber-700">
+                            <div className="rounded-xl bg-amber-50 p-4 dark:bg-amber-950">
+                              <p className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <circle cx="12" cy="12" r="10"/>
                                   <line x1="12" y1="16" x2="12" y2="12"/>
@@ -525,7 +525,7 @@ export default function AtividadesPage() {
                               </p>
                               <ul className="mt-2 space-y-1.5">
                                 {atividade.dicas.map((d) => (
-                                  <li key={d} className="flex items-start gap-2 text-sm text-slate-700">
+                                  <li key={d} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300">
                                     <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amber-400"/>
                                     {d}
                                   </li>
@@ -533,8 +533,8 @@ export default function AtividadesPage() {
                               </ul>
                             </div>
                             {atividade.equipamento && (
-                              <div className="rounded-xl bg-blue-50 p-4">
-                                <p className="flex items-center gap-1.5 text-xs font-bold text-blue-700">
+                              <div className="rounded-xl bg-blue-50 p-4 dark:bg-blue-950">
+                                <p className="flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-400">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                                   </svg>
@@ -542,7 +542,7 @@ export default function AtividadesPage() {
                                 </p>
                                 <div className="mt-2 flex flex-wrap gap-1.5">
                                   {atividade.equipamento.map((e) => (
-                                    <span key={e} className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">{e}</span>
+                                    <span key={e} className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300">{e}</span>
                                   ))}
                                 </div>
                               </div>
@@ -554,10 +554,10 @@ export default function AtividadesPage() {
                   })}
 
                   {atividadesFiltradas.length === 0 && (
-                    <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 py-12 text-center">
+                    <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 py-12 text-center dark:from-slate-900 dark:to-slate-800">
                       <span className="text-5xl">🔍</span>
-                      <p className="mt-4 text-base font-bold text-slate-700">Nenhuma atividade encontrada</p>
-                      <p className="mt-1 text-xs text-slate-400">Tente outros filtros</p>
+                      <p className="mt-4 text-base font-bold text-slate-700 dark:text-slate-300">Nenhuma atividade encontrada</p>
+                      <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Tente outros filtros</p>
                     </div>
                   )}
                 </div>
@@ -642,8 +642,8 @@ export default function AtividadesPage() {
 
               {/* Modal Nova Atividade */}
               {novaAtividade && (
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg">
-                  <h3 className="text-sm font-bold text-slate-900">Nova Atividade</h3>
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Nova Atividade</h3>
                   <div className="mt-3 space-y-3">
                     <button
                       onClick={adicionarAtividade}
@@ -653,7 +653,7 @@ export default function AtividadesPage() {
                     </button>
                     <button
                       onClick={() => setNovaAtividade(false)}
-                      className="w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50"
+                      className="w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
                     >
                       Cancelar
                     </button>
@@ -661,8 +661,8 @@ export default function AtividadesPage() {
                 </div>
               )}
 
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-                <h3 className="text-sm font-bold text-slate-900">Rotina semanal</h3>
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Rotina semanal</h3>
                 <div className="mt-4 space-y-2">
                   {rotinaSugerida.map((r) => (
                     <div key={r.dia} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${r.cor}`}>
