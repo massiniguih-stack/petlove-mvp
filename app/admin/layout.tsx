@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useDarkMode } from '@/hooks/useDarkMode';
+import { useDarkMode } from '@/providers/DarkModeProvider';
 
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icone: '📊' },

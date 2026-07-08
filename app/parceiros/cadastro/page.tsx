@@ -139,19 +139,19 @@ export default function CadastroParceiroPage() {
 
   if (enviado) {
     return (
-      <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+      <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950/30">
         <Navbar />
         <main className="flex-1 flex items-center justify-center px-4 py-20">
           <div className="max-w-md text-center">
             <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-2xl shadow-emerald-500/30">
               <span className="text-5xl">✅</span>
             </div>
-            <h1 className="mt-8 text-3xl font-black text-slate-900">Cadastro Enviado!</h1>
-            <p className="mt-3 text-slate-600">
+            <h1 className="mt-8 text-3xl font-black text-slate-900 dark:text-white">Cadastro Enviado!</h1>
+            <p className="mt-3 text-slate-600 dark:text-slate-400">
               Recebemos as informações de <strong>{form.nome}</strong>. Nossa equipe irá analisar e entrar em contato em até <strong>48 horas</strong>.
             </p>
-            <div className="mt-6 rounded-2xl bg-emerald-50 p-4 ring-1 ring-emerald-200">
-              <p className="text-sm font-medium text-emerald-700">
+            <div className="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950 p-4 ring-1 ring-emerald-200 dark:ring-emerald-800">
+              <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
                 📧 Enviamos um e-mail de confirmação para <strong>{form.email}</strong>
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function CadastroParceiroPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950/30">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-3xl px-4 py-10">
@@ -182,21 +182,21 @@ export default function CadastroParceiroPage() {
                 <span className="text-3xl">💼</span>
               </div>
               <div>
-                <h1 className="text-3xl font-black tracking-tight text-slate-900">
+                <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
                   Seja um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">Parceiro</span>
                 </h1>
-                <p className="mt-1 text-sm text-slate-500">Cadastre sua clínica, pet shop ou parque no PetLove</p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no PetLove</p>
               </div>
             </div>
           </div>
 
           {/* Progresso */}
           <div className="mb-8">
-            <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
+            <div className="flex items-center justify-between text-sm font-semibold text-slate-600 dark:text-slate-400">
               <span>Passo {step} de {totalSteps}</span>
               <span>{Math.round(progresso)}% concluído</span>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500"
                 style={{ width: `${progresso}%` }}
@@ -208,7 +208,7 @@ export default function CadastroParceiroPage() {
                   key={label}
                   onClick={() => setStep(i + 1)}
                   className={`text-xs font-semibold transition ${
-                    step === i + 1 ? 'text-blue-600' : step > i + 1 ? 'text-emerald-500' : 'text-slate-400'
+                    step === i + 1 ? 'text-blue-600' : step > i + 1 ? 'text-emerald-500' : 'text-slate-400 dark:text-slate-500'
                   }`}
                 >
                   {step > i + 1 ? '✓' : ''} {label}
@@ -220,22 +220,22 @@ export default function CadastroParceiroPage() {
           <form onSubmit={handleSubmit}>
             {/* Step 1: Informações do Negócio */}
             {step === 1 && (
-              <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-200/50 ring-1 ring-slate-100">
-                <h2 className="text-xl font-black text-slate-900">Informações do Negócio</h2>
-                <p className="mt-1 text-sm text-slate-500">Conte-nos sobre sua empresa</p>
+              <div className="rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 ring-1 ring-slate-100 dark:ring-slate-800">
+                <h2 className="text-xl font-black text-slate-900 dark:text-white">Informações do Negócio</h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Conte-nos sobre sua empresa</p>
 
                 <div className="mt-6 space-y-5">
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Nome do Estabelecimento *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Nome do Estabelecimento *</label>
                     <input
                       type="text" required value={form.nome} onChange={(e) => update('nome', e.target.value)}
                       placeholder="Ex: VetCare Clínica Veterinária"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
 
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Tipo de Negócio * <span className="text-xs font-normal text-slate-400">(pode selecionar mais de um)</span></label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Tipo de Negócio * <span className="text-xs font-normal text-slate-400 dark:text-slate-500">(pode selecionar mais de um)</span></label>
                     <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
                       {tiposServico.map((tipo) => (
                         <button
@@ -244,7 +244,7 @@ export default function CadastroParceiroPage() {
                           className={`flex items-center gap-2 rounded-xl border p-3 text-sm font-semibold transition ${
                             form.tipo.includes(tipo.id)
                               ? 'border-blue-500 bg-blue-50 text-blue-700 ring-2 ring-blue-500/20'
-                              : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                              : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'
                           }`}
                         >
                           <span>{tipo.emoji}</span>
@@ -268,12 +268,12 @@ export default function CadastroParceiroPage() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Descrição</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Descrição</label>
                     <textarea
                       value={form.descricao} onChange={(e) => update('descricao', e.target.value)}
                       placeholder="Descreva brevemente seu estabelecimento, diferenciais e história..."
                       rows={3}
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
                     />
                   </div>
                 </div>
@@ -292,62 +292,62 @@ export default function CadastroParceiroPage() {
 
             {/* Step 2: Localização */}
             {step === 2 && (
-              <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-200/50 ring-1 ring-slate-100">
-                <h2 className="text-xl font-black text-slate-900">Localização</h2>
-                <p className="mt-1 text-sm text-slate-500">Onde seus clientes podem te encontrar</p>
+              <div className="rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 ring-1 ring-slate-100 dark:ring-slate-800">
+                <h2 className="text-xl font-black text-slate-900 dark:text-white">Localização</h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Onde seus clientes podem te encontrar</p>
 
                 <div className="mt-6 space-y-5">
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Endereço *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Endereço *</label>
                     <input
                       type="text" required value={form.endereco} onChange={(e) => update('endereco', e.target.value)}
                       placeholder="Ex: Av. Paraná, 368"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="text-sm font-bold text-slate-700">Número *</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Número *</label>
                       <input
                         type="text" required value={form.numero} onChange={(e) => update('numero', e.target.value)}
                         placeholder="368"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div className="col-span-2">
-                      <label className="text-sm font-bold text-slate-700">Complemento</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Complemento</label>
                       <input
                         type="text" value={form.complemento} onChange={(e) => update('complemento', e.target.value)}
                         placeholder="Sala 1, Bloco B"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Bairro *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Bairro *</label>
                     <input
                       type="text" required value={form.bairro} onChange={(e) => update('bairro', e.target.value)}
                       placeholder="Ex: Centro"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-sm font-bold text-slate-700">Cidade *</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Cidade *</label>
                       <input
                         type="text" required value={form.cidade} onChange={(e) => update('cidade', e.target.value)}
                         placeholder="Ex: Maringá"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-bold text-slate-700">Estado *</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Estado *</label>
                       <select
                         required value={form.uf} onChange={(e) => update('uf', e.target.value)}
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       >
                         <option value="">Selecione</option>
                         {estados.map((e) => (
@@ -358,7 +358,7 @@ export default function CadastroParceiroPage() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-bold text-slate-700">CEP</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">CEP</label>
                     <div className="relative">
                       <input
                         type="text" value={form.cep}
@@ -376,7 +376,7 @@ export default function CadastroParceiroPage() {
                         }}
                         placeholder="00000-000"
                         maxLength={9}
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 pr-10 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                       {buscandoCep && (
                         <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -384,12 +384,12 @@ export default function CadastroParceiroPage() {
                         </div>
                       )}
                     </div>
-                    <p className="mt-1 text-xs text-slate-400">Digite o CEP para preencher endereço automaticamente</p>
+                    <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Digite o CEP para preencher endereço automaticamente</p>
                   </div>
                 </div>
 
                 <div className="mt-6 flex justify-between">
-                  <button type="button" onClick={() => setStep(1)} className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50">
+                  <button type="button" onClick={() => setStep(1)} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 transition hover:bg-slate-50 dark:hover:bg-slate-800">
                     ← Voltar
                   </button>
                   <button
@@ -405,94 +405,94 @@ export default function CadastroParceiroPage() {
 
             {/* Step 3: Contato */}
             {step === 3 && (
-              <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-200/50 ring-1 ring-slate-100">
-                <h2 className="text-xl font-black text-slate-900">Contato</h2>
-                <p className="mt-1 text-sm text-slate-500">Como seus clientes podem entrar em contato</p>
+              <div className="rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 ring-1 ring-slate-100 dark:ring-slate-800">
+                <h2 className="text-xl font-black text-slate-900 dark:text-white">Contato</h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Como seus clientes podem entrar em contato</p>
 
                 <div className="mt-6 space-y-5">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-sm font-bold text-slate-700">Telefone *</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Telefone *</label>
                       <input
                         type="tel" required value={form.telefone} onChange={(e) => update('telefone', e.target.value)}
                         placeholder="(44) 3305-1234"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-bold text-slate-700">WhatsApp</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">WhatsApp</label>
                       <input
                         type="tel" value={form.whatsapp} onChange={(e) => update('whatsapp', e.target.value)}
                         placeholder="(44) 99999-1234"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-bold text-slate-700">E-mail *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">E-mail *</label>
                     <input
                       type="email" required value={form.email} onChange={(e) => update('email', e.target.value)}
                       placeholder="contato@vetcarea.com.br"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
 
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Website</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Website</label>
                     <input
                       type="url" value={form.website} onChange={(e) => update('website', e.target.value)}
                       placeholder="https://www.vetcarea.com.br"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-sm font-bold text-slate-700">Instagram</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Instagram</label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">@</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">@</span>
                         <input
                           type="text" value={form.instagram} onChange={(e) => update('instagram', e.target.value)}
                           placeholder="vetcarea"
-                          className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-8 pr-4 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-3 pl-8 pr-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="text-sm font-bold text-slate-700">Facebook</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Facebook</label>
                       <input
                         type="text" value={form.facebook} onChange={(e) => update('facebook', e.target.value)}
                         placeholder="vetcarea"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-100 pt-5">
-                    <label className="text-sm font-bold text-slate-700">Horário de Funcionamento</label>
+                  <div className="border-t border-slate-100 dark:border-slate-800 pt-5">
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Horário de Funcionamento</label>
                     <div className="mt-2 grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs font-semibold text-slate-500">Abertura</label>
+                        <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Abertura</label>
                         <input
                           type="time" value={form.horarioAbertura} onChange={(e) => update('horarioAbertura', e.target.value)}
-                          className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-semibold text-slate-500">Fechamento</label>
+                        <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Fechamento</label>
                         <input
                           type="time" value={form.horarioFechamento} onChange={(e) => update('horarioFechamento', e.target.value)}
-                          className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                          className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                         />
                       </div>
                     </div>
                     <div className="mt-3">
-                      <label className="text-xs font-semibold text-slate-500">Horário especial (opcional)</label>
+                      <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Horário especial (opcional)</label>
                       <input
                         type="text" value={form.horarioEspecial} onChange={(e) => update('horarioEspecial', e.target.value)}
                         placeholder="Ex: Sáb 8h-12h, Dom Fechado"
-                        className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div className="mt-3 flex items-center gap-3">
@@ -501,15 +501,15 @@ export default function CadastroParceiroPage() {
                           type="checkbox" checked={form.plantao24h} onChange={(e) => update('plantao24h', e.target.checked)}
                           className="peer sr-only"
                         />
-                        <div className="h-6 w-11 rounded-full bg-slate-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all peer-checked:bg-emerald-500 peer-checked:after:translate-x-full" />
+                        <div className="h-6 w-11 rounded-full bg-slate-200 dark:bg-slate-700 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all peer-checked:bg-emerald-500 peer-checked:after:translate-x-full" />
                       </label>
-                      <span className="text-sm font-semibold text-slate-700">Plantão 24 horas</span>
+                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Plantão 24 horas</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-6 flex justify-between">
-                  <button type="button" onClick={() => setStep(2)} className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50">
+                  <button type="button" onClick={() => setStep(2)} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 transition hover:bg-slate-50 dark:hover:bg-slate-800">
                     ← Voltar
                   </button>
                   <button
@@ -525,9 +525,9 @@ export default function CadastroParceiroPage() {
 
             {/* Step 4: Serviços */}
             {step === 4 && (
-              <div className="rounded-3xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-200/50 ring-1 ring-slate-100">
-                <h2 className="text-xl font-black text-slate-900">Serviços Oferecidos</h2>
-                <p className="mt-1 text-sm text-slate-500">Selecione tudo que seu estabelecimento oferece</p>
+              <div className="rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 ring-1 ring-slate-100 dark:ring-slate-800">
+                <h2 className="text-xl font-black text-slate-900 dark:text-white">Serviços Oferecidos</h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Selecione tudo que seu estabelecimento oferece</p>
 
                 <div className="mt-6">
                   <div className="flex flex-wrap gap-2">
@@ -538,7 +538,7 @@ export default function CadastroParceiroPage() {
                         className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                           form.servicos.includes(servico)
                             ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md shadow-blue-500/20'
-                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                         }`}
                       >
                         {servico}
@@ -548,13 +548,13 @@ export default function CadastroParceiroPage() {
                 </div>
 
                 {/* Termos */}
-                <div className="mt-8 border-t border-slate-100 pt-6">
+                <div className="mt-8 border-t border-slate-100 dark:border-slate-800 pt-6">
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
                       type="checkbox" checked={form.aceiteTermos} onChange={(e) => update('aceiteTermos', e.target.checked)}
                       className="mt-1 h-5 w-5 rounded border-slate-300 text-blue-500 focus:ring-blue-500"
                     />
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-slate-600 dark:text-slate-400">
                       Li e aceito os{' '}
                       <a href="#" className="font-semibold text-blue-600 hover:underline">Termos de Uso</a>
                       {' '}e{' '}
@@ -565,9 +565,9 @@ export default function CadastroParceiroPage() {
                 </div>
 
                 {/* Resumo */}
-                <div className="mt-6 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50/30 p-5 ring-1 ring-slate-100">
-                  <h3 className="text-sm font-bold text-slate-900">Resumo do Cadastro</h3>
-                  <div className="mt-3 space-y-2 text-sm text-slate-600">
+                <div className="mt-6 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-800 dark:to-blue-950/30 p-5 ring-1 ring-slate-100 dark:ring-slate-700">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Resumo do Cadastro</h3>
+                  <div className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400">
                     <p>
                       <span className="font-semibold">Negócio:</span> {form.nome} (
                       {form.tipo.map(t => tiposServico.find(ts => ts.id === t)?.label).filter(Boolean).join(', ')}
@@ -582,7 +582,7 @@ export default function CadastroParceiroPage() {
                 </div>
 
                 <div className="mt-6 flex justify-between">
-                  <button type="button" onClick={() => setStep(3)} className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50">
+                  <button type="button" onClick={() => setStep(3)} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 transition hover:bg-slate-50 dark:hover:bg-slate-800">
                     ← Voltar
                   </button>
                   <button

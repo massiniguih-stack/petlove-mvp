@@ -375,11 +375,11 @@ export default function RacaoPage() {
 
   if (!pet) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
         <Navbar />
         <main className="flex-1">
           <div className="mx-auto max-w-2xl px-4 py-12 text-center">
-            <p className="text-slate-600">Cadastre um pet primeiro para ver recomendações.</p>
+            <p className="text-slate-600 dark:text-slate-400">Cadastre um pet primeiro para ver recomendações.</p>
           </div>
         </main>
         <Footer />
@@ -395,61 +395,61 @@ export default function RacaoPage() {
   const marcasParaMostrar = mostrarTodos ? marcas : marcas.slice(0, 3);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <header className="mb-8">
             <BackButton href="/dashboard" />
-            <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700">
+            <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700 dark:bg-amber-950">
               <span className="text-lg">🥣</span>
               Análise personalizada
             </div>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900">
+            <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
               Recomendação de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">ração</span>
             </h1>
-            <p className="mt-2 text-lg text-slate-600">
+            <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">
               Para {pet.nome} ({pet.raca}, {pet.peso} kg)
             </p>
           </header>
 
           <div className="grid gap-6 lg:grid-cols-4">
             <div className="lg:col-span-3 space-y-6">
-              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h2 className="text-lg font-bold text-slate-900">Perfil do pet</h2>
+              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100">
-                    <span className="text-2xl">🐕</span>
-                    <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
-                    <p className="text-sm font-bold text-slate-900">{pet.raca}</p>
+                   <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
+                     <span className="text-2xl">🐕</span>
+                     <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
+                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100">
-                    <span className="text-2xl">⚖️</span>
-                    <p className="mt-2 text-xs font-medium text-blue-600">Peso</p>
-                    <p className="text-sm font-bold text-slate-900">{pet.peso} kg</p>
+                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
+                     <span className="text-2xl">⚖️</span>
+                     <p className="mt-2 text-xs font-medium text-blue-600">Peso</p>
+                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 text-center ring-1 ring-emerald-100">
-                    <span className="text-2xl">📅</span>
-                    <p className="mt-2 text-xs font-medium text-emerald-600">Idade</p>
-                    <p className="text-sm font-bold text-slate-900">
+                   <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
+                     <span className="text-2xl">📅</span>
+                     <p className="mt-2 text-xs font-medium text-emerald-600">Idade</p>
+                     <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {idadeEmMeses < 12 ? `${idadeEmMeses} meses` : `${Math.floor(idadeEmMeses / 12)} anos`}
                     </p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 text-center ring-1 ring-purple-100">
-                    <span className="text-2xl">🎯</span>
-                    <p className="mt-2 text-xs font-medium text-purple-600">Objetivo</p>
-                    <p className="text-sm font-bold text-slate-900">
+                   <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">
+                     <span className="text-2xl">🎯</span>
+                     <p className="mt-2 text-xs font-medium text-purple-600">Objetivo</p>
+                     <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {objetivo === 'manutencao' ? 'Manutenção' : objetivo === 'pelagem' ? 'Pelagem' : objetivo === 'emagrecimento' ? 'Emagrecimento' : 'Desempenho'}
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-4">
-                  <label className="block text-sm font-semibold text-slate-700">Alterar objetivo</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Alterar objetivo</label>
                   <select
                     value={objetivo}
                     onChange={(e) => setObjetivo(e.target.value as 'manutencao' | 'pelagem' | 'desempenho' | 'emagrecimento')}
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                    className="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                   >
                     <option value="manutencao">Manutenção</option>
                     <option value="pelagem">Pelagem</option>
@@ -459,11 +459,11 @@ export default function RacaoPage() {
                 </div>
               </section>
 
-              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-bold text-slate-900">Marcas recomendadas</h2>
-                    <p className="mt-1 text-sm text-slate-500">Baseado no perfil de {pet.nome}</p>
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">Marcas recomendadas</h2>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Baseado no perfil de {pet.nome}</p>
                   </div>
                   <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">
                     {marcas.length} opções
@@ -478,7 +478,7 @@ export default function RacaoPage() {
                       key={marca.nome}
                       onClick={() => setMarcaExpandida(isExpandida ? null : marca.nome)}
                       className={`relative cursor-pointer rounded-2xl border p-5 transition-all ${
-                        index === 0 ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-white ring-2 ring-amber-100 shadow-md' : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-sm'
+                        index === 0 ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-white ring-2 ring-amber-100 shadow-md dark:border-amber-800 dark:from-amber-950 dark:to-slate-900' : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600'
                       }`}
                     >
                       {index === 0 && (
@@ -488,12 +488,12 @@ export default function RacaoPage() {
                       )}
 
                       <div className="flex items-start gap-4">
-                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 text-3xl">
+                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 text-3xl dark:from-slate-800 dark:to-slate-700">
                           {marca.logo}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="text-lg font-bold text-slate-900">{marca.nome}</h3>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{marca.nome}</h3>
                             <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
                               marca.tier === 'premium' ? 'bg-gradient-to-r from-amber-400 to-orange-400 text-white' :
                               marca.tier === 'superior' ? 'bg-gradient-to-r from-blue-400 to-cyan-400 text-white' :
@@ -501,19 +501,19 @@ export default function RacaoPage() {
                             }`}>
                               {marca.tier}
                             </span>
-                            <span className="text-sm font-bold text-slate-400">{marca.preco}</span>
+                            <span className="text-sm font-bold text-slate-400 dark:text-slate-500">{marca.preco}</span>
                           </div>
 
                           <div className="mt-3 grid grid-cols-3 gap-2">
-                            <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-3 text-center ring-1 ring-emerald-100">
+                            <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-3 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
                               <p className="text-xs font-medium text-emerald-600">Proteína</p>
                               <p className="text-lg font-black text-emerald-700">{marca.proteina}%</p>
                             </div>
-                            <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-3 text-center ring-1 ring-amber-100">
+                            <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-3 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
                               <p className="text-xs font-medium text-amber-600">Gordura</p>
                               <p className="text-lg font-black text-amber-700">{marca.gordura}%</p>
                             </div>
-                            <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-3 text-center ring-1 ring-blue-100">
+                            <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-3 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
                               <p className="text-xs font-medium text-blue-600">Fibra</p>
                               <p className="text-lg font-black text-blue-700">{marca.fibra}%</p>
                             </div>
@@ -553,7 +553,7 @@ export default function RacaoPage() {
 
                           <button
                             onClick={() => setMarcaExpandida(isExpandida ? null : marca.nome)}
-                            className="mt-3 flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-700"
+                            className="mt-3 flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
                           >
                             {isExpandida ? 'Ocultar detalhes' : 'Ver detalhes'}
                             <svg
@@ -567,12 +567,12 @@ export default function RacaoPage() {
                           </button>
 
                           {isExpandida && (
-                            <div className="mt-4 space-y-3 border-t border-slate-100 pt-4">
+                            <div className="mt-4 space-y-3 border-t border-slate-100 pt-4 dark:border-slate-700">
                               <div>
-                                <p className="text-xs font-bold text-slate-700">Indicada para</p>
+                                <p className="text-xs font-bold text-slate-700 dark:text-slate-300">Indicada para</p>
                                 <div className="mt-2 flex flex-wrap gap-1">
                                   {marca.indicada.map((i) => (
-                                    <span key={i} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">{i}</span>
+                                    <span key={i} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-400">{i}</span>
                                   ))}
                                 </div>
                               </div>
@@ -599,9 +599,9 @@ export default function RacaoPage() {
                 )}
               </section>
 
-              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h2 className="text-lg font-bold text-slate-900">Suplementação</h2>
-                <p className="mt-1 text-sm text-slate-500">
+              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Suplementação</h2>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   Clique para ver detalhes · Complementos para {objetivo === 'manutencao' ? 'manutenção' : objetivo === 'pelagem' ? 'pelagem' : objetivo === 'emagrecimento' ? 'emagrecimento' : 'desempenho'}
                 </p>
 
@@ -615,10 +615,10 @@ export default function RacaoPage() {
                       <span className="text-2xl transition group-hover:scale-110">{s.icone}</span>
                       <div className="flex-1">
                         <p className={`text-sm font-bold ${s.cor.split(' ')[1]}`}>{s.nome}</p>
-                        <p className="text-xs text-slate-600">{s.beneficio}</p>
-                        <p className="mt-1 text-xs font-medium text-slate-500">{s.quando}</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400">{s.beneficio}</p>
+                        <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">{s.quando}</p>
                       </div>
-                      <svg className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-slate-600 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-slate-600 group-hover:translate-x-0.5 dark:text-slate-500 dark:group-hover:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="9 18 15 12 9 6"/>
                       </svg>
                     </button>
@@ -630,20 +630,20 @@ export default function RacaoPage() {
               {suplementoExpandido && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setSuplementoExpandido(null)}>
                   <div
-                    className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-scale-in"
+                    className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl animate-scale-in dark:bg-slate-900"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <span className="text-4xl">{suplementoExpandido.icone}</span>
                         <div>
-                          <h3 className="text-xl font-black text-slate-900">{suplementoExpandido.nome}</h3>
+                          <h3 className="text-xl font-black text-slate-900 dark:text-white">{suplementoExpandido.nome}</h3>
                           <p className={`text-sm font-bold ${suplementoExpandido.cor.split(' ')[1]}`}>{suplementoExpandido.beneficio}</p>
                         </div>
                       </div>
                       <button
                         onClick={() => setSuplementoExpandido(null)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200"
+                        className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <line x1="18" y1="6" x2="6" y2="18"/>
@@ -652,17 +652,17 @@ export default function RacaoPage() {
                       </button>
                     </div>
 
-                    <p className="mt-4 text-sm leading-relaxed text-slate-600">{suplementoExpandido.descricao}</p>
+                    <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{suplementoExpandido.descricao}</p>
 
-                    <div className="mt-5 rounded-2xl bg-slate-50 p-4">
+                    <div className="mt-5 rounded-2xl bg-slate-50 p-4 dark:bg-slate-800">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-xs font-bold text-slate-500">Dosagem</p>
-                          <p className="mt-1 text-sm font-semibold text-slate-900">{suplementoExpandido.dosagem}</p>
+                          <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Dosagem</p>
+                          <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{suplementoExpandido.dosagem}</p>
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-slate-500">Quando usar</p>
-                          <p className="mt-1 text-sm font-semibold text-slate-900">{suplementoExpandido.quando}</p>
+                          <p className="text-xs font-bold text-slate-500 dark:text-slate-400">Quando usar</p>
+                          <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{suplementoExpandido.quando}</p>
                         </div>
                       </div>
                     </div>
@@ -672,7 +672,7 @@ export default function RacaoPage() {
                         <p className="text-xs font-bold text-amber-600">⚠️ Cuidados</p>
                         <ul className="mt-2 space-y-1">
                           {suplementoExpandido.cuidados.map((c) => (
-                            <li key={c} className="flex items-start gap-2 text-xs text-slate-600">
+                            <li key={c} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400">
                               <span className="mt-0.5 text-amber-500">•</span>
                               {c}
                             </li>
@@ -686,7 +686,7 @@ export default function RacaoPage() {
                         <p className="text-xs font-bold text-red-500">🚫 Contraindicações</p>
                         <ul className="mt-2 space-y-1">
                           {suplementoExpandido.contraindicacoes.map((c) => (
-                            <li key={c} className="flex items-start gap-2 text-xs text-slate-600">
+                            <li key={c} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400">
                               <span className="mt-0.5 text-red-400">•</span>
                               {c}
                             </li>
@@ -783,8 +783,8 @@ export default function RacaoPage() {
 
               {/* Modal Nova Refeição */}
               {novaRefeicao && (
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg">
-                  <h3 className="text-sm font-bold text-slate-900">Nova Refeição</h3>
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Nova Refeição</h3>
                   <div className="mt-3 space-y-3">
                     <button
                       onClick={adicionarRefeicao}
@@ -794,7 +794,7 @@ export default function RacaoPage() {
                     </button>
                     <button
                       onClick={() => setNovaRefeicao(false)}
-                      className="w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50"
+                      className="w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
                     >
                       Cancelar
                     </button>
@@ -803,42 +803,42 @@ export default function RacaoPage() {
               )}
 
               {/* Porções Diárias */}
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-                <h3 className="text-sm font-bold text-slate-900">Porções diárias</h3>
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Porções diárias</h3>
                 <div className="mt-4 space-y-3">
-                  <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-3 ring-1 ring-amber-100">
+                  <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-3 ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
                     <span className="text-2xl">🥣</span>
                     <div>
                       <p className="text-xs font-medium text-amber-600">Quantidade</p>
-                      <p className="text-lg font-black text-slate-900">{recomendacao.quantidadeDiaria}g/dia</p>
+                      <p className="text-lg font-black text-slate-900 dark:text-white">{recomendacao.quantidadeDiaria}g/dia</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 p-3 ring-1 ring-rose-100">
+                  <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 p-3 ring-1 ring-rose-100 dark:from-rose-950 dark:to-pink-950">
                     <span className="text-2xl">🔥</span>
                     <div>
                       <p className="text-xs font-medium text-rose-600">Calorias</p>
-                      <p className="text-lg font-black text-slate-900">{recomendacao.caloriasDiarias} kcal</p>
+                      <p className="text-lg font-black text-slate-900 dark:text-white">{recomendacao.caloriasDiarias} kcal</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-3 ring-1 ring-blue-100">
+                  <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-3 ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
                     <span className="text-2xl">🍽️</span>
                     <div>
                       <p className="text-xs font-medium text-blue-600">Refeições</p>
-                      <p className="text-lg font-black text-slate-900">2-3x ao dia</p>
+                      <p className="text-lg font-black text-slate-900 dark:text-white">2-3x ao dia</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-                <h3 className="text-sm font-bold text-slate-900">Dicas de desenvolvimento</h3>
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Dicas de desenvolvimento</h3>
                 <div className="mt-4 space-y-3">
                   {dicas.map((d) => (
                     <div key={d.titulo} className={`flex items-start gap-3 rounded-xl p-3 ${d.cor.split(' ')[0]}`}>
                       <span className="text-lg">{d.icone}</span>
                       <div>
                         <p className={`text-sm font-bold ${d.cor.split(' ')[1]}`}>{d.titulo}</p>
-                        <p className="text-xs text-slate-600">{d.descricao}</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400">{d.descricao}</p>
                       </div>
                     </div>
                   ))}

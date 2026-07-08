@@ -164,7 +164,7 @@ export default function ConvitesPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-amber-950/30">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 py-10">
@@ -176,24 +176,24 @@ export default function ConvitesPage() {
               <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
                 <span>📨</span> Convites para Parceiros
               </div>
-              <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900">
+              <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
                 Mensagens prontas para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">convite</span>
               </h1>
-              <p className="mt-3 text-slate-500">Copie e envie para clínicas e pet shops da sua região</p>
+              <p className="mt-3 text-slate-500 dark:text-slate-400">Copie e envie para clínicas e pet shops da sua região</p>
             </div>
           </div>
 
           {/* Input da clínica */}
-          <div className="mb-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <label className="text-sm font-bold text-slate-700">Nome da clínica/pet shop (opcional)</label>
+          <div className="mb-8 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Nome da clínica/pet shop (opcional)</label>
             <input
               type="text"
               value={clinica}
               onChange={(e) => setClinica(e.target.value)}
               placeholder="Ex: VetCare Clínica Veterinária"
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
             />
-            <p className="mt-2 text-xs text-slate-400">
+            <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
               Se preencher, o nome será inserido automaticamente nas mensagens
             </p>
           </div>
@@ -201,7 +201,7 @@ export default function ConvitesPage() {
           {/* Mensagens */}
           <div className="space-y-6">
             {mensagens.map((m) => (
-              <div key={m.id} className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+              <div key={m.id} className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
                 <div className={`flex items-center justify-between bg-gradient-to-r ${m.cor} p-4`}>
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{m.icone}</span>
@@ -219,7 +219,7 @@ export default function ConvitesPage() {
                   </button>
                 </div>
                 <div className="p-6">
-                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-700">
+                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                     {m.mensagem.replace(/{CLINICA}/g, clinica || '[Nome da Clínica]')}
                   </pre>
                 </div>
@@ -228,9 +228,9 @@ export default function ConvitesPage() {
           </div>
 
           {/* Dicas */}
-          <div className="mt-12 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-8">
-            <h2 className="text-xl font-black text-slate-900">💡 Dicas para o convite</h2>
-            <ul className="mt-4 space-y-3 text-sm text-slate-700">
+          <div className="mt-12 rounded-3xl border border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 p-8">
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">💡 Dicas para o convite</h2>
+            <ul className="mt-4 space-y-3 text-sm text-slate-700 dark:text-slate-300">
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 text-amber-500">✓</span>
                 <span>Pesquise o nome do estabelecimento antes de enviar o convite</span>

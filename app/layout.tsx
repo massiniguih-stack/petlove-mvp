@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/providers/AuthProvider'
+import { DarkModeProvider } from '@/providers/DarkModeProvider'
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
 
@@ -6,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'PetLove - Cuidados para seu pet',
-  description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário,酒店 e mais.',
+  description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário, hotel e mais.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32' },
@@ -35,9 +36,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <DarkModeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </DarkModeProvider>
       </body>
     </html>
   )

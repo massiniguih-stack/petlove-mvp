@@ -43,7 +43,7 @@ export default function DesempenhoPage() {
   const fase = idadeEmMeses < 6 ? 'Filhote' : idadeEmMeses < 12 ? 'Adolescente' : idadeEmMeses < 84 ? 'Adulto' : 'Sênior';
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-amber-950/30">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 py-10">
@@ -55,10 +55,10 @@ export default function DesempenhoPage() {
                 <ScaleIcon3D size={40} />
               </div>
               <div>
-                <h1 className="text-3xl font-black tracking-tight text-slate-900">
+                <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
                   Desempenho de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">{pet.nome}</span>
                 </h1>
-                <p className="mt-1 text-sm text-slate-500">Acompanhe a evolução e veja o que é ideal para ele</p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Acompanhe a evolução e veja o que é ideal para ele</p>
               </div>
             </div>
           </div>
@@ -108,14 +108,14 @@ export default function DesempenhoPage() {
           </div>
 
           {/* Recomendações */}
-          <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-200/50 ring-1 ring-slate-100">
+          <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-200/50 ring-1 ring-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:ring-slate-800">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg shadow-amber-500/20">
                 <span className="text-lg">💡</span>
               </div>
               <div>
-                <h2 className="text-xl font-black text-slate-900">Recomendações para {pet.nome}</h2>
-                <p className="text-xs text-slate-500">Baseado no peso, idade e objetivo</p>
+                <h2 className="text-xl font-black text-slate-900 dark:text-white">Recomendações para {pet.nome}</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Baseado no peso, idade e objetivo</p>
               </div>
             </div>
 

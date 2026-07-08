@@ -106,25 +106,25 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl">
-        <h2 className="text-2xl font-bold text-slate-900">{editando ? '✏️ Editar momento' : '📸 Novo momento'}</h2>
-        <p className="mt-1 text-sm text-slate-500">Registre um momento especial na vida do seu pet</p>
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 p-8 shadow-2xl">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{editando ? '✏️ Editar momento' : '📸 Novo momento'}</h2>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Registre um momento especial na vida do seu pet</p>
         
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
               <span className="text-lg">📅</span> Data
             </label>
             <input
               type="date"
               value={data}
               onChange={(e) => setData(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
             />
           </div>
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
               <span className="text-lg">🏷️</span> Categoria
             </label>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -136,7 +136,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
                   className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition ${
                     categoria === cat.id
                       ? `${cat.cor} text-white shadow-md`
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : ' bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                   }`}
                 >
                   <span>{cat.emoji}</span>
@@ -161,7 +161,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
                   className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition ${
                     statusVacina === 'tomada'
                       ? 'bg-emerald-500 text-white shadow-md'
-                      : 'bg-white text-slate-600 hover:bg-slate-50'
+                      : 'bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
                   ✅ Já tomou
@@ -172,7 +172,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
                   className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition ${
                     statusVacina === 'pendente'
                       ? 'bg-amber-500 text-white shadow-md'
-                      : 'bg-white text-slate-600 hover:bg-slate-50'
+                      : 'bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
                   📅 Ainda vai tomar
@@ -182,7 +182,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
               <button
                 type="button"
                 onClick={() => setUsarVacinaComum(true)}
-                className="w-full rounded-xl bg-white px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-100"
+                className="w-full rounded-xl bg-white dark:bg-slate-900 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-100 dark:hover:bg-blue-900"
               >
                 📋 Selecionar vacina comum
               </button>
@@ -194,10 +194,10 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
                       key={vacina.nome}
                       type="button"
                       onClick={() => handleVacinaComumSelect(vacina)}
-                      className="w-full rounded-xl bg-white p-3 text-left transition hover:bg-blue-100"
+                      className="w-full rounded-xl bg-white dark:bg-slate-900 p-3 text-left transition hover:bg-blue-100 dark:hover:bg-blue-900"
                     >
-                      <div className="font-semibold text-slate-900">{vacina.nome}</div>
-                      <div className="text-xs text-slate-500">{vacina.descricao}</div>
+                      <div className="font-semibold text-slate-900 dark:text-white">{vacina.nome}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">{vacina.descricao}</div>
                     </button>
                   ))}
                 </div>
@@ -212,7 +212,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
                     type="date"
                     value={dataAgendada}
                     onChange={(e) => setDataAgendada(e.target.value)}
-                    className="mt-2 w-full rounded-xl border border-amber-200 bg-white px-4 py-3 text-slate-900 transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                    className="mt-2 w-full rounded-xl border border-amber-200 bg-white dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                   />
                   <p className="mt-2 text-xs text-amber-600">
                     📲 Você receberá um lembrete antes da data agendada
@@ -223,7 +223,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
           )}
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
               <span className="text-lg">✨</span> Título
             </label>
             <input
@@ -231,13 +231,13 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               placeholder={categoria === 'vacina' ? 'Ex: V10, Raiva, Gripe...' : 'Ex: Primeira vacina, Dia do parque...'}
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
               required
             />
           </div>
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
               <span className="text-lg">📝</span> Descrição
             </label>
             <textarea
@@ -245,19 +245,19 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
               onChange={(e) => setDescricao(e.target.value)}
               placeholder={categoria === 'vacina' ? 'Local, veterinário, observações...' : 'Conte mais sobre este momento especial...'}
               rows={3}
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
             />
           </div>
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+            <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
               <span className="text-lg">📷</span> Foto (opcional)
             </label>
             <div className="mt-2 flex items-center gap-4">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 transition hover:border-purple-400 hover:text-purple-600"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-400 transition hover:border-purple-400 hover:text-purple-600"
               >
                 {fotoUrl ? '🔄 Trocar foto' : '📷 Adicionar foto'}
               </button>
@@ -284,7 +284,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="rounded-xl border-2 border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+            <button type="button" onClick={onClose} className="rounded-xl border-2 border-slate-200 dark:border-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-800">
               Cancelar
             </button>
             <button type="submit" className="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition hover:shadow-xl hover:shadow-purple-500/40">
@@ -391,7 +391,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
               onClick={() => setMarcoSelecionado(isSelected ? null : marco.mes)}
               className={`flex flex-col items-center rounded-xl p-3 transition-all shrink-0 w-20 ${
                 isSelected 
-                  ? 'bg-purple-50 ring-2 ring-purple-300' 
+                  ? 'bg-purple-50 ring-2 ring-purple-300 dark:ring-purple-700' 
                   : 'hover:bg-slate-50'
               }`}
             >
@@ -408,7 +408,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
                   {getMesLabel(marco.mes)}
                 </div>
                 {marco.momento && (
-                  <div className="mt-0.5 text-[10px] text-slate-400 truncate max-w-[68px]">
+                  <div className="mt-0.5 text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[68px]">
                     {marco.momento.titulo}
                   </div>
                 )}
@@ -425,7 +425,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold text-slate-900">{marcoDetalhe.label}</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{marcoDetalhe.label}</h3>
                 {marcoDetalhe.momento && (
                   <span className="rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-600">
                     Registrado
@@ -436,14 +436,14 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
               {marcoDetalhe.momento ? (
                 <div className="mt-2 space-y-2">
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">{marcoDetalhe.momento.titulo}</p>
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{marcoDetalhe.momento.titulo}</p>
                     {marcoDetalhe.momento.descricao && (
-                      <p className="mt-1 text-xs text-slate-600">{marcoDetalhe.momento.descricao}</p>
+                      <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">{marcoDetalhe.momento.descricao}</p>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
                     <CategoriaBadge categoria={marcoDetalhe.momento.categoria} />
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500">
                       {format(marcoDetalhe.momento.data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                     </span>
                   </div>
@@ -457,27 +457,27 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
                   <div className="flex gap-2">
                     <button
                       onClick={() => onEdit(marcoDetalhe.momento!)}
-                      className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 transition hover:bg-slate-50"
+                      className="rounded-lg bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 ring-1 ring-slate-200 dark:ring-slate-800 transition hover:bg-slate-50 dark:hover:bg-slate-800"
                     >
                       ✏️ Editar
                     </button>
                     <button
                       onClick={() => { onDelete(marcoDetalhe.momento!.id); setMarcoSelecionado(null); }}
-                      className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-red-500 ring-1 ring-red-100 transition hover:bg-red-50"
+                      className="rounded-lg bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-semibold text-red-500 ring-1 ring-red-100 transition hover:bg-red-50 dark:hover:bg-red-950"
                     >
                       🗑️ Excluir
                     </button>
                   </div>
                 </div>
               ) : (
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                   Nenhum momento registrado para este marco.
                 </p>
               )}
             </div>
             <button
               onClick={() => setMarcoSelecionado(null)}
-              className="shrink-0 rounded-lg p-1 text-slate-400 transition hover:bg-white hover:text-slate-600"
+              className="shrink-0 rounded-lg p-1 text-slate-400 dark:text-slate-500 transition hover:bg-white hover:text-slate-600"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/>
@@ -493,7 +493,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
         <div className="mt-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-3">
           <div className="flex items-center justify-between text-xs">
             <span className="text-slate-600">
-              📅 <span className="font-bold text-slate-900">{pet.nome}</span> tem{' '}
+              📅 <span className="font-bold text-slate-900 dark:text-white">{pet.nome}</span> tem{' '}
               <span className="font-bold text-purple-600">{totalMeses} {totalMeses === 1 ? 'mês' : 'meses'}</span>
             </span>
             <span className="text-slate-500">
@@ -564,7 +564,7 @@ export default function VidaPage() {
   const primeiraFoto = momentos.find((m) => m.fotoUrl);
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 to-white">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 py-10">
@@ -577,7 +577,7 @@ export default function VidaPage() {
               {diasVida > 0 && ` · ${diasVida} dias`}
             </div>
             <div className="mt-3 flex flex-col items-center justify-between gap-4 sm:flex-row">
-              <h1 className="text-4xl font-black tracking-tight text-slate-900">
+              <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
                 Linha do tempo de <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">{pet.nome}</span>
               </h1>
               <button
@@ -645,8 +645,8 @@ export default function VidaPage() {
                     <span className="text-xl">💉</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900">Painel de Vacinas</h3>
-                    <p className="text-sm text-slate-500">
+                    <h3 className="font-bold text-slate-900 dark:text-white">Painel de Vacinas</h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       {vacinasTomadas.length} tomada{vacinasTomadas.length !== 1 ? 's' : ''} · {vacinasPendentes.length} pendente{vacinasPendentes.length !== 1 ? 's' : ''}
                     </p>
                   </div>
@@ -669,7 +669,7 @@ export default function VidaPage() {
                           className={`group relative flex items-center justify-between rounded-2xl border p-4 transition ${
                             isUrgente 
                               ? 'border-amber-200 bg-amber-50 shadow-md' 
-                              : 'border-slate-200 bg-white hover:shadow-md'
+                              : 'border-slate-200 bg-white dark:bg-slate-900 hover:shadow-md'
                           }`}
                         >
                           <div className="flex items-center gap-4">
@@ -681,7 +681,7 @@ export default function VidaPage() {
                               <span className="text-lg">💉</span>
                             </div>
                             <div>
-                              <h5 className="font-bold text-slate-900">{vacina.titulo}</h5>
+                              <h5 className="font-bold text-slate-900 dark:text-white">{vacina.titulo}</h5>
                               <div className="flex items-center gap-2">
                                 <span className={`text-xs font-semibold ${
                                   isUrgente ? 'text-amber-600' : 'text-slate-500'
@@ -698,7 +698,7 @@ export default function VidaPage() {
                                 )}
                               </div>
                               {vacina.descricao && (
-                                <p className="mt-1 text-xs text-slate-500">{vacina.descricao}</p>
+                                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{vacina.descricao}</p>
                               )}
                             </div>
                           </div>
@@ -744,7 +744,7 @@ export default function VidaPage() {
             {filtro !== 'todos' && (
               <button
                 onClick={() => setFiltro('todos')}
-                className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-600 ring-1 ring-slate-200 transition hover:bg-slate-50"
+                className="rounded-full bg-white dark:bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 ring-1 ring-slate-200 dark:ring-slate-800 transition hover:bg-slate-50 dark:hover:bg-slate-800"
               >
                 ✕ Limpar filtro
               </button>
@@ -754,7 +754,7 @@ export default function VidaPage() {
                 key={cat.id}
                 onClick={() => setFiltro(cat.id as Momento['categoria'])}
                 className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition ${
-                  filtro === cat.id ? `${cat.cor} text-white shadow-md` : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  filtro === cat.id ? `${cat.cor} text-white shadow-md` : ' bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
                 <span>{cat.emoji}</span>
@@ -775,14 +775,14 @@ export default function VidaPage() {
 
           {/* Primeira Foto */}
           {primeiraFoto && (
-            <div className="mt-12 rounded-3xl bg-gradient-to-br from-purple-50 to-pink-50 p-6 shadow-sm ring-1 ring-purple-100">
+            <div className="mt-12 rounded-3xl bg-gradient-to-br from-purple-50 to-pink-50 p-6 shadow-sm ring-1 ring-purple-100 dark:ring-purple-900">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30">
                   <span className="text-xl">📸</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900">Primeira foto registrada</h3>
-                  <p className="text-sm text-slate-500">
+                  <h3 className="font-bold text-slate-900 dark:text-white">Primeira foto registrada</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     {format(primeiraFoto.data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                   </p>
                 </div>
@@ -802,14 +802,14 @@ export default function VidaPage() {
 
           {/* Empty State */}
           {momentos.length === 0 && (
-            <div className="mt-12 rounded-3xl bg-white py-20 text-center shadow-sm ring-1 ring-slate-200">
+            <div className="mt-12 rounded-3xl bg-white dark:bg-slate-900 py-20 text-center shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
               <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100">
                 <span className="text-5xl">📅</span>
               </div>
-              <h2 className="mt-6 text-2xl font-bold text-slate-900">
+              <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
                 Comece a contar a história de {pet.nome}
               </h2>
-              <p className="mt-2 max-w-sm mx-auto text-slate-500">
+              <p className="mt-2 max-w-sm mx-auto text-slate-500 dark:text-slate-400">
                 Adicione fotos, vacinas, conquistas e momentos especiais para criar uma linha do tempo única.
               </p>
               <button

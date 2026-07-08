@@ -90,7 +90,7 @@ export default function PlanosPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-amber-950/30">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-10">
@@ -102,10 +102,10 @@ export default function PlanosPage() {
               <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
                 <span>🏆</span> Planos Premium
               </div>
-              <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900">
+              <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
                 Escolha o plano ideal para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">seu negócio</span>
               </h1>
-              <p className="mt-3 text-slate-500">Invista na visibilidade do seu estabelecimento</p>
+              <p className="mt-3 text-slate-500 dark:text-slate-400">Invista na visibilidade do seu estabelecimento</p>
               <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
                 🎉 50% OFF para membros PetLove — Desconto aplicado automaticamente
               </div>
@@ -114,13 +114,13 @@ export default function PlanosPage() {
 
           {/* Seletor Mensal/Anual */}
           <div className="flex justify-center">
-            <div className="inline-flex rounded-2xl bg-slate-100 p-1">
+            <div className="inline-flex rounded-2xl bg-slate-100 dark:bg-slate-800 p-1">
               <button
                 onClick={() => setPeriodo('mensal')}
                 className={`rounded-xl px-6 py-3 text-sm font-bold transition ${
                   periodo === 'mensal'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700'
+                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                 }`}
               >
                 Mensal
@@ -129,8 +129,8 @@ export default function PlanosPage() {
                 onClick={() => setPeriodo('anual')}
                 className={`rounded-xl px-6 py-3 text-sm font-bold transition ${
                   periodo === 'anual'
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700'
+                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                 }`}
               >
                 Anual
@@ -146,10 +146,10 @@ export default function PlanosPage() {
             {planos.map((plano) => (
               <div
                 key={plano.id}
-                className={`relative rounded-3xl border-2 bg-white p-6 transition-all ${
+                className={`relative rounded-3xl border-2 bg-white dark:bg-slate-900 p-6 transition-all ${
                   selecionado === plano.id
                     ? `${plano.corBorder} shadow-xl`
-                    : 'border-slate-200 hover:border-slate-300 hover:shadow-lg'
+                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-lg'
                 } ${plano.popular ? 'md:-translate-y-2' : ''}`}
               >
                 {plano.popular && (
@@ -160,19 +160,19 @@ export default function PlanosPage() {
 
                 <div className={`rounded-2xl ${plano.corBg} p-4`}>
                   <h3 className={`text-xl font-black ${plano.corText}`}>{plano.nome}</h3>
-                  <p className="mt-1 text-sm text-slate-500">{plano.descricao}</p>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{plano.descricao}</p>
                 </div>
 
                 <div className="mt-6">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-sm font-bold text-slate-400">R$</span>
-                    <span className="text-4xl font-black text-slate-900">
+                    <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
+                    <span className="text-4xl font-black text-slate-900 dark:text-white">
                       {periodo === 'mensal'
                         ? plano.mensal.toFixed(0)
                         : Math.floor(plano.anual / 12).toFixed(0)
                       }
                     </span>
-                    <span className="text-sm text-slate-500">/mês</span>
+                    <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
                   </div>
                   <p className="mt-1 text-xs text-slate-400">
                     <span className="line-through">
@@ -185,29 +185,29 @@ export default function PlanosPage() {
                       💰 Economia de R$ {((plano.mensal * 2 * 12) - plano.anual).toFixed(2)} no ano
                     </p>
                   )}
-                  <p className="mt-2 text-xs text-slate-400">
+                  <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
                     {periodo === 'mensal' ? 'Cobrado mensalmente' : `R$ ${plano.anual.toFixed(2)} cobrado anualmente`}
                   </p>
                 </div>
 
                 <ul className="mt-6 space-y-3">
                   {plano.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm text-slate-700">
+                    <li key={feature} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
                       <span className={`flex h-5 w-5 items-center justify-center rounded-full ${plano.corBg} text-xs ${plano.corText}`}>✓</span>
                       {feature}
                     </li>
                   ))}
                 </ul>
 
-                <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+                <div className="mt-6 rounded-2xl bg-slate-50 dark:bg-slate-800 p-4">
                   <div className="grid grid-cols-2 gap-3 text-center">
                     <div>
-                      <p className="text-xs font-semibold text-slate-500">Fotos</p>
-                      <p className="text-lg font-black text-slate-900">{plano.limites.fotos}</p>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Fotos</p>
+                      <p className="text-lg font-black text-slate-900 dark:text-white">{plano.limites.fotos}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-slate-500">Destaque</p>
-                      <p className="text-lg font-black text-slate-900">{plano.limites.destaque}</p>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Destaque</p>
+                      <p className="text-lg font-black text-slate-900 dark:text-white">{plano.limites.destaque}</p>
                     </div>
                   </div>
                 </div>
@@ -228,95 +228,95 @@ export default function PlanosPage() {
 
           {/* Checkout */}
           {selecionado && (
-            <div className="mt-12 rounded-3xl border border-slate-100 bg-white p-8 shadow-xl ring-1 ring-slate-100">
-              <h2 className="text-2xl font-black text-slate-900">Finalizar Assinatura</h2>
-              <p className="mt-1 text-sm text-slate-500">
+            <div className="mt-12 rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 shadow-xl ring-1 ring-slate-100 dark:ring-slate-800">
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Finalizar Assinatura</h2>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Plano {planos.find(p => p.id === selecionado)?.nome} · {periodo === 'mensal' ? 'Mensal' : 'Anual'}
               </p>
 
               <div className="mt-6 grid gap-6 md:grid-cols-2">
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Nome Completo *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Nome Completo *</label>
                     <input
                       type="text" required
                       placeholder="Seu nome"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-bold text-slate-700">E-mail *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">E-mail *</label>
                     <input
                       type="email" required
                       placeholder="seu@email.com"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-bold text-slate-700">CPF/CNPJ *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">CPF/CNPJ *</label>
                     <input
                       type="text" required
                       placeholder="000.000.000-00"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Telefone *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Telefone *</label>
                     <input
                       type="tel" required
                       placeholder="(00) 00000-0000"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Número do Cartão *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Número do Cartão *</label>
                     <input
                       type="text" required
                       placeholder="0000 0000 0000 0000"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-sm font-bold text-slate-700">Validade *</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Validade *</label>
                       <input
                         type="text" required
                         placeholder="MM/AA"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-bold text-slate-700">CVV *</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">CVV *</label>
                       <input
                         type="text" required
                         placeholder="000"
-                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-bold text-slate-700">Nome no Cartão *</label>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Nome no Cartão *</label>
                     <input
                       type="text" required
                       placeholder="Como está no cartão"
-                      className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      className="mt-1.5 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     />
                   </div>
 
-                  <div className="rounded-2xl bg-slate-50 p-4">
+                  <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-600">Total a pagar</span>
-                      <span className="text-2xl font-black text-slate-900">
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Total a pagar</span>
+                      <span className="text-2xl font-black text-slate-900 dark:text-white">
                         R$ {periodo === 'mensal'
                           ? planos.find(p => p.id === selecionado)?.mensal.toFixed(2)
                           : planos.find(p => p.id === selecionado)?.anual.toFixed(2)
                         }
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                       {periodo === 'mensal' ? 'Cobrado todo mês' : 'Cobrado uma vez no ano'}
                     </p>
                   </div>
@@ -328,7 +328,7 @@ export default function PlanosPage() {
                   type="checkbox"
                   className="mt-1 h-5 w-5 rounded border-slate-300 text-amber-500 focus:ring-amber-500"
                 />
-                <span className="text-sm text-slate-600">
+                <span className="text-sm text-slate-600 dark:text-slate-400">
                   Li e aceito os{' '}
                   <a href="#" className="font-semibold text-amber-600 hover:underline">Termos de Uso</a>
                   {' '}e{' '}
@@ -341,7 +341,7 @@ export default function PlanosPage() {
                 💳 Assinar Agora
               </button>
 
-              <div className="mt-4 flex items-center justify-center gap-4 text-xs text-slate-400">
+              <div className="mt-4 flex items-center justify-center gap-4 text-xs text-slate-400 dark:text-slate-500">
                 <span>🔒 Pagamento seguro</span>
                 <span>·</span>
                 <span>Cancelamento grátis</span>
@@ -353,7 +353,7 @@ export default function PlanosPage() {
 
           {/* FAQ */}
           <section className="mt-16">
-            <h2 className="text-center text-2xl font-black text-slate-900">Perguntas Frequentes</h2>
+            <h2 className="text-center text-2xl font-black text-slate-900 dark:text-white">Perguntas Frequentes</h2>
             <div className="mx-auto mt-8 max-w-3xl space-y-4">
               {[
                 {
@@ -373,12 +373,12 @@ export default function PlanosPage() {
                   resposta: 'Utilizamos criptografia SSL e processamos pagamentos via Stripe, uma das maiores plataformas de pagamento do mundo.',
                 },
               ].map((faq) => (
-                <details key={faq.pergunta} className="group rounded-2xl border border-slate-200 bg-white">
-                  <summary className="flex cursor-pointer items-center justify-between p-5 font-bold text-slate-900">
+                <details key={faq.pergunta} className="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                  <summary className="flex cursor-pointer items-center justify-between p-5 font-bold text-slate-900 dark:text-white">
                     {faq.pergunta}
-                    <span className="ml-2 text-slate-400 transition group-open:rotate-180">▼</span>
+                    <span className="ml-2 text-slate-400 dark:text-slate-500 transition group-open:rotate-180">▼</span>
                   </summary>
-                  <div className="border-t border-slate-100 px-5 pb-5 pt-3 text-sm text-slate-600">
+                  <div className="border-t border-slate-100 dark:border-slate-800 px-5 pb-5 pt-3 text-sm text-slate-600 dark:text-slate-400">
                     {faq.resposta}
                   </div>
                 </details>

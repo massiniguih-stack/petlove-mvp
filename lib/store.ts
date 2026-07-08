@@ -41,7 +41,6 @@ function loadPets(): Pet[] {
   try {
     const data = localStorage.getItem(PETS_KEY);
     if (data) return JSON.parse(data);
-    // Migrate from old single pet format
     const oldData = localStorage.getItem('petlove_pet');
     if (oldData) {
       const pet = JSON.parse(oldData);

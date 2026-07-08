@@ -38,7 +38,7 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
   return (
     <div
       onClick={() => onCenterMap?.(servico)}
-      className={`group cursor-pointer rounded-2xl border bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-lg ${
+      className={`group cursor-pointer rounded-2xl border bg-white dark:bg-slate-900 p-5 shadow-sm transition-all duration-300 hover:shadow-lg ${
         servico.premium ? 'border-amber-300 ring-2 ring-amber-200 shadow-amber-500/10' : 'border-slate-200'
       }`}
     >
@@ -56,18 +56,18 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
             )}
           </div>
 
-          <h3 className="mt-3 text-lg font-bold text-slate-900 group-hover:text-slate-950">{servico.nome}</h3>
+          <h3 className="mt-3 text-lg font-bold text-slate-900 dark:text-white group-hover:text-slate-950 dark:group-hover:text-white">{servico.nome}</h3>
 
-          <div className="mt-1.5 flex items-center gap-1.5 text-sm text-slate-500">
+          <div className="mt-1.5 flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
             <MapPinIcon size={14} />
             <span>{servico.endereco}</span>
           </div>
-          <p className="mt-0.5 text-xs font-medium text-slate-400">{servico.bairro} · {servico.cidade}</p>
+          <p className="mt-0.5 text-xs font-medium text-slate-400 dark:text-slate-500">{servico.bairro} · {servico.cidade}</p>
 
           <div className="mt-2.5 flex items-center gap-2">
             <div className="flex items-center gap-1">
               <StarIcon size={15} className="text-amber-500" />
-              <span className="text-sm font-bold text-slate-900">{servico.avaliacao.toLocaleString('pt-BR')}</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white">{servico.avaliacao.toLocaleString('pt-BR')}</span>
             </div>
             {servico.telefone && (
               <>
@@ -77,15 +77,15 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
             )}
           </div>
 
-          {servico.horario && <p className="mt-1.5 text-xs font-medium text-slate-500">🕐 {servico.horario}</p>}
+          {servico.horario && <p className="mt-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">🕐 {servico.horario}</p>}
 
           {servico.servicos && servico.servicos.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-1.5">
               {servico.servicos.slice(0, expandido ? undefined : 4).map((s) => (
-                <span key={s} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">{s}</span>
+                <span key={s} className="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-400">{s}</span>
               ))}
               {!expandido && servico.servicos.length > 4 && (
-                <button onClick={() => setExpandido(true)} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500 hover:bg-slate-200">
+                <button onClick={() => setExpandido(true)} className="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover: bg-slate-200 dark:bg-slate-700">
                   +{servico.servicos.length - 4} mais
                 </button>
               )}
@@ -116,7 +116,7 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
               </a>
             )}
           </div>
-          <p className="mt-2 text-[10px] font-medium text-slate-400 text-center">Clique no card para ver no mapa</p>
+          <p className="mt-2 text-[10px] font-medium text-slate-400 dark:text-slate-500 text-center">Clique no card para ver no mapa</p>
         </div>
       </div>
     </div>
@@ -152,20 +152,20 @@ export default function MapaPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950/30">
       <Navbar />
       <main className="flex-1">
 
         {/* Hero Header */}
         <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 px-4 py-12 text-white">
           <div className="absolute inset-0 opacity-10">
-            <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white" />
-            <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-white" />
+            <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white dark:bg-slate-900" />
+            <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-white dark:bg-slate-900" />
           </div>
           <div className="relative mx-auto max-w-7xl">
             <BackButton href="/dashboard" />
             <div className="mt-4">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm dark:bg-white/10">
                 <span>📍</span> Mapa de Serviços
               </div>
               <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
@@ -183,43 +183,43 @@ export default function MapaPage() {
           {/* Cidade + Ordenação */}
           <div className="mb-6 flex flex-col gap-3 sm:flex-row">
             <div className="flex-1 relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">📍</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">📍</span>
               <select
                 value={cidade}
                 onChange={(e) => { setCidade(e.target.value); setFiltro('todos'); setServicoSelecionado(null); }}
-                className="w-full appearance-none rounded-2xl border border-slate-200 bg-white pl-10 pr-10 py-4 text-sm font-semibold text-slate-700 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full appearance-none rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-10 pr-10 py-4 text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               >
                 {cidades.map((c) => (
                   <option key={c.nome} value={c.nome}>{c.nome}, {c.uf}</option>
                 ))}
               </select>
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
               </span>
             </div>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">⚡</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">⚡</span>
               <select
                 value={ordenarPor}
                 onChange={(e) => setOrdenarPor(e.target.value as 'avaliacao' | 'distancia')}
-                className="appearance-none rounded-2xl border border-slate-200 bg-white pl-10 pr-10 py-4 text-sm font-semibold text-slate-700 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="appearance-none rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-10 pr-10 py-4 text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="avaliacao">⭐ Melhor avaliados</option>
                 <option value="distancia">📍 Mais próximos</option>
               </select>
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
               </span>
             </div>
           </div>
 
           {/* Mapa */}
-          <div className="mb-8 overflow-hidden rounded-3xl border border-slate-200 shadow-xl">
+          <div className="mb-8 overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl">
             <Suspense fallback={
-              <div className="flex h-[400px] items-center justify-center bg-gradient-to-br from-slate-100 to-slate-50 sm:h-[500px]">
+              <div className="flex h-[400px] items-center justify-center bg-gradient-to-br from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-900 sm:h-[500px]">
                 <div className="text-center">
                   <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
-                  <p className="mt-4 text-sm font-semibold text-slate-500">Carregando mapa...</p>
+                  <p className="mt-4 text-sm font-semibold text-slate-500 dark:text-slate-400">Carregando mapa...</p>
                 </div>
               </div>
             }>
@@ -236,7 +236,7 @@ export default function MapaPage() {
           {/* Filtros */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-700">Filtrar por tipo</h3>
+              <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300">Filtrar por tipo</h3>
               {filtro !== 'todos' && (
                 <button onClick={() => setFiltro('todos')} className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 transition hover:bg-red-100">
                   ✕ Limpar
@@ -254,7 +254,7 @@ export default function MapaPage() {
                     className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-5 py-3.5 transition-all duration-200 ${
                       isActive
                         ? `bg-gradient-to-r ${cores[tipo]} text-white shadow-xl scale-105`
-                        : 'bg-white text-slate-700 shadow-md ring-1 ring-slate-200 hover:shadow-lg hover:ring-slate-300 hover:scale-105'
+                        : 'bg-white text-slate-700 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
                     }`}
                   >
                     <span className="text-2xl">{emojis[tipo]}</span>
@@ -276,12 +276,12 @@ export default function MapaPage() {
           </div>
 
           {listaFiltrada.length === 0 && (
-            <div className="rounded-3xl bg-white py-16 text-center ring-1 ring-slate-200 shadow-sm">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200">
+            <div className="rounded-3xl bg-white dark:bg-slate-900 py-16 text-center ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
                 <span className="text-4xl">🔍</span>
               </div>
-              <h2 className="mt-4 text-xl font-bold text-slate-900">Nenhum serviço em {cidade}</h2>
-              <p className="mt-1 text-slate-500">Tente outra cidade ou filtro.</p>
+              <h2 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">Nenhum serviço em {cidade}</h2>
+              <p className="mt-1 text-slate-500 dark:text-slate-400">Tente outra cidade ou filtro.</p>
               <button onClick={() => setFiltro('todos')} className="mt-4 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-600 hover:shadow-lg">
                 Limpar filtros
               </button>
@@ -292,8 +292,8 @@ export default function MapaPage() {
           <div className="mt-12 overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 shadow-2xl shadow-amber-500/30">
             <div className="relative flex flex-col items-center gap-6 p-10 text-center lg:flex-row lg:text-left">
               <div className="absolute inset-0 opacity-10">
-                <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white" />
-                <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white" />
+                <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white dark:bg-slate-900" />
+                <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white dark:bg-slate-900" />
               </div>
               <div className="relative flex-1">
                 <h2 className="text-2xl font-black text-white">Você é dono de uma loja ou clínica pet?</h2>
@@ -301,7 +301,7 @@ export default function MapaPage() {
               </div>
               <a
                 href="/parceiros/premium"
-                className="relative rounded-2xl bg-white px-8 py-4 text-lg font-black text-orange-600 shadow-xl transition hover:bg-orange-50 hover:shadow-2xl hover:scale-105 active:scale-95"
+                className="relative rounded-2xl bg-white dark:bg-slate-900 px-8 py-4 text-lg font-black text-orange-600 shadow-xl transition hover:bg-orange-50 hover:shadow-2xl hover:scale-105 active:scale-95"
               >
                 🏆 Ser Premium
               </a>

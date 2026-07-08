@@ -72,7 +72,7 @@ const depoimentos = [
 
 export default function ParceiroPremiumPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:from-slate-950 dark:via-slate-950 dark:to-slate-950">
       <Navbar />
       <main className="flex-1">
 
@@ -112,21 +112,21 @@ export default function ParceiroPremiumPage() {
         {/* Comparativo */}
         <section className="px-4 py-16">
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-center text-3xl font-black text-slate-900">
+            <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
               Compare os planos
             </h2>
-            <p className="mt-2 text-center text-slate-500">Veja a diferença entre ser parceiro comum e Premium</p>
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Veja a diferença entre ser parceiro comum e Premium</p>
 
             <div className="mt-10 grid gap-6 md:grid-cols-2">
               {/* Plano Gratuito */}
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
                     <span className="text-2xl">📍</span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-slate-900">Parceiro Comum</h3>
-                    <p className="text-sm font-bold text-slate-500">Gratuito</p>
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white">Parceiro Comum</h3>
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Gratuito</p>
                   </div>
                 </div>
                 <ul className="mt-6 space-y-3">
@@ -136,8 +136,8 @@ export default function ParceiroPremiumPage() {
                     'Telefone e endereço',
                     'Avaliação de clientes',
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
-                      <span className="text-slate-400">✓</span> {item}
+                    <li key={item} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                      <span className="text-slate-400 dark:text-slate-500">✓</span> {item}
                     </li>
                   ))}
                   {[
@@ -148,7 +148,7 @@ export default function ParceiroPremiumPage() {
                     'WhatsApp direto',
                     'Suporte prioritário',
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-slate-400">
+                    <li key={item} className="flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500">
                       <span>✕</span> {item}
                     </li>
                   ))}
@@ -165,9 +165,9 @@ export default function ParceiroPremiumPage() {
                     <span className="text-2xl">🏆</span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-slate-900">Parceiro Premium</h3>
+                    <h3 className="text-lg font-black text-slate-900 dark:text-white">Parceiro Premium</h3>
                     <p className="text-sm font-bold text-amber-600">
-                  <span className="text-slate-400 line-through">R$ 49,90</span>{' '}
+                  <span className="text-slate-400 dark:text-slate-500 line-through">R$ 49,90</span>{' '}
                   <span className="text-lg">R$ 24,90</span>/mês
                 </p>
                 <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
@@ -188,7 +188,7 @@ export default function ParceiroPremiumPage() {
                     'Botão WhatsApp direto',
                     'Suporte prioritário 24h',
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-slate-700">
+                    <li key={item} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
                       <span className="text-amber-500">✓</span> {item}
                     </li>
                   ))}
@@ -205,21 +205,21 @@ export default function ParceiroPremiumPage() {
         </section>
 
         {/* Benefícios */}
-        <section id="beneficios" className="bg-white px-4 py-16">
+        <section id="beneficios" className="bg-white dark:bg-slate-900 px-4 py-16">
           <div className="mx-auto max-w-6xl">
-            <h2 className="text-center text-3xl font-black text-slate-900">
+            <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
               Tudo que você precisa para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">crescer</span>
             </h2>
-            <p className="mt-2 text-center text-slate-500">Benefícios exclusivos para parceiros Premium</p>
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Benefícios exclusivos para parceiros Premium</p>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {beneficios.map((b) => (
-                <div key={b.titulo} className="group rounded-3xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white p-6 transition-all hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-1">
+                <div key={b.titulo} className="group rounded-3xl border border-slate-100 dark:border-slate-700 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 p-6 transition-all hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-1">
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 text-3xl transition group-hover:scale-110">
                     {b.icon}
                   </div>
-                  <h3 className="mt-4 text-lg font-black text-slate-900">{b.titulo}</h3>
-                  <p className="mt-2 text-sm text-slate-500">{b.descricao}</p>
+                  <h3 className="mt-4 text-lg font-black text-slate-900 dark:text-white">{b.titulo}</h3>
+                  <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{b.descricao}</p>
                 </div>
               ))}
             </div>
@@ -229,27 +229,27 @@ export default function ParceiroPremiumPage() {
         {/* Depoimentos */}
         <section className="px-4 py-16">
           <div className="mx-auto max-w-5xl">
-            <h2 className="text-center text-3xl font-black text-slate-900">
+            <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
               O que dizem nossos parceiros
             </h2>
-            <p className="mt-2 text-center text-slate-500">Resultados reais de quem já é Premium</p>
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Resultados reais de quem já é Premium</p>
 
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               {depoimentos.map((d) => (
-                <div key={d.nome} className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+                <div key={d.nome} className="rounded-3xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
                   <div className="flex items-center gap-1 text-amber-500">
                     {'⭐⭐⭐⭐⭐'.split('').map((_, i) => (
                       <span key={i}>⭐</span>
                     ))}
                   </div>
-                  <p className="mt-3 text-sm text-slate-600">&ldquo;{d.texto}&rdquo;</p>
-                  <div className="mt-4 flex items-center gap-3 border-t border-slate-100 pt-4">
+                  <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">&ldquo;{d.texto}&rdquo;</p>
+                  <div className="mt-4 flex items-center gap-3 border-t border-slate-100 dark:border-slate-700 pt-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 text-xl">
                       {d.avatar}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{d.nome}</p>
-                      <p className="text-xs text-slate-500">{d.cargo} · {d.cidade}</p>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{d.nome}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{d.cargo} · {d.cidade}</p>
                     </div>
                   </div>
                 </div>
