@@ -167,8 +167,8 @@ export default function ParceiroPremiumPage() {
                   <div>
                     <h3 className="text-lg font-black text-slate-900 dark:text-white">Parceiro Premium</h3>
                     <p className="text-sm font-bold text-amber-600">
-                  <span className="text-slate-400 dark:text-slate-500 line-through">R$ 49,90</span>{' '}
-                  <span className="text-lg">R$ 24,90</span>/mês
+                  <span className="text-slate-400 dark:text-slate-500 line-through">R$ 34,90</span>{' '}
+                  <span className="text-lg">R$ 17,45</span>/mês
                 </p>
                 <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
                   🎉 50% OFF — Só para membros PetLove
