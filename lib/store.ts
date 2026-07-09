@@ -23,11 +23,17 @@ interface PetState {
   pets: Pet[];
   selectedPetId: string | null;
   isPremium: boolean;
+  plan: string | null;
+  subscriptionStatus: string | null;
+  currentPeriodEnd: string | null;
+  cancelAtPeriodEnd: boolean;
   addPet: (pet: Pet) => void;
   removePet: (id: string) => void;
   selectPet: (id: string) => void;
   updatePet: (id: string, updates: Partial<Pet>) => void;
   setPremium: (value: boolean) => void;
+  setPlan: (plan: string | null, status: string | null, periodEnd: string | null, cancel: boolean) => void;
+  fetchSubscription: () => Promise<void>;
   clearAll: () => void;
   pet: Pet | null;
 }
@@ -35,6 +41,9 @@ interface PetState {
 const PETS_KEY = 'petlove_pets';
 const SELECTED_KEY = 'petlove_selected_pet';
 const PREMIUM_KEY = 'petlove_premium';
+const PLAN_KEY = 'petlove_plan';
+const PLAN_CACHE_KEY = 'petlove_plan_cache';
+const PLAN_CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 function loadPets(): Pet[] {
   if (typeof window === 'undefined') return [];
@@ -63,6 +72,22 @@ function loadPremium(): boolean {
   return localStorage.getItem(PREMIUM_KEY) === 'true';
 }
 
+function loadPlanCache(): { plan: string | null; timestamp: number } | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const data = localStorage.getItem(PLAN_CACHE_KEY);
+    if (!data) return null;
+    const parsed = JSON.parse(data);
+    if (Date.now() - parsed.timestamp > PLAN_CACHE_TTL) {
+      localStorage.removeItem(PLAN_CACHE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 function savePets(pets: Pet[]) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(PETS_KEY, JSON.stringify(pets));
@@ -86,6 +111,7 @@ export const usePetStore = create<PetState>((set, get) => {
   const pets = loadPets();
   const selectedId = loadSelectedId();
   const isPremium = loadPremium();
+  const planCache = loadPlanCache();
 
   const currentPet = pets.find((p) => p.id === selectedId) || pets[0] || null;
 
@@ -93,6 +119,10 @@ export const usePetStore = create<PetState>((set, get) => {
     pets,
     selectedPetId: currentPet?.id || null,
     isPremium,
+    plan: planCache?.plan || null,
+    subscriptionStatus: null,
+    currentPeriodEnd: null,
+    cancelAtPeriodEnd: false,
     pet: currentPet,
 
     addPet: (pet) => {
@@ -137,12 +167,47 @@ export const usePetStore = create<PetState>((set, get) => {
       set({ isPremium: value });
     },
 
+    setPlan: (plan, status, periodEnd, cancel) => {
+      savePremium(!!plan);
+      localStorage.setItem(PLAN_KEY, plan || '');
+      localStorage.setItem(PLAN_CACHE_KEY, JSON.stringify({ plan, timestamp: Date.now() }));
+      set({
+        isPremium: !!plan,
+        plan,
+        subscriptionStatus: status,
+        currentPeriodEnd: periodEnd,
+        cancelAtPeriodEnd: cancel,
+      });
+    },
+
+    fetchSubscription: async () => {
+      try {
+        const res = await fetch('/api/stripe/subscription');
+        const data = await res.json();
+        const { setPlan } = get();
+        setPlan(data.plan, data.status, data.currentPeriodEnd, data.cancelAtPeriodEnd);
+      } catch {
+        // Keep cached value on network error
+      }
+    },
+
     clearAll: () => {
       localStorage.removeItem(PETS_KEY);
       localStorage.removeItem(SELECTED_KEY);
       localStorage.removeItem(PREMIUM_KEY);
+      localStorage.removeItem(PLAN_KEY);
+      localStorage.removeItem(PLAN_CACHE_KEY);
       localStorage.removeItem('petlove_pet');
-      set({ pets: [], selectedPetId: null, pet: null, isPremium: false });
+      set({
+        pets: [],
+        selectedPetId: null,
+        pet: null,
+        isPremium: false,
+        plan: null,
+        subscriptionStatus: null,
+        currentPeriodEnd: null,
+        cancelAtPeriodEnd: false,
+      });
     },
   };
 });
