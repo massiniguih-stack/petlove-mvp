@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
@@ -26,23 +25,41 @@ const funcionalidades = [
 
 export default function PlanosPage() {
   const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
-  const [showConfirm, setShowConfirm] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const { setPremium, isPremium } = usePetStore();
-  const router = useRouter();
+  const { setPremium, isPremium, fetchSubscription } = usePetStore();
 
-  const handleAssinar = () => {
+  useEffect(() => {
+    fetchSubscription();
+  }, []);
+
+  const handleAssinar = async () => {
     setProcessing(true);
-    setTimeout(() => {
-      setPremium(true);
-      setProcessing(false);
-      setShowConfirm(true);
-    }, 1500);
-  };
 
-  const handleConcluir = () => {
-    setShowConfirm(false);
-    router.push('/dashboard');
+    try {
+      const priceId = periodo === 'mensal'
+        ? process.env.NEXT_PUBLIC_STRIPE_PRICE_TUTOR_MONTHLY
+        : process.env.NEXT_PUBLIC_STRIPE_PRICE_TUTOR_ANNUAL;
+
+      const planType = periodo === 'mensal' ? 'tutor_monthly' : 'tutor_annual';
+
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, planType }),
+      });
+
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error('Checkout error:', data.error);
+        setProcessing(false);
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      setProcessing(false);
+    }
   };
 
   return (
@@ -302,24 +319,6 @@ export default function PlanosPage() {
       </main>
       <Footer />
 
-      {/* Modal de confirmacao */}
-      {showConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-3xl bg-white dark:bg-slate-900 p-8 text-center shadow-2xl">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-purple-500 text-3xl text-white shadow-lg shadow-violet-500/30">
-              🎉
-            </div>
-            <h2 className="mt-4 text-2xl font-black text-slate-900 dark:text-white">Parabens!</h2>
-            <p className="mt-2 text-slate-600 dark:text-slate-400">Voce agora e <strong className="text-violet-600">Premium</strong>! Cadastre quantos pets quiser.</p>
-            <button
-              onClick={handleConcluir}
-              className="mt-6 w-full rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl"
-            >
-              Ir para o Dashboard
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
