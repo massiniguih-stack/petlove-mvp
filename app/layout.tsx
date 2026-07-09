@@ -1,5 +1,6 @@
 import { AuthProvider } from '@/providers/AuthProvider'
 import { DarkModeProvider } from '@/providers/DarkModeProvider'
+import { SubscriptionLoader } from '@/components/SubscriptionLoader'
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
 
@@ -39,7 +40,9 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
         <DarkModeProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <SubscriptionLoader>{children}</SubscriptionLoader>
+          </AuthProvider>
         </DarkModeProvider>
       </body>
     </html>
