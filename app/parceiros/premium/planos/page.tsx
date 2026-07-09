@@ -100,18 +100,11 @@ export default function PlanosPage() {
     setError(null);
 
     try {
-      const priceId = process.env[plano.priceEnvKey];
-      if (!priceId) {
-        throw new Error(`Price ID não configurado para o plano ${plano.nome}`);
-      }
-
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          priceId,
           planType: planTypeMap[plano.id],
-          billing: periodo,
         }),
       });
 
@@ -215,8 +208,8 @@ export default function PlanosPage() {
                       <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
                       <span className="text-4xl font-black text-slate-900 dark:text-white">
                         {periodo === 'mensal'
-                          ? plano.mensal.toFixed(0)
-                          : Math.floor(plano.anual / 12).toFixed(0)
+                          ? plano.mensal.toFixed(2).replace('.', ',')
+                          : Math.floor(plano.anual / 12).toFixed(2).replace('.', ',')
                         }
                       </span>
                       <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>

@@ -36,16 +36,12 @@ export default function PlanosPage() {
     setProcessing(true);
 
     try {
-      const priceId = periodo === 'mensal'
-        ? process.env.NEXT_PUBLIC_STRIPE_PRICE_TUTOR_MONTHLY
-        : process.env.NEXT_PUBLIC_STRIPE_PRICE_TUTOR_ANNUAL;
-
       const planType = periodo === 'mensal' ? 'tutor_monthly' : 'tutor_annual';
 
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, planType }),
+        body: JSON.stringify({ planType }),
       });
 
       const data = await res.json();

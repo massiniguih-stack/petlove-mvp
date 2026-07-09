@@ -21,11 +21,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { priceId, planType } = await request.json();
+    const { planType } = await request.json();
 
-    if (!priceId || !planType || !PRICE_MAP[planType]) {
-      return NextResponse.json({ error: 'Invalid price or plan type' }, { status: 400 });
+    if (!planType || !PRICE_MAP[planType]) {
+      return NextResponse.json({ error: 'Invalid plan type' }, { status: 400 });
     }
+
+    const priceId = PRICE_MAP[planType];
 
     // Get or create Stripe customer
     const { data: existingCustomer } = await supabase
