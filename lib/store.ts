@@ -182,12 +182,12 @@ export const usePetStore = create<PetState>((set, get) => {
 
     fetchSubscription: async () => {
       try {
-        const res = await fetch('/api/stripe/subscription');
+        const res = await fetch('/api/subscription');
         const data = await res.json();
         const { setPlan } = get();
         setPlan(data.plan, data.status, data.currentPeriodEnd, data.cancelAtPeriodEnd);
-      } catch {
-        // Keep cached value on network error
+      } catch (error) {
+        console.error('Failed to fetch subscription:', error);
       }
     },
 
