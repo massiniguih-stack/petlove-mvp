@@ -1,10 +1,14 @@
 import { AuthProvider } from '@/providers/AuthProvider'
 import { DarkModeProvider } from '@/providers/DarkModeProvider'
 import { SubscriptionLoader } from '@/components/SubscriptionLoader'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import '../styles/globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
+  display: 'swap',
+})
 
 export const metadata = {
   title: 'PetLove - Cuidados para seu pet',
@@ -37,8 +41,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="pt-BR" className={jakarta.variable} suppressHydrationWarning>
+      <body className={`${jakarta.className} antialiased`}>
         <DarkModeProvider>
           <AuthProvider>
             <SubscriptionLoader>{children}</SubscriptionLoader>
