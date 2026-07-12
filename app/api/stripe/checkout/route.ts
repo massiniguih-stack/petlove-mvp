@@ -7,6 +7,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://petlove-mvp.vercel.a
 const PRICE_MAP: Record<string, string> = {
   tutor_monthly: process.env.STRIPE_PRICE_TUTOR_MONTHLY!,
   tutor_annual: process.env.STRIPE_PRICE_TUTOR_ANNUAL!,
+  tutor_enterprise: process.env.STRIPE_PRICE_TUTOR_ENTERPRISE!,
   partner_basic: process.env.STRIPE_PRICE_PARTNER_BASIC!,
   partner_pro: process.env.STRIPE_PRICE_PARTNER_PRO!,
   partner_enterprise: process.env.STRIPE_PRICE_PARTNER_ENTERPRISE!,

@@ -1,7 +1,74 @@
 'use client';
 
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+
+const planos = [
+  {
+    id: 'basico',
+    nome: 'Básico',
+    descricao: 'Para quem está começando',
+    mensal: 39.80,
+    anual: 238.80,
+    cor: 'from-blue-500 to-indigo-500',
+    corBg: 'bg-blue-50',
+    corText: 'text-blue-600',
+    features: [
+      'Listagem no mapa',
+      'Selo de destaque',
+      'Até 5 fotos',
+      'Informações de contato',
+      'Avaliação de clientes',
+    ],
+    limites: { fotos: 5, destaque: 'Cidade' },
+  },
+  {
+    id: 'profissional',
+    nome: 'Profissional',
+    descricao: 'Para negócios em crescimento',
+    mensal: 69.80,
+    anual: 418.80,
+    popular: true,
+    cor: 'from-amber-500 to-orange-500',
+    corBg: 'bg-amber-50',
+    corText: 'text-amber-600',
+    features: [
+      'Listagem no mapa',
+      'Selo Premium',
+      'Até 15 fotos',
+      'WhatsApp direto',
+      'Painel de métricas',
+      'Destaque na região',
+    ],
+    limites: { fotos: 15, destaque: 'Região' },
+  },
+  {
+    id: 'empresarial',
+    nome: 'Empresarial',
+    descricao: 'Para redes e franquias',
+    mensal: 129.80,
+    anual: 778.80,
+    cor: 'from-purple-500 to-pink-500',
+    corBg: 'bg-purple-50',
+    corText: 'text-purple-600',
+    features: [
+      'Tudo do Profissional',
+      'Até 20 fotos',
+      'Múltiplas unidades',
+      'Suporte dedicado',
+      'Relatórios avançados',
+      'Prioridade máxima',
+    ],
+    limites: { fotos: 20, destaque: 'Nacional' },
+  },
+];
+
+const planTypeMap: Record<string, string> = {
+  basico: 'partner_basic',
+  profissional: 'partner_pro',
+  empresarial: 'partner_enterprise',
+};
 
 const beneficios = [
   {
@@ -71,6 +138,32 @@ const depoimentos = [
 ];
 
 export default function ParceiroPremiumPage() {
+  const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
+  const [loading, setLoading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleCheckout = async (plano: typeof planos[number]) => {
+    setLoading(plano.id);
+    setError(null);
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planType: planTypeMap[plano.id] }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Erro ao criar sessão de checkout');
+      }
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro inesperado');
+    } finally {
+      setLoading(null);
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:from-slate-950 dark:via-slate-950 dark:to-slate-950">
       <Navbar />
@@ -93,113 +186,144 @@ export default function ParceiroPremiumPage() {
               Apareça no topo do mapa, ganhe um selo de destaque e atraira mais clientes para sua clínica ou pet shop.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href="/parceiros/premium/planos"
-                className="rounded-2xl bg-white px-8 py-4 text-lg font-black text-orange-600 shadow-2xl transition hover:bg-orange-50 hover:shadow-3xl"
-              >
-                Ver Planos →
-              </a>
-              <a
-                href="#beneficios"
-                className="rounded-2xl border-2 border-white/30 px-8 py-4 text-lg font-bold text-white transition hover:bg-white/10"
-              >
+              <a href="#beneficios" className="rounded-2xl border-2 border-white/30 px-8 py-4 text-lg font-bold text-white transition hover:bg-white/10">
                 Conhecer Benefícios
               </a>
             </div>
           </div>
         </section>
 
-        {/* Comparativo */}
-        <section className="px-4 py-16">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
-              Compare os planos
-            </h2>
-            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Veja a diferença entre ser parceiro comum e Premium</p>
-
-            <div className="mt-10 grid gap-6 md:grid-cols-2">
-              {/* Plano Gratuito */}
-              <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
-                    <span className="text-2xl">📍</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-black text-slate-900 dark:text-white">Parceiro Comum</h3>
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Gratuito</p>
-                  </div>
-                </div>
-                <ul className="mt-6 space-y-3">
-                  {[
-                    'Listagem no mapa',
-                    'Informações básicas',
-                    'Telefone e endereço',
-                    'Avaliação de clientes',
-                  ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                      <span className="text-slate-400 dark:text-slate-500">✓</span> {item}
-                    </li>
-                  ))}
-                  {[
-                    'Destaque no mapa',
-                    'Selo Premium',
-                    'Galeria de fotos',
-                    'Painel de métricas',
-                    'WhatsApp direto',
-                    'Suporte prioritário',
-                  ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500">
-                      <span>✕</span> {item}
-                    </li>
-                  ))}
-                </ul>
+        {/* Planos */}
+        <section id="planos" className="px-4 py-16">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
+                <span>🏆</span> Planos Premium
               </div>
+              <h2 className="mt-4 text-3xl font-black text-slate-900 dark:text-white">
+                Escolha o plano ideal para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">seu negócio</span>
+              </h2>
+              <p className="mt-2 text-slate-500 dark:text-slate-400">Invista na visibilidade do seu estabelecimento</p>
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
+                🎉 50% OFF para membros PetLove — Desconto aplicado automaticamente
+              </div>
+            </div>
 
-              {/* Plano Premium */}
-              <div className="relative rounded-3xl border-2 border-amber-400 bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-lg shadow-amber-500/10">
-                <div className="absolute -top-3 right-6 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1 text-xs font-black text-white shadow-md">
-                  ⭐ MAIS POPULAR
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg shadow-amber-500/30">
-                    <span className="text-2xl">🏆</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-black text-slate-900 dark:text-white">Parceiro Premium</h3>
-                    <p className="text-sm font-bold text-amber-600">
-                  <span className="text-slate-400 dark:text-slate-500 line-through">R$ 34,90</span>{' '}
-                  <span className="text-lg">R$ 17,45</span>/mês
-                </p>
-                <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
-                  🎉 50% OFF — Só para membros PetLove
-                </p>
-                  </div>
-                </div>
-                <ul className="mt-6 space-y-3">
-                  {[
-                    'Listagem no mapa',
-                    'Informações básicas',
-                    'Telefone e endereço',
-                    'Avaliação de clientes',
-                    'Destaque no topo do mapa',
-                    'Selo Premium exclusivo',
-                    'Galeria de até 20 fotos',
-                    'Painel de métricas completo',
-                    'Botão WhatsApp direto',
-                    'Suporte prioritário 24h',
-                  ].map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-                      <span className="text-amber-500">✓</span> {item}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href="/parceiros/premium/planos"
-                  className="mt-6 block rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-4 text-center text-sm font-black text-white shadow-lg shadow-amber-500/25 transition hover:shadow-xl hover:shadow-amber-500/35"
+            {/* Seletor */}
+            <div className="mt-8 flex justify-center">
+              <div className="inline-flex rounded-2xl bg-slate-100 dark:bg-slate-800 p-1">
+                <button
+                  onClick={() => setPeriodo('mensal')}
+                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'mensal' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
                 >
-                  Começar Agora →
-                </a>
+                  Mensal
+                </button>
+                <button
+                  onClick={() => setPeriodo('anual')}
+                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'anual' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                >
+                  Anual
+                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">-20%</span>
+                </button>
               </div>
+            </div>
+
+            {error && (
+              <div className="mt-6 mx-auto max-w-lg rounded-2xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
+            {/* Cards */}
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {planos.map((plano) => {
+                const isLoading = loading === plano.id;
+                return (
+                  <div
+                    key={plano.id}
+                    className={`relative rounded-3xl border-2 bg-white dark:bg-slate-900 p-6 transition-all ${plano.popular ? 'md:-translate-y-2 border-amber-400 shadow-lg shadow-amber-500/10' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-lg'}`}
+                  >
+                    {plano.popular && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1 text-xs font-black text-white shadow-md">
+                        ⭐ MAIS POPULAR
+                      </div>
+                    )}
+
+                    <div className={`rounded-2xl ${plano.corBg} p-4`}>
+                      <h3 className={`text-xl font-black ${plano.corText}`}>{plano.nome}</h3>
+                      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{plano.descricao}</p>
+                    </div>
+
+                    <div className="mt-6">
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
+                        <span className="text-4xl font-black text-slate-900 dark:text-white">
+                          {periodo === 'mensal' ? plano.mensal.toFixed(2).replace('.', ',') : Math.floor(plano.anual / 12).toFixed(2).replace('.', ',')}
+                        </span>
+                        <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-400">
+                        <span className="line-through">R$ {(plano.mensal * 2).toFixed(2).replace('.', ',')}</span>{' '}
+                        <span className="font-bold text-emerald-600">50% OFF</span>
+                      </p>
+                      {periodo === 'anual' && (
+                        <p className="mt-1 text-xs font-semibold text-emerald-600">
+                          💰 Economia de R$ {((plano.mensal * 2 * 12) - plano.anual).toFixed(2)} no ano
+                        </p>
+                      )}
+                      <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                        {periodo === 'mensal' ? 'Cobrado mensalmente' : `R$ ${plano.anual.toFixed(2)} cobrado anualmente`}
+                      </p>
+                    </div>
+
+                    <ul className="mt-6 space-y-3">
+                      {plano.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                          <span className={`flex h-5 w-5 items-center justify-center rounded-full ${plano.corBg} text-xs ${plano.corText}`}>✓</span>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-6 rounded-2xl bg-slate-50 dark:bg-slate-800 p-4">
+                      <div className="grid grid-cols-2 gap-3 text-center">
+                        <div>
+                          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Fotos</p>
+                          <p className="text-lg font-black text-slate-900 dark:text-white">{plano.limites.fotos}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Destaque</p>
+                          <p className="text-lg font-black text-slate-900 dark:text-white">{plano.limites.destaque}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleCheckout(plano)}
+                      disabled={loading !== null}
+                      className={`mt-6 w-full rounded-2xl py-4 text-sm font-black transition ${isLoading ? 'bg-slate-200 dark:bg-slate-700 text-slate-500 cursor-wait' : `bg-gradient-to-r ${plano.cor} text-white shadow-lg hover:shadow-2xl`}`}
+                    >
+                      {isLoading ? (
+                        <span className="inline-flex items-center gap-2">
+                          <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Processando…
+                        </span>
+                      ) : 'Assinar Agora'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-6 flex items-center justify-center gap-4 text-xs text-slate-400 dark:text-slate-500">
+              <span>🔒 Pagamento seguro via Stripe</span>
+              <span>·</span>
+              <span>Cancelamento grátis</span>
+              <span>·</span>
+              <span>Suporte 24h</span>
             </div>
           </div>
         </section>
@@ -258,23 +382,7 @@ export default function ParceiroPremiumPage() {
           </div>
         </section>
 
-        {/* CTA Final */}
-        <section className="px-4 py-16">
-          <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 p-10 text-center text-white shadow-2xl shadow-amber-500/30">
-            <h2 className="text-3xl font-black">Pronto para ser o nº 1 da sua cidade?</h2>
-            <p className="mx-auto mt-3 max-w-lg text-orange-100">
-              Junte-se a centenas de parceiros que já estão crescendo com o PetLove Premium.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href="/parceiros/premium/planos"
-                className="rounded-2xl bg-white px-8 py-4 text-lg font-black text-orange-600 shadow-xl transition hover:bg-orange-50"
-              >
-                Ver Planos e Preços 🏆
-              </a>
-            </div>
-          </div>
-        </section>
+
 
       </main>
       <Footer />

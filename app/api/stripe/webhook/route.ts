@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   const supabaseAdmin = createClient(
@@ -56,6 +59,51 @@ export async function POST(request: NextRequest) {
           },
           { onConflict: 'stripe_subscription_id' }
         );
+
+        // Send premium confirmation email
+        try {
+          const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(userId);
+          if (user?.email) {
+            const planName = planType === 'tutor_annual' ? 'Premium Anual' : 'Premium Mensal';
+            await resend.emails.send({
+              from: 'PetLove <onboarding@resend.dev>',
+              to: user.email,
+              subject: 'Parabens! Voce agora e Premium! 🎉',
+              html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                  <div style="text-align: center; padding: 30px 0;">
+                    <h1 style="color: #7c3aed; font-size: 28px; margin: 0;">Parabens! 🎉</h1>
+                    <p style="color: #666; font-size: 16px; margin-top: 8px;">Voce agora e membro Premium do PetLove</p>
+                  </div>
+                  <div style="background: linear-gradient(135deg, #fdf2f8, #f3e8ff); border-radius: 16px; padding: 24px; margin: 20px 0;">
+                    <h2 style="color: #7c3aed; font-size: 18px; margin: 0 0 12px 0;">Seu plano ativo:</h2>
+                    <p style="color: #333; font-size: 16px; font-weight: bold; margin: 0;">${planName}</p>
+                  </div>
+                  <h3 style="color: #333; font-size: 16px;">Agora voce tem acesso a:</h3>
+                  <ul style="color: #555; line-height: 1.8;">
+                    <li>Cadastro ilimitado de pets</li>
+                    <li>Controle de peso avancado</li>
+                    <li>Linha do tempo completa</li>
+                    <li>Mapa de servicos premium</li>
+                    <li>Relatorios de desempenho</li>
+                    <li>Suporte prioritario</li>
+                  </ul>
+                  <div style="text-align: center; margin: 30px 0;">
+                    <a href="https://petlove-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                      Acessar Dashboard
+                    </a>
+                  </div>
+                  <p style="color: #999; font-size: 13px; text-align: center; margin-top: 30px;">
+                    Para gerenciar sua assinatura, acesse Configuracoes > Assinatura.
+                  </p>
+                </div>
+              `,
+            });
+          }
+        } catch (emailErr) {
+          console.error('Failed to send premium email:', emailErr);
+        }
+
         break;
       }
 
