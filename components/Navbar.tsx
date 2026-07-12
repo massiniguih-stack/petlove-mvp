@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { usePetStore } from '@/lib/store';
+import { useAuth } from '@/hooks/useAuth';
 import { useState, useEffect } from 'react';
 import PetSelector from './PetSelector';
-import { useDarkMode } from '@/providers/DarkModeProvider';
+import { DarkModeToggle } from './DarkModeToggle';
 
 function DogIcon({ size = 28, className = '' }: { size?: number; className?: string }) {
   return (
@@ -91,40 +92,9 @@ function DogIcon({ size = 28, className = '' }: { size?: number; className?: str
   );
 }
 
-function DarkModeToggle() {
-  const { dark, toggle, mounted } = useDarkMode();
-
-  if (!mounted) return null;
-
-  return (
-    <button
-      onClick={toggle}
-      className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
-      title={dark ? 'Modo claro' : 'Modo escuro'}
-    >
-      {dark ? (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      ) : (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-      )}
-    </button>
-  );
-}
-
 export default function Navbar() {
   const { pet } = usePetStore();
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -133,6 +103,7 @@ export default function Navbar() {
   }, []);
 
   const petData = mounted ? pet : null;
+  const isLoggedIn = mounted && Boolean(user);
 
   return (
     <nav className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
@@ -181,12 +152,29 @@ export default function Navbar() {
           {!petData && (
             <div className="hidden items-center gap-2 text-sm font-medium md:flex">
               <DarkModeToggle />
-              <Link href="/login" className="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100">
-                Entrar
-              </Link>
-              <Link href="/cadastro" className="rounded-lg bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700">
-                Criar conta
-              </Link>
+              {isLoggedIn ? (
+                <Link
+                  href="/onboarding"
+                  className="rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 font-bold text-white shadow-sm hover:shadow-md"
+                >
+                  Cadastrar meu pet
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                  >
+                    Entrar
+                  </Link>
+                  <Link
+                    href="/cadastro"
+                    className="rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 font-bold text-white shadow-sm hover:shadow-md"
+                  >
+                    Começar grátis
+                  </Link>
+                </>
+              )}
             </div>
           )}
 
@@ -285,23 +273,32 @@ export default function Navbar() {
                 <div className="px-4 pb-2">
                   <DarkModeToggle />
                 </div>
-                <Link href="/login" onClick={() => setMenuOpen(false)} className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                    <polyline points="10 17 15 12 10 7"/>
-                    <line x1="15" y1="12" x2="3" y2="12"/>
-                  </svg>
-                  Entrar
-                </Link>
-                <Link href="/cadastro" onClick={() => setMenuOpen(false)} className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/30">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="8.5" cy="7" r="4"/>
-                    <line x1="20" y1="8" x2="20" y2="14"/>
-                    <line x1="23" y1="11" x2="17" y2="11"/>
-                  </svg>
-                  Criar conta
-                </Link>
+                {isLoggedIn ? (
+                  <Link
+                    href="/onboarding"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/30"
+                  >
+                    Cadastrar meu pet
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                    >
+                      Entrar
+                    </Link>
+                    <Link
+                      href="/cadastro"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/30"
+                    >
+                      Começar grátis
+                    </Link>
+                  </>
+                )}
               </div>
             )}
           </div>
