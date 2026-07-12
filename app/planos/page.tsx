@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
@@ -22,6 +23,25 @@ const funcionalidades = [
 ];
 
 export default function PlanosPage() {
+  const [loading, setLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/lastlink/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planType: 'tutor_monthly' }),
+      });
+      if (!res.ok) throw new Error('Erro ao criar checkout');
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-violet-950/30">
       <Navbar />
@@ -119,9 +139,13 @@ export default function PlanosPage() {
                 ))}
               </ul>
 
-              <div className="mt-8 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-center">
-                <p className="text-sm font-bold text-white">Disponivel em breve</p>
-              </div>
+              <button
+                onClick={handleCheckout}
+                disabled={loading}
+                className="mt-8 w-full rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-center text-sm font-bold text-white shadow-lg transition hover:shadow-xl disabled:opacity-50"
+              >
+                {loading ? 'Carregando...' : 'Assinar Premium'}
+              </button>
             </div>
           </div>
 

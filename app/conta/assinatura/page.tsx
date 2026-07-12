@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
@@ -8,24 +8,13 @@ import { usePetStore } from '@/lib/store';
 
 export default function AssinaturaPage() {
   const { isPremium, plan, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd, fetchSubscription } = usePetStore();
-  const [loadingPortal, setLoadingPortal] = useState(false);
 
   useEffect(() => {
     fetchSubscription();
   }, []);
 
   const handleManage = async () => {
-    setLoadingPortal(true);
-    try {
-      const res = await fetch('/api/stripe/portal', { method: 'POST' });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Portal error:', error);
-    }
-    setLoadingPortal(false);
+    window.location.href = process.env.NEXT_PUBLIC_LASTLINK_MEMBER_URL || 'https://lastlink.com/app/member';
   };
 
   const formatDate = (dateStr: string | null) => {
@@ -89,10 +78,9 @@ export default function AssinaturaPage() {
 
                 <button
                   onClick={handleManage}
-                  disabled={loadingPortal}
                   className="mt-6 w-full rounded-2xl border border-slate-200 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
                 >
-                  {loadingPortal ? 'Carregando...' : 'Gerenciar assinatura (Stripe)'}
+                  Gerenciar assinatura
                 </button>
               </>
             ) : (

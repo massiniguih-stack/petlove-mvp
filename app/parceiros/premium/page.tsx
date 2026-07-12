@@ -146,7 +146,7 @@ export default function ParceiroPremiumPage() {
     setLoading(plano.id);
     setError(null);
     try {
-      const res = await fetch('/api/stripe/checkout', {
+      const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planType: planTypeMap[plano.id] }),
@@ -319,7 +319,7 @@ export default function ParceiroPremiumPage() {
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-4 text-xs text-slate-400 dark:text-slate-500">
-              <span>🔒 Pagamento seguro via Stripe</span>
+              <span>🔒 Pagamento seguro via LastLink</span>
               <span>·</span>
               <span>Cancelamento grátis</span>
               <span>·</span>
