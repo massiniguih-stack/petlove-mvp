@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { createClient } from '@/lib/supabase/client';
 
 const planos = [
   {
@@ -141,11 +143,18 @@ export default function ParceiroPremiumPage() {
   const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleCheckout = async (plano: typeof planos[number]) => {
     setLoading(plano.id);
     setError(null);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/login?next=/parceiros/premium');
+        return;
+      }
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
