@@ -60,6 +60,11 @@ async function getUserByEmail(
 }
 
 export async function POST(request: NextRequest) {
+  const webhookToken = request.headers.get('x-webhook-token');
+  if (webhookToken !== process.env.LASTLINK_WEBHOOK_TOKEN) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
