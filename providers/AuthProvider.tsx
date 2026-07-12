@@ -9,7 +9,11 @@ interface AuthContextType {
   session: Session | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error?: string }>
-  signUp: (email: string, password: string, metadata?: Record<string, string>) => Promise<{ error?: string }>
+  signUp: (
+    email: string,
+    password: string,
+    metadata?: Record<string, string>
+  ) => Promise<{ error?: string; hasSession?: boolean }>
   signOut: () => Promise<void>
   signInWithGoogle: () => Promise<{ error?: string }>
 }
@@ -48,13 +52,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signUp = async (email: string, password: string, metadata?: Record<string, string>) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: metadata }
+      options: {
+        data: metadata,
+        emailRedirectTo: typeof window !== 'undefined'
+          ? `${window.location.origin}/auth/callback?next=/onboarding`
+          : undefined,
+      },
     })
     if (error) return { error: error.message }
-    return {}
+    // hasSession = true quando a confirmação de e-mail está desligada
+    return { hasSession: Boolean(data.session) }
   }
 
   const signOut = async () => {
@@ -65,8 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
-      }
+        // Após Google, o app decide entre dashboard e onboarding
+        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+      },
     })
     if (error) return { error: error.message }
     return {}

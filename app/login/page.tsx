@@ -3,8 +3,8 @@
 import { LoginForm } from '@/components/auth/LoginForm'
 import { GoogleButton } from '@/components/auth/GoogleButton'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import { useDarkMode } from '@/providers/DarkModeProvider'
+import { Suspense, useState, useEffect } from 'react'
+import { DarkModeToggle } from '@/components/DarkModeToggle'
 
 function DogPawIcon({ size = 48 }: { size?: number }) {
   return (
@@ -22,38 +22,6 @@ function DogPawIcon({ size = 48 }: { size?: number }) {
       <ellipse cx="32" cy="44" rx="14" ry="12" fill="url(#pawGrad)"/>
     </svg>
   )
-}
-
-function DarkModeToggle() {
-  const { dark, toggle, mounted } = useDarkMode();
-
-  if (!mounted) return null;
-
-  return (
-    <button
-      onClick={toggle}
-      className="fixed bottom-6 right-6 z-50 rounded-full border border-slate-200 bg-white p-3 shadow-lg transition hover:shadow-xl dark:border-slate-700 dark:bg-slate-800"
-      title={dark ? 'Modo claro' : 'Modo escuro'}
-    >
-      {dark ? (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      ) : (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-      )}
-    </button>
-  );
 }
 
 export default function LoginPage() {
@@ -104,7 +72,15 @@ export default function LoginPage() {
 
           {/* Login Card */}
           <div className="rounded-3xl bg-white/80 p-8 shadow-2xl shadow-slate-200/50 ring-1 ring-slate-200/60 backdrop-blur-sm dark:bg-slate-900/80 dark:shadow-slate-900/50 dark:ring-slate-800/60">
-            <LoginForm />
+            <Suspense
+              fallback={
+                <div className="flex justify-center py-8">
+                  <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+                </div>
+              }
+            >
+              <LoginForm />
+            </Suspense>
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
