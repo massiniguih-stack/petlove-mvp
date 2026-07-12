@@ -19,12 +19,20 @@ export default function AdminUsuariosPage() {
   const [usuarios, setUsuarios] = useState<Tutor[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const limit = 50;
 
   useEffect(() => {
-    fetch('/api/admin/usuarios')
+    fetch(`/api/admin/usuarios?page=${page}&limit=${limit}`)
       .then((r) => r.json())
       .then((data) => {
-        if (Array.isArray(data)) {
+        if (data.data) {
+          setUsuarios(data.data);
+          setTotalPages(data.totalPages || 1);
+          setTotal(data.total || 0);
+        } else if (Array.isArray(data)) {
           setUsuarios(data);
         } else {
           setErro(data.error || 'Erro ao carregar');
@@ -32,7 +40,7 @@ export default function AdminUsuariosPage() {
       })
       .catch(() => setErro('Erro de conexao'))
       .finally(() => setCarregando(false));
-  }, []);
+  }, [page]);
 
   const filtrados = usuarios.filter((u) => {
     const termo = filtro.toLowerCase();
@@ -134,6 +142,30 @@ export default function AdminUsuariosPage() {
           <p className="text-4xl">👥</p>
           <p className="mt-4 text-lg font-bold text-slate-900 dark:text-white">Nenhum usuario encontrado</p>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{usuarios.length === 0 ? 'Aguarde usuarios se cadastrarem no app.' : 'Tente outro filtro de busca.'}</p>
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-6 flex items-center justify-between">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Pagina {page} de {totalPages} ({total} total)
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            >
+              Anterior
+            </button>
+            <button
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            >
+              Proxima
+            </button>
+          </div>
         </div>
       )}
     </div>

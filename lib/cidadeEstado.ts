@@ -1,0 +1,65 @@
+const cidadeEstadoMap: Record<string, string> = {
+  'Manaus': 'AM', 'Belém': 'PA', 'Ananindeua': 'PA', 'Santarém': 'PA', 'Boa Vista': 'RR',
+  'Macapá': 'AP', 'Palmas': 'TO', 'Porto Velho': 'RO', 'Rio Branco': 'AC',
+  'São Luís': 'MA', 'Timon': 'MA', 'Teresina': 'PI', 'Fortaleza': 'CE',
+  'Juazeiro do Norte': 'CE', 'Sobral': 'CE', 'Natal': 'RN', 'Mossoró': 'RN',
+  'João Pessoa': 'PB', 'Campina Grande': 'PB', 'Recife': 'PE', 'Jaboatão dos Guararapes': 'PE',
+  'Olinda': 'PE', 'Caruaru': 'PE', 'Petrolina': 'PE', 'Salvador': 'BA',
+  'Feira de Santana': 'BA', 'Vitória da Conquista': 'BA', 'Camaçari': 'BA',
+  'Santo Antônio de Jesus': 'BA', 'Lauro de Freitas': 'BA', 'Ilhéus': 'BA',
+  'Jequié': 'BA', 'Teixeira de Freitas': 'BA', 'Barreiras': 'BA',
+  'Alagoinhas': 'BA', 'Porto Seguro': 'BA', 'Simões Filho': 'BA',
+  'Paulo Afonso': 'BA', 'Eunápolis': 'BA', 'Santo Estêvão': 'BA',
+  'Candeias': 'BA', 'Guanambi': 'BA', 'Barra do Choça': 'BA',
+  'Maceió': 'AL', 'Arapiraca': 'AL', 'Rio Largo': 'AL',
+  'São Paulo': 'SP', 'Guarulhos': 'SP', 'Campinas': 'SP', 'São Bernardo do Campo': 'SP',
+  'Santo André': 'SP', 'São José dos Campos': 'SP', 'Osasco': 'SP', 'Sorocaba': 'SP',
+  'Ribeirão Preto': 'SP', 'São José do Rio Preto': 'SP', 'Santos': 'SP',
+  'Mauá': 'SP', 'Ubatuba': 'SP', 'Monte Alto': 'SP',
+  'São José dos Pinhais': 'PR', 'Londrina': 'PR', 'Maringá': 'PR',
+  'Curitiba': 'PR', 'Ponta Grossa': 'PR', 'Cascavel': 'PR',
+  'Foz do Iguaçu': 'PR', 'Colombo': 'PR', 'Guarapuava': 'PR', 'Paranaguá': 'PR',
+  'Apucarana': 'PR', 'Pinhais': 'PR', 'Campo Largo': 'PR', 'Araucária': 'PR',
+  'Toledo': 'PR',
+  'Crato': 'CE', 'Maracanaú': 'CE', 'Itapipoca': 'CE', 'Maranguape': 'CE',
+  'Iguatu': 'CE', 'Quixadá': 'CE', 'Pacatuba': 'CE', 'Aquiraz': 'CE',
+  'Eusébio': 'CE', 'Caucaia': 'CE', 'Canindé': 'CE', 'Russas': 'CE',
+  'Tianguá': 'CE', 'Ibiapaba': 'CE', 'Coreaú': 'CE',
+  'Rio de Janeiro': 'RJ', 'São Gonçalo': 'RJ', 'Duque de Caxias': 'RJ',
+  'Niterói': 'RJ', 'Nova Iguaçu': 'RJ', 'Campos dos Goytacazes': 'RJ',
+  'Belford Roxo': 'RJ', 'São João de Meriti': 'RJ', 'Petrópolis': 'RJ',
+  'Volta Redonda': 'RJ', 'Magé': 'RJ', 'Itaboraí': 'RJ', 'Macaé': 'RJ',
+  'Mesquita': 'RJ', 'Nova Friburgo': 'RJ', 'Barra Mansa': 'RJ',
+  'Angra dos Reis': 'RJ', 'Cabo Frio': 'RJ', 'Nilópolis': 'RJ',
+  'Teresópolis': 'RJ', 'Itaguaí': 'RJ', 'Queimados': 'RJ', 'Três Rios': 'RJ',
+  'Belo Horizonte': 'MG', 'Uberlândia': 'MG', 'Contagem': 'MG',
+  'Juiz de Fora': 'MG', 'Betim': 'MG', 'Montes Claros': 'MG',
+  'Ribeirão das Neves': 'MG', 'Uberaba': 'MG', 'Governador Valadares': 'MG',
+  'Ipatinga': 'MG', 'Sete Lagoas': 'MG', 'Divinópolis': 'MG',
+  'Santa Luzia': 'MG', 'Poços de Caldas': 'MG', 'Patos de Minas': 'MG',
+  'Teófilo Otoni': 'MG', 'Pouso Alegre': 'MG', 'Barbacena': 'MG',
+  'Sabará': 'MG', 'Varginha': 'MG', 'Passos': 'MG',
+  'Lavras': 'MG', 'Três Corações': 'MG', 'Alfenas': 'MG', 'Arcos': 'MG',
+  'Porto Alegre': 'RS', 'Caxias do Sul': 'RS', 'Pelotas': 'RS', 'Canoas': 'RS',
+  'Santa Maria': 'RS', 'Gravataí': 'RS', 'Viamão': 'RS', 'Novo Hamburgo': 'RS',
+  'São Leopoldo': 'RS', 'Rio Grande': 'RS', 'Alvorada': 'RS',
+  'Passo Fundo': 'RS', 'Sapucaia do Sul': 'RS', 'Cachoeirinha': 'RS',
+  'Santa Cruz do Sul': 'RS', 'Camaquã': 'RS',
+  'Gramado': 'RS', 'Canela': 'RS', 'Bento Gonçalves': 'RS',
+  'Vacaria': 'RS', 'Lajeado': 'RS', 'Encantado': 'RS',
+  'Liberdade': 'RS', 'Igrejinha': 'RS',
+  'Florianópolis': 'SC', 'Joinville': 'SC', 'Blumenau': 'SC',
+  'Chapecó': 'SC', 'Itajaí': 'SC', 'Criciúma': 'SC',
+  'Vitória': 'ES', 'Vila Velha': 'ES', 'Serra': 'ES', 'Cariacica': 'ES',
+  'Búzios': 'RJ',
+};
+
+export function getEstadoByCidade(cidade: string): string {
+  if (!cidade) return 'OUTRO';
+  if (cidadeEstadoMap[cidade]) return cidadeEstadoMap[cidade];
+  const lower = cidade.toLowerCase();
+  for (const [key, value] of Object.entries(cidadeEstadoMap)) {
+    if (key.toLowerCase() === lower) return value;
+  }
+  return 'OUTRO';
+}
