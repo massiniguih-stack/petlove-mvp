@@ -57,7 +57,7 @@ export default function AdminUsuariosPage() {
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Total</p>
-          <p className="mt-1 text-3xl font-black text-slate-900 dark:text-white">{usuarios.length}</p>
+          <p className="mt-1 text-3xl font-black text-slate-900 dark:text-white">{total}</p>
         </div>
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm dark:border-emerald-900 dark:bg-emerald-950">
           <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Com telefone</p>

@@ -1,44 +1,26 @@
-import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
-
-const adminEmails = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
+import { createClient } from '@/lib/supabase/server';
+import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
 
 export async function GET(request: NextRequest) {
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.headers.get('cookie')?.split(';')
-            .find(c => c.trim().startsWith(name + '='))
-            ?.split('=')[1];
-        },
-        set() {},
-        remove() {},
-      },
-    }
-  );
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-  if (authError || !user) {
+  if (!user || !isAdmin(user.email)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  if (!adminEmails.includes(user.email || '')) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const supabaseAdmin = getSupabaseAdmin();
 
   const page = parseInt(request.nextUrl.searchParams.get('page') || '1');
   const limit = Math.min(parseInt(request.nextUrl.searchParams.get('limit') || '50'), 100);
   const offset = (page - 1) * limit;
 
-  const { count } = await supabase
+  const { count } = await supabaseAdmin
     .from('tutor')
     .select('*', { count: 'exact', head: true });
 
-  const { data: tutors, error } = await supabase
+  const { data: tutors, error } = await supabaseAdmin
     .from('tutor')
     .select('*')
     .order('created_at', { ascending: false })
