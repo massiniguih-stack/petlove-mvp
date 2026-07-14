@@ -48,10 +48,12 @@ export async function GET() {
   const porTipo: Record<string, number> = {};
   let convitesEnviados = 0;
   let comEmail = 0;
+  let pendentesComEmail = 0;
   for (const p of partners) {
     porTipo[p.tipo] = (porTipo[p.tipo] || 0) + 1;
     if (p.status === 'sent') convitesEnviados++;
     if (p.email) comEmail++;
+    if (p.email && p.status !== 'sent') pendentesComEmail++;
   }
 
   const subscriptions = subscriptionsRes.data || [];
@@ -69,7 +71,7 @@ export async function GET() {
       porTipo,
       comEmail,
       convitesEnviados,
-      pendentesComEmail: comEmail - convitesEnviados,
+      pendentesComEmail,
     },
     tutores: {
       total: tutorTotalRes.count || 0,
