@@ -1,109 +1,187 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { servicosMock, type Servico } from '@/data/servicos';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+
+interface Partner {
+  id: string;
+  tipo: string;
+  nome: string;
+  endereco: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  estado: string | null;
+  telefone: string | null;
+  instagram: string | null;
+  website: string | null;
+  avaliacao: number | null;
+  premium: boolean;
+  destaque: boolean;
+  status: string;
+  sent_at: string | null;
+  email: string | null;
+}
 
 export default function AdminParceirosPage() {
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('todos');
-  const [filtroDestaque, setFiltroDestaque] = useState('todos');
-  const [editando, setEditando] = useState<Servico | null>(null);
-  const [dbCount, setDbCount] = useState<number | null>(null);
+  const [filtroStatus, setFiltroStatus] = useState('todos');
+  const [editando, setEditando] = useState<Partner | null>(null);
+  const [emailEditando, setEmailEditando] = useState('');
+  const [salvandoEmail, setSalvandoEmail] = useState(false);
+  const [enviandoId, setEnviandoId] = useState<string | null>(null);
+  const [enviandoLote, setEnviandoLote] = useState(false);
+  const [mensagem, setMensagem] = useState<string | null>(null);
   const [importando, setImportando] = useState(false);
-  const [importResult, setImportResult] = useState<string | null>(null);
 
-  const carregarContagemBanco = async () => {
+  const carregarParceiros = useCallback(async () => {
+    setLoading(true);
     try {
-      const res = await fetch('/api/admin/import-partners?limit=1');
+      const res = await fetch('/api/admin/import-partners?limit=500');
       const data = await res.json();
-      setDbCount(typeof data.total === 'number' ? data.total : null);
+      const todos: Partner[] = Object.values(data.partners || {}).flat() as Partner[];
+      todos.sort((a, b) => a.nome.localeCompare(b.nome));
+      setPartners(todos);
     } catch {
-      setDbCount(null);
+      setPartners([]);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    carregarContagemBanco();
-  }, []);
+    carregarParceiros();
+  }, [carregarParceiros]);
 
   const importarParaBanco = async () => {
     setImportando(true);
-    setImportResult(null);
+    setMensagem(null);
     try {
       const res = await fetch('/api/admin/import-partners', { method: 'POST' });
       const data = await res.json();
-      if (!res.ok) {
-        setImportResult(data.error || 'Erro ao importar');
-      } else {
-        setImportResult(`✓ ${data.imported} parceiros importados para o banco`);
-      }
+      setMensagem(res.ok ? `✓ ${data.imported} parceiros importados` : data.error || 'Erro ao importar');
     } catch {
-      setImportResult('Erro ao importar');
+      setMensagem('Erro ao importar');
     } finally {
       setImportando(false);
-      carregarContagemBanco();
+      carregarParceiros();
     }
   };
 
-  const parceiros = useMemo(() => {
-    return servicosMock
-      .filter((s) => {
-        const termo = filtro.toLowerCase();
-        const matchBusca = !termo || s.nome.toLowerCase().includes(termo) || s.cidade.toLowerCase().includes(termo);
-        const matchTipo = filtroTipo === 'todos' || s.tipo === filtroTipo;
-        const matchDestaque = filtroDestaque === 'todos' ||
-          (filtroDestaque === 'premium' && s.premium) ||
-          (filtroDestaque === 'destaque' && s.destaque) ||
-          (filtroDestaque === 'comum' && !s.premium && !s.destaque);
-        return matchBusca && matchTipo && matchDestaque;
-      })
-      .sort((a, b) => {
-        if (a.premium && !b.premium) return -1;
-        if (!a.premium && b.premium) return 1;
-        if (a.destaque && !b.destaque) return -1;
-        if (!a.destaque && b.destaque) return 1;
-        return a.nome.localeCompare(b.nome);
+  const salvarEmail = async () => {
+    if (!editando) return;
+    setSalvandoEmail(true);
+    try {
+      const res = await fetch('/api/admin/import-partners', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: editando.id, email: emailEditando || null }),
       });
-  }, [filtro, filtroTipo, filtroDestaque]);
+      if (res.ok) {
+        setPartners((prev) => prev.map((p) => (p.id === editando.id ? { ...p, email: emailEditando || null } : p)));
+        setEditando({ ...editando, email: emailEditando || null });
+        setMensagem('✓ Email salvo');
+      } else {
+        setMensagem('Erro ao salvar email');
+      }
+    } catch {
+      setMensagem('Erro ao salvar email');
+    } finally {
+      setSalvandoEmail(false);
+    }
+  };
+
+  const enviarConvite = async (ids: string[]) => {
+    try {
+      const res = await fetch('/api/admin/partners/send-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPartners((prev) =>
+          prev.map((p) => (ids.includes(p.id) && p.email ? { ...p, status: 'sent', sent_at: new Date().toISOString() } : p))
+        );
+        setMensagem(`✓ ${data.sent} convite(s) enviado(s)${data.skipped ? `, ${data.skipped} sem email` : ''}${data.failed ? `, ${data.failed} falharam` : ''}`);
+      } else {
+        setMensagem(data.error || 'Erro ao enviar convite');
+      }
+    } catch {
+      setMensagem('Erro ao enviar convite');
+    }
+  };
+
+  const enviarConviteUnico = async (id: string) => {
+    setEnviandoId(id);
+    await enviarConvite([id]);
+    setEnviandoId(null);
+  };
+
+  const parceiros = useMemo(() => {
+    return partners.filter((p) => {
+      const termo = filtro.toLowerCase();
+      const matchBusca = !termo || p.nome.toLowerCase().includes(termo) || (p.cidade || '').toLowerCase().includes(termo);
+      const matchTipo = filtroTipo === 'todos' || p.tipo === filtroTipo;
+      const matchStatus =
+        filtroStatus === 'todos' ||
+        (filtroStatus === 'pendente' && p.status !== 'sent') ||
+        (filtroStatus === 'enviado' && p.status === 'sent') ||
+        (filtroStatus === 'sem_email' && !p.email);
+      return matchBusca && matchTipo && matchStatus;
+    });
+  }, [partners, filtro, filtroTipo, filtroStatus]);
 
   const stats = useMemo(() => {
-    const total = servicosMock.length;
-    const comInstagram = servicosMock.filter((s) => s.instagram).length;
-    const premium = servicosMock.filter((s) => s.premium).length;
-    const destaque = servicosMock.filter((s) => s.destaque).length;
-    return { total, comInstagram, premium, destaque };
-  }, []);
+    const total = partners.length;
+    const comEmail = partners.filter((p) => p.email).length;
+    const enviados = partners.filter((p) => p.status === 'sent').length;
+    const pendentesComEmail = partners.filter((p) => p.status !== 'sent' && p.email).length;
+    return { total, comEmail, enviados, pendentesComEmail };
+  }, [partners]);
 
-  const getBadge = (parceiro: Servico) => {
-    if (parceiro.premium) return { label: '⭐ PREMIUM', classes: 'bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg shadow-amber-500/30' };
-    if (parceiro.destaque) return { label: '🔥 DESTAQUE', classes: 'bg-gradient-to-r from-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-500/30' };
-    return null;
+  const enviarLotePendentes = async () => {
+    const ids = parceiros.filter((p) => p.status !== 'sent' && p.email).map((p) => p.id);
+    if (ids.length === 0) {
+      setMensagem('Nenhum parceiro pendente com email na lista filtrada');
+      return;
+    }
+    setEnviandoLote(true);
+    await enviarConvite(ids);
+    setEnviandoLote(false);
   };
 
   return (
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Parceiros</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Gerencie os parceiros cadastrados</p>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Gerencie os parceiros cadastrados no banco de dados</p>
       </div>
 
       <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-bold text-blue-900 dark:text-blue-200">
-            Banco de dados (usado pelo /mapa): {dbCount === null ? '...' : `${dbCount} parceiros importados`}
+            {loading ? 'Carregando...' : `${stats.total} parceiros no banco (mesma fonte do /mapa)`}
           </p>
-          <p className="text-xs text-blue-700 dark:text-blue-400">
-            A lista abaixo mostra os {servicosMock.length} dados de exemplo do código. O mapa público lê do banco — importe para sincronizar.
-          </p>
-          {importResult && <p className="mt-1 text-xs font-semibold text-blue-900 dark:text-blue-200">{importResult}</p>}
+          {mensagem && <p className="mt-1 text-xs font-semibold text-blue-900 dark:text-blue-200">{mensagem}</p>}
         </div>
-        <button
-          onClick={importarParaBanco}
-          disabled={importando}
-          className="shrink-0 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
-        >
-          {importando ? 'Importando...' : '⬆️ Importar para o banco'}
-        </button>
+        <div className="flex shrink-0 gap-2">
+          <button
+            onClick={enviarLotePendentes}
+            disabled={enviandoLote || stats.pendentesComEmail === 0}
+            className="rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-600 disabled:opacity-50"
+          >
+            {enviandoLote ? 'Enviando...' : `📤 Enviar convites pendentes (${stats.pendentesComEmail})`}
+          </button>
+          <button
+            onClick={importarParaBanco}
+            disabled={importando}
+            className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
+          >
+            {importando ? '...' : '⬆️ Importar dados de exemplo'}
+          </button>
+        </div>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
@@ -111,17 +189,17 @@ export default function AdminParceirosPage() {
           <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Total</p>
           <p className="mt-1 text-3xl font-black text-slate-900 dark:text-white">{stats.total}</p>
         </div>
-        <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-4 shadow-sm dark:border-amber-900 dark:from-amber-950 dark:to-orange-950">
-          <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">⭐ Premium</p>
-          <p className="mt-1 text-3xl font-black text-amber-700 dark:text-amber-300">{stats.premium}</p>
+        <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-4 shadow-sm dark:border-emerald-900 dark:from-emerald-950 dark:to-teal-950">
+          <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">✓ Convite enviado</p>
+          <p className="mt-1 text-3xl font-black text-emerald-700 dark:text-emerald-300">{stats.enviados}</p>
         </div>
-        <div className="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-4 shadow-sm dark:border-blue-900 dark:from-blue-950 dark:to-indigo-950">
-          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">🔥 Destaque</p>
-          <p className="mt-1 text-3xl font-black text-blue-700 dark:text-blue-300">{stats.destaque}</p>
+        <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-4 shadow-sm dark:border-amber-900 dark:from-amber-950 dark:to-orange-950">
+          <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">⏳ Pendente com email</p>
+          <p className="mt-1 text-3xl font-black text-amber-700 dark:text-amber-300">{stats.pendentesComEmail}</p>
         </div>
         <div className="rounded-2xl border border-pink-200 bg-pink-50 p-4 shadow-sm dark:border-pink-900 dark:bg-pink-950">
-          <p className="text-sm font-semibold text-pink-600 dark:text-pink-400">📸 Com Instagram</p>
-          <p className="mt-1 text-3xl font-black text-pink-700 dark:text-pink-300">{stats.comInstagram}</p>
+          <p className="text-sm font-semibold text-pink-600 dark:text-pink-400">✉️ Com email cadastrado</p>
+          <p className="mt-1 text-3xl font-black text-pink-700 dark:text-pink-300">{stats.comEmail}</p>
         </div>
       </div>
 
@@ -146,95 +224,79 @@ export default function AdminParceirosPage() {
           <option value="hotel">Hotel</option>
         </select>
         <select
-          value={filtroDestaque}
-          onChange={(e) => setFiltroDestaque(e.target.value)}
+          value={filtroStatus}
+          onChange={(e) => setFiltroStatus(e.target.value)}
           className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-blue-400"
         >
           <option value="todos">Todos os status</option>
-          <option value="premium">⭐ Premium</option>
-          <option value="destaque">🔥 Destaque</option>
-          <option value="comum">Comum</option>
+          <option value="pendente">⏳ Pendente</option>
+          <option value="enviado">✓ Convite enviado</option>
+          <option value="sem_email">Sem email</option>
         </select>
         <span className="text-sm text-slate-500 dark:text-slate-400">{parceiros.length} parceiros</span>
       </div>
 
-      <div className="space-y-3">
-        {parceiros.map((parceiro) => {
-          const badge = getBadge(parceiro);
-          const isPremium = parceiro.premium;
-          const isDestaque = parceiro.destaque;
-
-          return (
-            <div
-              key={parceiro.id}
-              className={`flex items-center gap-4 rounded-2xl border p-4 shadow-sm transition hover:shadow-md ${
-                isPremium
-                  ? 'border-amber-300 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 ring-2 ring-amber-200 dark:border-amber-800 dark:from-amber-950 dark:via-orange-950 dark:to-amber-950 dark:ring-amber-900'
-                  : isDestaque
-                  ? 'border-blue-300 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 ring-2 ring-blue-200 dark:border-blue-800 dark:from-blue-950 dark:via-indigo-950 dark:to-blue-950 dark:ring-blue-900'
-                  : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700'
-              }`}
-            >
-              <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${
-                isPremium ? 'bg-gradient-to-br from-amber-400 to-orange-400 shadow-lg shadow-amber-500/30' :
-                isDestaque ? 'bg-gradient-to-br from-blue-400 to-indigo-400 shadow-lg shadow-blue-500/30' :
-                parceiro.tipo === 'veterinario' ? 'bg-blue-100 dark:bg-blue-900' :
-                parceiro.tipo === 'petshop' ? 'bg-purple-100 dark:bg-purple-900' :
-                parceiro.tipo === 'creche' ? 'bg-amber-100 dark:bg-amber-900' :
-                parceiro.tipo === 'parque' ? 'bg-green-100 dark:bg-green-900' :
-                'bg-slate-100 dark:bg-slate-800'
-              }`}>
-                <span className={`text-xl ${isPremium || isDestaque ? 'drop-shadow-sm' : ''}`}>
-                  {parceiro.tipo === 'veterinario' ? '🩺' :
-                   parceiro.tipo === 'petshop' ? '🛁' :
-                   parceiro.tipo === 'creche' ? '🏫' :
-                   parceiro.tipo === 'parque' ? '🌳' : '🐾'}
-                </span>
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className={`text-sm font-bold truncate ${isPremium || isDestaque ? 'text-slate-900 dark:text-white' : 'text-slate-900 dark:text-white'}`}>
-                    {parceiro.nome}
-                  </h3>
-                  {badge && (
-                    <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${badge.classes}`}>
-                      {badge.label}
-                    </span>
-                  )}
-                  {parceiro.instagram && (
-                    <span className="shrink-0 rounded-full bg-pink-100 px-2 py-0.5 text-[10px] font-bold text-pink-600 dark:bg-pink-900 dark:text-pink-400">📸</span>
-                  )}
-                </div>
-                <p className="text-xs text-slate-500 truncate dark:text-slate-400">
-                  {parceiro.tipo} · {parceiro.cidade}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
-                {parceiro.telefone && <span title="Telefone">📱</span>}
-                {parceiro.website && <span title="Website">🌐</span>}
-                {parceiro.instagram && <span title="Instagram">📸</span>}
-              </div>
-
-              <button
-                onClick={() => setEditando(parceiro)}
-                className={`rounded-lg px-3 py-2 text-xs font-bold transition ${
-                  isPremium || isDestaque
-                    ? 'bg-white/80 text-slate-700 hover:bg-white shadow-sm dark:bg-slate-800/80 dark:text-slate-300 dark:hover:bg-slate-800'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
-                }`}
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {parceiros.map((parceiro) => {
+            const enviado = parceiro.status === 'sent';
+            return (
+              <div
+                key={parceiro.id}
+                className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
               >
-                Editar
-              </button>
-            </div>
-          );
-        })}
-      </div>
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
+                  <span className="text-xl">
+                    {parceiro.tipo === 'veterinario' ? '🩺' :
+                     parceiro.tipo === 'petshop' ? '🛁' :
+                     parceiro.tipo === 'creche' ? '🏫' :
+                     parceiro.tipo === 'parque' ? '🌳' : '🐾'}
+                  </span>
+                </div>
 
-      {parceiros.length === 0 && (
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-bold truncate text-slate-900 dark:text-white">{parceiro.nome}</h3>
+                    {enviado ? (
+                      <span className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300">✓ Enviado</span>
+                    ) : (
+                      <span className="shrink-0 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-600 dark:bg-amber-900 dark:text-amber-300">⏳ Pendente</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500 truncate dark:text-slate-400">
+                    {parceiro.tipo} · {parceiro.cidade} · {parceiro.email || 'sem email cadastrado'}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => { setEditando(parceiro); setEmailEditando(parceiro.email || ''); }}
+                  className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => enviarConviteUnico(parceiro.id)}
+                  disabled={!parceiro.email || enviandoId === parceiro.id}
+                  className="rounded-lg bg-amber-50 px-3 py-2 text-xs font-bold text-amber-600 transition hover:bg-amber-100 disabled:opacity-40 dark:bg-amber-900 dark:text-amber-300"
+                >
+                  {enviandoId === parceiro.id ? '...' : enviado ? 'Reenviar' : '📤 Enviar'}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {!loading && parceiros.length === 0 && (
         <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
           <p className="text-lg font-bold text-slate-400">Nenhum parceiro encontrado</p>
+          {stats.total === 0 && (
+            <p className="mt-2 text-sm text-slate-400">O banco está vazio — clique em &quot;Importar dados de exemplo&quot; acima.</p>
+          )}
         </div>
       )}
 
@@ -242,15 +304,7 @@ export default function AdminParceirosPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setEditando(null)}>
           <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-900" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-black text-slate-900 dark:text-white">{editando.nome}</h2>
-                {editando.premium && (
-                  <span className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 text-[10px] font-bold text-white">⭐ PREMIUM</span>
-                )}
-                {editando.destaque && (
-                  <span className="rounded-full bg-gradient-to-r from-blue-400 to-indigo-400 px-2.5 py-0.5 text-[10px] font-bold text-white">🔥 DESTAQUE</span>
-                )}
-              </div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">{editando.nome}</h2>
               <button onClick={() => setEditando(null)} className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">✕</button>
             </div>
             <div className="mt-6 space-y-4">
@@ -274,24 +328,40 @@ export default function AdminParceirosPage() {
                   <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.website || '—'}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Instagram</label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.instagram ? `@${editando.instagram}` : '—'}</p>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Avaliação</label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.avaliacao ? `${editando.avaliacao} ⭐` : '—'}</p>
-                </div>
-              </div>
               <div>
                 <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Endereço</label>
                 <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.endereco || '—'}</p>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Email para convite</label>
+                <div className="mt-1 flex gap-2">
+                  <input
+                    type="email"
+                    value={emailEditando}
+                    onChange={(e) => setEmailEditando(e.target.value)}
+                    placeholder="contato@clinica.com.br"
+                    className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                  />
+                  <button
+                    onClick={salvarEmail}
+                    disabled={salvandoEmail}
+                    className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {salvandoEmail ? '...' : 'Salvar'}
+                  </button>
+                </div>
               </div>
             </div>
             <div className="mt-6 flex gap-3">
               <button onClick={() => setEditando(null)} className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
                 Fechar
+              </button>
+              <button
+                onClick={() => enviarConviteUnico(editando.id)}
+                disabled={!editando.email || enviandoId === editando.id}
+                className="flex-1 rounded-xl bg-amber-500 py-3 text-sm font-bold text-white transition hover:bg-amber-600 disabled:opacity-40"
+              >
+                {enviandoId === editando.id ? 'Enviando...' : editando.status === 'sent' ? 'Reenviar convite' : '📤 Enviar convite'}
               </button>
             </div>
           </div>

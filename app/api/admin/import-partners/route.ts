@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
 
   const supabaseAdmin = getSupabaseAdmin();
   const page = parseInt(req.nextUrl.searchParams.get('page') || '1');
-  const limit = Math.min(parseInt(req.nextUrl.searchParams.get('limit') || '50'), 100);
+  const limit = Math.min(parseInt(req.nextUrl.searchParams.get('limit') || '50'), 500);
   const offset = (page - 1) * limit;
 
   const { count } = await supabaseAdmin
