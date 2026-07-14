@@ -161,10 +161,14 @@ export async function POST(request: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    await supabaseAdmin.from('subscriptions').upsert(
+    const { error: upsertError } = await supabaseAdmin.from('subscriptions').upsert(
       subscriptionData,
       { onConflict: 'user_id' }
     );
+    if (upsertError) {
+      console.error('Failed to upsert subscription:', upsertError);
+      return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 });
+    }
 
     // Send email for first payment
     if (event.Event === 'Purchase_Order_Confirmed') {
