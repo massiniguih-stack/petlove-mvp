@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getLastlinkCheckoutUrl, isValidPlanType } from '@/lib/lastlink';
 
 export async function POST(request: NextRequest) {
@@ -23,8 +24,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Checkout URL not configured' }, { status: 500 });
     }
 
-    // Store pending checkout in metadata (webhook will confirm)
-    await supabase.from('subscriptions').upsert(
+    // Store pending checkout in metadata (webhook will confirm).
+    // subscriptions has no RLS write policy for regular users (service role
+    // handles all writes), so this must go through the admin client.
+    const supabaseAdmin = getSupabaseAdmin();
+    const { error: upsertError } = await supabaseAdmin.from('subscriptions').upsert(
       {
         user_id: user.id,
         provider_subscription_id: `pending_${user.id}_${Date.now()}`,
@@ -34,6 +38,10 @@ export async function POST(request: NextRequest) {
       },
       { onConflict: 'user_id' }
     );
+
+    if (upsertError) {
+      console.error('Failed to store pending checkout:', upsertError);
+    }
 
     return NextResponse.json({ url: checkoutUrl });
   } catch (error) {
