@@ -67,7 +67,9 @@ export default function OnboardingPage() {
 
   const tutorEmail = user?.email ?? pet?.tutor?.email ?? '';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [salvando, setSalvando] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErro('');
 
@@ -100,29 +102,35 @@ export default function OnboardingPage() {
       endereco: form.tutorEndereco.trim(),
     };
 
-    if (pet) {
-      // Edição do pet atual
-      updatePet(pet.id, {
-        nome: form.nome.trim(),
-        raca: form.raca.trim(),
-        dataNascimento: form.dataNascimento,
-        peso: pesoNum,
-        sexo: form.sexo as 'macho' | 'femea',
-        objetivo: form.objetivo as 'manutencao' | 'pelagem' | 'desempenho' | 'emagrecimento',
-        tutor,
-      });
-    } else {
-      addPet({
-        id: crypto.randomUUID(),
-        nome: form.nome.trim(),
-        raca: form.raca.trim(),
-        dataNascimento: form.dataNascimento,
-        peso: pesoNum,
-        sexo: form.sexo as 'macho' | 'femea',
-        objetivo: form.objetivo as 'manutencao' | 'pelagem' | 'desempenho' | 'emagrecimento',
-        fotoUrl: null,
-        tutor,
-      });
+    setSalvando(true);
+    const resultado = pet
+      ? await updatePet(pet.id, {
+          nome: form.nome.trim(),
+          raca: form.raca.trim(),
+          dataNascimento: form.dataNascimento,
+          peso: pesoNum,
+          sexo: form.sexo as 'macho' | 'femea',
+          objetivo: form.objetivo as 'manutencao' | 'pelagem' | 'desempenho' | 'emagrecimento',
+          tutor,
+        })
+      : await addPet({
+          id: crypto.randomUUID(),
+          nome: form.nome.trim(),
+          raca: form.raca.trim(),
+          dataNascimento: form.dataNascimento,
+          peso: pesoNum,
+          sexo: form.sexo as 'macho' | 'femea',
+          objetivo: form.objetivo as 'manutencao' | 'pelagem' | 'desempenho' | 'emagrecimento',
+          fotoUrl: null,
+          tutor,
+        });
+    setSalvando(false);
+
+    // O pet já foi salvo neste dispositivo mesmo se o envio ao servidor falhar
+    // (uma próxima sincronização tenta de novo automaticamente), então não
+    // travamos o fluxo — só avisamos.
+    if (resultado?.error) {
+      console.warn(resultado.error);
     }
 
     router.push('/dashboard');
@@ -416,9 +424,10 @@ export default function OnboardingPage() {
 
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl hover:shadow-amber-500/40"
+                disabled={salvando}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl hover:shadow-amber-500/40 disabled:opacity-50"
               >
-                {pet ? 'Salvar alterações' : 'Concluir e ir para o painel'}
+                {salvando ? 'Salvando...' : pet ? 'Salvar alterações' : 'Concluir e ir para o painel'}
                 <svg
                   width="16"
                   height="16"

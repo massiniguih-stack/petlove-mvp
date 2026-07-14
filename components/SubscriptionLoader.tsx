@@ -5,9 +5,11 @@ import { usePetStore } from '@/lib/store'
 
 export function SubscriptionLoader({ children }: { children: React.ReactNode }) {
   const fetchSubscription = usePetStore((s) => s.fetchSubscription)
+  const fetchPets = usePetStore((s) => s.fetchPets)
 
   useEffect(() => {
     fetchSubscription()
+    fetchPets()
   }, [])
 
   return <>{children}</>

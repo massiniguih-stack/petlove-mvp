@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { createClient } from './supabase/client';
 
 export interface Tutor {
   nome: string;
@@ -27,15 +28,44 @@ interface PetState {
   subscriptionStatus: string | null;
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
-  addPet: (pet: Pet) => void;
-  removePet: (id: string) => void;
+  petsCarregados: boolean;
+  addPet: (pet: Pet) => Promise<{ error?: string }>;
+  removePet: (id: string) => Promise<void>;
   selectPet: (id: string) => void;
-  updatePet: (id: string, updates: Partial<Pet>) => void;
+  updatePet: (id: string, updates: Partial<Pet>) => Promise<{ error?: string }>;
+  fetchPets: () => Promise<void>;
   setPremium: (value: boolean) => void;
   setPlan: (plan: string | null, status: string | null, periodEnd: string | null, cancel: boolean) => void;
   fetchSubscription: () => Promise<void>;
   clearAll: () => void;
   pet: Pet | null;
+}
+
+// Banco <-> forma local usada pelo app
+function petFromRow(row: Record<string, unknown>, tutor: Tutor): Pet {
+  return {
+    id: row.id as string,
+    nome: row.nome as string,
+    raca: row.raca as string,
+    dataNascimento: row.data_nascimento as string,
+    peso: Number(row.peso_atual),
+    sexo: row.sexo as Pet['sexo'],
+    objetivo: row.objetivo as Pet['objetivo'],
+    fotoUrl: (row.foto_url as string) || null,
+    tutor,
+  };
+}
+
+function petToRow(pet: Partial<Pet>) {
+  const row: Record<string, unknown> = {};
+  if (pet.nome !== undefined) row.nome = pet.nome;
+  if (pet.raca !== undefined) row.raca = pet.raca;
+  if (pet.dataNascimento !== undefined) row.data_nascimento = pet.dataNascimento;
+  if (pet.peso !== undefined) row.peso_atual = pet.peso;
+  if (pet.sexo !== undefined) row.sexo = pet.sexo;
+  if (pet.objetivo !== undefined) row.objetivo = pet.objetivo;
+  if (pet.fotoUrl !== undefined) row.foto_url = pet.fotoUrl;
+  return row;
 }
 
 const PETS_KEY = 'petlove_pets';
@@ -123,18 +153,91 @@ export const usePetStore = create<PetState>((set, get) => {
     subscriptionStatus: null,
     currentPeriodEnd: null,
     cancelAtPeriodEnd: false,
+    petsCarregados: false,
     pet: currentPet,
 
-    addPet: (pet) => {
+    fetchPets: async () => {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data: tutorRow } = await supabase.from('tutor').select('*').eq('id', user.id).single();
+        const tutor: Tutor = {
+          nome: (tutorRow?.nome as string) || '',
+          email: (tutorRow?.email as string) || user.email || '',
+          telefone: (tutorRow?.telefone as string) || '',
+          endereco: (tutorRow?.endereco as string) || '',
+        };
+
+        const { data: rows, error } = await supabase.from('pet').select('*').order('created_at');
+        if (error) throw error;
+
+        // Primeira sincronização: pets que só existiam no localStorage sobem pro banco
+        const { pets: petsLocais } = get();
+        if ((!rows || rows.length === 0) && petsLocais.length > 0) {
+          const inseridos: Pet[] = [];
+          for (const p of petsLocais) {
+            const { data: novo, error: insertErr } = await supabase
+              .from('pet')
+              .insert({ id: p.id, tutor_id: user.id, ...petToRow(p) })
+              .select()
+              .single();
+            if (!insertErr && novo) inseridos.push(petFromRow(novo, tutor));
+          }
+          if (inseridos.length > 0) {
+            savePets(inseridos);
+            const selectedId = get().selectedPetId;
+            const selected = inseridos.find((p) => p.id === selectedId) || inseridos[0];
+            set({ pets: inseridos, pet: selected, selectedPetId: selected?.id || null, petsCarregados: true });
+            return;
+          }
+        }
+
+        const petsServidor = (rows || []).map((r) => petFromRow(r, tutor));
+        savePets(petsServidor);
+        const selectedId = get().selectedPetId;
+        const selected = petsServidor.find((p) => p.id === selectedId) || petsServidor[0] || null;
+        if (selected) saveSelectedId(selected.id);
+        set({ pets: petsServidor, pet: selected, selectedPetId: selected?.id || null, petsCarregados: true });
+      } catch (error) {
+        console.error('Failed to fetch pets:', error);
+        set({ petsCarregados: true });
+      }
+    },
+
+    addPet: async (pet) => {
       const { pets, isPremium } = get();
-      if (!isPremium && pets.length >= 1) return;
+      if (!isPremium && pets.length >= 1) return { error: 'Limite de pets do plano gratuito atingido' };
+
+      // Atualiza local imediatamente para a UI responder na hora
       const newPets = [...pets, pet];
       savePets(newPets);
       set({ pets: newPets, pet, selectedPetId: pet.id });
       saveSelectedId(pet.id);
+
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return { error: 'Sessão expirada, faça login novamente' };
+
+        const { error } = await supabase.from('pet').insert({ id: pet.id, tutor_id: user.id, ...petToRow(pet) });
+        if (error) throw error;
+
+        if (pet.tutor?.telefone || pet.tutor?.endereco) {
+          await supabase.from('tutor').update({
+            telefone: pet.tutor.telefone || null,
+            endereco: pet.tutor.endereco || null,
+          }).eq('id', user.id);
+        }
+        return {};
+      } catch (error) {
+        console.error('Failed to save pet to database:', error);
+        return { error: 'Não foi possível salvar no servidor — os dados ficaram só neste dispositivo por enquanto.' };
+      }
     },
 
-    removePet: (id) => {
+    removePet: async (id) => {
       const { pets, selectedPetId } = get();
       const newPets = pets.filter((p) => p.id !== id);
       savePets(newPets);
@@ -145,6 +248,13 @@ export const usePetStore = create<PetState>((set, get) => {
         selectedPetId: newSelected,
         pet: newPets.find((p) => p.id === newSelected) || null,
       });
+
+      try {
+        const supabase = createClient();
+        await supabase.from('pet').delete().eq('id', id);
+      } catch (error) {
+        console.error('Failed to delete pet from database:', error);
+      }
     },
 
     selectPet: (id) => {
@@ -154,12 +264,35 @@ export const usePetStore = create<PetState>((set, get) => {
       set({ selectedPetId: id, pet: pet || null });
     },
 
-    updatePet: (id, updates) => {
+    updatePet: async (id, updates) => {
       const { pets, selectedPetId } = get();
       const newPets = pets.map((p) => (p.id === id ? { ...p, ...updates } : p));
       savePets(newPets);
       const selectedPet = newPets.find((p) => p.id === selectedPetId);
       set({ pets: newPets, pet: selectedPet || null });
+
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return { error: 'Sessão expirada, faça login novamente' };
+
+        const row = petToRow(updates);
+        if (Object.keys(row).length > 0) {
+          const { error } = await supabase.from('pet').update(row).eq('id', id);
+          if (error) throw error;
+        }
+
+        if (updates.tutor?.telefone !== undefined || updates.tutor?.endereco !== undefined) {
+          await supabase.from('tutor').update({
+            telefone: updates.tutor?.telefone || null,
+            endereco: updates.tutor?.endereco || null,
+          }).eq('id', user.id);
+        }
+        return {};
+      } catch (error) {
+        console.error('Failed to update pet in database:', error);
+        return { error: 'Não foi possível salvar no servidor — os dados ficaram só neste dispositivo por enquanto.' };
+      }
     },
 
     setPremium: (value) => {
