@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { servicosMock, type Servico } from '@/data/servicos';
 
 export default function AdminParceirosPage() {
@@ -8,6 +8,42 @@ export default function AdminParceirosPage() {
   const [filtroTipo, setFiltroTipo] = useState('todos');
   const [filtroDestaque, setFiltroDestaque] = useState('todos');
   const [editando, setEditando] = useState<Servico | null>(null);
+  const [dbCount, setDbCount] = useState<number | null>(null);
+  const [importando, setImportando] = useState(false);
+  const [importResult, setImportResult] = useState<string | null>(null);
+
+  const carregarContagemBanco = async () => {
+    try {
+      const res = await fetch('/api/admin/import-partners?limit=1');
+      const data = await res.json();
+      setDbCount(typeof data.total === 'number' ? data.total : null);
+    } catch {
+      setDbCount(null);
+    }
+  };
+
+  useEffect(() => {
+    carregarContagemBanco();
+  }, []);
+
+  const importarParaBanco = async () => {
+    setImportando(true);
+    setImportResult(null);
+    try {
+      const res = await fetch('/api/admin/import-partners', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        setImportResult(data.error || 'Erro ao importar');
+      } else {
+        setImportResult(`✓ ${data.imported} parceiros importados para o banco`);
+      }
+    } catch {
+      setImportResult('Erro ao importar');
+    } finally {
+      setImportando(false);
+      carregarContagemBanco();
+    }
+  };
 
   const parceiros = useMemo(() => {
     return servicosMock
@@ -49,6 +85,25 @@ export default function AdminParceirosPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Parceiros</h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Gerencie os parceiros cadastrados</p>
+      </div>
+
+      <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-bold text-blue-900 dark:text-blue-200">
+            Banco de dados (usado pelo /mapa): {dbCount === null ? '...' : `${dbCount} parceiros importados`}
+          </p>
+          <p className="text-xs text-blue-700 dark:text-blue-400">
+            A lista abaixo mostra os {servicosMock.length} dados de exemplo do código. O mapa público lê do banco — importe para sincronizar.
+          </p>
+          {importResult && <p className="mt-1 text-xs font-semibold text-blue-900 dark:text-blue-200">{importResult}</p>}
+        </div>
+        <button
+          onClick={importarParaBanco}
+          disabled={importando}
+          className="shrink-0 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
+        >
+          {importando ? 'Importando...' : '⬆️ Importar para o banco'}
+        </button>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-4">

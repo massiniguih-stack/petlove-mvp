@@ -6,7 +6,7 @@ import { StarIcon, MapPinIcon } from '@/components/Icons';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
-import { servicosMock, cidades, type Servico } from '@/data/servicos';
+import { cidades, type Servico } from '@/data/servicos';
 
 const PetMap = dynamic(() => import('@/components/PetMap'), { ssr: false });
 
@@ -129,10 +129,29 @@ export default function MapaPage() {
   const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(null);
   const [coordenadasUsuario, setCoordenadasUsuario] = useState<{ lat: number; lng: number } | null>(null);
   const [ordenarPor, setOrdenarPor] = useState<'avaliacao' | 'distancia'>('avaliacao');
+  const [servicosDaCidade, setServicosDaCidade] = useState<Servico[]>([]);
+  const [carregandoServicos, setCarregandoServicos] = useState(true);
 
   const cidadeSelecionada = cidades.find((c) => c.nome === cidade) || cidades[0];
 
-  const servicosDaCidade = servicosMock.filter((s) => s.cidade === cidade);
+  useEffect(() => {
+    let cancelado = false;
+    setCarregandoServicos(true);
+    fetch(`/api/servicos?cidade=${encodeURIComponent(cidade)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelado) setServicosDaCidade(data.servicos || []);
+      })
+      .catch(() => {
+        if (!cancelado) setServicosDaCidade([]);
+      })
+      .finally(() => {
+        if (!cancelado) setCarregandoServicos(false);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [cidade]);
 
   const listaFiltrada = servicosDaCidade
     .filter((s) => filtro === 'todos' || s.tipo === filtro)
@@ -269,13 +288,19 @@ export default function MapaPage() {
           </div>
 
           {/* Lista de Serviços */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {listaFiltrada.map((servico) => (
-              <ServicoCard key={servico.id} servico={servico} onSelect={setServicoSelecionado} onCenterMap={setServicoSelecionado} />
-            ))}
-          </div>
+          {carregandoServicos ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {listaFiltrada.map((servico) => (
+                <ServicoCard key={servico.id} servico={servico} onSelect={setServicoSelecionado} onCenterMap={setServicoSelecionado} />
+              ))}
+            </div>
+          )}
 
-          {listaFiltrada.length === 0 && (
+          {!carregandoServicos && listaFiltrada.length === 0 && (
             <div className="rounded-3xl bg-white dark:bg-slate-900 py-16 text-center ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
                 <span className="text-4xl">🔍</span>
