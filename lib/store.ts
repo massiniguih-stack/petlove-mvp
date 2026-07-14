@@ -56,6 +56,19 @@ function petFromRow(row: Record<string, unknown>, tutor: Tutor): Pet {
   };
 }
 
+// Garante que o tutor tenha uma linha na tabela `tutor` antes de mexer em
+// pets — o trigger que cria essa linha automaticamente só existe desde uma
+// certa data; contas mais antigas podem não ter sido cobertas por ele.
+async function ensureTutorRow(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
+  const nome =
+    (user.user_metadata?.nome as string | undefined) ||
+    (user.user_metadata?.full_name as string | undefined) ||
+    '';
+  await supabase
+    .from('tutor')
+    .upsert({ id: user.id, nome, email: user.email || '' }, { onConflict: 'id', ignoreDuplicates: true });
+}
+
 function petToRow(pet: Partial<Pet>) {
   const row: Record<string, unknown> = {};
   if (pet.nome !== undefined) row.nome = pet.nome;
@@ -162,6 +175,8 @@ export const usePetStore = create<PetState>((set, get) => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
+        await ensureTutorRow(supabase, user);
+
         const { data: tutorRow } = await supabase.from('tutor').select('*').eq('id', user.id).single();
         const tutor: Tutor = {
           nome: (tutorRow?.nome as string) || '',
@@ -220,6 +235,8 @@ export const usePetStore = create<PetState>((set, get) => {
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return { error: 'Sessão expirada, faça login novamente' };
+
+        await ensureTutorRow(supabase, user);
 
         const { error } = await supabase.from('pet').insert({ id: pet.id, tutor_id: user.id, ...petToRow(pet) });
         if (error) throw error;
