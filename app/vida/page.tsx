@@ -145,7 +145,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
               type="date"
               value={data}
               onChange={(e) => setData(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white transition focus:border-rose-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
             />
           </div>
 
@@ -257,7 +257,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               placeholder={categoria === 'vacina' ? 'Ex: V10, Raiva, Gripe...' : 'Ex: Primeira vacina, Dia do parque...'}
-              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 transition focus:border-rose-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
               required
             />
           </div>
@@ -271,7 +271,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
               onChange={(e) => setDescricao(e.target.value)}
               placeholder={categoria === 'vacina' ? 'Local, veterinário, observações...' : 'Conte mais sobre este momento especial...'}
               rows={3}
-              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 transition focus:border-purple-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 transition focus:border-rose-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500/20"
             />
           </div>
 
@@ -283,7 +283,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-400 transition hover:border-purple-400 hover:text-purple-600"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 px-4 py-3 text-sm font-semibold text-slate-600 dark:text-slate-400 transition hover:border-rose-400 hover:text-rose-600"
               >
                 {fotoUrl ? '🔄 Trocar foto' : '📷 Adicionar foto'}
               </button>
@@ -313,7 +313,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
             <button type="button" onClick={onClose} className="rounded-xl border-2 border-slate-200 dark:border-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-800">
               Cancelar
             </button>
-            <button type="submit" className="rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition hover:shadow-xl hover:shadow-purple-500/40">
+            <button type="submit" className="rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
               {editando ? '💾 Salvar' : '✨ Adicionar'}
             </button>
           </div>
@@ -417,20 +417,20 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
               onClick={() => setMarcoSelecionado(isSelected ? null : marco.mes)}
               className={`flex flex-col items-center rounded-xl p-3 transition-all shrink-0 w-20 ${
                 isSelected 
-                  ? 'bg-purple-50 ring-2 ring-purple-300 dark:ring-purple-700' 
+                  ? 'bg-rose-50 ring-2 ring-rose-300 dark:ring-rose-700' 
                   : 'hover:bg-slate-50'
               }`}
             >
               <div className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${marco.cor} text-white shadow-sm transition-all hover:scale-110 ${
-                isAtual ? 'ring-2 ring-purple-400 ring-offset-1' : ''
+                isAtual ? 'ring-2 ring-rose-400 ring-offset-1' : ''
               } ${isProximo ? 'ring-2 ring-amber-400 ring-offset-1 animate-pulse' : ''}`}>
                 <span className="text-lg">{marco.emoji}</span>
                 {isAtual && (
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-purple-500 ring-1 ring-white" />
+                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-1 ring-white" />
                 )}
               </div>
               <div className="mt-1.5 text-center">
-                <div className={`text-[11px] font-bold leading-tight ${isAtual ? 'text-purple-600' : isProximo ? 'text-amber-600' : 'text-slate-600'}`}>
+                <div className={`text-[11px] font-bold leading-tight ${isAtual ? 'text-rose-600' : isProximo ? 'text-amber-600' : 'text-slate-600'}`}>
                   {getMesLabel(marco.mes)}
                 </div>
                 {marco.momento && (
@@ -444,7 +444,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
         })}
       </div>
       {marcoDetalhe && (
-        <div className="mt-4 rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 to-pink-50 p-4 shadow-sm">
+        <div className="mt-4 rounded-2xl border border-rose-100 bg-gradient-to-br from-amber-50 to-rose-50 p-4 shadow-sm">
           <div className="flex items-start gap-3">
             <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${marcoDetalhe.cor} text-white shadow-md`}>
               <span className="text-xl">{marcoDetalhe.emoji}</span>
@@ -453,7 +453,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">{marcoDetalhe.label}</h3>
                 {marcoDetalhe.momento && (
-                  <span className="rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-600">
+                  <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-600">
                     Registrado
                   </span>
                 )}
@@ -516,11 +516,11 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
 
       {/* Resumo */}
       {marcos.length > 0 && (
-        <div className="mt-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-3">
+        <div className="mt-4 rounded-xl bg-gradient-to-r from-amber-50 to-rose-50 p-3">
           <div className="flex items-center justify-between text-xs">
             <span className="text-slate-600">
               📅 <span className="font-bold text-slate-900 dark:text-white">{pet.nome}</span> tem{' '}
-              <span className="font-bold text-purple-600">{totalMeses} {totalMeses === 1 ? 'mês' : 'meses'}</span>
+              <span className="font-bold text-rose-600">{totalMeses} {totalMeses === 1 ? 'mês' : 'meses'}</span>
             </span>
             <span className="text-slate-500">
               {momentos.length} momento{momentos.length !== 1 ? 's' : ''}
@@ -619,18 +619,18 @@ export default function VidaPage() {
           {/* Header */}
           <div className="mb-8">
             <BackButton href="/dashboard" />
-            <div className="inline-flex items-center gap-2 rounded-full bg-purple-50 px-3 py-1.5 text-sm font-medium text-purple-700">
+            <div className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-700">
               <span className="text-lg">📅</span>
               {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'} de história
               {diasVida > 0 && ` · ${diasVida} dias`}
             </div>
             <div className="mt-3 flex flex-col items-center justify-between gap-4 sm:flex-row">
               <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                Linha do tempo de <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">{pet.nome}</span>
+                Linha do tempo de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500">{pet.nome}</span>
               </h1>
               <button
                 onClick={() => { setEditando(undefined); setShowForm(true); }}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition hover:shadow-xl hover:shadow-purple-500/40"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19"/>
@@ -658,10 +658,10 @@ export default function VidaPage() {
                 const el = document.getElementById('timeline');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 p-4 text-left text-white shadow-lg shadow-purple-500/20 transition hover:shadow-xl hover:shadow-purple-500/30 hover:-translate-y-0.5"
+              className="rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-4 text-left text-white shadow-lg shadow-rose-500/20 transition hover:shadow-xl hover:shadow-rose-500/30 hover:-translate-y-0.5"
             >
               <div className="text-3xl font-black">{totalDias}</div>
-              <div className="mt-1 text-sm font-medium text-purple-100">📅 Dias</div>
+              <div className="mt-1 text-sm font-medium text-rose-100">📅 Dias</div>
             </button>
             <button
               onClick={() => setFiltro('foto')}
@@ -823,9 +823,9 @@ export default function VidaPage() {
 
           {/* Primeira Foto */}
           {primeiraFoto && (
-            <div className="mt-12 rounded-3xl bg-gradient-to-br from-purple-50 to-pink-50 p-6 shadow-sm ring-1 ring-purple-100 dark:ring-purple-900">
+            <div className="mt-12 rounded-3xl bg-gradient-to-br from-amber-50 to-rose-50 p-6 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-rose-500 text-white shadow-lg shadow-rose-500/30">
                   <span className="text-xl">📸</span>
                 </div>
                 <div>
@@ -851,7 +851,7 @@ export default function VidaPage() {
           {/* Empty State */}
           {momentos.length === 0 && (
             <div className="mt-12 rounded-3xl bg-white dark:bg-slate-900 py-20 text-center shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100">
+              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-rose-100">
                 <span className="text-5xl">📅</span>
               </div>
               <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
@@ -862,7 +862,7 @@ export default function VidaPage() {
               </p>
               <button
                 onClick={() => setShowForm(true)}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition hover:shadow-xl hover:shadow-purple-500/40"
+                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19"/>
