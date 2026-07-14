@@ -101,9 +101,9 @@ export default function AdminParceirosPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setPartners((prev) =>
-          prev.map((p) => (ids.includes(p.id) && p.email ? { ...p, status: 'sent', sent_at: new Date().toISOString() } : p))
-        );
+        const marcarEnviado = (p: Partner) => (ids.includes(p.id) && p.email ? { ...p, status: 'sent', sent_at: new Date().toISOString() } : p);
+        setPartners((prev) => prev.map(marcarEnviado));
+        setEditando((prev) => (prev ? marcarEnviado(prev) : prev));
         setMensagem(`✓ ${data.sent} convite(s) enviado(s)${data.skipped ? `, ${data.skipped} sem email` : ''}${data.failed ? `, ${data.failed} falharam` : ''}`);
       } else {
         setMensagem(data.error || 'Erro ao enviar convite');
