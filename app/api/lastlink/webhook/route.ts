@@ -34,19 +34,34 @@ interface LastlinkEvent {
   };
 }
 
-// Map LastLink product IDs to plan types
-// This will be populated from the lastlink_products table
+// Map LastLink product IDs to plan types.
+// Some LastLink products bundle monthly and annual offers under the same
+// product_id (e.g. tutor_monthly/tutor_annual), so when a product_id
+// matches more than one row we disambiguate using the event's price.
 async function getPlanTypeFromProductId(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
-  productId: string
+  productId: string,
+  price?: number
 ): Promise<string | null> {
   const { data } = await supabase
     .from('lastlink_products')
-    .select('plan_type')
-    .eq('product_id', productId)
-    .single();
-  return data?.plan_type || null;
+    .select('plan_type, price')
+    .eq('product_id', productId);
+
+  if (!data || data.length === 0) return null;
+  if (data.length === 1) return data[0].plan_type;
+
+  if (price != null) {
+    const closest = data.reduce((best: { plan_type: string; price: number | null }, row: { plan_type: string; price: number | null }) => {
+      if (row.price == null) return best;
+      if (best.price == null) return row;
+      return Math.abs(row.price - price) < Math.abs(best.price - price) ? row : best;
+    }, data[0]);
+    return closest.plan_type;
+  }
+
+  return data[0].plan_type;
 }
 
 // Find user by email
@@ -90,13 +105,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ received: true });
     }
 
-    // Get product ID from event
+    // Get product ID and price from event
     const productId = event.Data.Subscriptions?.[0]?.ProductId ||
                       event.Data.Products?.[0]?.Id;
+    const price = event.Data.Purchase?.Price?.Value ??
+                  event.Data.Products?.[0]?.Price?.Value;
 
     let planType: string | null = null;
     if (productId) {
-      planType = await getPlanTypeFromProductId(supabaseAdmin, productId);
+      planType = await getPlanTypeFromProductId(supabaseAdmin, productId, price);
     }
 
     // Determine status from event
