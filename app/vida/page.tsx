@@ -1,6 +1,7 @@
 'use client';
 
 import { usePetStore } from '@/lib/store';
+import { createClient } from '@/lib/supabase/client';
 import { format, differenceInMonths, differenceInDays, addMonths, startOfMonth, isSameMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Link from 'next/link';
@@ -21,6 +22,31 @@ interface Momento {
   statusVacina?: 'tomada' | 'pendente';
   dataAgendada?: Date;
   lembreteEnviado?: boolean;
+}
+
+function momentoFromRow(row: Record<string, unknown>): Momento {
+  return {
+    id: row.id as string,
+    data: new Date(row.data as string),
+    titulo: row.titulo as string,
+    descricao: (row.descricao as string) || '',
+    categoria: row.categoria as Momento['categoria'],
+    fotoUrl: (row.foto_url as string) || undefined,
+    statusVacina: (row.status_vacina as 'tomada' | 'pendente') || undefined,
+    dataAgendada: row.data_agendada ? new Date(row.data_agendada as string) : undefined,
+  };
+}
+
+function momentoToRow(m: Omit<Momento, 'id'>) {
+  return {
+    data: m.data.toISOString(),
+    titulo: m.titulo,
+    descricao: m.descricao || null,
+    categoria: m.categoria,
+    foto_url: m.fotoUrl || null,
+    status_vacina: m.statusVacina || null,
+    data_agendada: m.dataAgendada ? format(m.dataAgendada, 'yyyy-MM-dd') : null,
+  };
 }
 
 const vacinasComuns = [
@@ -518,19 +544,38 @@ export default function VidaPage() {
     if (!pet) router.push('/onboarding');
   }, [pet, router]);
 
+  useEffect(() => {
+    if (!pet?.id) return;
+    const supabase = createClient();
+    supabase
+      .from('momento')
+      .select('*')
+      .eq('pet_id', pet.id)
+      .order('data')
+      .then(({ data, error }) => {
+        if (!error && data) setMomentos(data.map(momentoFromRow));
+      });
+  }, [pet?.id]);
+
   if (!pet) return null;
 
-  const handleSalvar = (m: Omit<Momento, 'id'>) => {
+  const handleSalvar = async (m: Omit<Momento, 'id'>) => {
+    const supabase = createClient();
     if (editando) {
       setMomentos((prev) => prev.map((item) => (item.id === editando.id ? { ...m, id: editando.id } : item)));
+      await supabase.from('momento').update(momentoToRow(m)).eq('id', editando.id);
     } else {
-      setMomentos((prev) => [...prev, { ...m, id: Date.now().toString() }]);
+      const id = crypto.randomUUID();
+      setMomentos((prev) => [...prev, { ...m, id }]);
+      await supabase.from('momento').insert({ id, pet_id: pet.id, ...momentoToRow(m) });
     }
     setEditando(undefined);
   };
 
   const handleExcluir = (id: string) => {
     setMomentos((prev) => prev.filter((m) => m.id !== id));
+    const supabase = createClient();
+    supabase.from('momento').delete().eq('id', id).then();
   };
 
   const handleEditar = (m: Momento) => {
@@ -549,9 +594,12 @@ export default function VidaPage() {
   const mesesRestantes = totalMeses % 12;
 
   const handleMarcarComoTomada = (id: string) => {
-    setMomentos((prev) => prev.map((m) => 
-      m.id === id ? { ...m, statusVacina: 'tomada', data: new Date() } : m
+    const agora = new Date();
+    setMomentos((prev) => prev.map((m) =>
+      m.id === id ? { ...m, statusVacina: 'tomada', data: agora } : m
     ));
+    const supabase = createClient();
+    supabase.from('momento').update({ status_vacina: 'tomada', data: agora.toISOString() }).eq('id', id).then();
   };
 
   const vacinasPendentes = momentos.filter((m) => m.categoria === 'vacina' && m.statusVacina === 'pendente');

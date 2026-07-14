@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { usePetStore } from '@/lib/store';
+import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
@@ -18,6 +19,10 @@ interface Atividade {
   dicas: string[];
   indicadaPara: string[];
   equipamento?: string[];
+}
+
+function diaISO(d: Date) {
+  return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
 }
 
 interface CheckItem {
@@ -244,66 +249,74 @@ export default function AtividadesPage() {
 
   useEffect(() => {
     if (!pet) return;
-    const hoje = new Date().toDateString();
-    const chave = `checklist-atividades-${pet.id}-${hoje}`;
-    const salvo = localStorage.getItem(chave);
-    if (salvo) {
-      setChecklist(JSON.parse(salvo));
-    } else {
-      const padrao: CheckItem[] = [
-        { id: '1', hora: '07:00', atividade: 'Passeio matinal', icone: '🐕', concluida: false },
-        { id: '2', hora: '10:00',atividade: 'Brincadeira', icone: '🎾', concluida: false },
-        { id: '3', hora: '14:00', atividade: 'Treino de obediência', icone: '🎯', concluida: false },
-        { id: '4', hora: '17:00', atividade: 'Passeio vespertino', icone: '🦴', concluida: false },
-      ];
-      setChecklist(padrao);
-      localStorage.setItem(chave, JSON.stringify(padrao));
-    }
+    const supabase = createClient();
+    const hoje = diaISO(new Date());
+    supabase
+      .from('checklist_item')
+      .select('*')
+      .eq('pet_id', pet.id)
+      .eq('lista', 'atividade')
+      .eq('dia', hoje)
+      .order('hora')
+      .then(async ({ data, error }) => {
+        if (error) return;
+        if (data && data.length > 0) {
+          setChecklist(data.map((r) => ({ id: r.id, hora: r.hora, atividade: r.nome, icone: r.detalhe || '🐾', concluida: r.concluida })));
+          return;
+        }
+        const padrao = [
+          { hora: '07:00', atividade: 'Passeio matinal', icone: '🐕' },
+          { hora: '10:00', atividade: 'Brincadeira', icone: '🎾' },
+          { hora: '14:00', atividade: 'Treino de obediência', icone: '🎯' },
+          { hora: '17:00', atividade: 'Passeio vespertino', icone: '🦴' },
+        ];
+        const rows = padrao.map((p) => ({
+          id: crypto.randomUUID(),
+          pet_id: pet.id,
+          lista: 'atividade',
+          dia: hoje,
+          hora: p.hora,
+          nome: p.atividade,
+          detalhe: p.icone,
+          concluida: false,
+        }));
+        const { data: inseridos } = await supabase.from('checklist_item').insert(rows).select();
+        const criados = inseridos || rows;
+        setChecklist(criados.map((r) => ({ id: r.id, hora: r.hora, atividade: r.nome, icone: r.detalhe || '🐾', concluida: r.concluida })));
+      });
   }, [pet?.id]);
 
-  const salvarChecklist = (novo: CheckItem[]) => {
-    if (!pet) return;
-    const hoje = new Date().toDateString();
-    const chave = `checklist-atividades-${pet.id}-${hoje}`;
-    localStorage.setItem(chave, JSON.stringify(novo));
-  };
-
   const concluirAtividade = (id: string) => {
-    const novo = checklist.map((c) =>
-      c.id === id ? { ...c, concluida: true } : c
-    );
-    setChecklist(novo);
-    salvarChecklist(novo);
+    setChecklist((prev) => prev.map((c) => (c.id === id ? { ...c, concluida: true } : c)));
+    const supabase = createClient();
+    supabase.from('checklist_item').update({ concluida: true }).eq('id', id).then();
   };
 
   const desfazerAtividade = (id: string) => {
-    const novo = checklist.map((c) =>
-      c.id === id ? { ...c, concluida: false } : c
-    );
-    setChecklist(novo);
-    salvarChecklist(novo);
+    setChecklist((prev) => prev.map((c) => (c.id === id ? { ...c, concluida: false } : c)));
+    const supabase = createClient();
+    supabase.from('checklist_item').update({ concluida: false }).eq('id', id).then();
   };
 
   const removerAtividade = (id: string) => {
-    const novo = checklist.filter((c) => c.id !== id);
-    setChecklist(novo);
-    salvarChecklist(novo);
+    setChecklist((prev) => prev.filter((c) => c.id !== id));
+    const supabase = createClient();
+    supabase.from('checklist_item').delete().eq('id', id).then();
   };
 
   const adicionarAtividade = () => {
+    if (!pet) return;
     const agora = new Date();
     const hora = `${agora.getHours().toString().padStart(2, '0')}:${agora.getMinutes().toString().padStart(2, '0')}`;
-    const nova: CheckItem = {
-      id: Date.now().toString(),
-      hora,
-      atividade: 'Atividade livre',
-      icone: '🐾',
-      concluida: false,
-    };
-    const novo = [...checklist, nova];
-    setChecklist(novo);
-    salvarChecklist(novo);
+    const id = crypto.randomUUID();
+    const nova: CheckItem = { id, hora, atividade: 'Atividade livre', icone: '🐾', concluida: false };
+    setChecklist((prev) => [...prev, nova]);
     setNovaAtividade(false);
+    const supabase = createClient();
+    supabase.from('checklist_item').insert({
+      id, pet_id: pet.id, lista: 'atividade', dia: diaISO(agora),
+      hora, nome: 'Atividade livre', detalhe: '🐾', concluida: false,
+    }).then();
   };
 
   const pendentes = checklist.filter((c) => !c.concluida);

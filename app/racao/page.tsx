@@ -2,10 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { usePetStore } from '@/lib/store';
+import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
+
+function diaISO(d: Date) {
+  return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+}
 
 interface MarcaRacao {
   nome: string;
@@ -310,64 +315,74 @@ export default function RacaoPage() {
 
   useEffect(() => {
     if (!pet?.id) return;
-    const hoje = new Date().toDateString();
-    const chave = `refeicoes-${pet.id}-${hoje}`;
-    const salvas = localStorage.getItem(chave);
-    if (salvas) {
-      setRefeicoes(JSON.parse(salvas));
-    } else {
-      const padrao: Refeicao[] = [
-        { id: '1', hora: '07:00', tipo: 'Café da manhã', quantidade: `${Math.round(pet.peso * 10)}g`, concluida: false },
-        { id: '2', hora: '12:00', tipo: 'Almoço', quantidade: `${Math.round(pet.peso * 15)}g`, concluida: false },
-        { id: '3', hora: '18:00', tipo: 'Jantar', quantidade: `${Math.round(pet.peso * 15)}g`, concluida: false },
-      ];
-      setRefeicoes(padrao);
-      localStorage.setItem(chave, JSON.stringify(padrao));
-    }
+    const supabase = createClient();
+    const hoje = diaISO(new Date());
+    supabase
+      .from('checklist_item')
+      .select('*')
+      .eq('pet_id', pet.id)
+      .eq('lista', 'refeicao')
+      .eq('dia', hoje)
+      .order('hora')
+      .then(async ({ data, error }) => {
+        if (error) return;
+        if (data && data.length > 0) {
+          setRefeicoes(data.map((r) => ({ id: r.id, hora: r.hora, tipo: r.nome, quantidade: r.detalhe || '', concluida: r.concluida })));
+          return;
+        }
+        const padrao = [
+          { hora: '07:00', tipo: 'Café da manhã', quantidade: `${Math.round(pet.peso * 10)}g` },
+          { hora: '12:00', tipo: 'Almoço', quantidade: `${Math.round(pet.peso * 15)}g` },
+          { hora: '18:00', tipo: 'Jantar', quantidade: `${Math.round(pet.peso * 15)}g` },
+        ];
+        const rows = padrao.map((p) => ({
+          id: crypto.randomUUID(),
+          pet_id: pet.id,
+          lista: 'refeicao',
+          dia: hoje,
+          hora: p.hora,
+          nome: p.tipo,
+          detalhe: p.quantidade,
+          concluida: false,
+        }));
+        const { data: inseridos } = await supabase.from('checklist_item').insert(rows).select();
+        const criados = inseridos || rows;
+        setRefeicoes(criados.map((r) => ({ id: r.id, hora: r.hora, tipo: r.nome, quantidade: r.detalhe || '', concluida: r.concluida })));
+      });
   }, [pet?.id, pet?.peso]);
 
-  const salvarRefeicoes = (novas: Refeicao[]) => {
-    const hoje = new Date().toDateString();
-    const chave = `refeicoes-${pet?.id}-${hoje}`;
-    localStorage.setItem(chave, JSON.stringify(novas));
-  };
-
   const concluirRefeicao = (id: string) => {
-    const novas = refeicoes.map((r) =>
-      r.id === id ? { ...r, concluida: true } : r
-    );
-    setRefeicoes(novas);
-    salvarRefeicoes(novas);
+    setRefeicoes((prev) => prev.map((r) => (r.id === id ? { ...r, concluida: true } : r)));
+    const supabase = createClient();
+    supabase.from('checklist_item').update({ concluida: true }).eq('id', id).then();
   };
 
   const desfazerRefeicao = (id: string) => {
-    const novas = refeicoes.map((r) =>
-      r.id === id ? { ...r, concluida: false } : r
-    );
-    setRefeicoes(novas);
-    salvarRefeicoes(novas);
+    setRefeicoes((prev) => prev.map((r) => (r.id === id ? { ...r, concluida: false } : r)));
+    const supabase = createClient();
+    supabase.from('checklist_item').update({ concluida: false }).eq('id', id).then();
   };
 
   const adicionarRefeicao = () => {
+    if (!pet) return;
     const agora = new Date();
     const hora = `${agora.getHours().toString().padStart(2, '0')}:${agora.getMinutes().toString().padStart(2, '0')}`;
-    const nova: Refeicao = {
-      id: Date.now().toString(),
-      hora,
-      tipo: 'Lanche',
-      quantidade: `${Math.round((pet?.peso || 10) * 5)}g`,
-      concluida: false,
-    };
-    const novas = [...refeicoes, nova];
-    setRefeicoes(novas);
-    salvarRefeicoes(novas);
+    const id = crypto.randomUUID();
+    const quantidade = `${Math.round((pet.peso || 10) * 5)}g`;
+    const nova: Refeicao = { id, hora, tipo: 'Lanche', quantidade, concluida: false };
+    setRefeicoes((prev) => [...prev, nova]);
     setNovaRefeicao(false);
+    const supabase = createClient();
+    supabase.from('checklist_item').insert({
+      id, pet_id: pet.id, lista: 'refeicao', dia: diaISO(agora),
+      hora, nome: 'Lanche', detalhe: quantidade, concluida: false,
+    }).then();
   };
 
   const removerRefeicao = (id: string) => {
-    const novas = refeicoes.filter((r) => r.id !== id);
-    setRefeicoes(novas);
-    salvarRefeicoes(novas);
+    setRefeicoes((prev) => prev.filter((r) => r.id !== id));
+    const supabase = createClient();
+    supabase.from('checklist_item').delete().eq('id', id).then();
   };
 
   const pendentes = refeicoes.filter((r) => !r.concluida);
