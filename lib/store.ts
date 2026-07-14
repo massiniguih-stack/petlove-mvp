@@ -59,14 +59,14 @@ function petFromRow(row: Record<string, unknown>, tutor: Tutor): Pet {
 // Garante que o tutor tenha uma linha na tabela `tutor` antes de mexer em
 // pets — o trigger que cria essa linha automaticamente só existe desde uma
 // certa data; contas mais antigas podem não ter sido cobertas por ele.
-async function ensureTutorRow(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
-  const nome =
-    (user.user_metadata?.nome as string | undefined) ||
-    (user.user_metadata?.full_name as string | undefined) ||
-    '';
-  await supabase
-    .from('tutor')
-    .upsert({ id: user.id, nome, email: user.email || '' }, { onConflict: 'id', ignoreDuplicates: true });
+// Feito via rota de servidor (service role) porque a tabela `tutor` não tem
+// policy de RLS para INSERT no cliente, só SELECT/UPDATE.
+async function ensureTutorRow(_supabase: ReturnType<typeof createClient>, _user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
+  try {
+    await fetch('/api/tutor/ensure', { method: 'POST' });
+  } catch {
+    // não bloqueia o fluxo local se a chamada falhar
+  }
 }
 
 function petToRow(pet: Partial<Pet>) {
