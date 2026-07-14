@@ -579,7 +579,7 @@ export default function AtividadesPage() {
 
             <div className="space-y-6">
               {/* Checklist Diário */}
-              <div className="rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 p-5 text-white shadow-xl shadow-blue-500/30">
+              <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-600 p-5 text-white shadow-xl shadow-blue-500/30">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold">Checklist de Hoje</h3>
                   <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold backdrop-blur-sm">
