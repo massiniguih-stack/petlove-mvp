@@ -77,18 +77,18 @@ export default function DesempenhoPage() {
               </div>
             </div>
 
-            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-500 to-purple-600 p-5 text-white shadow-xl shadow-violet-500/25 transition-all duration-300 hover:shadow-2xl hover:shadow-violet-500/35 hover:-translate-y-1">
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-500 to-pink-600 p-5 text-white shadow-xl shadow-rose-500/25 transition-all duration-300 hover:shadow-2xl hover:shadow-rose-500/35 hover:-translate-y-1">
               <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10 transition group-hover:scale-110" />
               <div className="absolute -bottom-10 -right-10 h-36 w-36 rounded-full bg-white/5" />
               <div className="relative">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
                   <CalendarIcon3D size={30} />
                 </div>
-                <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-violet-100">Idade</p>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-rose-100">Idade</p>
                 <p className="mt-1 text-4xl font-black leading-tight">
                   {idadeEmMeses < 12 ? idadeEmMeses : Math.floor(idadeEmMeses / 12)}
                 </p>
-                <p className="text-xs font-medium text-violet-100">{idadeEmMeses < 12 ? 'meses' : 'anos'} · {fase}</p>
+                <p className="text-xs font-medium text-rose-100">{idadeEmMeses < 12 ? 'meses' : 'anos'} · {fase}</p>
               </div>
             </div>
 
