@@ -8,22 +8,7 @@ interface PartnerEmail {
   nome: string;
   tipo: string;
   cidade: string;
-}
-
-const STORAGE_KEY = 'petlove_partner_emails';
-
-function loadPartnerEmails(): PartnerEmail[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
-  } catch {
-    return [];
-  }
-}
-
-function savePartnerEmails(emails: PartnerEmail[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(emails));
+  sent_at?: string | null;
 }
 
 export default function AdminPartnerEmailsPage() {
@@ -113,39 +98,46 @@ export default function AdminPartnerEmailsPage() {
 </div>`);
 
   useEffect(() => {
-    setPartners(loadPartnerEmails());
+    loadPartners();
   }, []);
 
-  function addPartner() {
+  async function loadPartners() {
+    const res = await fetch('/api/admin/partner-drafts');
+    if (!res.ok) return;
+    const { drafts } = await res.json();
+    setPartners(drafts);
+    setSent(drafts.filter((d: PartnerEmail) => d.sent_at).map((d: PartnerEmail) => d.email));
+  }
+
+  async function addPartner() {
     if (!newEmail || !newNome) return;
-    const partner: PartnerEmail = {
-      id: Date.now().toString(),
-      email: newEmail,
-      nome: newNome,
-      tipo: newTipo,
-      cidade: newCidade,
-    };
-    const updated = [...partners, partner];
-    setPartners(updated);
-    savePartnerEmails(updated);
+    const res = await fetch('/api/admin/partner-drafts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ drafts: [{ email: newEmail, nome: newNome, tipo: newTipo, cidade: newCidade }] }),
+    });
+    if (res.ok) {
+      const { drafts } = await res.json();
+      setPartners(prev => [...prev, ...drafts]);
+    }
     setNewEmail('');
     setNewNome('');
     setNewCidade('');
     setShowForm(false);
   }
 
-  function removePartner(id: string) {
-    const updated = partners.filter(p => p.id !== id);
-    setPartners(updated);
-    savePartnerEmails(updated);
+  async function removePartner(id: string) {
+    const res = await fetch(`/api/admin/partner-drafts?id=${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      setPartners(prev => prev.filter(p => p.id !== id));
+    }
   }
 
-  function addBulkEmails() {
+  async function addBulkEmails() {
     const lines = bulkEmails.split('\n').filter(l => l.trim());
     const newPartners = lines.map(line => {
       const parts = line.split(',').map(p => p.trim());
       return {
-        id: Date.now().toString() + Math.random(),
         email: parts[0] || '',
         nome: parts[1] || 'Parceiro',
         tipo: parts[2] || 'veterinario',
@@ -153,14 +145,20 @@ export default function AdminPartnerEmailsPage() {
       };
     }).filter(p => p.email && p.email.includes('@'));
 
-    const updated = [...partners, ...newPartners];
-    setPartners(updated);
-    savePartnerEmails(updated);
+    const res = await fetch('/api/admin/partner-drafts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ drafts: newPartners }),
+    });
+    if (res.ok) {
+      const { drafts } = await res.json();
+      setPartners(prev => [...prev, ...drafts]);
+    }
     setBulkEmails('');
     setBulkMode(false);
   }
 
-  async function sendEmail(to: string, nome: string) {
+  async function sendEmail(id: string, to: string, nome: string) {
     const personalizedBody = body.replace('{nome}', nome);
     setSending(true);
     try {
@@ -175,6 +173,11 @@ export default function AdminPartnerEmailsPage() {
       });
       if (res.ok) {
         setSent(prev => [...prev, to]);
+        await fetch('/api/admin/partner-drafts', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        });
       }
     } catch (err) {
       console.error('Failed to send:', err);
@@ -186,7 +189,7 @@ export default function AdminPartnerEmailsPage() {
   async function sendToAll() {
     for (const partner of partners) {
       if (!sent.includes(partner.email)) {
-        await sendEmail(partner.email, partner.nome);
+        await sendEmail(partner.id, partner.email, partner.nome);
       }
     }
   }
@@ -380,7 +383,7 @@ export default function AdminPartnerEmailsPage() {
                     </span>
                   ) : (
                     <button
-                      onClick={() => sendEmail(partner.email, partner.nome)}
+                      onClick={() => sendEmail(partner.id, partner.email, partner.nome)}
                       disabled={sending}
                       className="rounded-lg bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-600 transition hover:bg-amber-100 disabled:opacity-50 dark:bg-amber-900 dark:text-amber-300"
                     >
