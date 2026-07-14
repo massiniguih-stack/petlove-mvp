@@ -533,7 +533,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
 }
 
 export default function VidaPage() {
-  const { pet } = usePetStore();
+  const { pet, hydrated } = usePetStore();
   const router = useRouter();
   const [momentos, setMomentos] = useState<Momento[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -541,8 +541,8 @@ export default function VidaPage() {
   const [filtro, setFiltro] = useState<Momento['categoria'] | 'todos'>('todos');
 
   useEffect(() => {
-    if (!pet) router.push('/onboarding');
-  }, [pet, router]);
+    if (hydrated && !pet) router.push('/onboarding');
+  }, [hydrated, pet, router]);
 
   useEffect(() => {
     if (!pet?.id) return;

@@ -10,7 +10,7 @@ import { racasCachorros } from '@/data/racas';
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { pet, addPet, updatePet } = usePetStore();
+  const { pet, addPet, updatePet, hydrated } = usePetStore();
   const { user, loading: authLoading } = useAuth();
   const [erro, setErro] = useState('');
   const [mostrarOpcionais, setMostrarOpcionais] = useState(false);
@@ -35,6 +35,28 @@ export default function OnboardingPage() {
       setMostrarOpcionais(true);
     }
   }, [pet]);
+
+  // pet só fica disponível depois que o store hidrata a partir do
+  // localStorage (ver lib/store.ts); os useState acima capturam o valor
+  // inicial (vazio) antes disso, então re-sincroniza o formulário assim
+  // que a hidratação terminar, se houver um pet existente para editar.
+  useEffect(() => {
+    if (hydrated && pet) {
+      setForm({
+        nome: pet.nome,
+        raca: pet.raca,
+        dataNascimento: pet.dataNascimento,
+        peso: pet.peso?.toString() ?? '',
+        sexo: pet.sexo,
+        objetivo: pet.objetivo,
+        tutorTelefone: pet.tutor?.telefone ?? '',
+        tutorEndereco: pet.tutor?.endereco ?? '',
+        consentimentoMarketing: false,
+        consentimentoLocalizacao: false,
+      });
+      setBuscaRaca(pet.raca ?? '');
+    }
+  }, [hydrated]);
 
   const racasFiltradas = buscaRaca.trim()
     ? racasCachorros.filter((r) => r.toLowerCase().includes(buscaRaca.toLowerCase())).slice(0, 20)

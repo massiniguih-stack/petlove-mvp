@@ -29,6 +29,8 @@ interface PetState {
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
   petsCarregados: boolean;
+  hydrated: boolean;
+  hydrate: () => void;
   addPet: (pet: Pet) => Promise<{ error?: string }>;
   removePet: (id: string) => Promise<void>;
   selectPet: (id: string) => void;
@@ -151,23 +153,37 @@ function savePremium(value: boolean) {
 }
 
 export const usePetStore = create<PetState>((set, get) => {
-  const pets = loadPets();
-  const selectedId = loadSelectedId();
-  const isPremium = loadPremium();
-  const planCache = loadPlanCache();
-
-  const currentPet = pets.find((p) => p.id === selectedId) || pets[0] || null;
-
+  // Estado inicial precisa bater com o que o servidor renderiza (sem acesso a
+  // localStorage) para não causar erro de hidratação do React. Os dados reais
+  // só entram depois, via hydrate() chamado num useEffect (ver SubscriptionLoader).
   return {
-    pets,
-    selectedPetId: currentPet?.id || null,
-    isPremium,
-    plan: planCache?.plan || null,
+    pets: [],
+    selectedPetId: null,
+    isPremium: false,
+    plan: null,
     subscriptionStatus: null,
     currentPeriodEnd: null,
     cancelAtPeriodEnd: false,
     petsCarregados: false,
-    pet: currentPet,
+    hydrated: false,
+    pet: null,
+
+    hydrate: () => {
+      const pets = loadPets();
+      const selectedId = loadSelectedId();
+      const isPremium = loadPremium();
+      const planCache = loadPlanCache();
+      const currentPet = pets.find((p) => p.id === selectedId) || pets[0] || null;
+
+      set({
+        pets,
+        selectedPetId: currentPet?.id || null,
+        isPremium,
+        plan: planCache?.plan || null,
+        pet: currentPet,
+        hydrated: true,
+      });
+    },
 
     fetchPets: async () => {
       try {

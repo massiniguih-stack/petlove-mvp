@@ -305,8 +305,15 @@ function getDicasDesenvolvimento(idadeEmMeses: number, objetivo: string) {
 }
 
 export default function RacaoPage() {
-  const { pet } = usePetStore();
+  const { pet, hydrated } = usePetStore();
   const [objetivo, setObjetivo] = useState(pet?.objetivo ?? 'manutencao');
+
+  // pet só fica disponível depois que o store hidrata a partir do
+  // localStorage (ver lib/store.ts); o useState acima captura o valor
+  // inicial antes disso, então re-sincroniza assim que a hidratação terminar.
+  useEffect(() => {
+    if (hydrated && pet) setObjetivo(pet.objetivo);
+  }, [hydrated]);
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [marcaExpandida, setMarcaExpandida] = useState<string | null>(null);
   const [suplementoExpandido, setSuplementoExpandido] = useState<SuplementoDetalhe | null>(null);

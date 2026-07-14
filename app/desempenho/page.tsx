@@ -23,12 +23,12 @@ function calcularMeta(idadeEmMeses: number, pesoAtual: number, objetivo: string)
 }
 
 export default function DesempenhoPage() {
-  const { pet } = usePetStore();
+  const { pet, hydrated } = usePetStore();
   const router = useRouter();
 
   useEffect(() => {
-    if (!pet) router.push('/onboarding');
-  }, [pet, router]);
+    if (hydrated && !pet) router.push('/onboarding');
+  }, [hydrated, pet, router]);
 
   if (!pet) return null;
 

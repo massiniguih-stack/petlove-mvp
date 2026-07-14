@@ -54,7 +54,7 @@ function PetPhoto({ pet, onPhotoChange }: { pet: { nome: string; fotoUrl: string
 }
 
 export default function DashboardPage() {
-  const { pet, updatePet } = usePetStore();
+  const { pet, updatePet, hydrated } = usePetStore();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -63,8 +63,8 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    if (!pet) router.push('/onboarding');
-  }, [pet, router]);
+    if (hydrated && !pet) router.push('/onboarding');
+  }, [hydrated, pet, router]);
 
   if (!pet) return null;
 
