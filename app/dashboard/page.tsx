@@ -156,7 +156,7 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <Link href="/mapa" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 p-5 text-white shadow-lg shadow-purple-500/30 transition hover:shadow-xl hover:shadow-purple-500/40">
+            <Link href="/mapa" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
@@ -166,7 +166,7 @@ export default function DashboardPage() {
               </div>
             </Link>
 
-            <Link href="/vida" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 p-5 text-white shadow-lg shadow-violet-500/30 transition hover:shadow-xl hover:shadow-violet-500/40">
+            <Link href="/vida" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">

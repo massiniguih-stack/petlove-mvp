@@ -193,14 +193,14 @@ export default function HomePage() {
 
               <Link
                 href="/vida"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500 to-pink-500 p-6 text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-rose-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
                   <div className="flex h-16 w-16 items-center justify-center">
                     <CalendarIcon3D size={56} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Linha do tempo</h3>
-                  <p className="mt-1.5 text-sm text-purple-100">Marcos, vacinas e conquistas.</p>
+                  <p className="mt-1.5 text-sm text-rose-100">Marcos, vacinas e conquistas.</p>
                 </div>
               </Link>
 
