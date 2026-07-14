@@ -128,10 +128,30 @@ export default function CadastroParceiroPage() {
     return digits;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [enviando, setEnviando] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.aceiteTermos) return;
-    setEnviado(true);
+    setEnviando(true);
+    setErroEnvio(null);
+    try {
+      const res = await fetch('/api/parceiros/cadastro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Erro ao enviar cadastro');
+      }
+      setEnviado(true);
+    } catch (err) {
+      setErroEnvio(err instanceof Error ? err.message : 'Erro ao enviar cadastro');
+    } finally {
+      setEnviando(false);
+    }
   };
 
   const totalSteps = 4;
@@ -581,16 +601,20 @@ export default function CadastroParceiroPage() {
                   </div>
                 </div>
 
+                {erroEnvio && (
+                  <p className="mt-4 rounded-xl bg-red-50 dark:bg-red-950 px-4 py-3 text-sm font-semibold text-red-600 dark:text-red-400">{erroEnvio}</p>
+                )}
+
                 <div className="mt-6 flex justify-between">
                   <button type="button" onClick={() => setStep(3)} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 py-3 text-sm font-bold text-slate-600 dark:text-slate-400 transition hover:bg-slate-50 dark:hover:bg-slate-800">
                     ← Voltar
                   </button>
                   <button
                     type="submit"
-                    disabled={!form.aceiteTermos}
+                    disabled={!form.aceiteTermos || enviando}
                     className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-8 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition hover:shadow-xl hover:shadow-emerald-500/35 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    ✅ Enviar Cadastro
+                    {enviando ? 'Enviando...' : '✅ Enviar Cadastro'}
                   </button>
                 </div>
               </div>
