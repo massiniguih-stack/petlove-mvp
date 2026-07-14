@@ -176,7 +176,7 @@ export default function MapaPage() {
       <main className="flex-1">
 
         {/* Hero Header */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 px-4 py-12 text-white">
+        <section className="relative overflow-hidden bg-gradient-to-br from-rose-600 to-pink-600 px-4 py-12 text-white">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white dark:bg-slate-900" />
             <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-white dark:bg-slate-900" />
@@ -190,7 +190,7 @@ export default function MapaPage() {
               <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
                 Encontre o melhor <span className="text-yellow-200">para seu pet</span>
               </h1>
-              <p className="mt-3 max-w-lg text-lg text-blue-100">
+              <p className="mt-3 max-w-lg text-lg text-rose-100">
                 Clínicas, pet shops, creches, hotéis e parques pet friendly na sua região.
               </p>
             </div>
