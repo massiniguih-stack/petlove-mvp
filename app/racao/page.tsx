@@ -337,10 +337,12 @@ export default function RacaoPage() {
           setRefeicoes(data.map((r) => ({ id: r.id, hora: r.hora, tipo: r.nome, quantidade: r.detalhe || '', concluida: r.concluida })));
           return;
         }
+        // Distribuição das refeições padrão soma os mesmos 2% do peso corporal
+        // ao dia usados em getRecomendacao() (peso * 0.02 * 1000 = peso * 20g).
         const padrao = [
-          { hora: '07:00', tipo: 'Café da manhã', quantidade: `${Math.round(pet.peso * 10)}g` },
-          { hora: '12:00', tipo: 'Almoço', quantidade: `${Math.round(pet.peso * 15)}g` },
-          { hora: '18:00', tipo: 'Jantar', quantidade: `${Math.round(pet.peso * 15)}g` },
+          { hora: '07:00', tipo: 'Café da manhã', quantidade: `${Math.round(pet.peso * 6)}g` },
+          { hora: '12:00', tipo: 'Almoço', quantidade: `${Math.round(pet.peso * 7)}g` },
+          { hora: '18:00', tipo: 'Jantar', quantidade: `${Math.round(pet.peso * 7)}g` },
         ];
         const rows = padrao.map((p) => ({
           id: crypto.randomUUID(),
@@ -414,7 +416,7 @@ export default function RacaoPage() {
   const suplementos = getSuplementos(objetivo);
   const dicas = getDicasDesenvolvimento(idadeEmMeses, objetivo);
 
-  const marcasParaMostrar = mostrarTodos ? marcas : marcas.slice(0, 3);
+  const marcasParaMostrar = mostrarTodos ? marcas : recomendacao.marcas;
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
