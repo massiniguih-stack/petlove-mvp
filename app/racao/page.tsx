@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
+import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D } from '@/components/Icons3D';
 
 function diaISO(d: Date) {
   return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
@@ -448,19 +449,19 @@ export default function RacaoPage() {
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
                    <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
-                     <span className="text-2xl">⚖️</span>
+                     <ScaleIcon3D size={28} className="mx-auto" />
                      <p className="mt-2 text-xs font-medium text-blue-600">Peso</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
                    <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
-                     <span className="text-2xl">📅</span>
+                     <CalendarIcon3D size={28} className="mx-auto" />
                      <p className="mt-2 text-xs font-medium text-emerald-600">Idade</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {idadeEmMeses < 12 ? `${idadeEmMeses} meses` : `${Math.floor(idadeEmMeses / 12)} anos`}
                     </p>
                   </div>
                    <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">
-                     <span className="text-2xl">🎯</span>
+                     <TargetIcon3D size={28} className="mx-auto" />
                      <p className="mt-2 text-xs font-medium text-purple-600">Objetivo</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {objetivo === 'manutencao' ? 'Manutenção' : objetivo === 'pelagem' ? 'Pelagem' : objetivo === 'emagrecimento' ? 'Emagrecimento' : 'Desempenho'}

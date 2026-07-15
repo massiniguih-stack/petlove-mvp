@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
+import { ScaleIcon3D } from '@/components/Icons3D';
 
 interface Atividade {
   id: string;
@@ -389,7 +390,7 @@ export default function AtividadesPage() {
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950 dark:ring-blue-900">
-                    <span className="text-2xl">⚖️</span>
+                    <ScaleIcon3D size={28} className="mx-auto" />
                     <p className="mt-2 text-xs font-medium text-blue-600 dark:text-blue-400">Peso</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
