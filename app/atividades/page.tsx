@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
-import { ScaleIcon3D, SearchIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, SearchIcon3D, DogIcon3D } from '@/components/Icons3D';
 
 interface Atividade {
   id: string;
@@ -385,7 +385,7 @@ export default function AtividadesPage() {
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-                    <span className="text-2xl">🐕</span>
+                    <DogIcon3D size={28} className="mx-auto" />
                     <p className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400">Raça</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>

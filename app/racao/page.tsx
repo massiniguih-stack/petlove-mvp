@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BackButton } from '@/components/BackButton';
-import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D, DogIcon3D, BowlIcon3D } from '@/components/Icons3D';
 
 function diaISO(d: Date) {
   return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
@@ -448,7 +448,7 @@ export default function RacaoPage() {
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                    <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
-                     <span className="text-2xl">🐕</span>
+                     <DogIcon3D size={28} className="mx-auto" />
                      <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
@@ -844,7 +844,7 @@ export default function RacaoPage() {
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Porções diárias</h3>
                 <div className="mt-4 space-y-3">
                   <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-3 ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
-                    <span className="text-2xl">🥣</span>
+                    <BowlIcon3D size={28} />
                     <div>
                       <p className="text-xs font-medium text-amber-600">Quantidade</p>
                       <p className="text-lg font-black text-slate-900 dark:text-white">{recomendacao.quantidadeDiaria}g/dia</p>

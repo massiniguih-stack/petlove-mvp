@@ -8,11 +8,13 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import {
   PawIcon3D,
+  DogIcon3D,
   CalendarIcon3D,
   ActivityIcon3D,
   BowlIcon3D,
   PinIcon3D,
   GearIcon3D,
+  ChartIcon3D,
 } from '@/components/Icons3D';
 
 function DogIcon({ size = 24, className = '' }: { size?: number; className?: string }) {
@@ -72,9 +74,9 @@ function DogIcon({ size = 24, className = '' }: { size?: number; className?: str
 }
 
 const benefits = [
-  { title: 'Saúde e peso', desc: 'Acompanhe o crescimento do seu pet.', icon: '📊' },
-  { title: 'Ração certa', desc: 'Sugestões por raça e objetivo.', icon: '🥣' },
-  { title: 'Serviços perto', desc: 'Vet, parque e hotel no mapa.', icon: '📍' },
+  { title: 'Saúde e peso', desc: 'Acompanhe o crescimento do seu pet.', Icon: ChartIcon3D },
+  { title: 'Ração certa', desc: 'Sugestões por raça e objetivo.', Icon: BowlIcon3D },
+  { title: 'Serviços perto', desc: 'Vet, parque e hotel no mapa.', Icon: PinIcon3D },
 ];
 
 export default function HomePage() {
@@ -106,7 +108,7 @@ export default function HomePage() {
         <main className="flex-1">
           <section className="mx-auto max-w-lg px-4 py-16 text-center md:py-24">
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 shadow-lg ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-              <span className="text-4xl">🐕</span>
+              <DogIcon3D size={44} />
             </div>
             <h1 className="mt-8 text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
               Falta só cadastrar seu pet
@@ -341,7 +343,7 @@ export default function HomePage() {
                 key={b.title}
                 className="rounded-2xl bg-white p-5 text-center ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800"
               >
-                <div className="text-2xl">{b.icon}</div>
+                <div className="flex justify-center"><b.Icon size={32} /></div>
                 <h3 className="mt-2 text-sm font-bold text-slate-800 dark:text-slate-100">{b.title}</h3>
                 <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{b.desc}</p>
               </div>

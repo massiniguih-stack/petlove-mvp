@@ -11,7 +11,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
-import { CalendarIcon3D } from '@/components/Icons3D';
+import { CalendarIcon3D, PawIcon3D, DogIcon3D } from '@/components/Icons3D';
 
 interface Momento {
   id: string;
@@ -341,7 +341,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
   }, [momentos, nascimento]);
 
   const marcos = useMemo(() => {
-    const lista: { mes: number; label: string; emoji: string; icone?: string; cor: string; momento?: Momento }[] = [];
+    const lista: { mes: number; label: string; emoji: string; icone?: string; IconComp?: typeof PawIcon3D; cor: string; momento?: Momento }[] = [];
     
     const nascimentoMomento = momentos.find((m) => m.categoria === 'nascimento');
     lista.push({ 
@@ -353,10 +353,10 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
     });
 
     const marcosImportantes = [
-      { mes: 2, label: '2 meses', emoji: '🐾', cor: 'from-amber-400 to-orange-400' },
+      { mes: 2, label: '2 meses', emoji: '🐾', IconComp: PawIcon3D, cor: 'from-amber-400 to-orange-400' },
       { mes: 4, label: '4 meses', emoji: '🦴', icone: '/icons/bone.png', cor: 'from-emerald-400 to-teal-400' },
       { mes: 6, label: '6 meses', emoji: '🎂', cor: 'from-purple-400 to-pink-400' },
-      { mes: 9, label: '9 meses', emoji: '🐕', cor: 'from-blue-400 to-indigo-400' },
+      { mes: 9, label: '9 meses', emoji: '🐕', IconComp: DogIcon3D, cor: 'from-blue-400 to-indigo-400' },
       { mes: 12, label: '1 ano', emoji: '🎉', cor: 'from-rose-400 to-pink-400' },
       { mes: 18, label: '1.5 anos', emoji: '🌟', icone: '/icons/star.png', cor: 'from-cyan-400 to-blue-400' },
       { mes: 24, label: '2 anos', emoji: '🏆', icone: '/icons/trophy.png', cor: 'from-amber-500 to-orange-500' },
@@ -426,7 +426,9 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
               <div className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${marco.cor} text-white shadow-sm transition-all hover:scale-110 ${
                 isAtual ? 'ring-2 ring-rose-400 ring-offset-1' : ''
               } ${isProximo ? 'ring-2 ring-amber-400 ring-offset-1 animate-pulse' : ''}`}>
-                {marco.icone ? (
+                {marco.IconComp ? (
+                  <marco.IconComp size={26} />
+                ) : marco.icone ? (
                   <Image src={marco.icone} alt="" width={26} height={26} unoptimized />
                 ) : (
                   <span className="text-lg">{marco.emoji}</span>
@@ -453,7 +455,9 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
         <div className="mt-4 rounded-2xl border border-rose-100 bg-gradient-to-br from-amber-50 to-rose-50 p-4 shadow-sm">
           <div className="flex items-start gap-3">
             <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${marcoDetalhe.cor} text-white shadow-md`}>
-              {marcoDetalhe.icone ? (
+              {marcoDetalhe.IconComp ? (
+                <marcoDetalhe.IconComp size={28} />
+              ) : marcoDetalhe.icone ? (
                 <Image src={marcoDetalhe.icone} alt="" width={28} height={28} unoptimized />
               ) : (
                 <span className="text-xl">{marcoDetalhe.emoji}</span>
