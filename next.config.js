@@ -28,7 +28,7 @@ const nextConfig = {
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "img-src 'self' data: blob: https://*.supabase.co https://*.mapbox.com https://maps.gstatic.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org",
             "font-src 'self' https://fonts.gstatic.com",
-            "connect-src 'self' https://*.supabase.co https://viacep.com.br https://*.mapbox.com",
+            "connect-src 'self' https://*.supabase.co https://viacep.com.br https://*.mapbox.com https://router.project-osrm.org",
             "frame-ancestors 'none'",
           ].join('; '),
         },
