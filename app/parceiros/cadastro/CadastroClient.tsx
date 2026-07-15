@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
+import { CheckIcon3D } from '@/components/Icons3D';
 
 const tiposServico = [
   { id: 'veterinario', label: 'Veterinário', emoji: '🩺' },
@@ -164,7 +165,7 @@ export default function CadastroClient() {
         <main className="flex-1 flex items-center justify-center px-4 py-20">
           <div className="max-w-md text-center">
             <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-2xl shadow-emerald-500/30">
-              <span className="text-5xl">✅</span>
+              <CheckIcon3D size={56} />
             </div>
             <h1 className="mt-8 text-3xl font-black text-slate-900 dark:text-white">Cadastro Enviado!</h1>
             <p className="mt-3 text-slate-600 dark:text-slate-400">

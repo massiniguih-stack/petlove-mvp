@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
+import { FileTextIcon3D } from '@/components/Icons3D';
 import { usePetStore } from '@/lib/store';
 
 export default function AssinaturaPage() {
@@ -85,7 +86,7 @@ export default function AssinaturaPage() {
               </>
             ) : (
               <div className="text-center py-8">
-                <span className="text-5xl">📋</span>
+                <FileTextIcon3D size={56} className="mx-auto" />
                 <h2 className="mt-4 text-lg font-black text-slate-900 dark:text-white">
                   Sem assinatura ativa
                 </h2>

@@ -10,6 +10,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
+import { CalendarIcon3D } from '@/components/Icons3D';
 
 interface Momento {
   id: string;
@@ -852,7 +853,7 @@ export default function VidaPage() {
           {momentos.length === 0 && (
             <div className="mt-12 rounded-3xl bg-white dark:bg-slate-900 py-20 text-center shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
               <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-rose-100">
-                <span className="text-5xl">📅</span>
+                <CalendarIcon3D size={56} />
               </div>
               <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
                 Comece a contar a história de {pet.nome}

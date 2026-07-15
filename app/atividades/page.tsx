@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
-import { ScaleIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, SearchIcon3D } from '@/components/Icons3D';
 
 interface Atividade {
   id: string;
@@ -569,7 +569,7 @@ export default function AtividadesPage() {
 
                   {atividadesFiltradas.length === 0 && (
                     <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 py-12 text-center dark:from-slate-900 dark:to-slate-800">
-                      <span className="text-5xl">🔍</span>
+                      <SearchIcon3D size={56} className="mx-auto" />
                       <p className="mt-4 text-base font-bold text-slate-700 dark:text-slate-300">Nenhuma atividade encontrada</p>
                       <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Tente outros filtros</p>
                     </div>

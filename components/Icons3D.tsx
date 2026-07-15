@@ -125,3 +125,24 @@ export function ChartIcon3D({ size = 48, className = '' }: Icon3DProps) {
     <Image src="/icons/chart.png" alt="" width={size} height={size} className={className} unoptimized />
   );
 }
+
+// 🔍 Search — Estados vazios de busca
+export function SearchIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/search.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// ✅ Check — Estados de sucesso
+export function CheckIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/check.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// 📋 File — Estados vazios de assinatura/documentos
+export function FileTextIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/file-text.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}

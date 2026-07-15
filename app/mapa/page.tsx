@@ -6,6 +6,7 @@ import { StarIcon, MapPinIcon } from '@/components/Icons';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
+import { SearchIcon3D } from '@/components/Icons3D';
 import { cidades, type Servico } from '@/data/servicos';
 
 const PetMap = dynamic(() => import('@/components/PetMap'), { ssr: false });
@@ -303,7 +304,7 @@ export default function MapaPage() {
           {!carregandoServicos && listaFiltrada.length === 0 && (
             <div className="rounded-3xl bg-white dark:bg-slate-900 py-16 text-center ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
-                <span className="text-4xl">🔍</span>
+                <SearchIcon3D size={40} />
               </div>
               <h2 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">Nenhum serviço em {cidade}</h2>
               <p className="mt-1 text-slate-500 dark:text-slate-400">Tente outra cidade ou filtro.</p>
