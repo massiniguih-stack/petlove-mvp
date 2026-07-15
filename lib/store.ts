@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { createClient } from './supabase/client';
+import { getUtmParams } from './utm';
 
 export interface Tutor {
   nome: string;
@@ -65,7 +66,16 @@ function petFromRow(row: Record<string, unknown>, tutor: Tutor): Pet {
 // policy de RLS para INSERT no cliente, só SELECT/UPDATE.
 async function ensureTutorRow(_supabase: ReturnType<typeof createClient>, _user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
   try {
-    await fetch('/api/tutor/ensure', { method: 'POST' });
+    const utm = getUtmParams();
+    await fetch('/api/tutor/ensure', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        utm_source: utm?.utm_source,
+        utm_medium: utm?.utm_medium,
+        utm_campaign: utm?.utm_campaign,
+      }),
+    });
   } catch {
     // não bloqueia o fluxo local se a chamada falhar
   }

@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://petlove.vercel.app/login</loc>
+    <loc>https://petlove-mvp.vercel.app/login</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://petlove.vercel.app/cadastro</loc>
+    <loc>https://petlove-mvp.vercel.app/cadastro</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://petlove.vercel.app/planos</loc>
+    <loc>https://petlove-mvp.vercel.app/planos</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://petlove.vercel.app/recuperar-senha</loc>
+    <loc>https://petlove-mvp.vercel.app/parceiros/premium</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://petlove-mvp.vercel.app/recuperar-senha</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://petlove.vercel.app/politica-de-privacidade</loc>
+    <loc>https://petlove-mvp.vercel.app/politica-de-privacidade</loc>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>

@@ -4,6 +4,8 @@ Allow: /cadastro
 Allow: /planos
 Allow: /recuperar-senha
 Allow: /politica-de-privacidade
+Allow: /parceiros/premium
+Allow: /parceiros/cadastro
 Disallow: /dashboard
 Disallow: /admin
 Disallow: /onboarding
@@ -12,6 +14,6 @@ Disallow: /racao
 Disallow: /atividades
 Disallow: /vida
 Disallow: /desempenho
-Disallow: /parceiros
+Disallow: /parceiros/convites
 
-Sitemap: https://petlove.vercel.app/sitemap.xml
+Sitemap: https://petlove-mvp.vercel.app/sitemap.xml
