@@ -1,0 +1,1057 @@
+[
+  {
+    "id": "1858b9",
+    "slug": "map-pin",
+    "full": "1858b9-map-pin"
+  },
+  {
+    "id": "49b6f4",
+    "slug": "target",
+    "full": "49b6f4-target"
+  },
+  {
+    "id": "744cc0",
+    "slug": "rocket",
+    "full": "744cc0-rocket"
+  },
+  {
+    "id": "4e7918",
+    "slug": "thumb-up",
+    "full": "4e7918-thumb-up"
+  },
+  {
+    "id": "5f20be",
+    "slug": "computer",
+    "full": "5f20be-computer"
+  },
+  {
+    "id": "0ef25b",
+    "slug": "calender",
+    "full": "0ef25b-calender"
+  },
+  {
+    "id": "b91186",
+    "slug": "shield",
+    "full": "b91186-shield"
+  },
+  {
+    "id": "313578",
+    "slug": "megaphone",
+    "full": "313578-megaphone"
+  },
+  {
+    "id": "628100",
+    "slug": "notebook",
+    "full": "628100-notebook"
+  },
+  {
+    "id": "421bcd",
+    "slug": "dollar",
+    "full": "421bcd-dollar"
+  },
+  {
+    "id": "1fded0",
+    "slug": "mobile",
+    "full": "1fded0-mobile"
+  },
+  {
+    "id": "176980",
+    "slug": "folder",
+    "full": "176980-folder"
+  },
+  {
+    "id": "1acc3d",
+    "slug": "heart",
+    "full": "1acc3d-heart"
+  },
+  {
+    "id": "ddbd61",
+    "slug": "bulb",
+    "full": "ddbd61-bulb"
+  },
+  {
+    "id": "7e47be",
+    "slug": "setting",
+    "full": "7e47be-setting"
+  },
+  {
+    "id": "1b714e",
+    "slug": "tick",
+    "full": "1b714e-tick"
+  },
+  {
+    "id": "269bcd",
+    "slug": "gift-box",
+    "full": "269bcd-gift-box"
+  },
+  {
+    "id": "8ef1fa",
+    "slug": "clock",
+    "full": "8ef1fa-clock"
+  },
+  {
+    "id": "eec43d",
+    "slug": "chat-bubble",
+    "full": "eec43d-chat-bubble"
+  },
+  {
+    "id": "7d956f",
+    "slug": "wallet",
+    "full": "7d956f-wallet"
+  },
+  {
+    "id": "6bfe8c",
+    "slug": "fire",
+    "full": "6bfe8c-fire"
+  },
+  {
+    "id": "a0f7a1",
+    "slug": "at",
+    "full": "a0f7a1-at"
+  },
+  {
+    "id": "39121b",
+    "slug": "medal",
+    "full": "39121b-medal"
+  },
+  {
+    "id": "b4a0af",
+    "slug": "zoom",
+    "full": "b4a0af-zoom"
+  },
+  {
+    "id": "a14880",
+    "slug": "boy",
+    "full": "a14880-boy"
+  },
+  {
+    "id": "17125d",
+    "slug": "star",
+    "full": "17125d-star"
+  },
+  {
+    "id": "5656e5",
+    "slug": "camera",
+    "full": "5656e5-camera"
+  },
+  {
+    "id": "65d841",
+    "slug": "file-text",
+    "full": "65d841-file-text"
+  },
+  {
+    "id": "19312f",
+    "slug": "picture",
+    "full": "19312f-picture"
+  },
+  {
+    "id": "8924a0",
+    "slug": "mail",
+    "full": "8924a0-mail"
+  },
+  {
+    "id": "f0f795",
+    "slug": "chat-text",
+    "full": "f0f795-chat-text"
+  },
+  {
+    "id": "49654f",
+    "slug": "trophy",
+    "full": "49654f-trophy"
+  },
+  {
+    "id": "4a4275",
+    "slug": "chart",
+    "full": "4a4275-chart"
+  },
+  {
+    "id": "634add",
+    "slug": "money",
+    "full": "634add-money"
+  },
+  {
+    "id": "66b0f8",
+    "slug": "pencil",
+    "full": "66b0f8-pencil"
+  },
+  {
+    "id": "637858",
+    "slug": "flash",
+    "full": "637858-flash"
+  },
+  {
+    "id": "b1dccf",
+    "slug": "video-cam",
+    "full": "b1dccf-video-cam"
+  },
+  {
+    "id": "11463e",
+    "slug": "credit-card",
+    "full": "11463e-credit-card"
+  },
+  {
+    "id": "ff5be0",
+    "slug": "tools",
+    "full": "ff5be0-tools"
+  },
+  {
+    "id": "b81ead",
+    "slug": "headphone",
+    "full": "b81ead-headphone"
+  },
+  {
+    "id": "457612",
+    "slug": "lock",
+    "full": "457612-lock"
+  },
+  {
+    "id": "e67951",
+    "slug": "locker",
+    "full": "e67951-locker"
+  },
+  {
+    "id": "196608",
+    "slug": "notify-heart",
+    "full": "196608-notify-heart"
+  },
+  {
+    "id": "8bbd16",
+    "slug": "location",
+    "full": "8bbd16-location"
+  },
+  {
+    "id": "2d9fa2",
+    "slug": "link",
+    "full": "2d9fa2-link"
+  },
+  {
+    "id": "6afbc7",
+    "slug": "chat",
+    "full": "6afbc7-chat"
+  },
+  {
+    "id": "fddbbc",
+    "slug": "mic",
+    "full": "fddbbc-mic"
+  },
+  {
+    "id": "16f789",
+    "slug": "wifi",
+    "full": "16f789-wifi"
+  },
+  {
+    "id": "866e45",
+    "slug": "play",
+    "full": "866e45-play"
+  },
+  {
+    "id": "a68576",
+    "slug": "puzzle",
+    "full": "a68576-puzzle"
+  },
+  {
+    "id": "3f0398",
+    "slug": "gift",
+    "full": "3f0398-gift"
+  },
+  {
+    "id": "ae1a5e",
+    "slug": "pin",
+    "full": "ae1a5e-pin"
+  },
+  {
+    "id": "d3d0c8",
+    "slug": "copy",
+    "full": "d3d0c8-copy"
+  },
+  {
+    "id": "634b4b",
+    "slug": "crown",
+    "full": "634b4b-crown"
+  },
+  {
+    "id": "f71a3e",
+    "slug": "bag",
+    "full": "f71a3e-bag"
+  },
+  {
+    "id": "778c78",
+    "slug": "key",
+    "full": "778c78-key"
+  },
+  {
+    "id": "fcbbf1",
+    "slug": "painting-kit",
+    "full": "fcbbf1-painting-kit"
+  },
+  {
+    "id": "33bdc6",
+    "slug": "plus",
+    "full": "33bdc6-plus"
+  },
+  {
+    "id": "b7c633",
+    "slug": "folder-fav",
+    "full": "b7c633-folder-fav"
+  },
+  {
+    "id": "c90331",
+    "slug": "call-ringing",
+    "full": "c90331-call-ringing"
+  },
+  {
+    "id": "801da3",
+    "slug": "sun",
+    "full": "801da3-sun"
+  },
+  {
+    "id": "dd7474",
+    "slug": "calculator",
+    "full": "dd7474-calculator"
+  },
+  {
+    "id": "6d3198",
+    "slug": "toggle",
+    "full": "6d3198-toggle"
+  },
+  {
+    "id": "ef4a90",
+    "slug": "bell",
+    "full": "ef4a90-bell"
+  },
+  {
+    "id": "8c0c80",
+    "slug": "bookmark",
+    "full": "8c0c80-bookmark"
+  },
+  {
+    "id": "fa6099",
+    "slug": "travel",
+    "full": "fa6099-travel"
+  },
+  {
+    "id": "3d77e2",
+    "slug": "bookmark-fav",
+    "full": "3d77e2-bookmark-fav"
+  },
+  {
+    "id": "1b19dc",
+    "slug": "call-only",
+    "full": "1b19dc-call-only"
+  },
+  {
+    "id": "bf610e",
+    "slug": "figma",
+    "full": "bf610e-figma"
+  },
+  {
+    "id": "f32794",
+    "slug": "calendar",
+    "full": "f32794-calendar"
+  },
+  {
+    "id": "2dfe27",
+    "slug": "girl",
+    "full": "2dfe27-girl"
+  },
+  {
+    "id": "331e9c",
+    "slug": "music",
+    "full": "331e9c-music"
+  },
+  {
+    "id": "908239",
+    "slug": "hash",
+    "full": "908239-hash"
+  },
+  {
+    "id": "10c35a",
+    "slug": "gym",
+    "full": "10c35a-gym"
+  },
+  {
+    "id": "34bc6f",
+    "slug": "folder-new",
+    "full": "34bc6f-folder-new"
+  },
+  {
+    "id": "e9828b",
+    "slug": "flag",
+    "full": "e9828b-flag"
+  },
+  {
+    "id": "a0330a",
+    "slug": "explorer",
+    "full": "a0330a-explorer"
+  },
+  {
+    "id": "d891e3",
+    "slug": "thumb-down",
+    "full": "d891e3-thumb-down"
+  },
+  {
+    "id": "8034f3",
+    "slug": "sphere",
+    "full": "8034f3-sphere"
+  },
+  {
+    "id": "36f0c6",
+    "slug": "money-bag",
+    "full": "36f0c6-money-bag"
+  },
+  {
+    "id": "add2ea",
+    "slug": "trash-can",
+    "full": "add2ea-trash-can"
+  },
+  {
+    "id": "82db59",
+    "slug": "color-palette",
+    "full": "82db59-color-palette"
+  },
+  {
+    "id": "abab3a",
+    "slug": "takeway-cup",
+    "full": "abab3a-takeway-cup"
+  },
+  {
+    "id": "56180e",
+    "slug": "lab",
+    "full": "56180e-lab"
+  },
+  {
+    "id": "845bf0",
+    "slug": "tea-cup",
+    "full": "845bf0-tea-cup"
+  },
+  {
+    "id": "ac021e",
+    "slug": "file",
+    "full": "ac021e-file"
+  },
+  {
+    "id": "923d52",
+    "slug": "forward",
+    "full": "923d52-forward"
+  },
+  {
+    "id": "4f52f8",
+    "slug": "cube",
+    "full": "4f52f8-cube"
+  },
+  {
+    "id": "a63030",
+    "slug": "moon",
+    "full": "a63030-moon"
+  },
+  {
+    "id": "d40073",
+    "slug": "euro",
+    "full": "d40073-euro"
+  },
+  {
+    "id": "0fa56a",
+    "slug": "circle",
+    "full": "0fa56a-circle"
+  },
+  {
+    "id": "8510e2",
+    "slug": "battery",
+    "full": "8510e2-battery"
+  },
+  {
+    "id": "c2395b",
+    "slug": "painting-brush",
+    "full": "c2395b-painting-brush"
+  },
+  {
+    "id": "f33986",
+    "slug": "text",
+    "full": "f33986-text"
+  },
+  {
+    "id": "fdb416",
+    "slug": "minecraft",
+    "full": "fdb416-minecraft"
+  },
+  {
+    "id": "62a0b1",
+    "slug": "brush",
+    "full": "62a0b1-brush"
+  },
+  {
+    "id": "5cc402",
+    "slug": "magic-trick",
+    "full": "5cc402-magic-trick"
+  },
+  {
+    "id": "cdb20a",
+    "slug": "next",
+    "full": "cdb20a-next"
+  },
+  {
+    "id": "b0b258",
+    "slug": "ribbon",
+    "full": "b0b258-ribbon"
+  },
+  {
+    "id": "1c6625",
+    "slug": "3d",
+    "full": "1c6625-3d"
+  },
+  {
+    "id": "616eaf",
+    "slug": "chess",
+    "full": "616eaf-chess"
+  },
+  {
+    "id": "fc0a5a",
+    "slug": "roll-brush",
+    "full": "fc0a5a-roll-brush"
+  },
+  {
+    "id": "fd6d80",
+    "slug": "pause",
+    "full": "fd6d80-pause"
+  },
+  {
+    "id": "7bbb2b",
+    "slug": "file-new",
+    "full": "7bbb2b-file-new"
+  },
+  {
+    "id": "e94351",
+    "slug": "scissor",
+    "full": "e94351-scissor"
+  },
+  {
+    "id": "135b84",
+    "slug": "file-fav",
+    "full": "135b84-file-fav"
+  },
+  {
+    "id": "8c4e01",
+    "slug": "backward",
+    "full": "8c4e01-backward"
+  },
+  {
+    "id": "ecf873",
+    "slug": "bucket",
+    "full": "ecf873-bucket"
+  },
+  {
+    "id": "7fb19c",
+    "slug": "cup",
+    "full": "7fb19c-cup"
+  },
+  {
+    "id": "5fc3fc",
+    "slug": "snowflake",
+    "full": "5fc3fc-snowflake"
+  },
+  {
+    "id": "879a83",
+    "slug": "rupee",
+    "full": "879a83-rupee"
+  },
+  {
+    "id": "16c368",
+    "slug": "eth",
+    "full": "16c368-eth"
+  },
+  {
+    "id": "4e9c51",
+    "slug": "snowman",
+    "full": "4e9c51-snowman"
+  },
+  {
+    "id": "f1cab8",
+    "slug": "glass",
+    "full": "f1cab8-glass"
+  },
+  {
+    "id": "3f82a3",
+    "slug": "umbrella",
+    "full": "3f82a3-umbrella"
+  },
+  {
+    "id": "6f449f",
+    "slug": "axe",
+    "full": "6f449f-axe"
+  },
+  {
+    "id": "5fdffa",
+    "slug": "yuan",
+    "full": "5fdffa-yuan"
+  },
+  {
+    "id": "520d02",
+    "slug": "eyedropper",
+    "full": "520d02-eyedropper"
+  },
+  {
+    "id": "883904",
+    "slug": "call-in",
+    "full": "883904-call-in"
+  },
+  {
+    "id": "e4ef20",
+    "slug": "call-missed",
+    "full": "e4ef20-call-missed"
+  },
+  {
+    "id": "11b186",
+    "slug": "xmas-tree",
+    "full": "11b186-xmas-tree"
+  },
+  {
+    "id": "283ce1",
+    "slug": "blender",
+    "full": "283ce1-blender"
+  },
+  {
+    "id": "14180b",
+    "slug": "back",
+    "full": "14180b-back"
+  },
+  {
+    "id": "87c2c5",
+    "slug": "call-out",
+    "full": "87c2c5-call-out"
+  },
+  {
+    "id": "b801dc",
+    "slug": "3d-coin",
+    "full": "b801dc-3d-coin"
+  },
+  {
+    "id": "3d005d",
+    "slug": "star",
+    "full": "3d005d-star"
+  },
+  {
+    "id": "1358b6",
+    "slug": "pound",
+    "full": "1358b6-pound"
+  },
+  {
+    "id": "deb9ff",
+    "slug": "can",
+    "full": "deb9ff-can"
+  },
+  {
+    "id": "b5916f",
+    "slug": "bell",
+    "full": "b5916f-bell"
+  },
+  {
+    "id": "d4ee0e",
+    "slug": "call-end",
+    "full": "d4ee0e-call-end"
+  },
+  {
+    "id": "f8ba36",
+    "slug": "santa",
+    "full": "f8ba36-santa"
+  },
+  {
+    "id": "d004fd",
+    "slug": "gingerbread",
+    "full": "d004fd-gingerbread"
+  },
+  {
+    "id": "7db5bc",
+    "slug": "ball",
+    "full": "7db5bc-ball"
+  },
+  {
+    "id": "2c84d9",
+    "slug": "leaf",
+    "full": "2c84d9-leaf"
+  },
+  {
+    "id": "6e6a21",
+    "slug": "candle",
+    "full": "6e6a21-candle"
+  },
+  {
+    "id": "ab9721",
+    "slug": "candy",
+    "full": "ab9721-candy"
+  },
+  {
+    "id": "e32138",
+    "slug": "cap",
+    "full": "e32138-cap"
+  },
+  {
+    "id": "8d7202",
+    "slug": "wreath",
+    "full": "8d7202-wreath"
+  },
+  {
+    "id": "e7eb9d",
+    "slug": "sleigh",
+    "full": "e7eb9d-sleigh"
+  },
+  {
+    "id": "dd3311",
+    "slug": "reindeer",
+    "full": "dd3311-reindeer"
+  },
+  {
+    "id": "3ddcf2",
+    "slug": "gloves",
+    "full": "3ddcf2-gloves"
+  },
+  {
+    "id": "aca067",
+    "slug": "shocks",
+    "full": "aca067-shocks"
+  },
+  {
+    "id": "781f28",
+    "slug": "calendar",
+    "full": "781f28-calendar"
+  },
+  {
+    "id": "231450",
+    "slug": "ghost",
+    "full": "231450-ghost"
+  },
+  {
+    "id": "b2ebdd",
+    "slug": "pumpkin",
+    "full": "b2ebdd-pumpkin"
+  },
+  {
+    "id": "e216db",
+    "slug": "candy",
+    "full": "e216db-candy"
+  },
+  {
+    "id": "835a74",
+    "slug": "zombie",
+    "full": "835a74-zombie"
+  },
+  {
+    "id": "bf7492",
+    "slug": "skull",
+    "full": "bf7492-skull"
+  },
+  {
+    "id": "9ebc41",
+    "slug": "candle",
+    "full": "9ebc41-candle"
+  },
+  {
+    "id": "40545a",
+    "slug": "candy",
+    "full": "40545a-candy"
+  },
+  {
+    "id": "544d0d",
+    "slug": "cauldron",
+    "full": "544d0d-cauldron"
+  },
+  {
+    "id": "31b611",
+    "slug": "instagram",
+    "full": "31b611-instagram"
+  },
+  {
+    "id": "da9711",
+    "slug": "frankenstein",
+    "full": "da9711-frankenstein"
+  },
+  {
+    "id": "af03f3",
+    "slug": "potion",
+    "full": "af03f3-potion"
+  },
+  {
+    "id": "ca95d1",
+    "slug": "witch-hat",
+    "full": "ca95d1-witch-hat"
+  },
+  {
+    "id": "368c50",
+    "slug": "broom",
+    "full": "368c50-broom"
+  },
+  {
+    "id": "5cab4b",
+    "slug": "youtube",
+    "full": "5cab4b-youtube"
+  },
+  {
+    "id": "b3351c",
+    "slug": "vamp",
+    "full": "b3351c-vamp"
+  },
+  {
+    "id": "4ffad0",
+    "slug": "bat",
+    "full": "4ffad0-bat"
+  },
+  {
+    "id": "a3b4b6",
+    "slug": "spider",
+    "full": "a3b4b6-spider"
+  },
+  {
+    "id": "49f115",
+    "slug": "gravestone",
+    "full": "49f115-gravestone"
+  },
+  {
+    "id": "979095",
+    "slug": "skull-candle",
+    "full": "979095-skull-candle"
+  },
+  {
+    "id": "791ffc",
+    "slug": "coffine-box",
+    "full": "791ffc-coffine-box"
+  },
+  {
+    "id": "a5673a",
+    "slug": "facebook",
+    "full": "a5673a-facebook"
+  },
+  {
+    "id": "1dec68",
+    "slug": "bone",
+    "full": "1dec68-bone"
+  },
+  {
+    "id": "3df687",
+    "slug": "tiktok",
+    "full": "3df687-tiktok"
+  },
+  {
+    "id": "e5d0c9",
+    "slug": "whatsapp",
+    "full": "e5d0c9-whatsapp"
+  },
+  {
+    "id": "187a4e",
+    "slug": "google",
+    "full": "187a4e-google"
+  },
+  {
+    "id": "725c02",
+    "slug": "whatsapp",
+    "full": "725c02-whatsapp"
+  },
+  {
+    "id": "135592",
+    "slug": "zombie-hand",
+    "full": "135592-zombie-hand"
+  },
+  {
+    "id": "bc8f50",
+    "slug": "instagram",
+    "full": "bc8f50-instagram"
+  },
+  {
+    "id": "b03751",
+    "slug": "facebook",
+    "full": "b03751-facebook"
+  },
+  {
+    "id": "c0d39c",
+    "slug": "tiktok",
+    "full": "c0d39c-tiktok"
+  },
+  {
+    "id": "27e250",
+    "slug": "google",
+    "full": "27e250-google"
+  },
+  {
+    "id": "a278a4",
+    "slug": "message",
+    "full": "a278a4-message"
+  },
+  {
+    "id": "a6d2be",
+    "slug": "x",
+    "full": "a6d2be-x"
+  },
+  {
+    "id": "0dc921",
+    "slug": "linkedin",
+    "full": "0dc921-linkedin"
+  },
+  {
+    "id": "e02c13",
+    "slug": "x",
+    "full": "e02c13-x"
+  },
+  {
+    "id": "700d85",
+    "slug": "discord",
+    "full": "700d85-discord"
+  },
+  {
+    "id": "58aeba",
+    "slug": "message",
+    "full": "58aeba-message"
+  },
+  {
+    "id": "a1d2c3",
+    "slug": "messanger",
+    "full": "a1d2c3-messanger"
+  },
+  {
+    "id": "abf800",
+    "slug": "linkedin",
+    "full": "abf800-linkedin"
+  },
+  {
+    "id": "3cdf3d",
+    "slug": "facetime",
+    "full": "3cdf3d-facetime"
+  },
+  {
+    "id": "04e52c",
+    "slug": "threads",
+    "full": "04e52c-threads"
+  },
+  {
+    "id": "a5b61e",
+    "slug": "pinterest",
+    "full": "a5b61e-pinterest"
+  },
+  {
+    "id": "a1c22a",
+    "slug": "discord",
+    "full": "a1c22a-discord"
+  },
+  {
+    "id": "03253c",
+    "slug": "twitter",
+    "full": "03253c-twitter"
+  },
+  {
+    "id": "3f9980",
+    "slug": "facetime",
+    "full": "3f9980-facetime"
+  },
+  {
+    "id": "fba58c",
+    "slug": "pinterest",
+    "full": "fba58c-pinterest"
+  },
+  {
+    "id": "730572",
+    "slug": "snapchat",
+    "full": "730572-snapchat"
+  },
+  {
+    "id": "da6196",
+    "slug": "snapchat",
+    "full": "da6196-snapchat"
+  },
+  {
+    "id": "3d2332",
+    "slug": "bluesky",
+    "full": "3d2332-bluesky"
+  },
+  {
+    "id": "ef57a6",
+    "slug": "twitter",
+    "full": "ef57a6-twitter"
+  },
+  {
+    "id": "d49ef9",
+    "slug": "reddit",
+    "full": "d49ef9-reddit"
+  },
+  {
+    "id": "75b1c1",
+    "slug": "ok",
+    "full": "75b1c1-ok"
+  },
+  {
+    "id": "3d421b",
+    "slug": "qq",
+    "full": "3d421b-qq"
+  },
+  {
+    "id": "537509",
+    "slug": "threads",
+    "full": "537509-threads"
+  },
+  {
+    "id": "9effd3",
+    "slug": "qq",
+    "full": "9effd3-qq"
+  },
+  {
+    "id": "f0cda3",
+    "slug": "weibo",
+    "full": "f0cda3-weibo"
+  },
+  {
+    "id": "e9beb7",
+    "slug": "ok",
+    "full": "e9beb7-ok"
+  },
+  {
+    "id": "8a8649",
+    "slug": "vk",
+    "full": "8a8649-vk"
+  },
+  {
+    "id": "c30a98",
+    "slug": "bilibili",
+    "full": "c30a98-bilibili"
+  },
+  {
+    "id": "8c542c",
+    "slug": "weibo",
+    "full": "8c542c-weibo"
+  },
+  {
+    "id": "99dd0f",
+    "slug": "vk",
+    "full": "99dd0f-vk"
+  },
+  {
+    "id": "5e9baf",
+    "slug": "reddit",
+    "full": "5e9baf-reddit"
+  },
+  {
+    "id": "b361e4",
+    "slug": "mastodon",
+    "full": "b361e4-mastodon"
+  },
+  {
+    "id": "c1937c",
+    "slug": "tinder",
+    "full": "c1937c-tinder"
+  },
+  {
+    "id": "5c857f",
+    "slug": "bluesky",
+    "full": "5c857f-bluesky"
+  },
+  {
+    "id": "31f885",
+    "slug": "bilibili",
+    "full": "31f885-bilibili"
+  },
+  {
+    "id": "b321b4",
+    "slug": "tinder",
+    "full": "b321b4-tinder"
+  },
+  {
+    "id": "041684",
+    "slug": "mastodon",
+    "full": "041684-mastodon"
+  }
+]
