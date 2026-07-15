@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { format, differenceInMonths, differenceInDays, addMonths, startOfMonth, isSameMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import Navbar from '@/components/Navbar';
@@ -340,7 +341,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
   }, [momentos, nascimento]);
 
   const marcos = useMemo(() => {
-    const lista: { mes: number; label: string; emoji: string; cor: string; momento?: Momento }[] = [];
+    const lista: { mes: number; label: string; emoji: string; icone?: string; cor: string; momento?: Momento }[] = [];
     
     const nascimentoMomento = momentos.find((m) => m.categoria === 'nascimento');
     lista.push({ 
@@ -353,17 +354,17 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
 
     const marcosImportantes = [
       { mes: 2, label: '2 meses', emoji: '🐾', cor: 'from-amber-400 to-orange-400' },
-      { mes: 4, label: '4 meses', emoji: '🦴', cor: 'from-emerald-400 to-teal-400' },
+      { mes: 4, label: '4 meses', emoji: '🦴', icone: '/icons/bone.png', cor: 'from-emerald-400 to-teal-400' },
       { mes: 6, label: '6 meses', emoji: '🎂', cor: 'from-purple-400 to-pink-400' },
       { mes: 9, label: '9 meses', emoji: '🐕', cor: 'from-blue-400 to-indigo-400' },
       { mes: 12, label: '1 ano', emoji: '🎉', cor: 'from-rose-400 to-pink-400' },
-      { mes: 18, label: '1.5 anos', emoji: '🌟', cor: 'from-cyan-400 to-blue-400' },
-      { mes: 24, label: '2 anos', emoji: '🏆', cor: 'from-amber-500 to-orange-500' },
-      { mes: 36, label: '3 anos', emoji: '💪', cor: 'from-violet-500 to-purple-500' },
-      { mes: 48, label: '4 anos', emoji: '🎖️', cor: 'from-indigo-500 to-blue-500' },
-      { mes: 60, label: '5 anos', emoji: '⭐', cor: 'from-yellow-500 to-amber-500' },
-      { mes: 84, label: '7 anos', emoji: '🏅', cor: 'from-emerald-500 to-green-500' },
-      { mes: 120, label: '10 anos', emoji: '👑', cor: 'from-pink-500 to-rose-500' },
+      { mes: 18, label: '1.5 anos', emoji: '🌟', icone: '/icons/star.png', cor: 'from-cyan-400 to-blue-400' },
+      { mes: 24, label: '2 anos', emoji: '🏆', icone: '/icons/trophy.png', cor: 'from-amber-500 to-orange-500' },
+      { mes: 36, label: '3 anos', emoji: '💪', icone: '/icons/weight.png', cor: 'from-violet-500 to-purple-500' },
+      { mes: 48, label: '4 anos', emoji: '🎖️', icone: '/icons/medal.png', cor: 'from-indigo-500 to-blue-500' },
+      { mes: 60, label: '5 anos', emoji: '⭐', icone: '/icons/star.png', cor: 'from-yellow-500 to-amber-500' },
+      { mes: 84, label: '7 anos', emoji: '🏅', icone: '/icons/medal.png', cor: 'from-emerald-500 to-green-500' },
+      { mes: 120, label: '10 anos', emoji: '👑', icone: '/icons/crown.png', cor: 'from-pink-500 to-rose-500' },
     ];
 
     for (const marco of marcosImportantes) {
@@ -425,7 +426,11 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
               <div className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${marco.cor} text-white shadow-sm transition-all hover:scale-110 ${
                 isAtual ? 'ring-2 ring-rose-400 ring-offset-1' : ''
               } ${isProximo ? 'ring-2 ring-amber-400 ring-offset-1 animate-pulse' : ''}`}>
-                <span className="text-lg">{marco.emoji}</span>
+                {marco.icone ? (
+                  <Image src={marco.icone} alt="" width={26} height={26} unoptimized />
+                ) : (
+                  <span className="text-lg">{marco.emoji}</span>
+                )}
                 {isAtual && (
                   <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-1 ring-white" />
                 )}
@@ -448,7 +453,11 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
         <div className="mt-4 rounded-2xl border border-rose-100 bg-gradient-to-br from-amber-50 to-rose-50 p-4 shadow-sm">
           <div className="flex items-start gap-3">
             <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${marcoDetalhe.cor} text-white shadow-md`}>
-              <span className="text-xl">{marcoDetalhe.emoji}</span>
+              {marcoDetalhe.icone ? (
+                <Image src={marcoDetalhe.icone} alt="" width={28} height={28} unoptimized />
+              ) : (
+                <span className="text-xl">{marcoDetalhe.emoji}</span>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">

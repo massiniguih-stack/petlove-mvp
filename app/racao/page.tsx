@@ -6,8 +6,9 @@ import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BackButton } from '@/components/BackButton';
-import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D } from '@/components/Icons3D';
 
 function diaISO(d: Date) {
   return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
@@ -39,6 +40,7 @@ interface SuplementoDetalhe {
   beneficio: string;
   quando: string;
   icone: string;
+  iconeImg?: string;
   cor: string;
   descricao: string;
   dosagem: string;
@@ -163,6 +165,7 @@ function getSuplementos(objetivo: string): SuplementoDetalhe[] {
         beneficio: 'Força muscular e resistência',
         quando: 'Pré-treino, 30min antes',
         icone: '💪',
+        iconeImg: '/icons/weight.png',
         cor: 'bg-rose-50 text-rose-700',
         descricao: 'Aminoácido que aumenta a disponibilidade de energia muscular, melhorando força e performance em exercícios de curta duração e alta intensidade.',
         dosagem: '5-10g por dia para cães de grande porte',
@@ -185,6 +188,7 @@ function getSuplementos(objetivo: string): SuplementoDetalhe[] {
         beneficio: 'Proteção antioxidante',
         quando: 'Diário',
         icone: '🛡️',
+        iconeImg: '/icons/shield.png',
         cor: 'bg-amber-50 text-amber-700',
         descricao: 'Antioxidante poderoso que protege as células contra radicais livres, fortalece o sistema imunológico e melhora a recuperação muscular.',
         dosagem: '1-2 UI por kg de peso corporal ao dia',
@@ -296,7 +300,7 @@ function getDicasDesenvolvimento(idadeEmMeses: number, objetivo: string) {
 
   if (objetivo === 'desempenho') {
     dicas.push(
-      { titulo: 'Treino progressivo', descricao: 'Aumente gradualmente a intensidade dos exercícios.', icone: '📈', cor: 'bg-amber-50 text-amber-700' },
+      { titulo: 'Treino progressivo', descricao: 'Aumente gradualmente a intensidade dos exercícios.', icone: '📈', iconeImg: '/icons/chart.png', cor: 'bg-amber-50 text-amber-700' },
       { titulo: 'Hidratação', descricao: 'Garanta água fresca sempre disponível.', icone: '💧', cor: 'bg-blue-50 text-blue-700' },
       { titulo: 'Descanso ativo', descricao: 'Mesmo cães ativos precisam de 12-14h de sono.', icone: '😴', cor: 'bg-purple-50 text-purple-700' },
     );
@@ -637,7 +641,11 @@ export default function RacaoPage() {
                       onClick={() => setSuplementoExpandido(s)}
                       className={`group flex items-start gap-3 rounded-xl p-4 text-left ring-1 ring-inset transition-all hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${s.cor.split(' ')[0].replace('bg-', 'ring-')}/30 ${s.cor.split(' ')[0]}`}
                     >
-                      <span className="text-2xl transition group-hover:scale-110">{s.icone}</span>
+                      {s.iconeImg ? (
+                        <Image src={s.iconeImg} alt="" width={28} height={28} unoptimized className="transition group-hover:scale-110" />
+                      ) : (
+                        <span className="text-2xl transition group-hover:scale-110">{s.icone}</span>
+                      )}
                       <div className="flex-1">
                         <p className={`text-sm font-bold ${s.cor.split(' ')[1]}`}>{s.nome}</p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">{s.beneficio}</p>
@@ -660,7 +668,11 @@ export default function RacaoPage() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <span className="text-4xl">{suplementoExpandido.icone}</span>
+                        {suplementoExpandido.iconeImg ? (
+                          <Image src={suplementoExpandido.iconeImg} alt="" width={44} height={44} unoptimized />
+                        ) : (
+                          <span className="text-4xl">{suplementoExpandido.icone}</span>
+                        )}
                         <div>
                           <h3 className="text-xl font-black text-slate-900 dark:text-white">{suplementoExpandido.nome}</h3>
                           <p className={`text-sm font-bold ${suplementoExpandido.cor.split(' ')[1]}`}>{suplementoExpandido.beneficio}</p>
@@ -839,7 +851,7 @@ export default function RacaoPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 p-3 ring-1 ring-rose-100 dark:from-rose-950 dark:to-pink-950">
-                    <span className="text-2xl">🔥</span>
+                    <FireIcon3D size={28} />
                     <div>
                       <p className="text-xs font-medium text-rose-600">Calorias</p>
                       <p className="text-lg font-black text-slate-900 dark:text-white">{recomendacao.caloriasDiarias} kcal</p>
@@ -860,7 +872,11 @@ export default function RacaoPage() {
                 <div className="mt-4 space-y-3">
                   {dicas.map((d) => (
                     <div key={d.titulo} className={`flex items-start gap-3 rounded-xl p-3 ${d.cor.split(' ')[0]}`}>
-                      <span className="text-lg">{d.icone}</span>
+                      {'iconeImg' in d && d.iconeImg ? (
+                        <Image src={d.iconeImg} alt="" width={20} height={20} />
+                      ) : (
+                        <span className="text-lg">{d.icone}</span>
+                      )}
                       <div>
                         <p className={`text-sm font-bold ${d.cor.split(' ')[1]}`}>{d.titulo}</p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">{d.descricao}</p>

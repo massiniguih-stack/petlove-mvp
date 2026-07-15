@@ -146,3 +146,52 @@ export function FileTextIcon3D({ size = 48, className = '' }: Icon3DProps) {
     <Image src="/icons/file-text.png" alt="" width={size} height={size} className={className} unoptimized />
   );
 }
+
+// 🦴 Bone — Marco 4 meses (Linha do tempo)
+export function BoneIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/bone.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// ⭐ Star — Marco 1a6m (Linha do tempo)
+export function StarIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/star.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// 🏆 Trophy — Marco 2 anos (Linha do tempo)
+export function TrophyIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/trophy.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// 🛡️ Shield — Vitamina E (Suplementação)
+export function ShieldIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/shield.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// 🔥 Fire — Calorias (Porções diárias)
+export function FireIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/fire.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// 🎖️ Medal — Marcos 4a/7a (Linha do tempo)
+export function MedalIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/medal.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
+
+// 👑 Crown — Marco 10a (Linha do tempo)
+export function CrownIcon3D({ size = 48, className = '' }: Icon3DProps) {
+  return (
+    <Image src="/icons/crown.png" alt="" width={size} height={size} className={className} unoptimized />
+  );
+}
