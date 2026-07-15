@@ -4,7 +4,7 @@ import { usePetStore } from '@/lib/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { ScaleIcon3D, TargetIcon3D, BuildingIcon3D, CalendarIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D } from '@/components/Icons3D';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -160,7 +160,7 @@ export default function DashboardPage() {
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <BuildingIcon3D size={40} />
+                <PinIcon3D size={40} />
                 <p className="mt-3 text-sm font-medium text-white/80">Serviços</p>
                 <p className="text-2xl font-bold">Vets e parques</p>
               </div>
