@@ -81,7 +81,7 @@ export default function AdminPartnerEmailsPage() {
 
     <div style="background: #f1f5f9; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;">
       <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">Conheca nosso app:</p>
-      <a href="https://petlove-mvp.vercel.app/app" style="color: #7c3aed; font-size: 15px; font-weight: 700; text-decoration: none;">petlove-mvp.vercel.app/app</a>
+      <a href="https://petlove-mvp.vercel.app" style="color: #7c3aed; font-size: 15px; font-weight: 700; text-decoration: none;">petlove-mvp.vercel.app</a>
     </div>
 
     <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 24px 0 0 0; text-align: center;">
