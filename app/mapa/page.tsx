@@ -8,17 +8,13 @@ import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { SearchIcon3D } from '@/components/Icons3D';
 import { cidades, type Servico } from '@/data/servicos';
+import { emojiServico } from '@/lib/tiposServico';
 
 const PetMap = dynamic(() => import('@/components/PetMap'), { ssr: false });
 
 const labels: Record<string, string> = {
   veterinario: 'Veterinários', petshop: 'Pet Shop', creche: 'Creche',
   hotel: 'Hotel', petsitter: 'Pet Sitter', parque: 'Parques',
-};
-
-const emojis: Record<string, string> = {
-  veterinario: '🩺', petshop: '🛁', creche: '🏫',
-  hotel: '🏨', petsitter: '🐾', parque: '🌳',
 };
 
 const cores: Record<string, string> = {
@@ -53,7 +49,7 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
               <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-purple-500/20">⭐ Destaque</span>
             )}
             <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${coresBg[servico.tipo]}`}>
-              {emojis[servico.tipo]} {labels[servico.tipo]}
+              {emojiServico(servico.tipo)} {labels[servico.tipo]}
             </span>
             {servico.plantao24h && (
               <span className="inline-flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">🚨 24h</span>
@@ -294,7 +290,7 @@ export default function MapaPage() {
                         : 'bg-white text-slate-700 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
                     }`}
                   >
-                    <span className="text-2xl">{emojis[tipo]}</span>
+                    <span className="text-2xl">{emojiServico(tipo)}</span>
                     <div className="text-left">
                       <p className={`text-sm font-bold ${isActive ? 'text-white' : 'text-slate-900'}`}>{labels[tipo]}</p>
                       <p className={`text-xs ${isActive ? 'text-white/80' : 'text-slate-500'}`}>{count} encontrado{count !== 1 ? 's' : ''}</p>

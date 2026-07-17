@@ -2,7 +2,7 @@
 
 import { usePetStore } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
-import { format, differenceInMonths, differenceInDays, addMonths, startOfMonth, isSameMonth } from 'date-fns';
+import { format, differenceInMonths, differenceInDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Link from 'next/link';
 import Image from 'next/image';

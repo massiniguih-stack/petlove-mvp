@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import { emojiServico } from '@/lib/tiposServico';
 
 interface Partner {
   id: string;
@@ -250,12 +251,7 @@ export default function AdminParceirosPage() {
                 className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
-                  <span className="text-xl">
-                    {parceiro.tipo === 'veterinario' ? '🩺' :
-                     parceiro.tipo === 'petshop' ? '🛁' :
-                     parceiro.tipo === 'creche' ? '🏫' :
-                     parceiro.tipo === 'parque' ? '🌳' : '🐾'}
-                  </span>
+                  <span className="text-xl">{emojiServico(parceiro.tipo)}</span>
                 </div>
 
                 <div className="flex-1 min-w-0">
