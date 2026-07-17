@@ -9,10 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BackButton } from '@/components/BackButton';
 import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D, DogIcon3D, BowlIcon3D } from '@/components/Icons3D';
-
-function diaISO(d: Date) {
-  return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
-}
+import { diaISO } from '@/lib/checklist';
 
 interface MarcaRacao {
   nome: string;

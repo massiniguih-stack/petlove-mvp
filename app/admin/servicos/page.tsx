@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { emojiServico } from '@/lib/tiposServico';
 
 interface Servico {
   id: string;
@@ -136,12 +137,7 @@ function AdminServicosContent() {
                 <tr key={servico.id} className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">
-                        {servico.tipo === 'veterinario' ? '🩺' :
-                         servico.tipo === 'petshop' ? '🛁' :
-                         servico.tipo === 'creche' ? '🏫' :
-                         servico.tipo === 'parque' ? '🌳' : '🐾'}
-                      </span>
+                      <span className="text-lg">{emojiServico(servico.tipo)}</span>
                       <span className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[200px]">{servico.nome}</span>
                     </div>
                   </td>

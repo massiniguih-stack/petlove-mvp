@@ -8,19 +8,7 @@ import { ScaleIcon3D, TargetIcon3D, CalendarIcon3D, BowlIcon3D, ActivityIcon3D, 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
-
-interface Meta {
-  caloriasDiarias: number;
-  racaoDiaria: number;
-  exercicioMinutos: number;
-}
-
-function calcularMeta(idadeEmMeses: number, pesoAtual: number, objetivo: string): Meta {
-  const caloriasDiarias = pesoAtual * 30 + (objetivo === 'desempenho' ? 50 : objetivo === 'emagrecimento' ? -50 : 0);
-  const racaoDiaria = (pesoAtual * 30) / 3.5;
-  const exercicioMinutos = idadeEmMeses < 12 ? 30 : idadeEmMeses < 36 ? 45 : 60;
-  return { caloriasDiarias, racaoDiaria, exercicioMinutos };
-}
+import { calcularMeta } from '@/lib/metaDiaria';
 
 export default function DesempenhoPage() {
   const { pet, hydrated } = usePetStore();

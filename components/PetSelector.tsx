@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { usePetStore, type Pet } from '@/lib/store';
+import { usePetStore } from '@/lib/store';
 
 export default function PetSelector() {
   const { pets, selectedPetId, selectPet, isPremium, removePet } = usePetStore();

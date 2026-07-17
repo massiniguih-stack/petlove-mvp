@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
 import { ScaleIcon3D, SearchIcon3D, DogIcon3D } from '@/components/Icons3D';
+import { diaISO } from '@/lib/checklist';
 
 interface Atividade {
   id: string;
@@ -20,10 +21,6 @@ interface Atividade {
   dicas: string[];
   indicadaPara: string[];
   equipamento?: string[];
-}
-
-function diaISO(d: Date) {
-  return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
 }
 
 interface CheckItem {
