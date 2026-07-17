@@ -546,8 +546,10 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
   );
 }
 
+const DIAS_HISTORICO_GRATIS = 7;
+
 export default function VidaPage() {
-  const { pet, hydrated } = usePetStore();
+  const { pet, hydrated, isPremium } = usePetStore();
   const router = useRouter();
   const [momentos, setMomentos] = useState<Momento[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -599,6 +601,14 @@ export default function VidaPage() {
 
   const momentosOrdenados = [...momentos].sort((a, b) => b.data.getTime() - a.data.getTime());
   const momentosFiltrados = filtro === 'todos' ? momentosOrdenados : momentosOrdenados.filter((m) => m.categoria === filtro);
+
+  // Grátis só vê os últimos DIAS_HISTORICO_GRATIS dias da linha do tempo;
+  // as estatísticas do topo (meses de vida, vacinas, etc.) continuam
+  // calculadas com o histórico completo, só a lista de momentos é limitada.
+  const corteHistorico = new Date();
+  corteHistorico.setDate(corteHistorico.getDate() - DIAS_HISTORICO_GRATIS);
+  const momentosVisiveis = isPremium ? momentosFiltrados : momentosFiltrados.filter((m) => m.data >= corteHistorico);
+  const momentosOcultosPorPlano = momentosFiltrados.length - momentosVisiveis.length;
 
   const nascimento = new Date(pet.dataNascimento);
   const hoje = new Date();
@@ -827,8 +837,25 @@ export default function VidaPage() {
 
           {/* Timeline */}
           <div id="timeline">
+            {momentosOcultosPorPlano > 0 && (
+              <a
+                href="/planos"
+                className="mb-4 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-white shadow-lg shadow-purple-500/20 transition hover:shadow-xl"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🔒</span>
+                  <div>
+                    <p className="text-sm font-bold">
+                      {momentosOcultosPorPlano} {momentosOcultosPorPlano === 1 ? 'momento mais antigo' : 'momentos mais antigos'} disponíve{momentosOcultosPorPlano === 1 ? 'l' : 'is'} só no Premium
+                    </p>
+                    <p className="text-xs text-purple-100">Grátis mostra os últimos {DIAS_HISTORICO_GRATIS} dias da linha do tempo</p>
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-full bg-white/20 px-3 py-1.5 text-xs font-bold backdrop-blur-sm">Assinar →</span>
+              </a>
+            )}
             <LinhaDoTempo
-              momentos={filtro === 'todos' ? momentos : momentosFiltrados}
+              momentos={momentosVisiveis}
               pet={{ nome: pet.nome, dataNascimento: pet.dataNascimento, fotoUrl: pet.fotoUrl }}
               onEdit={handleEditar}
               onDelete={handleExcluir}

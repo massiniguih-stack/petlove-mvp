@@ -110,6 +110,18 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
             >
               📍 Maps
             </a>
+            {servico.telefone && (
+              <a
+                href={`https://wa.me/${(() => {
+                  const digitos = servico.telefone!.replace(/\D/g, '');
+                  return digitos.startsWith('55') ? digitos : `55${digitos}`;
+                })()}`}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600 hover:shadow-md"
+              >
+                💬 WhatsApp
+              </a>
+            )}
             {servico.instagram && (
               <a href={`https://instagram.com/${servico.instagram}`} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:shadow-md">
