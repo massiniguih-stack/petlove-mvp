@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -9,8 +8,7 @@ import { usePetStore } from '@/lib/store';
 
 export default function CheckoutSuccessPage() {
   const [loading, setLoading] = useState(true);
-  const { fetchSubscription, isPremium, plan } = usePetStore();
-  const router = useRouter();
+  const { fetchSubscription, plan } = usePetStore();
 
   useEffect(() => {
     const verify = async () => {

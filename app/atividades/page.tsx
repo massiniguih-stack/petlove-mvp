@@ -5,7 +5,6 @@ import { usePetStore } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Link from 'next/link';
 import { BackButton } from '@/components/BackButton';
 import { ScaleIcon3D, SearchIcon3D, DogIcon3D } from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';

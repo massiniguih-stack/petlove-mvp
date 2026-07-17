@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Group by state
-  const byState: Record<string, any[]> = {};
+  const byState: Record<string, unknown[]> = {};
   for (const p of partners || []) {
     const estado = p.estado || 'OUTRO';
     if (!byState[estado]) byState[estado] = [];

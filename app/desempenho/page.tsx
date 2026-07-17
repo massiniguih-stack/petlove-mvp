@@ -1,7 +1,6 @@
 'use client';
 
 import { usePetStore } from '@/lib/store';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { ScaleIcon3D, TargetIcon3D, CalendarIcon3D, BowlIcon3D, ActivityIcon3D, PinIcon3D } from '@/components/Icons3D';
