@@ -62,8 +62,7 @@ export default function CadastroPage() {
               </div>
             </div>
             <h1 className="mt-6 text-4xl font-black tracking-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Pet</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-600">Love</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-600">Patinha</span>
             </h1>
             <p className="mt-2 text-sm font-medium text-slate-400">
               Crie sua conta e comece a cuidar 🐕

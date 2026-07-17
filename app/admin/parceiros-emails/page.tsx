@@ -22,11 +22,11 @@ export default function AdminPartnerEmailsPage() {
   const [showForm, setShowForm] = useState(false);
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkEmails, setBulkEmails] = useState('');
-  const [subject, setSubject] = useState('PetLove - Parceiro exclusivo para seu negocio 🐾');
+  const [subject, setSubject] = useState('Patinha - Parceiro exclusivo para seu negocio 🐾');
   const [body, setBody] = useState(`<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background: #ffffff;">
   <div style="background: linear-gradient(135deg, #7c3aed, #9333ea); padding: 40px 30px; text-align: center; border-radius: 0 0 24px 24px;">
     <div style="font-size: 48px; margin-bottom: 12px;">🐾</div>
-    <h1 style="color: #ffffff; font-size: 28px; font-weight: 900; margin: 0; letter-spacing: -0.5px;">PetLove</h1>
+    <h1 style="color: #ffffff; font-size: 28px; font-weight: 900; margin: 0; letter-spacing: -0.5px;">Patinha</h1>
     <p style="color: rgba(255,255,255,0.85); font-size: 14px; margin: 8px 0 0 0;">Cuidados premium para quem ama pets</p>
   </div>
 
@@ -34,11 +34,11 @@ export default function AdminPartnerEmailsPage() {
     <p style="color: #334155; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">Ola, <strong>{nome}</strong>!</p>
 
     <p style="color: #334155; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-      Somos o <strong>PetLove</strong>, uma plataforma digital que conecta tutores de pets a servicos de qualidade. Estamos expandindo e queremos Voce como nosso parceiro.
+      Somos o <strong>Patinha</strong>, uma plataforma digital que conecta tutores de pets a servicos de qualidade. Estamos expandindo e queremos Voce como nosso parceiro.
     </p>
 
     <div style="background: #f8fafc; border-radius: 16px; padding: 24px; margin: 24px 0; border: 1px solid #e2e8f0;">
-      <h3 style="color: #1e293b; font-size: 18px; font-weight: 800; margin: 0 0 16px 0;">Por que ser parceiro PetLove?</h3>
+      <h3 style="color: #1e293b; font-size: 18px; font-weight: 800; margin: 0 0 16px 0;">Por que ser parceiro Patinha?</h3>
 
       <div style="display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start;">
         <div style="background: #ede9fe; border-radius: 10px; padding: 8px; min-width: 36px; text-align: center; font-size: 18px;">📈</div>
@@ -90,7 +90,7 @@ export default function AdminPartnerEmailsPage() {
   </div>
 
   <div style="background: #f8fafc; padding: 24px 30px; text-align: center; border-radius: 0 0 16px 16px; border-top: 1px solid #e2e8f0;">
-    <p style="color: #94a3b8; font-size: 12px; margin: 0;">PetLove - Cuidados premium para quem ama pets</p>
+    <p style="color: #94a3b8; font-size: 12px; margin: 0;">Patinha - Cuidados premium para quem ama pets</p>
     <p style="color: #94a3b8; font-size: 12px; margin: 8px 0 0 0;">
       <a href="https://petlove-mvp.vercel.app" style="color: #7c3aed; text-decoration: none;">petlove-mvp.vercel.app</a>
     </p>

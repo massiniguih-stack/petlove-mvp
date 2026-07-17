@@ -125,8 +125,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-black tracking-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">Pet</span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-600">Love</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-600">Patinha</span>
               </span>
               <span className="text-[10px] font-medium tracking-widest text-slate-400 uppercase">Cuidados premium</span>
             </div>

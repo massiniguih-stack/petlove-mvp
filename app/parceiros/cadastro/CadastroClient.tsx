@@ -206,7 +206,7 @@ export default function CadastroClient() {
                 <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
                   Seja um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">Parceiro</span>
                 </h1>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no PetLove</p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no Patinha</p>
               </div>
             </div>
           </div>
@@ -580,7 +580,7 @@ export default function CadastroClient() {
                       <a href="#" className="font-semibold text-blue-600 hover:underline">Termos de Uso</a>
                       {' '}e{' '}
                       <a href="#" className="font-semibold text-blue-600 hover:underline">Política de Privacidade</a>.
-                      Estou ciente de que meus dados serão utilizados para divulgação no PetLove.
+                      Estou ciente de que meus dados serão utilizados para divulgação no Patinha.
                     </span>
                   </label>
                 </div>

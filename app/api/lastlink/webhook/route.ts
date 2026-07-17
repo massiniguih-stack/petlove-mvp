@@ -175,14 +175,14 @@ export async function POST(request: NextRequest) {
       try {
         const planName = planType?.replaceAll('_', ' ') || 'Premium';
         await resend.emails.send({
-          from: 'PetLove <onboarding@resend.dev>',
+          from: 'Patinha <onboarding@resend.dev>',
           to: buyerEmail,
           subject: 'Parabéns! Você agora é Premium! 🎉',
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <div style="text-align: center; padding: 30px 0;">
                 <h1 style="color: #7c3aed; font-size: 28px; margin: 0;">Parabéns! 🎉</h1>
-                <p style="color: #666; font-size: 16px; margin-top: 8px;">Você agora é membro Premium do PetLove</p>
+                <p style="color: #666; font-size: 16px; margin-top: 8px;">Você agora é membro Premium do Patinha</p>
               </div>
               <div style="background: linear-gradient(135deg, #fdf2f8, #f3e8ff); border-radius: 16px; padding: 24px; margin: 20px 0;">
                 <h2 style="color: #7c3aed; font-size: 18px; margin: 0 0 12px 0;">Seu plano ativo:</h2>

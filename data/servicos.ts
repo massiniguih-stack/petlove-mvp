@@ -151,7 +151,7 @@ function criarServicosBase(cidade: string, uf: string, latBase: number, lngBase:
       lat: latBase + variacao(), lng: lngBase + variacao(),
     },
     {
-      id: `${id}-pet1`, tipo: 'petshop', nome: `PetLove ${cidade}`,
+      id: `${id}-pet1`, tipo: 'petshop', nome: `Patinha ${cidade}`,
       endereco: `Rua das Flores, 500`, bairro: 'Jardim Central', cidade,
       avaliacao: 4.7, telefone: `(0${Math.floor(Math.random() * 90) + 10}) 3${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
       horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
@@ -184,7 +184,7 @@ function criarServicosCompletos(cidade: string, uf: string, latBase: number, lng
       lat: latBase + variacao(), lng: lngBase + variacao(),
     },
     {
-      id: `${id}-pet1`, tipo: 'petshop', nome: `PetLove ${cidade}`,
+      id: `${id}-pet1`, tipo: 'petshop', nome: `Patinha ${cidade}`,
       endereco: `Rua das Flores, 500`, bairro: 'Jardim Central', cidade,
       avaliacao: 4.7, telefone: tel(),
       horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
@@ -251,7 +251,7 @@ const servicosManaus: Servico[] = [
     lat: -3.119, lng: -60.022,
   },
   {
-    id: 'mao-pet1', tipo: 'petshop', nome: 'PetLove Manaus', endereco: 'Rua Ramos Ferreira, 1000', bairro: 'Centro', cidade: 'Manaus',
+    id: 'mao-pet1', tipo: 'petshop', nome: 'Patinha Manaus', endereco: 'Rua Ramos Ferreira, 1000', bairro: 'Centro', cidade: 'Manaus',
     avaliacao: 4.7, telefone: '(92) 3633-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -3.120, lng: -60.025,
@@ -277,7 +277,7 @@ const servicosBelem: Servico[] = [
     lat: -1.455, lng: -48.502,
   },
   {
-    id: 'bel-pet1', tipo: 'petshop', nome: 'PetLove Belém', endereco: 'Rua do Porto, 500', bairro: 'Cidade Velha', cidade: 'Belém',
+    id: 'bel-pet1', tipo: 'petshop', nome: 'Patinha Belém', endereco: 'Rua do Porto, 500', bairro: 'Cidade Velha', cidade: 'Belém',
     avaliacao: 4.7, telefone: '(91) 3212-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -1.458, lng: -48.505,
@@ -297,7 +297,7 @@ const servicosSaoLuis: Servico[] = [
     lat: -2.529, lng: -44.282,
   },
   {
-    id: 'slz-pet1', tipo: 'petshop', nome: 'PetLove São Luís', endereco: 'Rua do Sol, 300', bairro: 'Praia Grande', cidade: 'São Luís',
+    id: 'slz-pet1', tipo: 'petshop', nome: 'Patinha São Luís', endereco: 'Rua do Sol, 300', bairro: 'Praia Grande', cidade: 'São Luís',
     avaliacao: 4.7, telefone: '(98) 3123-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -2.532, lng: -44.285,
@@ -312,7 +312,7 @@ const servicosTeresina: Servico[] = [
     lat: -5.089, lng: -42.801,
   },
   {
-    id: 'ter-pet1', tipo: 'petshop', nome: 'PetLove Teresina', endereco: 'Rua da Cruz, 500', bairro: 'Centro', cidade: 'Teresina',
+    id: 'ter-pet1', tipo: 'petshop', nome: 'Patinha Teresina', endereco: 'Rua da Cruz, 500', bairro: 'Centro', cidade: 'Teresina',
     avaliacao: 4.7, telefone: '(86) 3216-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -5.092, lng: -42.804,
@@ -327,7 +327,7 @@ const servicosFortaleza: Servico[] = [
     lat: -3.717, lng: -38.543,
   },
   {
-    id: 'for-pet1', tipo: 'petshop', nome: 'PetLove Fortaleza', endereco: 'Rua Barão de Aracati, 500', bairro: 'Aldeota', cidade: 'Fortaleza',
+    id: 'for-pet1', tipo: 'petshop', nome: 'Patinha Fortaleza', endereco: 'Rua Barão de Aracati, 500', bairro: 'Aldeota', cidade: 'Fortaleza',
     avaliacao: 4.7, telefone: '(85) 3219-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -3.720, lng: -38.546,
@@ -347,7 +347,7 @@ const servicosNatal: Servico[] = [
     lat: -5.794, lng: -35.211,
   },
   {
-    id: 'nat-pet1', tipo: 'petshop', nome: 'PetLove Natal', endereco: 'Rua Chile, 500', bairro: 'Centro', cidade: 'Natal',
+    id: 'nat-pet1', tipo: 'petshop', nome: 'Patinha Natal', endereco: 'Rua Chile, 500', bairro: 'Centro', cidade: 'Natal',
     avaliacao: 4.7, telefone: '(84) 3217-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -5.797, lng: -35.214,
@@ -362,7 +362,7 @@ const servicosJoaoPessoa: Servico[] = [
     lat: -7.119, lng: -34.845,
   },
   {
-    id: 'jp-pet1', tipo: 'petshop', nome: 'PetLove João Pessoa', endereco: 'Rua Maciel Pinheiro, 500', bairro: 'Centro', cidade: 'João Pessoa',
+    id: 'jp-pet1', tipo: 'petshop', nome: 'Patinha João Pessoa', endereco: 'Rua Maciel Pinheiro, 500', bairro: 'Centro', cidade: 'João Pessoa',
     avaliacao: 4.7, telefone: '(83) 3218-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -7.122, lng: -34.848,
@@ -377,7 +377,7 @@ const servicosRecife: Servico[] = [
     lat: -8.047, lng: -34.877,
   },
   {
-    id: 'rec-pet1', tipo: 'petshop', nome: 'PetLove Recife', endereco: 'Rua da Aurora, 500', bairro: 'Boa Vista', cidade: 'Recife',
+    id: 'rec-pet1', tipo: 'petshop', nome: 'Patinha Recife', endereco: 'Rua da Aurora, 500', bairro: 'Boa Vista', cidade: 'Recife',
     avaliacao: 4.7, telefone: '(81) 3212-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -8.050, lng: -34.880,
@@ -398,7 +398,7 @@ const servicosMaceio: Servico[] = [
     lat: -9.665, lng: -35.735,
   },
   {
-    id: 'mac-pet1', tipo: 'petshop', nome: 'PetLove Maceió', endereco: 'Rua Marechal Deodoro, 500', bairro: 'Centro', cidade: 'Maceió',
+    id: 'mac-pet1', tipo: 'petshop', nome: 'Patinha Maceió', endereco: 'Rua Marechal Deodoro, 500', bairro: 'Centro', cidade: 'Maceió',
     avaliacao: 4.7, telefone: '(82) 3214-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -9.668, lng: -35.738,
@@ -413,7 +413,7 @@ const servicosAracaju: Servico[] = [
     lat: -10.909, lng: -37.067,
   },
   {
-    id: 'ara-pet1', tipo: 'petshop', nome: 'PetLove Aracaju', endereco: 'Rua Orzes Motta, 500', bairro: 'Centro', cidade: 'Aracaju',
+    id: 'ara-pet1', tipo: 'petshop', nome: 'Patinha Aracaju', endereco: 'Rua Orzes Motta, 500', bairro: 'Centro', cidade: 'Aracaju',
     avaliacao: 4.7, telefone: '(79) 3217-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -10.912, lng: -37.070,
@@ -428,7 +428,7 @@ const servicosSalvador: Servico[] = [
     lat: -12.971, lng: -38.512,
   },
   {
-    id: 'sal-pet1', tipo: 'petshop', nome: 'PetLove Salvador', endereco: 'Rua Chile, 500', bairro: 'Centro', cidade: 'Salvador',
+    id: 'sal-pet1', tipo: 'petshop', nome: 'Patinha Salvador', endereco: 'Rua Chile, 500', bairro: 'Centro', cidade: 'Salvador',
     avaliacao: 4.7, telefone: '(71) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -12.974, lng: -38.515,
@@ -454,7 +454,7 @@ const servicosBrasilia: Servico[] = [
     lat: -15.797, lng: -47.892,
   },
   {
-    id: 'bsb-pet1', tipo: 'petshop', nome: 'PetLove Brasília', endereco: 'SCLS Quadra 308, 500', bairro: 'Asa Sul', cidade: 'Brasília',
+    id: 'bsb-pet1', tipo: 'petshop', nome: 'Patinha Brasília', endereco: 'SCLS Quadra 308, 500', bairro: 'Asa Sul', cidade: 'Brasília',
     avaliacao: 4.7, telefone: '(61) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -15.800, lng: -47.895,
@@ -480,7 +480,7 @@ const servicosGoiania: Servico[] = [
     lat: -16.686, lng: -49.264,
   },
   {
-    id: 'goi-pet1', tipo: 'petshop', nome: 'PetLove Goiânia', endereco: 'Rua T-30, 500', bairro: 'Bueno', cidade: 'Goiânia',
+    id: 'goi-pet1', tipo: 'petshop', nome: 'Patinha Goiânia', endereco: 'Rua T-30, 500', bairro: 'Bueno', cidade: 'Goiânia',
     avaliacao: 4.7, telefone: '(62) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -16.689, lng: -49.267,
@@ -495,7 +495,7 @@ const servicosCuiaba: Servico[] = [
     lat: -15.601, lng: -56.097,
   },
   {
-    id: 'cui-pet1', tipo: 'petshop', nome: 'PetLove Cuiabá', endereco: 'Rua da Paz, 500', bairro: 'Centro', cidade: 'Cuiabá',
+    id: 'cui-pet1', tipo: 'petshop', nome: 'Patinha Cuiabá', endereco: 'Rua da Paz, 500', bairro: 'Centro', cidade: 'Cuiabá',
     avaliacao: 4.7, telefone: '(65) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -15.604, lng: -56.100,
@@ -510,7 +510,7 @@ const servicosCampoGrande: Servico[] = [
     lat: -20.469, lng: -54.620,
   },
   {
-    id: 'cg-pet1', tipo: 'petshop', nome: 'PetLove Campo Grande', endereco: 'Rua Bahia, 500', bairro: 'Centro', cidade: 'Campo Grande',
+    id: 'cg-pet1', tipo: 'petshop', nome: 'Patinha Campo Grande', endereco: 'Rua Bahia, 500', bairro: 'Centro', cidade: 'Campo Grande',
     avaliacao: 4.7, telefone: '(67) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -20.472, lng: -54.623,
@@ -525,7 +525,7 @@ const servicosBeloHorizonte: Servico[] = [
     lat: -19.916, lng: -43.934,
   },
   {
-    id: 'bh-pet1', tipo: 'petshop', nome: 'PetLove Belo Horizonte', endereco: 'Rua Curitiba, 500', bairro: 'Centro', cidade: 'Belo Horizonte',
+    id: 'bh-pet1', tipo: 'petshop', nome: 'Patinha Belo Horizonte', endereco: 'Rua Curitiba, 500', bairro: 'Centro', cidade: 'Belo Horizonte',
     avaliacao: 4.7, telefone: '(31) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -19.919, lng: -43.937,
@@ -551,7 +551,7 @@ const servicosUberlandia: Servico[] = [
     lat: -18.918, lng: -48.277,
   },
   {
-    id: 'ubl-pet1', tipo: 'petshop', nome: 'PetLove Uberlândia', endereco: 'Rua Bahia, 500', bairro: 'Centro', cidade: 'Uberlândia',
+    id: 'ubl-pet1', tipo: 'petshop', nome: 'Patinha Uberlândia', endereco: 'Rua Bahia, 500', bairro: 'Centro', cidade: 'Uberlândia',
     avaliacao: 4.7, telefone: '(34) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -18.921, lng: -48.280,
@@ -566,7 +566,7 @@ const servicosVitoria: Servico[] = [
     lat: -20.315, lng: -40.312,
   },
   {
-    id: 'vit-pet1', tipo: 'petshop', nome: 'PetLove Vitória', endereco: 'Rua Sete de Setembro, 500', bairro: 'Centro', cidade: 'Vitória',
+    id: 'vit-pet1', tipo: 'petshop', nome: 'Patinha Vitória', endereco: 'Rua Sete de Setembro, 500', bairro: 'Centro', cidade: 'Vitória',
     avaliacao: 4.7, telefone: '(27) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -20.318, lng: -40.315,
@@ -586,7 +586,7 @@ const servicosRioDeJaneiro: Servico[] = [
     lat: -22.906, lng: -43.172,
   },
   {
-    id: 'rj-pet1', tipo: 'petshop', nome: 'PetLove Rio de Janeiro', endereco: 'Rua das Laranjeiras, 500', bairro: 'Laranjeiras', cidade: 'Rio de Janeiro',
+    id: 'rj-pet1', tipo: 'petshop', nome: 'Patinha Rio de Janeiro', endereco: 'Rua das Laranjeiras, 500', bairro: 'Laranjeiras', cidade: 'Rio de Janeiro',
     avaliacao: 4.7, telefone: '(21) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -22.909, lng: -43.175,
@@ -617,7 +617,7 @@ const servicosSaoPaulo: Servico[] = [
     lat: -23.550, lng: -46.633,
   },
   {
-    id: 'sp-pet1', tipo: 'petshop', nome: 'PetLove São Paulo', endereco: 'Rua Augusta, 2000', bairro: 'Consolação', cidade: 'São Paulo',
+    id: 'sp-pet1', tipo: 'petshop', nome: 'Patinha São Paulo', endereco: 'Rua Augusta, 2000', bairro: 'Consolação', cidade: 'São Paulo',
     avaliacao: 4.7, telefone: '(11) 3255-4400', horario: 'Seg-Sex 9h-21h, Sáb 9h-18h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios', 'Day Care'], disponivel: true,
     lat: -23.555, lng: -46.640,
@@ -648,7 +648,7 @@ const servicosCampinas: Servico[] = [
     lat: -22.909, lng: -47.062,
   },
   {
-    id: 'cmp-pet1', tipo: 'petshop', nome: 'PetLove Campinas', endereco: 'Rua Barão de Jaguara, 500', bairro: 'Centro', cidade: 'Campinas',
+    id: 'cmp-pet1', tipo: 'petshop', nome: 'Patinha Campinas', endereco: 'Rua Barão de Jaguara, 500', bairro: 'Centro', cidade: 'Campinas',
     avaliacao: 4.7, telefone: '(19) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -22.912, lng: -47.065,
@@ -668,7 +668,7 @@ const servicosSantos: Servico[] = [
     lat: -23.960, lng: -46.333,
   },
   {
-    id: 'stc-pet1', tipo: 'petshop', nome: 'PetLove Santos', endereco: 'Rua Conselheiro Saraiva, 500', bairro: 'Centro', cidade: 'Santos',
+    id: 'stc-pet1', tipo: 'petshop', nome: 'Patinha Santos', endereco: 'Rua Conselheiro Saraiva, 500', bairro: 'Centro', cidade: 'Santos',
     avaliacao: 4.7, telefone: '(13) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -23.963, lng: -46.336,
@@ -683,7 +683,7 @@ const servicosRibeiraoPreto: Servico[] = [
     lat: -21.176, lng: -47.820,
   },
   {
-    id: 'rpt-pet1', tipo: 'petshop', nome: 'PetLove Ribeirão Preto', endereco: 'Rua Visconde de Pirajá, 500', bairro: 'Centro', cidade: 'Ribeirão Preto',
+    id: 'rpt-pet1', tipo: 'petshop', nome: 'Patinha Ribeirão Preto', endereco: 'Rua Visconde de Pirajá, 500', bairro: 'Centro', cidade: 'Ribeirão Preto',
     avaliacao: 4.7, telefone: '(16) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -21.179, lng: -47.823,
@@ -698,7 +698,7 @@ const servicosCuritiba: Servico[] = [
     lat: -25.428, lng: -49.273,
   },
   {
-    id: 'cwb-pet1', tipo: 'petshop', nome: 'PetLove Curitiba', endereco: 'Rua das Flores, 500', bairro: 'Batel', cidade: 'Curitiba',
+    id: 'cwb-pet1', tipo: 'petshop', nome: 'Patinha Curitiba', endereco: 'Rua das Flores, 500', bairro: 'Batel', cidade: 'Curitiba',
     avaliacao: 4.7, telefone: '(41) 3322-8800', horario: 'Seg-Sex 9h-20h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Day Care', 'Hotel'], disponivel: true,
     lat: -25.435, lng: -49.280,
@@ -816,7 +816,7 @@ const servicosFlorianopolis: Servico[] = [
     lat: -27.595, lng: -48.547,
   },
   {
-    id: 'flp-pet1', tipo: 'petshop', nome: 'PetLove Florianópolis', endereco: 'Rua Esteves Júnior, 500', bairro: 'Centro', cidade: 'Florianópolis',
+    id: 'flp-pet1', tipo: 'petshop', nome: 'Patinha Florianópolis', endereco: 'Rua Esteves Júnior, 500', bairro: 'Centro', cidade: 'Florianópolis',
     avaliacao: 4.7, telefone: '(48) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -27.598, lng: -48.550,
@@ -836,7 +836,7 @@ const servicosJoinville: Servico[] = [
     lat: -26.304, lng: -48.848,
   },
   {
-    id: 'jnv-pet1', tipo: 'petshop', nome: 'PetLove Joinville', endereco: 'Rua Paraná, 500', bairro: 'Centro', cidade: 'Joinville',
+    id: 'jnv-pet1', tipo: 'petshop', nome: 'Patinha Joinville', endereco: 'Rua Paraná, 500', bairro: 'Centro', cidade: 'Joinville',
     avaliacao: 4.7, telefone: '(47) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -26.307, lng: -48.851,
@@ -851,7 +851,7 @@ const servicosPortoAlegre: Servico[] = [
     lat: -30.034, lng: -51.217,
   },
   {
-    id: 'poa-pet1', tipo: 'petshop', nome: 'PetLove Porto Alegre', endereco: 'Rua dos Andradas, 500', bairro: 'Centro', cidade: 'Porto Alegre',
+    id: 'poa-pet1', tipo: 'petshop', nome: 'Patinha Porto Alegre', endereco: 'Rua dos Andradas, 500', bairro: 'Centro', cidade: 'Porto Alegre',
     avaliacao: 4.7, telefone: '(51) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -30.037, lng: -51.220,
@@ -877,7 +877,7 @@ const servicosCaxiasDoSul: Servico[] = [
     lat: -29.166, lng: -51.178,
   },
   {
-    id: 'cxs-pet1', tipo: 'petshop', nome: 'PetLove Caxias do Sul', endereco: 'Rua São Pedro, 500', bairro: 'Centro', cidade: 'Caxias do Sul',
+    id: 'cxs-pet1', tipo: 'petshop', nome: 'Patinha Caxias do Sul', endereco: 'Rua São Pedro, 500', bairro: 'Centro', cidade: 'Caxias do Sul',
     avaliacao: 4.7, telefone: '(54) 3316-5678', horario: 'Seg-Sex 9h-19h, Sáb 9h-16h',
     servicos: ['Banho', 'Tosa', 'Rações', 'Acessórios'], disponivel: true,
     lat: -29.169, lng: -51.181,

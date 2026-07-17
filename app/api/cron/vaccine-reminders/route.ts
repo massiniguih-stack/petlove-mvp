@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
 
     try {
       await resend.emails.send({
-        from: 'PetLove <onboarding@resend.dev>',
+        from: 'Patinha <onboarding@resend.dev>',
         to: tutor.email,
         subject: `Lembrete: vacina de ${pet?.nome || 'seu pet'} está chegando`,
         html: `

@@ -21,14 +21,14 @@ export async function GET(req: NextRequest) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'PetLove <onboarding@resend.dev>',
+      from: 'Patinha <onboarding@resend.dev>',
       to,
-      subject: 'Email de teste - PetLove',
+      subject: 'Email de teste - Patinha',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1 style="color: #7c3aed;">Email de teste!</h1>
           <p>Se voce recebeu este email, o Resend esta funcionando perfeitamente.</p>
-          <p style="color: #666; font-size: 14px;">Equipe PetLove</p>
+          <p style="color: #666; font-size: 14px;">Equipe Patinha</p>
         </div>
       `,
     });

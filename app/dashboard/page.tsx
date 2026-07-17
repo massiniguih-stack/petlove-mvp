@@ -188,7 +188,7 @@ export default function DashboardPage() {
                 <span className="text-3xl">👑</span>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-black">Desbloqueie o PetLove Premium</h3>
+                <h3 className="text-lg font-black">Desbloqueie o Patinha Premium</h3>
                 <p className="mt-1 text-sm text-violet-100">Planos personalizados, alertas de vacinas, gráficos avançados e muito mais por apenas <strong>R$ 19,90/mês</strong>.</p>
               </div>
               <a

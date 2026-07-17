@@ -20,7 +20,7 @@ export default function PoliticaClient() {
             <section>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">1. Quem somos</h2>
               <p className="mt-2">
-                O PetLove é uma plataforma digital que conecta tutores de animais de estimação a serviços e cuidados para seus pets.
+                O Patinha é uma plataforma digital que conecta tutores de animais de estimação a serviços e cuidados para seus pets.
                 Esta Política de Privacidade descreve como coletamos, usamos, armazenamos e protegemos suas informações pessoais,
                 em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).
               </p>
@@ -105,7 +105,7 @@ export default function PoliticaClient() {
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">9. Contato</h2>
               <p className="mt-2">
                 Em caso de dúvidas sobre esta Política de Privacidade ou sobre o tratamento dos seus dados,
-                entre em contato pelo e-mail: <strong>contato@petlove.app.br</strong>
+                entre em contato pelo e-mail: <strong>contato@patinha.app.br</strong>
               </p>
             </section>
           </div>

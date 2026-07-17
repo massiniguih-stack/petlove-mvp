@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Visão geral do sistema PetLove — dados reais do banco</p>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Visão geral do sistema Patinha — dados reais do banco</p>
       </div>
 
       {/* Visão geral */}

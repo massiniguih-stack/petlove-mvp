@@ -13,7 +13,7 @@ const mensagens = [
     cor: 'from-emerald-500 to-green-500',
     corBg: 'bg-emerald-50',
     corText: 'text-emerald-700',
-    mensagem: `🐾 Olá! Somos do PetLove, o app que conecta tutores de pets aos melhores serviços da cidade.
+    mensagem: `🐾 Olá! Somos do Patinha, o app que conecta tutores de pets aos melhores serviços da cidade.
 
 Vi que a ${'{CLINICA}'} é uma ótima opção para os tutores da região e gostaríamos de convidá-la para ser nossa parceira Premium!
 
@@ -26,7 +26,7 @@ Vi que a ${'{CLINICA}'} é uma ótima opção para os tutores da região e gosta
 🔥 Oferta exclusiva: 50% OFF para novos parceiros!
 De R$ 49,90 por apenas R$ 24,90/mês
 
-Quer saber mais? Acesse: petlove.app/parceiros/premium
+Quer saber mais? Acesse: patinha.app/parceiros/premium
 
 Estamos à disposição para qualquer dúvida! 😊`,
   },
@@ -37,11 +37,11 @@ Estamos à disposição para qualquer dúvida! 😊`,
     cor: 'from-blue-500 to-indigo-500',
     corBg: 'bg-blue-50',
     corText: 'text-blue-700',
-    mensagem: `Assunto: Convite para ser Parceiro PetLove — 50% OFF para sua clínica
+    mensagem: `Assunto: Convite para ser Parceiro Patinha — 50% OFF para sua clínica
 
 Prezado(a),
 
-Sou da equipe do PetLove, plataforma que conecta tutores de pets aos melhores serviços veterinários e pet shops do Brasil.
+Sou da equipe do Patinha, plataforma que conecta tutores de pets aos melhores serviços veterinários e pet shops do Brasil.
 
 Identificamos que a ${'{CLINICA}'} seria um parceiro ideal para nossa rede, e gostaríamos de convidá-la a se juntar ao nosso programa de parceiros Premium.
 
@@ -59,13 +59,13 @@ Plano Profissional: R$ 49,90/mês (era R$ 99,90)
 Plano Empresarial: R$ 99,90/mês (era R$ 199,90)
 
 Para se cadastrar, acesse:
-https://petlove.app/parceiros/cadastro
+https://patinha.app/parceiros/cadastro
 
 Ficamos à disposição para esclarecer qualquer dúvida.
 
 Atenciosamente,
-Equipe PetLove
-contato@petlove.app`,
+Equipe Patinha
+contato@patinha.app`,
   },
   {
     id: 'instagram',
@@ -78,7 +78,7 @@ contato@petlove.app`,
 
 Vi o perfil da ${'{CLINICA}'} e amei o trabalho de vocês! 🐶🐱
 
-Sou do PetLove, um app que ajuda tutores a encontrarem os melhores serviços para seus pets.
+Sou do Patinha, um app que ajuda tutores a encontrarem os melhores serviços para seus pets.
 
 Estamos convidando clínicas e pet shops da região para serem nossos parceiros Premium. É uma chance incrível de ganhar visibilidade e atrair novos clientes!
 
@@ -102,10 +102,10 @@ Quer saber mais? Me manda que te explico tudo! 😄`,
     mensagem: `Script de abordagem presencial:
 
 1. Apresentação:
-"Olá! Tudo bem? Meu nome é [SEU NOME], sou representante do PetLove. Posso falar com o(a) dono(a) ou responsável?"
+"Olá! Tudo bem? Meu nome é [SEU NOME], sou representante do Patinha. Posso falar com o(a) dono(a) ou responsável?"
 
 2. Apresentação do app:
-"O PetLove é um aplicativo que conecta tutores de pets aos melhores serviços da cidade. Temos milhares de usuários ativos buscando clínicas e pet shops."
+"O Patinha é um aplicativo que conecta tutores de pets aos melhores serviços da cidade. Temos milhares de usuários ativos buscando clínicas e pet shops."
 
 3. Convite:
 "Estamos convidando estabelecimentos da região para serem nossos parceiros Premium. Com o plano, a ${'{CLINICA}'} ganharia destaque no mapa, um selo de credibilidade e acesso direto a novos clientes."
@@ -129,10 +129,10 @@ Material de apoio: Cartão de visita + Flyer com QR Code para cadastro.`,
 
 1. Abertura:
 "Boa tarde! Falo com o(a) dono(a) da ${'{CLINICA}'}? 
-Meu nome é [SEU NOME], ligando em nome do PetLove."
+Meu nome é [SEU NOME], ligando em nome do Patinha."
 
 2. Contexto:
-"O PetLove é um aplicativo que conecta tutores de pets a clínicas e pet shops. Estamos expandindo na região e identificamos que a ${'{CLINICA}'} seria um parceiro ideal."
+"O Patinha é um aplicativo que conecta tutores de pets a clínicas e pet shops. Estamos expandindo na região e identificamos que a ${'{CLINICA}'} seria um parceiro ideal."
 
 3. Benefícios:
 "Com o plano Premium, a clínica ganharia:

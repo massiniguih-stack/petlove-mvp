@@ -47,9 +47,9 @@ export async function POST(req: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: 'PetLove <onboarding@resend.dev>',
+      from: 'Patinha <onboarding@resend.dev>',
       to: email,
-      subject: 'PetLove - Recebemos seu cadastro! 🐾',
+      subject: 'Patinha - Recebemos seu cadastro! 🐾',
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 30px;">
           <h1 style="color: #7c3aed;">Recebemos seu cadastro! 🎉</h1>
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: 'PetLove <onboarding@resend.dev>',
+      from: 'Patinha <onboarding@resend.dev>',
       to: ADMIN_EMAILS,
       subject: `Novo cadastro de parceiro: ${nome}`,
       html: `<p>${nome} (${tipo.join(', ')}) se cadastrou em ${cidade}/${uf}. Email: ${email}. Telefone: ${whatsapp || telefone || '—'}.</p>`,
