@@ -36,6 +36,7 @@ function momentoFromRow(row: Record<string, unknown>): Momento {
     fotoUrl: (row.foto_url as string) || undefined,
     statusVacina: (row.status_vacina as 'tomada' | 'pendente') || undefined,
     dataAgendada: row.data_agendada ? new Date(row.data_agendada as string) : undefined,
+    lembreteEnviado: Boolean(row.lembrete_enviado_em),
   };
 }
 
