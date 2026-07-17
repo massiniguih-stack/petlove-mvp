@@ -80,6 +80,19 @@ export default function PetSelector() {
               </div>
             ))}
           </div>
+          {pets.length >= 2 && (
+            <div className="border-t border-slate-100 p-3">
+              <a
+                href="/comparar"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-50 py-2.5 text-sm font-bold text-violet-600 transition hover:bg-violet-100"
+              >
+                📊 Comparar pets
+                {!isPremium && (
+                  <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-600">PRO</span>
+                )}
+              </a>
+            </div>
+          )}
           <div className="border-t border-slate-100 p-3">
             <a
               href={!isPremium && pets.length >= 1 ? '/planos' : '/onboarding'}
