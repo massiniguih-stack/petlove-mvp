@@ -18,8 +18,6 @@ const funcionalidades = [
   { nome: 'Alertas de vacinas e consultas', gratis: false, premium: true },
   { nome: 'Relatorios de saude', gratis: false, premium: true },
   { nome: 'Comparacao entre pets', gratis: false, premium: true },
-  { nome: 'Suporte prioritario', gratis: false, premium: true },
-  { nome: 'Sem anuncios', gratis: false, premium: true },
 ];
 
 export default function PlanosClient() {
