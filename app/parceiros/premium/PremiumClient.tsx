@@ -58,7 +58,6 @@ const planos = [
       'Tudo do Profissional',
       'Até 20 fotos',
       'Múltiplas unidades',
-      'Suporte dedicado',
       'Relatórios avançados',
       'Prioridade máxima',
     ],
@@ -107,11 +106,6 @@ const beneficios = [
     icon: '🔄',
     titulo: 'Atualizações Ilimitadas',
     descricao: 'Altere horários, serviços, fotos e informações a qualquer momento.',
-  },
-  {
-    icon: '📞',
-    titulo: 'Suporte Prioritário',
-    descricao: 'Equipe dedicada para ajudar você com qualquer dúvida ou problema.',
   },
 ];
 
@@ -331,8 +325,6 @@ export default function PremiumClient() {
               <span>🔒 Pagamento seguro via LastLink</span>
               <span>·</span>
               <span>Cancelamento grátis</span>
-              <span>·</span>
-              <span>Suporte 24h</span>
             </div>
           </div>
         </section>
