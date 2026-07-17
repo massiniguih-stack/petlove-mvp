@@ -49,6 +49,9 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
             {servico.premium && (
               <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-amber-500/20">🏆 Premium</span>
             )}
+            {servico.destaque && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-purple-500/20">⭐ Destaque</span>
+            )}
             <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${coresBg[servico.tipo]}`}>
               {emojis[servico.tipo]} {labels[servico.tipo]}
             </span>
@@ -171,6 +174,8 @@ export default function MapaPage() {
     .sort((a, b) => {
       if (a.premium && !b.premium) return -1;
       if (!a.premium && b.premium) return 1;
+      if (a.destaque && !b.destaque) return -1;
+      if (!a.destaque && b.destaque) return 1;
       return 0;
     });
 
