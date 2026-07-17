@@ -27,7 +27,7 @@ export function useNotifications() {
       onMessage(messaging, (payload) => {
         const notification = payload.notification;
         if (notification) {
-          new Notification(notification.title || 'PetLove', {
+          new Notification(notification.title || 'Patinha', {
             body: notification.body,
             icon: '/icon-192.png',
           });

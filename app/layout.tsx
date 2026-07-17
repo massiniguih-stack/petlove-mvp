@@ -12,7 +12,7 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata = {
-  title: 'PetLove - Cuidados para seu pet',
+  title: 'Patinha - Cuidados para seu pet',
   description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário, hotel e mais.',
   icons: {
     icon: [
@@ -21,17 +21,17 @@ export const metadata = {
     ],
   },
   openGraph: {
-    title: 'PetLove - Cuidados para seu pet',
+    title: 'Patinha - Cuidados para seu pet',
     description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário, hotel e mais.',
     url: 'https://petlove-mvp.vercel.app',
-    siteName: 'PetLove',
+    siteName: 'Patinha',
     locale: 'pt_BR',
     type: 'website',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'PetLove - Cuidados para seu pet' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Patinha - Cuidados para seu pet' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PetLove - Cuidados para seu pet',
+    title: 'Patinha - Cuidados para seu pet',
     description: 'Encontre os melhores serviços para seu animal de estimação.',
     images: ['/og-image.png'],
   },

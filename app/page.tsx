@@ -285,11 +285,8 @@ export default function HomePage() {
               </div>
             </div>
             <h1 className="mt-8 text-6xl font-black tracking-tight md:text-7xl">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">
-                Pet
-              </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-600">
-                Love
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-600">
+                Patinha
               </span>
             </h1>
             <p className="mt-3 text-sm font-bold tracking-[0.3em] text-slate-400 uppercase">

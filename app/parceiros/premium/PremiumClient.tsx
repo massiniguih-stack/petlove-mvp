@@ -119,7 +119,7 @@ const depoimentos = [
   },
   {
     nome: 'Ana Beatriz',
-    cargo: 'PetLove Pet Shop',
+    cargo: 'Patinha Pet Shop',
     cidade: 'Curitiba, PR',
     texto: 'O selo Premium dá muito mais credibilidade. Clientes chegam já confiando no nosso atendimento.',
     avatar: '👩‍💼',
@@ -208,7 +208,7 @@ export default function PremiumClient() {
               </h2>
               <p className="mt-2 text-slate-500 dark:text-slate-400">Invista na visibilidade do seu estabelecimento</p>
               <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
-                🎉 50% OFF para membros PetLove — Desconto aplicado automaticamente
+                🎉 50% OFF para membros Patinha — Desconto aplicado automaticamente
               </div>
             </div>
 

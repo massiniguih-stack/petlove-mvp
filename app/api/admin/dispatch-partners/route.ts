@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
         const personalizedSubject = subject.replace(/\{nome\}/g, tutor.nome || 'Parceiro');
 
         await resend.emails.send({
-          from: 'PetLove <onboarding@resend.dev>',
+          from: 'Patinha <onboarding@resend.dev>',
           to: tutor.email,
           subject: personalizedSubject,
           html: personalizedBody,

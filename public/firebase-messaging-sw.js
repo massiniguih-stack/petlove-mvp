@@ -22,7 +22,7 @@ const messaging = firebase.messaging();
 // plano quem trata a notificação é o onMessage em lib/useNotifications.ts.
 messaging.onBackgroundMessage((payload) => {
   const notification = payload.notification || {};
-  self.registration.showNotification(notification.title || 'PetLove', {
+  self.registration.showNotification(notification.title || 'Patinha', {
     body: notification.body,
     icon: '/icon-192.png',
     badge: '/icon-192.png',

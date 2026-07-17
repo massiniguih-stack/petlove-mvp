@@ -112,7 +112,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           <div>
             <h1 className="text-sm font-black text-slate-900 dark:text-white">Painel Admin</h1>
-            <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">PetLove</p>
+            <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Patinha</p>
           </div>
         </div>
 

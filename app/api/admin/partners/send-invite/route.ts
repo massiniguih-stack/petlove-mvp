@@ -9,13 +9,13 @@ function buildInviteEmail(nome: string) {
   return `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background: #ffffff;">
   <div style="background: linear-gradient(135deg, #7c3aed, #9333ea); padding: 40px 30px; text-align: center; border-radius: 0 0 24px 24px;">
     <div style="font-size: 48px; margin-bottom: 12px;">🐾</div>
-    <h1 style="color: #ffffff; font-size: 28px; font-weight: 900; margin: 0;">PetLove</h1>
+    <h1 style="color: #ffffff; font-size: 28px; font-weight: 900; margin: 0;">Patinha</h1>
     <p style="color: rgba(255,255,255,0.85); font-size: 14px; margin: 8px 0 0 0;">Cuidados premium para quem ama pets</p>
   </div>
   <div style="padding: 40px 30px;">
     <p style="color: #334155; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">Olá, <strong>${nome}</strong>!</p>
     <p style="color: #334155; font-size: 16px; line-height: 1.7; margin: 0 0 20px 0;">
-      Encontramos a <strong>${nome}</strong> no mapa de serviços pet da sua região e gostaríamos de convidar vocês para serem nossos <strong>parceiros Premium</strong> no PetLove.
+      Encontramos a <strong>${nome}</strong> no mapa de serviços pet da sua região e gostaríamos de convidar vocês para serem nossos <strong>parceiros Premium</strong> no Patinha.
     </p>
     <div style="background: #f8fafc; border-radius: 16px; padding: 24px; margin: 24px 0; border: 1px solid #e2e8f0;">
       <h3 style="color: #1e293b; font-size: 18px; font-weight: 800; margin: 0 0 16px 0;">Vantagens de ser parceiro:</h3>
@@ -71,9 +71,9 @@ export async function POST(req: NextRequest) {
 
     try {
       await resend.emails.send({
-        from: 'PetLove <onboarding@resend.dev>',
+        from: 'Patinha <onboarding@resend.dev>',
         to: partner.email,
-        subject: 'PetLove - Seja nosso parceiro! 🐾',
+        subject: 'Patinha - Seja nosso parceiro! 🐾',
         html: buildInviteEmail(partner.nome),
       });
 

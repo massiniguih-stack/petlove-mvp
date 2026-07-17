@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
     try {
       const { data, error } = await resend.emails.send({
-        from: 'PetLove <onboarding@resend.dev>',
+        from: 'Patinha <onboarding@resend.dev>',
         to,
         subject,
         html,
@@ -44,14 +44,14 @@ export async function POST(req: NextRequest) {
   if (type === 'welcome') {
     try {
       const { data, error } = await resend.emails.send({
-        from: 'PetLove <onboarding@resend.dev>',
+        from: 'Patinha <onboarding@resend.dev>',
         to: user.email!,
-        subject: 'Bem-vindo ao PetLove! 🐾',
+        subject: 'Bem-vindo ao Patinha! 🐾',
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h1 style="color: #7c3aed;">Bem-vindo ao PetLove!</h1>
+            <h1 style="color: #7c3aed;">Bem-vindo ao Patinha!</h1>
             <p>Ola! Estamos muito felizes em ter voce conosco.</p>
-            <p>Com o PetLove, voce pode:</p>
+            <p>Com o Patinha, voce pode:</p>
             <ul>
               <li>Cadastrar seu pet com perfil completo</li>
               <li>Acompanhar o peso e saude</li>
@@ -83,14 +83,14 @@ export async function POST(req: NextRequest) {
     const { planName } = await req.json();
     try {
       const { data, error } = await resend.emails.send({
-        from: 'PetLove <onboarding@resend.dev>',
+        from: 'Patinha <onboarding@resend.dev>',
         to: user.email!,
         subject: 'Parabens! Voce agora e Premium! 🎉',
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; padding: 30px 0;">
               <h1 style="color: #7c3aed; font-size: 28px; margin: 0;">Parabens! 🎉</h1>
-              <p style="color: #666; font-size: 16px; margin-top: 8px;">Voce agora e membro Premium do PetLove</p>
+              <p style="color: #666; font-size: 16px; margin-top: 8px;">Voce agora e membro Premium do Patinha</p>
             </div>
             <div style="background: linear-gradient(135deg, #fdf2f8, #f3e8ff); border-radius: 16px; padding: 24px; margin: 20px 0;">
               <h2 style="color: #7c3aed; font-size: 18px; margin: 0 0 12px 0;">Seu plano ativo:</h2>
@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
     const { petName, vaccineName, dueDate } = await req.json();
     try {
       const { data, error } = await resend.emails.send({
-        from: 'PetLove <onboarding@resend.dev>',
+        from: 'Patinha <onboarding@resend.dev>',
         to: user.email!,
         subject: `Lembrete: Vacina ${vaccineName} do ${petName}`,
         html: `

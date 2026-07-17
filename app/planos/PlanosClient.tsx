@@ -51,7 +51,7 @@ export default function PlanosClient() {
             <BackButton href="/dashboard" label="Voltar ao dashboard" />
             <div className="mt-4 text-center">
               <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
-                <span>⭐</span> PetLove Premium
+                <span>⭐</span> Patinha Premium
               </div>
               <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
                 Cuide do seu pet com <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-purple-500">tudo que ele merece</span>

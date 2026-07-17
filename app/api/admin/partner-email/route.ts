@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'PetLove <onboarding@resend.dev>',
+      from: 'Patinha <onboarding@resend.dev>',
       to,
       subject,
       html,
