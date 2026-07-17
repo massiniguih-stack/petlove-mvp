@@ -201,7 +201,7 @@ export default function PetMap({
             ([lng, lat]: [number, number]) => [lat, lng] as [number, number]
           );
 
-          const polyline = L.polyline(coords, {
+          L.polyline(coords, {
             color: '#f97316',
             weight: 5,
             opacity: 0.85,

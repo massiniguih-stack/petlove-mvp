@@ -18,7 +18,7 @@ export function useNotifications() {
   }, []);
 
   useEffect(() => {
-    let messaging: any = null;
+    let messaging: Awaited<ReturnType<typeof getMessagingInstance>> = null;
 
     async function setupListener() {
       messaging = await getMessagingInstance();

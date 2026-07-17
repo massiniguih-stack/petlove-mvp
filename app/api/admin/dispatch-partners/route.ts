@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
   const sentMap = new Map(sentData?.map(s => [s.user_id, s.sent_at]) || []);
 
   // Group by state
-  const byState: Record<string, any[]> = {};
+  const byState: Record<string, unknown[]> = {};
   for (const tutor of tutors || []) {
     const estado = getEstadoByCidade(tutor.cidade);
     if (!byState[estado]) byState[estado] = [];

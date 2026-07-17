@@ -4,7 +4,6 @@ import { usePetStore } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import { format, differenceInMonths, differenceInDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef, useMemo } from 'react';

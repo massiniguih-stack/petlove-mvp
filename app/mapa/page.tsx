@@ -165,6 +165,17 @@ export default function MapaPage() {
     };
   }, [cidade]);
 
+  const distanciaKm = (s: Servico) => {
+    if (!coordenadasUsuario || s.lat == null || s.lng == null) return null;
+    const R = 6371;
+    const dLat = ((s.lat - coordenadasUsuario.lat) * Math.PI) / 180;
+    const dLng = ((s.lng - coordenadasUsuario.lng) * Math.PI) / 180;
+    const lat1 = (coordenadasUsuario.lat * Math.PI) / 180;
+    const lat2 = (s.lat * Math.PI) / 180;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  };
+
   const listaFiltrada = servicosDaCidade
     .filter((s) => filtro === 'todos' || s.tipo === filtro)
     .sort((a, b) => {
@@ -172,7 +183,14 @@ export default function MapaPage() {
       if (!a.premium && b.premium) return 1;
       if (a.destaque && !b.destaque) return -1;
       if (!a.destaque && b.destaque) return 1;
-      return 0;
+      if (ordenarPor === 'distancia') {
+        const da = distanciaKm(a);
+        const db = distanciaKm(b);
+        if (da != null && db != null) return da - db;
+        if (da != null) return -1;
+        if (db != null) return 1;
+      }
+      return b.avaliacao - a.avaliacao;
     });
 
   useEffect(() => {
