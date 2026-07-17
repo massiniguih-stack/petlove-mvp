@@ -1,13 +1,26 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { servicosMock, type Servico } from '@/data/servicos';
+
+interface Servico {
+  id: string;
+  tipo: string;
+  nome: string;
+  endereco: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  telefone: string | null;
+  instagram: string | null;
+  website: string | null;
+}
 
 function AdminServicosContent() {
   const searchParams = useSearchParams();
   const tipoParam = searchParams.get('tipo') || 'todos';
 
+  const [servicosDb, setServicosDb] = useState<Servico[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState('');
   const [filtroTipo, setFiltroTipo] = useState(tipoParam);
   const [editando, setEditando] = useState<Servico | null>(null);
@@ -16,24 +29,43 @@ function AdminServicosContent() {
     setFiltroTipo(tipoParam);
   }, [tipoParam]);
 
+  const carregarServicos = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/import-partners?limit=500');
+      const data = await res.json();
+      const todos: Servico[] = Object.values(data.partners || {}).flat() as Servico[];
+      setServicosDb(todos);
+    } catch {
+      setServicosDb([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    carregarServicos();
+  }, [carregarServicos]);
+
   const servicos = useMemo(() => {
-    return servicosMock.filter((s) => {
+    return servicosDb.filter((s) => {
       const termo = filtro.toLowerCase();
-      const matchBusca = !termo || s.nome.toLowerCase().includes(termo) || s.cidade.toLowerCase().includes(termo);
+      const matchBusca = !termo || s.nome.toLowerCase().includes(termo) || (s.cidade || '').toLowerCase().includes(termo);
       const matchTipo = filtroTipo === 'todos' || s.tipo === filtroTipo;
       return matchBusca && matchTipo;
     });
-  }, [filtro, filtroTipo]);
+  }, [servicosDb, filtro, filtroTipo]);
 
   const stats = useMemo(() => {
-    const total = servicosMock.length;
-    const porCidade = servicosMock.reduce((acc, s) => {
+    const total = servicosDb.length;
+    const porCidade = servicosDb.reduce((acc, s) => {
+      if (!s.cidade) return acc;
       acc[s.cidade] = (acc[s.cidade] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
     const top5 = Object.entries(porCidade).sort((a, b) => b[1] - a[1]).slice(0, 5);
     return { total, top5 };
-  }, []);
+  }, [servicosDb]);
 
   return (
     <div className="p-8">
@@ -83,59 +115,68 @@ function AdminServicosContent() {
         <span className="text-sm text-slate-500 dark:text-slate-400">{servicos.length} serviços</span>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-slate-100 bg-slate-50 dark:border-slate-800 dark:bg-slate-800">
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Nome</th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Tipo</th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Cidade</th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Contato</th>
-              <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {servicos.map((servico) => (
-              <tr key={servico.id} className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">
-                      {servico.tipo === 'veterinario' ? '🩺' :
-                       servico.tipo === 'petshop' ? '🛁' :
-                       servico.tipo === 'creche' ? '🏫' :
-                       servico.tipo === 'parque' ? '🌳' : '🐾'}
-                    </span>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[200px]">{servico.nome}</span>
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 capitalize dark:bg-slate-800 dark:text-slate-300">{servico.tipo}</span>
-                </td>
-                <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{servico.cidade}</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-1 text-xs text-slate-400">
-                    {servico.telefone && <span title={servico.telefone}>📱</span>}
-                    {servico.instagram && <span title={`@${servico.instagram}`}>📸</span>}
-                    {servico.website && <span title={servico.website}>🌐</span>}
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <button
-                    onClick={() => setEditando(servico)}
-                    className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                  >
-                    Ver
-                  </button>
-                </td>
+      {loading ? (
+        <div className="flex items-center justify-center py-16">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50 dark:border-slate-800 dark:bg-slate-800">
+                <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Nome</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Tipo</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Cidade</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Contato</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {servicos.map((servico) => (
+                <tr key={servico.id} className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">
+                        {servico.tipo === 'veterinario' ? '🩺' :
+                         servico.tipo === 'petshop' ? '🛁' :
+                         servico.tipo === 'creche' ? '🏫' :
+                         servico.tipo === 'parque' ? '🌳' : '🐾'}
+                      </span>
+                      <span className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[200px]">{servico.nome}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 capitalize dark:bg-slate-800 dark:text-slate-300">{servico.tipo}</span>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{servico.cidade || '-'}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1 text-xs text-slate-400">
+                      {servico.telefone && <span title={servico.telefone}>📱</span>}
+                      {servico.instagram && <span title={`@${servico.instagram}`}>📸</span>}
+                      {servico.website && <span title={servico.website}>🌐</span>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => setEditando(servico)}
+                      className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                    >
+                      Ver
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {servicos.length === 0 && (
+      {!loading && servicos.length === 0 && (
         <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
           <p className="text-lg font-bold text-slate-400">Nenhum serviço encontrado</p>
+          {servicosDb.length === 0 && (
+            <p className="mt-2 text-sm text-slate-400">O banco está vazio — importe parceiros pela tela &quot;Parceiros&quot;.</p>
+          )}
         </div>
       )}
 
