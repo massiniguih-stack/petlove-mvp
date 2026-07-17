@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { isAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -14,8 +15,13 @@ export async function POST(req: NextRequest) {
 
   const { type, to, subject, html } = await req.json();
 
-  // Email notification
+  // Email notification to an arbitrary recipient — only the admin panel
+  // (app/admin/emails) is allowed to do this; everyone else can only
+  // trigger the fixed templates below, always sent to their own address.
   if (type === 'email' && to && subject && html) {
+    if (!isAdmin(user.email)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
     try {
       const { data, error } = await resend.emails.send({
         from: 'PetLove <onboarding@resend.dev>',
