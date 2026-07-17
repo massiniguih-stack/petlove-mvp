@@ -241,28 +241,42 @@ function getIntensidadeInfo(int: string) {
 }
 
 export default function AtividadesPage() {
-  const { pet } = usePetStore();
+  const { pet, isPremium } = usePetStore();
   const [filtroCat, setFiltroCat] = useState<string>('caminhada');
   const [filtroIntensidade, setFiltroIntensidade] = useState<string>('baixa');
   const [expandida, setExpandida] = useState<string | null>(null);
   const [checklist, setChecklist] = useState<CheckItem[]>([]);
   const [novaAtividade, setNovaAtividade] = useState(false);
+  const [diaOffset, setDiaOffset] = useState(0); // 0 = hoje, 1 = ontem, etc.
+
+  const diaVisualizado = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - diaOffset);
+    return d;
+  })();
+  const ehHoje = diaOffset === 0;
 
   useEffect(() => {
     if (!pet) return;
     const supabase = createClient();
-    const hoje = diaISO(new Date());
+    const diaAlvo = diaISO(diaVisualizado);
     supabase
       .from('checklist_item')
       .select('*')
       .eq('pet_id', pet.id)
       .eq('lista', 'atividade')
-      .eq('dia', hoje)
+      .eq('dia', diaAlvo)
       .order('hora')
       .then(async ({ data, error }) => {
         if (error) return;
         if (data && data.length > 0) {
           setChecklist(data.map((r) => ({ id: r.id, hora: r.hora, atividade: r.nome, icone: r.detalhe || '🐾', concluida: r.concluida })));
+          return;
+        }
+        // Só gera o checklist padrão pro dia de hoje — dias passados sem
+        // registro ficam vazios mesmo (não inventamos histórico).
+        if (!ehHoje) {
+          setChecklist([]);
           return;
         }
         const padrao = [
@@ -275,7 +289,7 @@ export default function AtividadesPage() {
           id: crypto.randomUUID(),
           pet_id: pet.id,
           lista: 'atividade',
-          dia: hoje,
+          dia: diaAlvo,
           hora: p.hora,
           nome: p.atividade,
           detalhe: p.icone,
@@ -285,7 +299,7 @@ export default function AtividadesPage() {
         const criados = inseridos || rows;
         setChecklist(criados.map((r) => ({ id: r.id, hora: r.hora, atividade: r.nome, icone: r.detalhe || '🐾', concluida: r.concluida })));
       });
-  }, [pet?.id]);
+  }, [pet?.id, diaOffset]);
 
   const concluirAtividade = (id: string) => {
     setChecklist((prev) => prev.map((c) => (c.id === id ? { ...c, concluida: true } : c)));
@@ -582,11 +596,35 @@ export default function AtividadesPage() {
               {/* Checklist Diário */}
               <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-600 p-5 text-white shadow-xl shadow-blue-500/30">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold">Checklist de Hoje</h3>
+                  <h3 className="text-sm font-bold">{ehHoje ? 'Checklist de Hoje' : diaVisualizado.toLocaleDateString('pt-BR')}</h3>
                   <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold backdrop-blur-sm">
                     {concluidas.length}/{checklist.length}
                   </span>
                 </div>
+
+                <div className="mt-2 flex items-center justify-between">
+                  <button
+                    onClick={() => {
+                      if (!isPremium && diaOffset === 0) return;
+                      setDiaOffset((d) => d + 1);
+                    }}
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+                  >
+                    ← Dia anterior {!isPremium && diaOffset === 0 && <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[9px] font-bold">PRO</span>}
+                  </button>
+                  <button
+                    onClick={() => setDiaOffset((d) => Math.max(0, d - 1))}
+                    disabled={ehHoje}
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+                  >
+                    Próximo dia →
+                  </button>
+                </div>
+                {!isPremium && diaOffset === 0 && (
+                  <a href="/planos" className="mt-1 block text-center text-[10px] text-white/70 hover:text-white hover:underline">
+                    Assine Premium para ver dias anteriores
+                  </a>
+                )}
 
                 <div className="mt-4 space-y-2">
                   {pendentes.map((item) => (
@@ -646,16 +684,18 @@ export default function AtividadesPage() {
                   )}
                 </div>
 
-                <button
-                  onClick={() => setNovaAtividade(true)}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
-                >
-                  <span>+</span> Adicionar atividade
-                </button>
+                {ehHoje && (
+                  <button
+                    onClick={() => setNovaAtividade(true)}
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
+                  >
+                    <span>+</span> Adicionar atividade
+                  </button>
+                )}
               </div>
 
               {/* Modal Nova Atividade */}
-              {novaAtividade && (
+              {novaAtividade && ehHoje && (
                 <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">Nova Atividade</h3>
                   <div className="mt-3 space-y-3">

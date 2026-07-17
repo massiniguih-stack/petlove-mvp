@@ -310,7 +310,7 @@ function getDicasDesenvolvimento(idadeEmMeses: number, objetivo: string) {
 }
 
 export default function RacaoPage() {
-  const { pet, hydrated } = usePetStore();
+  const { pet, hydrated, isPremium } = usePetStore();
   const [objetivo, setObjetivo] = useState(pet?.objetivo ?? 'manutencao');
 
   // pet só fica disponível depois que o store hidrata a partir do
@@ -324,22 +324,36 @@ export default function RacaoPage() {
   const [suplementoExpandido, setSuplementoExpandido] = useState<SuplementoDetalhe | null>(null);
   const [refeicoes, setRefeicoes] = useState<Refeicao[]>([]);
   const [novaRefeicao, setNovaRefeicao] = useState(false);
+  const [diaOffset, setDiaOffset] = useState(0); // 0 = hoje, 1 = ontem, etc.
+
+  const diaVisualizado = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - diaOffset);
+    return d;
+  })();
+  const ehHoje = diaOffset === 0;
 
   useEffect(() => {
     if (!pet?.id) return;
     const supabase = createClient();
-    const hoje = diaISO(new Date());
+    const diaAlvo = diaISO(diaVisualizado);
     supabase
       .from('checklist_item')
       .select('*')
       .eq('pet_id', pet.id)
       .eq('lista', 'refeicao')
-      .eq('dia', hoje)
+      .eq('dia', diaAlvo)
       .order('hora')
       .then(async ({ data, error }) => {
         if (error) return;
         if (data && data.length > 0) {
           setRefeicoes(data.map((r) => ({ id: r.id, hora: r.hora, tipo: r.nome, quantidade: r.detalhe || '', concluida: r.concluida })));
+          return;
+        }
+        // Só gera as refeições padrão pro dia de hoje — dias passados sem
+        // registro ficam vazios mesmo (não inventamos histórico).
+        if (!ehHoje) {
+          setRefeicoes([]);
           return;
         }
         // Distribuição das refeições padrão soma os mesmos 2% do peso corporal
@@ -353,7 +367,7 @@ export default function RacaoPage() {
           id: crypto.randomUUID(),
           pet_id: pet.id,
           lista: 'refeicao',
-          dia: hoje,
+          dia: diaAlvo,
           hora: p.hora,
           nome: p.tipo,
           detalhe: p.quantidade,
@@ -363,7 +377,7 @@ export default function RacaoPage() {
         const criados = inseridos || rows;
         setRefeicoes(criados.map((r) => ({ id: r.id, hora: r.hora, tipo: r.nome, quantidade: r.detalhe || '', concluida: r.concluida })));
       });
-  }, [pet?.id, pet?.peso]);
+  }, [pet?.id, pet?.peso, diaOffset]);
 
   const concluirRefeicao = (id: string) => {
     setRefeicoes((prev) => prev.map((r) => (r.id === id ? { ...r, concluida: true } : r)));
@@ -747,11 +761,35 @@ export default function RacaoPage() {
               {/* Checklist de Refeições */}
               <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-5 text-white shadow-lg shadow-amber-500/30">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold">Refeições de Hoje</h3>
+                  <h3 className="text-sm font-bold">{ehHoje ? 'Refeições de Hoje' : diaVisualizado.toLocaleDateString('pt-BR')}</h3>
                   <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold">
                     {concluidas.length}/{refeicoes.length}
                   </span>
                 </div>
+
+                <div className="mt-2 flex items-center justify-between">
+                  <button
+                    onClick={() => {
+                      if (!isPremium && diaOffset === 0) return;
+                      setDiaOffset((d) => d + 1);
+                    }}
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+                  >
+                    ← Dia anterior {!isPremium && diaOffset === 0 && <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[9px] font-bold">PRO</span>}
+                  </button>
+                  <button
+                    onClick={() => setDiaOffset((d) => Math.max(0, d - 1))}
+                    disabled={ehHoje}
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+                  >
+                    Próximo dia →
+                  </button>
+                </div>
+                {!isPremium && diaOffset === 0 && (
+                  <a href="/planos" className="mt-1 block text-center text-[10px] text-white/70 hover:text-white hover:underline">
+                    Assine Premium para ver dias anteriores
+                  </a>
+                )}
 
                 <div className="mt-4 space-y-2">
                   {pendentes.map((r) => (
@@ -810,16 +848,18 @@ export default function RacaoPage() {
                   )}
                 </div>
 
-                <button
-                  onClick={() => setNovaRefeicao(true)}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
-                >
-                  <span>+</span> Adicionar refeição
-                </button>
+                {ehHoje && (
+                  <button
+                    onClick={() => setNovaRefeicao(true)}
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
+                  >
+                    <span>+</span> Adicionar refeição
+                  </button>
+                )}
               </div>
 
               {/* Modal Nova Refeição */}
-              {novaRefeicao && (
+              {novaRefeicao && ehHoje && (
                 <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">Nova Refeição</h3>
                   <div className="mt-3 space-y-3">
