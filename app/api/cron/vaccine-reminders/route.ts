@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { sendPushNotification } from '@/lib/push';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
 
   const { data: vacinas, error } = await supabaseAdmin
     .from('momento')
-    .select('id, titulo, data_agendada, pet:pet_id(nome, tutor:tutor_id(nome, email))')
+    .select('id, titulo, data_agendada, pet:pet_id(nome, tutor:tutor_id(id, nome, email))')
     .eq('categoria', 'vacina')
     .eq('status_vacina', 'pendente')
     .is('lembrete_enviado_em', null)
@@ -71,6 +72,22 @@ export async function GET(req: NextRequest) {
     } catch (err) {
       console.error('Falha ao enviar lembrete de vacina:', err);
       falhas++;
+      continue;
+    }
+
+    if (tutor.id) {
+      const { data: sub } = await supabaseAdmin.from('push_subscriptions').select('token').eq('user_id', tutor.id).maybeSingle();
+      if (sub?.token) {
+        const { tokenInvalido } = await sendPushNotification(
+          sub.token,
+          `Vacina de ${pet?.nome || 'seu pet'} está chegando 🐾`,
+          `${v.titulo} agendada para ${dataFormatada}`,
+          'https://petlove-mvp.vercel.app/vida'
+        );
+        if (tokenInvalido) {
+          await supabaseAdmin.from('push_subscriptions').delete().eq('user_id', tutor.id);
+        }
+      }
     }
   }
 
