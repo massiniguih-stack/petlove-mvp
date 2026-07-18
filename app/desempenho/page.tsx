@@ -10,12 +10,12 @@ import { BackButton } from '@/components/BackButton';
 import { calcularMeta } from '@/lib/metaDiaria';
 
 export default function DesempenhoPage() {
-  const { pet, hydrated } = usePetStore();
+  const { pet, petsCarregados } = usePetStore();
   const router = useRouter();
 
   useEffect(() => {
-    if (hydrated && !pet) router.push('/onboarding');
-  }, [hydrated, pet, router]);
+    if (petsCarregados && !pet) router.push('/onboarding');
+  }, [petsCarregados, pet, router]);
 
   if (!pet) return null;
 

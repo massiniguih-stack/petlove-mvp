@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
-import { usePetStore } from '@/lib/store'
-import { getPostAuthPath } from '@/lib/postAuthPath'
 import Link from 'next/link'
 
 function safeNextPath(next: string | null): string | null {
@@ -20,7 +18,6 @@ export function LoginForm() {
   const { signIn } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const pet = usePetStore((s) => s.pet)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,9 +31,10 @@ export function LoginForm() {
       return
     }
 
-    // Respeita ?next= (ex.: veio do onboarding) ou escolhe o caminho padrão
-    const requested = safeNextPath(searchParams.get('next'))
-    const destination = requested ?? getPostAuthPath(Boolean(pet))
+    // Respeita ?next= (ex.: veio do onboarding); senão vai direto pro
+    // dashboard — se a conta não tiver pet cadastrado, o próprio dashboard
+    // redireciona pro onboarding assim que carregar os dados reais.
+    const destination = safeNextPath(searchParams.get('next')) ?? '/dashboard'
     router.replace(destination)
     router.refresh()
   }

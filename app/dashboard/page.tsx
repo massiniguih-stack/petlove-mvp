@@ -55,7 +55,7 @@ function PetPhoto({ pet, onPhotoChange }: { pet: { nome: string; fotoUrl: string
 }
 
 export default function DashboardPage() {
-  const { pet, updatePet, hydrated } = usePetStore();
+  const { pet, updatePet, petsCarregados } = usePetStore();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -64,8 +64,11 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    if (hydrated && !pet) router.push('/onboarding');
-  }, [hydrated, pet, router]);
+    // Só redireciona depois que fetchPets() (a busca real no servidor)
+    // terminar — antes disso `pet` pode estar nulo só porque este
+    // navegador ainda não confirmou o que a conta realmente tem.
+    if (petsCarregados && !pet) router.push('/onboarding');
+  }, [petsCarregados, pet, router]);
 
   if (!pet) return null;
 
