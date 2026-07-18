@@ -8,6 +8,7 @@ import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D } from '@/componen
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NotificationBanner from '@/components/NotificationBanner';
+import FeedbackWidget from '@/components/FeedbackWidget';
 
 function PetPhoto({ pet, onPhotoChange }: { pet: { nome: string; fotoUrl: string | null }; onPhotoChange: (url: string) => void }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -89,6 +90,7 @@ export default function DashboardPage() {
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 py-10">
           <NotificationBanner />
+          <FeedbackWidget />
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <PetPhoto pet={pet} onPhotoChange={handlePhotoChange} />
             <div className="flex-1 text-center sm:text-left">

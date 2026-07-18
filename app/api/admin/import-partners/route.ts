@@ -111,19 +111,23 @@ export async function GET(req: NextRequest) {
   });
 }
 
-// PATCH: Update partner email
+// PATCH: Update partner email, or mark WhatsApp as contacted
 export async function PATCH(req: NextRequest) {
   const user = await checkAdmin();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id, email } = await req.json();
+  const { id, email, marcarWhatsapp } = await req.json();
   const supabaseAdmin = getSupabaseAdmin();
+
+  const updates: Record<string, unknown> = {};
+  if (email !== undefined) updates.email = email;
+  if (marcarWhatsapp) updates.whatsapp_contatado_em = new Date().toISOString();
 
   const { error } = await supabaseAdmin
     .from('partners')
-    .update({ email })
+    .update(updates)
     .eq('id', id);
 
   if (error) {

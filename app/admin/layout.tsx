@@ -11,6 +11,7 @@ const menuItems = [
   { href: '/admin/parceiros', label: 'Parceiros', icone: '🤝' },
   { href: '/admin/servicos', label: 'Servi\u00e7os', icone: '🏪' },
   { href: '/admin/usuarios', label: 'Usu\u00e1rios', icone: '👥' },
+  { href: '/admin/feedback', label: 'Feedback', icone: '💬' },
   { href: '/admin/dispatch', label: 'Dispatch', icone: '📨' },
 ];
 
@@ -19,6 +20,7 @@ const pageNames: Record<string, string> = {
   '/admin/parceiros': 'Parceiros',
   '/admin/servicos': 'Servi\u00e7os',
   '/admin/usuarios': 'Usu\u00e1rios',
+  '/admin/feedback': 'Feedback',
   '/admin/dispatch': 'Dispatch',
 };
 
