@@ -38,3 +38,31 @@ export async function GET(request: NextRequest) {
     totalPages: Math.ceil((count || 0) / limit),
   });
 }
+
+// Apaga o usuário do Supabase Auth — a tabela `tutor` referencia
+// auth.users(id) ON DELETE CASCADE, então isso já leva junto o perfil de
+// tutor, os pets, e tudo que depende deles (momentos, checklist, etc.),
+// além de subscriptions/push_subscriptions/partner_sends que referenciam
+// auth.users diretamente.
+export async function DELETE(request: NextRequest) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || !isAdmin(user.email)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const id = request.nextUrl.searchParams.get('id');
+  if (!id) {
+    return NextResponse.json({ error: 'id é obrigatório' }, { status: 400 });
+  }
+
+  const supabaseAdmin = getSupabaseAdmin();
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
+}

@@ -19,9 +19,12 @@ export default function AdminUsuariosPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [confirmandoId, setConfirmandoId] = useState<string | null>(null);
+  const [excluindoId, setExcluindoId] = useState<string | null>(null);
   const limit = 50;
 
-  useEffect(() => {
+  const carregarUsuarios = () => {
+    setCarregando(true);
     fetch(`/api/admin/usuarios?page=${page}&limit=${limit}`)
       .then((r) => r.json())
       .then((data) => {
@@ -37,7 +40,33 @@ export default function AdminUsuariosPage() {
       })
       .catch(() => setErro('Erro de conexao'))
       .finally(() => setCarregando(false));
-  }, [page]);
+  };
+
+  useEffect(carregarUsuarios, [page]);
+
+  const excluirUsuario = async (id: string) => {
+    if (confirmandoId !== id) {
+      setConfirmandoId(id);
+      setTimeout(() => setConfirmandoId((atual) => (atual === id ? null : atual)), 4000);
+      return;
+    }
+    setConfirmandoId(null);
+    setExcluindoId(id);
+    try {
+      const res = await fetch(`/api/admin/usuarios?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setUsuarios((prev) => prev.filter((u) => u.id !== id));
+        setTotal((t) => Math.max(0, t - 1));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Erro ao excluir usuário');
+      }
+    } catch {
+      alert('Erro de conexão ao excluir usuário');
+    } finally {
+      setExcluindoId(null);
+    }
+  };
 
   const filtrados = usuarios.filter((u) => {
     const termo = filtro.toLowerCase();
@@ -91,6 +120,7 @@ export default function AdminUsuariosPage() {
                 <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Email</th>
                 <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Telefone</th>
                 <th className="px-4 py-3 text-left text-xs font-bold text-slate-500 dark:text-slate-400">Cadastro</th>
+                <th className="px-4 py-3 text-right text-xs font-bold text-slate-500 dark:text-slate-400">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -108,6 +138,19 @@ export default function AdminUsuariosPage() {
                   <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{u.telefone || '-'}</td>
                   <td className="px-4 py-3 text-xs text-slate-500 dark:text-slate-400">
                     {new Date(u.created_at).toLocaleDateString('pt-BR')}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <button
+                      onClick={() => excluirUsuario(u.id)}
+                      disabled={excluindoId === u.id}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-bold transition disabled:opacity-50 ${
+                        confirmandoId === u.id
+                          ? 'bg-red-600 text-white hover:bg-red-700'
+                          : 'bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-red-950 dark:hover:text-red-400'
+                      }`}
+                    >
+                      {excluindoId === u.id ? '...' : confirmandoId === u.id ? 'Confirmar exclusão' : '🗑️ Excluir'}
+                    </button>
                   </td>
                 </tr>
               ))}
