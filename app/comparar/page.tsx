@@ -25,15 +25,15 @@ const objetivoLabel: Record<string, string> = {
 };
 
 export default function CompararPage() {
-  const { pets, isPremium, hydrated } = usePetStore();
+  const { pets, isPremium, petsCarregados } = usePetStore();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (hydrated && pets.length === 0) router.push('/onboarding');
-  }, [hydrated, pets.length, router]);
+    if (petsCarregados && pets.length === 0) router.push('/onboarding');
+  }, [petsCarregados, pets.length, router]);
 
   if (!mounted || pets.length === 0) return null;
 

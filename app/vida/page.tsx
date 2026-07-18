@@ -549,7 +549,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
 const DIAS_HISTORICO_GRATIS = 7;
 
 export default function VidaPage() {
-  const { pet, hydrated, isPremium } = usePetStore();
+  const { pet, petsCarregados, isPremium } = usePetStore();
   const router = useRouter();
   const [momentos, setMomentos] = useState<Momento[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -557,8 +557,8 @@ export default function VidaPage() {
   const [filtro, setFiltro] = useState<Momento['categoria'] | 'todos'>('todos');
 
   useEffect(() => {
-    if (hydrated && !pet) router.push('/onboarding');
-  }, [hydrated, pet, router]);
+    if (petsCarregados && !pet) router.push('/onboarding');
+  }, [petsCarregados, pet, router]);
 
   useEffect(() => {
     if (!pet?.id) return;
