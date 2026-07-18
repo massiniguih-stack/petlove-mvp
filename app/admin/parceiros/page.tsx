@@ -20,6 +20,19 @@ interface Partner {
   status: string;
   sent_at: string | null;
   email: string | null;
+  whatsapp_contatado_em: string | null;
+}
+
+function linkWhatsapp(parceiro: Partner): string | null {
+  if (!parceiro.telefone) return null;
+  const digitos = parceiro.telefone.replace(/\D/g, '');
+  const numero = digitos.startsWith('55') ? digitos : `55${digitos}`;
+  const pata = '\u{1F43E}';
+  const check = '✅';
+  const fogo = '\u{1F525}';
+  const sorriso = '\u{1F60A}';
+  const mensagem = `${pata} Olá! Somos do Patinha, o app que conecta tutores de pets aos melhores serviços da cidade.\n\nVi que a ${parceiro.nome} é uma ótima opção para os tutores de ${parceiro.cidade || 'sua região'} e gostaríamos de convidá-la para ser nossa parceira Premium!\n\n${check} Destaque no mapa\n${check} Selo de credibilidade\n${check} Acesso a milhares de tutores ativos\n\n${fogo} 50% OFF pra novos parceiros: patinha.app/parceiros/premium\n\nEstamos à disposição! ${sorriso}`;
+  return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 }
 
 export default function AdminParceirosPage() {
@@ -28,6 +41,7 @@ export default function AdminParceirosPage() {
   const [filtro, setFiltro] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('todos');
   const [filtroStatus, setFiltroStatus] = useState('todos');
+  const [filtroWhatsapp, setFiltroWhatsapp] = useState('todos');
   const [editando, setEditando] = useState<Partner | null>(null);
   const [emailEditando, setEmailEditando] = useState('');
   const [salvandoEmail, setSalvandoEmail] = useState(false);
@@ -120,6 +134,24 @@ export default function AdminParceirosPage() {
     setEnviandoId(null);
   };
 
+  const contatarWhatsapp = async (parceiro: Partner) => {
+    const url = linkWhatsapp(parceiro);
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+    try {
+      await fetch('/api/admin/import-partners', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parceiro.id, marcarWhatsapp: true }),
+      });
+      const agora = new Date().toISOString();
+      setPartners((prev) => prev.map((p) => (p.id === parceiro.id ? { ...p, whatsapp_contatado_em: agora } : p)));
+      setEditando((prev) => (prev && prev.id === parceiro.id ? { ...prev, whatsapp_contatado_em: agora } : prev));
+    } catch {
+      // abrir o WhatsApp já é o que importa; se o registro falhar, sem problema
+    }
+  };
+
   const parceiros = useMemo(() => {
     return partners.filter((p) => {
       const termo = filtro.toLowerCase();
@@ -130,16 +162,22 @@ export default function AdminParceirosPage() {
         (filtroStatus === 'pendente' && p.status !== 'sent') ||
         (filtroStatus === 'enviado' && p.status === 'sent') ||
         (filtroStatus === 'sem_email' && !p.email);
-      return matchBusca && matchTipo && matchStatus;
+      const matchWhatsapp =
+        filtroWhatsapp === 'todos' ||
+        (filtroWhatsapp === 'contatado' && !!p.whatsapp_contatado_em) ||
+        (filtroWhatsapp === 'pendente' && p.telefone && !p.whatsapp_contatado_em);
+      return matchBusca && matchTipo && matchStatus && matchWhatsapp;
     });
-  }, [partners, filtro, filtroTipo, filtroStatus]);
+  }, [partners, filtro, filtroTipo, filtroStatus, filtroWhatsapp]);
 
   const stats = useMemo(() => {
     const total = partners.length;
     const comEmail = partners.filter((p) => p.email).length;
     const enviados = partners.filter((p) => p.status === 'sent').length;
     const pendentesComEmail = partners.filter((p) => p.status !== 'sent' && p.email).length;
-    return { total, comEmail, enviados, pendentesComEmail };
+    const comTelefone = partners.filter((p) => p.telefone).length;
+    const contatadosWhatsapp = partners.filter((p) => p.whatsapp_contatado_em).length;
+    return { total, comEmail, enviados, pendentesComEmail, comTelefone, contatadosWhatsapp };
   }, [partners]);
 
   const enviarLotePendentes = async () => {
@@ -185,7 +223,7 @@ export default function AdminParceirosPage() {
         </div>
       </div>
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-4">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Total</p>
           <p className="mt-1 text-3xl font-black text-slate-900 dark:text-white">{stats.total}</p>
@@ -201,6 +239,10 @@ export default function AdminParceirosPage() {
         <div className="rounded-2xl border border-pink-200 bg-pink-50 p-4 shadow-sm dark:border-pink-900 dark:bg-pink-950">
           <p className="text-sm font-semibold text-pink-600 dark:text-pink-400">✉️ Com email cadastrado</p>
           <p className="mt-1 text-3xl font-black text-pink-700 dark:text-pink-300">{stats.comEmail}</p>
+        </div>
+        <div className="rounded-2xl border border-green-200 bg-green-50 p-4 shadow-sm dark:border-green-900 dark:bg-green-950">
+          <p className="text-sm font-semibold text-green-600 dark:text-green-400">💬 Contatados no WhatsApp</p>
+          <p className="mt-1 text-3xl font-black text-green-700 dark:text-green-300">{stats.contatadosWhatsapp} <span className="text-base font-bold text-green-500">/ {stats.comTelefone}</span></p>
         </div>
       </div>
 
@@ -233,6 +275,15 @@ export default function AdminParceirosPage() {
           <option value="pendente">⏳ Pendente</option>
           <option value="enviado">✓ Convite enviado</option>
           <option value="sem_email">Sem email</option>
+        </select>
+        <select
+          value={filtroWhatsapp}
+          onChange={(e) => setFiltroWhatsapp(e.target.value)}
+          className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-blue-400"
+        >
+          <option value="todos">WhatsApp: todos</option>
+          <option value="pendente">💬 Falta contatar</option>
+          <option value="contatado">✓ Já contatado</option>
         </select>
         <span className="text-sm text-slate-500 dark:text-slate-400">{parceiros.length} parceiros</span>
       </div>
@@ -281,6 +332,18 @@ export default function AdminParceirosPage() {
                 >
                   {enviandoId === parceiro.id ? '...' : enviado ? 'Reenviar' : '📤 Enviar'}
                 </button>
+                {parceiro.telefone && (
+                  <button
+                    onClick={() => contatarWhatsapp(parceiro)}
+                    className={`rounded-lg px-3 py-2 text-xs font-bold transition ${
+                      parceiro.whatsapp_contatado_em
+                        ? 'bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-950 dark:text-green-400'
+                        : 'bg-emerald-500 text-white hover:bg-emerald-600'
+                    }`}
+                  >
+                    {parceiro.whatsapp_contatado_em ? '✓ WhatsApp' : '💬 WhatsApp'}
+                  </button>
+                )}
               </div>
             );
           })}
@@ -359,6 +422,14 @@ export default function AdminParceirosPage() {
               >
                 {enviandoId === editando.id ? 'Enviando...' : editando.status === 'sent' ? 'Reenviar convite' : '📤 Enviar convite'}
               </button>
+              {editando.telefone && (
+                <button
+                  onClick={() => contatarWhatsapp(editando)}
+                  className="flex-1 rounded-xl bg-emerald-500 py-3 text-sm font-bold text-white transition hover:bg-emerald-600"
+                >
+                  {editando.whatsapp_contatado_em ? '✓ Abrir WhatsApp de novo' : '💬 WhatsApp'}
+                </button>
+              )}
             </div>
           </div>
         </div>
