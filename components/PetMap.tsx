@@ -10,7 +10,7 @@ interface Servico {
   nome: string;
   endereco: string;
   bairro: string;
-  avaliacao: number;
+  avaliacao: number | null;
   lat?: number;
   lng?: number;
 }
@@ -83,7 +83,7 @@ function addMarkers(
         <div style="font-weight:700;font-size:14px;color:#1e293b;">${s.nome}</div>
         <div style="font-size:12px;color:#64748b;margin-top:2px;">${s.endereco}</div>
         <div style="font-size:12px;color:#64748b;">${s.bairro}</div>
-        <div style="margin-top:4px;font-size:12px;color:#f59e0b;">⭐ ${s.avaliacao.toLocaleString('pt-BR')}</div>
+        <div style="margin-top:4px;font-size:12px;color:#f59e0b;">⭐ ${s.avaliacao != null ? s.avaliacao.toLocaleString('pt-BR') : 'Novo'}</div>
       </div>
     `);
     layer.addLayer(marker);

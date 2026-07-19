@@ -170,6 +170,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 });
     }
 
+    // Planos de parceiro (vet/petshop) não têm login próprio — a única forma
+    // de ligar o pagamento ao perfil dele no /mapa é casar o e-mail de quem
+    // pagou com partners.email (o mesmo e-mail cadastrado em
+    // /parceiros/cadastro). Sem isso, pagar não mudava nada no mapa.
+    if (planType?.startsWith('partner_')) {
+      const ativo = status === 'active';
+      const { error: partnerError, count } = await supabaseAdmin
+        .from('partners')
+        .update({ premium: ativo, destaque: ativo }, { count: 'exact' })
+        .eq('email', buyerEmail);
+      if (partnerError) {
+        console.error('Failed to update partner premium status:', partnerError);
+      } else if (!count) {
+        console.error(`Payment confirmed for ${buyerEmail} but no partners row matches this email — premium not activated on the map.`);
+      }
+    }
+
     // Send email for first payment
     if (event.Event === 'Purchase_Order_Confirmed') {
       try {

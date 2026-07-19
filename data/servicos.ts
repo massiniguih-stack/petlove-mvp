@@ -5,7 +5,9 @@ export interface Servico {
   endereco: string;
   bairro: string;
   cidade: string;
-  avaliacao: number;
+  // Nulo pra parceiros recém-cadastrados via /parceiros/cadastro, que não
+  // preenche esse campo — ver app/mapa/page.tsx pro tratamento.
+  avaliacao: number | null;
   preco?: string;
   telefone?: string;
   horario?: string;

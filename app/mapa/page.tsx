@@ -67,7 +67,9 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
           <div className="mt-2.5 flex items-center gap-2">
             <div className="flex items-center gap-1">
               <StarIcon size={15} className="text-amber-500" />
-              <span className="text-sm font-bold text-slate-900 dark:text-white">{servico.avaliacao.toLocaleString('pt-BR')}</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white">
+                {servico.avaliacao != null ? servico.avaliacao.toLocaleString('pt-BR') : 'Novo'}
+              </span>
             </div>
             {servico.telefone && (
               <>
@@ -109,7 +111,7 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
             >
               📍 Maps
             </a>
-            {servico.telefone && (
+            {servico.telefone && servico.premium && (
               <a
                 href={`https://wa.me/${(() => {
                   const digitos = servico.telefone!.replace(/\D/g, '');
@@ -190,7 +192,7 @@ export default function MapaPage() {
         if (da != null) return -1;
         if (db != null) return 1;
       }
-      return b.avaliacao - a.avaliacao;
+      return (b.avaliacao ?? 0) - (a.avaliacao ?? 0);
     });
 
   useEffect(() => {
