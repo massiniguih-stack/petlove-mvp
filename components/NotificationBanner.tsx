@@ -1,13 +1,24 @@
 'use client';
 
 import { useNotifications } from '@/lib/useNotifications';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+const STORAGE_KEY = 'patinha_notificacao_banner_visto';
 
 export default function NotificationBanner() {
   const { permission, loading, requestPermission } = useNotifications();
-  const [dismissed, setDismissed] = useState(false);
+  const [visto, setVisto] = useState(true); // começa escondido até checar o navegador
 
-  if (permission === 'granted' || permission === 'denied' || dismissed) return null;
+  useEffect(() => {
+    setVisto(localStorage.getItem(STORAGE_KEY) === 'true');
+  }, []);
+
+  const esconderPraSempre = () => {
+    localStorage.setItem(STORAGE_KEY, 'true');
+    setVisto(true);
+  };
+
+  if (permission === 'granted' || permission === 'denied' || visto) return null;
 
   return (
     <div className="mb-6 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50 p-4">
@@ -26,14 +37,17 @@ export default function NotificationBanner() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => requestPermission()}
+            onClick={async () => {
+              await requestPermission();
+              esconderPraSempre();
+            }}
             disabled={loading}
             className="rounded-xl bg-violet-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-violet-700 disabled:opacity-50"
           >
             {loading ? 'Ativando...' : 'Ativar'}
           </button>
           <button
-            onClick={() => setDismissed(true)}
+            onClick={esconderPraSempre}
             className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
