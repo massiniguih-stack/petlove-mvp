@@ -49,30 +49,6 @@ const beneficios = [
   },
 ];
 
-const depoimentos = [
-  {
-    nome: 'Dr. Carlos Silva',
-    cargo: 'VetCare Clínica Veterinária',
-    cidade: 'Maringá, PR',
-    texto: 'Desde que me tornei parceiro Premium, o fluxo de clientes aumentou 40%. O destaque no mapa faz toda diferença.',
-    avatar: '👨‍⚕️',
-  },
-  {
-    nome: 'Ana Beatriz',
-    cargo: 'Patinha Pet Shop',
-    cidade: 'Curitiba, PR',
-    texto: 'O selo Premium dá muito mais credibilidade. Clientes chegam já confiando no nosso atendimento.',
-    avatar: '👩‍💼',
-  },
-  {
-    nome: 'Marcos Oliveira',
-    cargo: 'PetSkill Escola Canina',
-    cidade: 'Londrina, PR',
-    texto: 'Melhor investimento que fiz para o meu negócio. O retorno é muito maior que o custo da assinatura.',
-    avatar: '🧑‍🏫',
-  },
-];
-
 export default function PremiumClient() {
   const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
   const [loading, setLoading] = useState(false);
@@ -256,38 +232,6 @@ export default function PremiumClient() {
                   </div>
                   <h3 className="mt-4 text-lg font-black text-slate-900 dark:text-white">{b.titulo}</h3>
                   <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{b.descricao}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Depoimentos */}
-        <section className="px-4 py-16">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
-              O que dizem nossos parceiros
-            </h2>
-            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Resultados reais de quem já é Premium</p>
-
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {depoimentos.map((d) => (
-                <div key={d.nome} className="rounded-3xl border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-                  <div className="flex items-center gap-1 text-amber-500">
-                    {'⭐⭐⭐⭐⭐'.split('').map((_, i) => (
-                      <span key={i}>⭐</span>
-                    ))}
-                  </div>
-                  <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">&ldquo;{d.texto}&rdquo;</p>
-                  <div className="mt-4 flex items-center gap-3 border-t border-slate-100 dark:border-slate-700 pt-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-orange-100 text-xl">
-                      {d.avatar}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">{d.nome}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">{d.cargo} · {d.cidade}</p>
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>
