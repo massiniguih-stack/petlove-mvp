@@ -9,14 +9,13 @@ const funcionalidades = [
   { nome: 'Perfil do pet', gratis: true, premium: true },
   { nome: 'Cadastro de 1 pet', gratis: true, premium: true },
   { nome: 'Controle de peso basico', gratis: true, premium: true },
-  { nome: 'Linha do tempo', gratis: true, premium: true },
+  { nome: 'Linha do tempo (ultimos 7 dias)', gratis: true, premium: true },
   { nome: 'Mapa de servicos', gratis: true, premium: true },
   { nome: 'Cadastro ilimitado de pets', gratis: false, premium: true },
-  { nome: 'Controle de peso avancado com graficos', gratis: false, premium: true },
-  { nome: 'Plano alimentar personalizado', gratis: false, premium: true },
-  { nome: 'Plano de exercicios completo', gratis: false, premium: true },
+  { nome: 'Historico completo da linha do tempo', gratis: false, premium: true },
+  { nome: 'Historico completo de refeicoes', gratis: false, premium: true },
+  { nome: 'Historico completo de atividades', gratis: false, premium: true },
   { nome: 'Alertas de vacinas e consultas', gratis: false, premium: true },
-  { nome: 'Relatorios de saude', gratis: false, premium: true },
   { nome: 'Comparacao entre pets', gratis: false, premium: true },
 ];
 
