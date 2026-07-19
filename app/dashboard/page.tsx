@@ -194,7 +194,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-black">Desbloqueie o Patinha Premium</h3>
-                <p className="mt-1 text-sm text-violet-100">Planos personalizados, alertas de vacinas, gráficos avançados e muito mais por apenas <strong>R$ 19,90/mês</strong>.</p>
+                <p className="mt-1 text-sm text-violet-100">Pets ilimitados, alertas de vacinas, histórico completo e comparação entre pets por apenas <strong>R$ 19,90/mês</strong>.</p>
               </div>
               <a
                 href="/planos"
