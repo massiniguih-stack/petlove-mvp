@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
-import { getLastlinkCheckoutUrl, isValidPlanType } from '@/lib/lastlink';
+import { getLastlinkCheckoutUrl, isValidPlanType, planCategory } from '@/lib/lastlink';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,8 +35,9 @@ export async function POST(request: NextRequest) {
         provider_price_id: planType,
         status: 'pending',
         plan_type: planType,
+        plan_category: planCategory(planType),
       },
-      { onConflict: 'user_id' }
+      { onConflict: 'user_id,plan_category' }
     );
 
     if (upsertError) {

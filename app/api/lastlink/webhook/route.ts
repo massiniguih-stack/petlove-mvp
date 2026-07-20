@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import { planCategory } from '@/lib/lastlink';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -148,12 +149,14 @@ export async function POST(request: NextRequest) {
     const lastlinkSubscriptionId = event.Data.Subscriptions?.[0]?.Id;
 
     // Upsert subscription
+    const resolvedPlanType = planType || 'unknown';
     const subscriptionData = {
       user_id: user.id,
       provider_subscription_id: lastlinkSubscriptionId || `lastlink_${event.Id}`,
-      provider_price_id: planType || 'unknown',
+      provider_price_id: resolvedPlanType,
       status,
-      plan_type: planType || 'unknown',
+      plan_type: resolvedPlanType,
+      plan_category: planCategory(resolvedPlanType),
       cancel_at_period_end: cancelAtPeriodEnd,
       current_period_end: event.Data.Purchase?.PaymentDate
         ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Estimate 30 days
@@ -163,7 +166,7 @@ export async function POST(request: NextRequest) {
 
     const { error: upsertError } = await supabaseAdmin.from('subscriptions').upsert(
       subscriptionData,
-      { onConflict: 'user_id' }
+      { onConflict: 'user_id,plan_category' }
     );
     if (upsertError) {
       console.error('Failed to upsert subscription:', upsertError);
