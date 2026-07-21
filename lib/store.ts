@@ -7,6 +7,8 @@ export interface Tutor {
   email: string;
   telefone: string;
   endereco: string;
+  consentimentoMarketing?: boolean;
+  consentimentoLocalizacao?: boolean;
 }
 
 export interface Pet {
@@ -209,6 +211,8 @@ export const usePetStore = create<PetState>((set, get) => {
           email: (tutorRow?.email as string) || user.email || '',
           telefone: (tutorRow?.telefone as string) || '',
           endereco: (tutorRow?.endereco as string) || '',
+          consentimentoMarketing: !!tutorRow?.consentimento_marketing,
+          consentimentoLocalizacao: !!tutorRow?.consentimento_localizacao,
         };
 
         const { data: rows, error } = await supabase.from('pet').select('*').order('created_at');
@@ -267,10 +271,12 @@ export const usePetStore = create<PetState>((set, get) => {
         const { error } = await supabase.from('pet').insert({ id: pet.id, tutor_id: user.id, ...petToRow(pet) });
         if (error) throw error;
 
-        if (pet.tutor?.telefone || pet.tutor?.endereco) {
+        if (pet.tutor?.telefone || pet.tutor?.endereco || pet.tutor?.consentimentoMarketing !== undefined || pet.tutor?.consentimentoLocalizacao !== undefined) {
           await supabase.from('tutor').update({
             telefone: pet.tutor.telefone || null,
             endereco: pet.tutor.endereco || null,
+            consentimento_marketing: pet.tutor.consentimentoMarketing ?? false,
+            consentimento_localizacao: pet.tutor.consentimentoLocalizacao ?? false,
           }).eq('id', user.id);
         }
         return {};
@@ -325,10 +331,12 @@ export const usePetStore = create<PetState>((set, get) => {
           if (error) throw error;
         }
 
-        if (updates.tutor?.telefone !== undefined || updates.tutor?.endereco !== undefined) {
+        if (updates.tutor?.telefone !== undefined || updates.tutor?.endereco !== undefined || updates.tutor?.consentimentoMarketing !== undefined || updates.tutor?.consentimentoLocalizacao !== undefined) {
           await supabase.from('tutor').update({
             telefone: updates.tutor?.telefone || null,
             endereco: updates.tutor?.endereco || null,
+            ...(updates.tutor?.consentimentoMarketing !== undefined && { consentimento_marketing: updates.tutor.consentimentoMarketing }),
+            ...(updates.tutor?.consentimentoLocalizacao !== undefined && { consentimento_localizacao: updates.tutor.consentimentoLocalizacao }),
           }).eq('id', user.id);
         }
         return {};

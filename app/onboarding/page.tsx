@@ -25,8 +25,8 @@ export default function OnboardingPage() {
     objetivo: pet?.objetivo ?? 'manutencao',
     tutorTelefone: pet?.tutor?.telefone ?? '',
     tutorEndereco: pet?.tutor?.endereco ?? '',
-    consentimentoMarketing: false,
-    consentimentoLocalizacao: false,
+    consentimentoMarketing: pet?.tutor?.consentimentoMarketing ?? false,
+    consentimentoLocalizacao: pet?.tutor?.consentimentoLocalizacao ?? false,
   });
 
   // Preenche telefone/endereço se já existirem no pet
@@ -51,8 +51,8 @@ export default function OnboardingPage() {
         objetivo: pet.objetivo,
         tutorTelefone: pet.tutor?.telefone ?? '',
         tutorEndereco: pet.tutor?.endereco ?? '',
-        consentimentoMarketing: false,
-        consentimentoLocalizacao: false,
+        consentimentoMarketing: pet.tutor?.consentimentoMarketing ?? false,
+        consentimentoLocalizacao: pet.tutor?.consentimentoLocalizacao ?? false,
       });
       setBuscaRaca(pet.raca ?? '');
     }
@@ -122,6 +122,8 @@ export default function OnboardingPage() {
       email: tutorEmail,
       telefone: form.tutorTelefone.trim(),
       endereco: form.tutorEndereco.trim(),
+      consentimentoMarketing: form.consentimentoMarketing,
+      consentimentoLocalizacao: form.consentimentoLocalizacao,
     };
 
     setSalvando(true);

@@ -18,7 +18,6 @@ const adminEmails = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split
 const authRoutes = [
   '/login',
   '/cadastro',
-  '/verificar-email',
   '/recuperar-senha',
   '/recuperar-senha/nova-senha',
 ]
