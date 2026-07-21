@@ -23,7 +23,7 @@ export const metadata = {
   openGraph: {
     title: 'Patinha - Cuidados para seu pet',
     description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário, hotel e mais.',
-    url: 'https://petlove-mvp.vercel.app',
+    url: 'https://patinha-mvp.vercel.app',
     siteName: 'Patinha',
     locale: 'pt_BR',
     type: 'website',
@@ -35,7 +35,7 @@ export const metadata = {
     description: 'Encontre os melhores serviços para seu animal de estimação.',
     images: ['/og-image.png'],
   },
-  metadataBase: new URL('https://petlove-mvp.vercel.app'),
+  metadataBase: new URL('https://patinha-mvp.vercel.app'),
 }
 
 export default function RootLayout({

@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
                 <p style="color: #333; font-size: 16px; font-weight: bold; margin: 0;">${planName}</p>
               </div>
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://petlove-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                <a href="https://patinha-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
                   Acessar Dashboard
                 </a>
               </div>

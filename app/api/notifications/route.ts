@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
               <li>Receber alertas de vacinas</li>
               <li>Encontrar servicos perto de voce</li>
             </ul>
-            <a href="https://petlove-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            <a href="https://patinha-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 16px;">
               Acessar Dashboard
             </a>
             <p style="margin-top: 24px; color: #666; font-size: 14px;">
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
               <li>Suporte prioritario</li>
             </ul>
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://petlove-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
+              <a href="https://patinha-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
                 Acessar Dashboard
               </a>
             </div>
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
             <h1 style="color: #7c3aed;">Lembrete de Vacina 🐾</h1>
             <p>A vacina <strong>${vaccineName}</strong> do <strong>${petName}</strong> esta programada para <strong>${dueDate}</strong>.</p>
             <p>Nao esqueca de agendar a consulta com o veterinario!</p>
-            <a href="https://petlove-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            <a href="https://patinha-mvp.vercel.app/dashboard" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 16px;">
               Ver Dashboard
             </a>
           </div>
