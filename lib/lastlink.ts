@@ -21,4 +21,12 @@ export function isValidPlanType(planType: string): boolean {
   return planType in PLAN_SLUGS;
 }
 
+// Uma conta pode ser tutora e dona de negócio parceiro ao mesmo tempo — cada
+// categoria tem sua própria linha em `subscriptions` (ver migration
+// 20260724_subscriptions_allow_tutor_and_partner.sql), pra uma não
+// sobrescrever a outra.
+export function planCategory(planType: string): 'tutor' | 'partner' {
+  return planType.startsWith('partner_') ? 'partner' : 'tutor';
+}
+
 export const LASTLINK_WEBHOOK_TOKEN = process.env.LASTLINK_WEBHOOK_TOKEN || '';
