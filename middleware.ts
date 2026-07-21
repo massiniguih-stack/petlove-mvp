@@ -11,6 +11,7 @@ const protectedRoutes = [
   '/vida',
   '/desempenho',
   '/conta',
+  '/parceiro',
 ]
 const adminRoutes = ['/admin']
 const adminEmails = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',')

@@ -8,7 +8,7 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').spli
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const {
-    nome, tipo, endereco, numero, complemento, bairro, cidade, uf,
+    nome, tipo, descricao, endereco, numero, complemento, bairro, cidade, uf,
     telefone, whatsapp, email, website, instagram,
     horarioAbertura, horarioFechamento, horarioEspecial,
     servicos, plantao24h, aceiteTermos,
@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
   const { error } = await supabaseAdmin.from('partners').insert({
     tipo: tipo[0],
     nome,
+    descricao: descricao || null,
     endereco: enderecoCompleto || null,
     bairro: bairro || null,
     cidade: cidade || null,

@@ -29,12 +29,21 @@ const coresBg: Record<string, string> = {
   petsitter: 'bg-rose-100 text-rose-700', parque: 'bg-green-100 text-green-700',
 };
 
+// Best-effort, não trava a navegação do tutor se falhar.
+function registrarEvento(partnerId: string, eventType: 'view' | 'whatsapp_click') {
+  fetch('/api/servicos/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ partnerId, eventType }),
+  }).catch(() => {});
+}
+
 function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onSelect?: (s: Servico) => void; onCenterMap?: (s: Servico) => void }) {
   const [expandido, setExpandido] = useState(false);
 
   return (
     <div
-      onClick={() => onCenterMap?.(servico)}
+      onClick={() => { registrarEvento(servico.id, 'view'); onCenterMap?.(servico); }}
       className={`group cursor-pointer rounded-2xl border bg-white dark:bg-slate-900 p-5 shadow-sm transition-all duration-300 hover:shadow-lg ${
         servico.premium ? 'border-amber-300 ring-2 ring-amber-200 shadow-amber-500/10' : 'border-slate-200'
       }`}
@@ -118,6 +127,7 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
                   return digitos.startsWith('55') ? digitos : `55${digitos}`;
                 })()}`}
                 target="_blank" rel="noopener noreferrer"
+                onClick={() => registrarEvento(servico.id, 'whatsapp_click')}
                 className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600 hover:shadow-md"
               >
                 💬 WhatsApp
@@ -142,6 +152,14 @@ export default function MapaPage() {
   const [filtro, setFiltro] = useState<string>('todos');
   const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(null);
   const [coordenadasUsuario, setCoordenadasUsuario] = useState<{ lat: number; lng: number } | null>(null);
+  const [souParceiro, setSouParceiro] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/parceiro/profile')
+      .then((res) => res.json())
+      .then((data) => setSouParceiro(!!data.partner))
+      .catch(() => {});
+  }, []);
   const [ordenarPor, setOrdenarPor] = useState<'avaliacao' | 'distancia'>('avaliacao');
   const [servicosDaCidade, setServicosDaCidade] = useState<Servico[]>([]);
   const [carregandoServicos, setCarregandoServicos] = useState(true);
@@ -355,14 +373,18 @@ export default function MapaPage() {
                 <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white dark:bg-slate-900" />
               </div>
               <div className="relative flex-1">
-                <h2 className="text-2xl font-black text-white">Você é dono de uma loja ou clínica pet?</h2>
-                <p className="mt-2 text-orange-100">Torne-se parceiro Premium e apareça no topo do mapa!</p>
+                <h2 className="text-2xl font-black text-white">
+                  {souParceiro ? 'Seu negócio está no mapa' : 'Você é dono de uma loja ou clínica pet?'}
+                </h2>
+                <p className="mt-2 text-orange-100">
+                  {souParceiro ? 'Acompanhe visualizações, cliques e sua assinatura no seu painel.' : 'Torne-se parceiro Premium e apareça no topo do mapa!'}
+                </p>
               </div>
               <a
-                href="/parceiros/premium"
+                href={souParceiro ? '/parceiro/dashboard' : '/parceiros/premium'}
                 className="relative rounded-2xl bg-white dark:bg-slate-900 px-8 py-4 text-lg font-black text-orange-600 shadow-xl transition hover:bg-orange-50 hover:shadow-2xl hover:scale-105 active:scale-95"
               >
-                🏆 Ser Premium
+                {souParceiro ? '📊 Meu Painel' : '🏆 Ser Premium'}
               </a>
             </div>
           </div>
