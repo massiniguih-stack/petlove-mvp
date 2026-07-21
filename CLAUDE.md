@@ -1,4 +1,4 @@
-# PetLove MVP
+# Patinha MVP
 
 Next.js 14 (App Router) + Supabase app for pet tutors (main app) and a
 staff-only admin panel. Payments via LastLink (webhook-driven), email via

@@ -1,8 +1,8 @@
-# PetLove MVP — Autenticação com Supabase Auth
+# Patinha MVP — Autenticação com Supabase Auth
 
 ## Visão Geral
 
-Implementar sistema de autenticação completo no PetLove MVP utilizando Supabase Auth com email/senha e login social (Google). Inclui verificação de email, recuperação de senha, e proteção de rotas.
+Implementar sistema de autenticação completo no Patinha MVP utilizando Supabase Auth com email/senha e login social (Google). Inclui verificação de email, recuperação de senha, e proteção de rotas.
 
 ## Decisões de Design
 
@@ -242,7 +242,7 @@ components/
 
 ```
 ┌─────────────────────────────┐
-│         🐕 PetLove          │
+│         🐕 Patinha          │
 │                             │
 │  ┌───────────────────────┐  │
 │  │ Email                 │  │
@@ -266,7 +266,7 @@ components/
 
 ```
 ┌─────────────────────────────┐
-│         🐕 PetLove          │
+│         🐕 Patinha          │
 │                             │
 │  Nome completo              │
 │  Email                      │

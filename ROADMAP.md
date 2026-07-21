@@ -1,4 +1,4 @@
-# PetLove MVP - Ordem de implementação
+# Patinha MVP - Ordem de implementação
 
 ## Já feito
 - [x] Projeto Next.js + Tailwind criado em `petlove-mvp/`

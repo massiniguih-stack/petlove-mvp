@@ -155,7 +155,7 @@ Pagina de vendas separada da landing page existente, focada em converter visitan
 **Titulo**: "Perguntas frequentes" (branco, font-black, 3xl)
 
 **Perguntas** (6 items):
-1. "O PetLove e gratuito?" — "Sim! Voce pode usar as funcionalidades basicas gratuitamente."
+1. "O Patinha e gratuito?" — "Sim! Voce pode usar as funcionalidades basicas gratuitamente."
 2. "Como funciona o plano Premium?" — "Por R$19,90/mes, voce desbloqueia todas as funcionalidades."
 3. "Posso cadastrar quantos pets?" — "Gratis: 1 pet. Premium: ilimitado."
 4. "Meus dados estao seguros?" — "Sim! Seguimos a LGPD e usamos criptografia."
@@ -185,7 +185,7 @@ Pagina de vendas separada da landing page existente, focada em converter visitan
 ## Elementos Globais
 
 ### Navbar
-- Logo PetLove (esquerdo)
+- Logo Patinha (esquerdo)
 - Links: Funcionalidades, Planos, FAQ (centro, desktop only)
 - Botoes: "Entrar" (fantasma) + "Comecar" (gradiente amber→orange)
 - Fixo no topo, transparente → `bg-black/80 backdrop-blur` no scroll
@@ -194,7 +194,7 @@ Pagina de vendas separada da landing page existente, focada em converter visitan
 - Logo + descricao curta
 - Links: Funcionalidades, Planos, FAQ, Privacidade, Termos
 - Redes sociais (placeholder)
-- Copyright: "2026 PetLove. Todos os direitos reservados."
+- Copyright: "2026 Patinha. Todos os direitos reservados."
 
 ### Animacoes
 - **Scroll-reveal**: fade-up com translateY(20px) → 0, opacidade 0→1, 0.6s ease-out

@@ -210,7 +210,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/server';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://petlove-mvp.vercel.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://patinha-mvp.vercel.app';
 
 const PRICE_MAP: Record<string, string> = {
   tutor_monthly: process.env.STRIPE_PRICE_TUTOR_MONTHLY!,
@@ -525,7 +525,7 @@ import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/server';
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://petlove-mvp.vercel.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://patinha-mvp.vercel.app';
 
 export async function POST() {
   try {
