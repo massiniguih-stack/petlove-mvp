@@ -520,12 +520,6 @@ export default function RacaoPage() {
                         index === 0 ? 'border-amber-200 bg-gradient-to-br from-amber-50 to-white ring-2 ring-amber-100 shadow-md dark:border-amber-800 dark:from-amber-950 dark:to-slate-900' : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600'
                       }`}
                     >
-                      {index === 0 && (
-                        <div className="absolute -top-3 left-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
-                          ⭐ Melhor escolha
-                        </div>
-                      )}
-
                       <div className="flex items-start gap-4">
                         <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 text-3xl dark:from-slate-800 dark:to-slate-700">
                           {marca.logo}
