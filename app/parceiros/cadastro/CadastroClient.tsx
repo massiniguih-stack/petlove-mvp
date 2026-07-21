@@ -30,10 +30,13 @@ const estados = [
 
 const servicosOferecidos = [
   'Consultas', 'Vacinas', 'Cirurgias', 'Exames Laboratoriais', 'Raio-X',
+  'Castração', 'Microchipagem', 'Vermifugação', 'Check-up',
+  'Odontologia', 'Dermatologia', 'Fisioterapia', 'Acupuntura', 'Nutrição',
   'Banho', 'Tosa', 'Day Care', 'Creche', 'Hotel', 'Passeio',
   'Educação Canina', 'Adestramento', 'Hidratação', 'Estética',
-  'Rações', 'Acessórios', 'Brinquedos', 'Petiscos',
+  'Rações', 'Acessórios', 'Brinquedos', 'Petiscos', 'Farmácia',
   'Área para Cães', 'Obstáculos', 'Bebedouros', 'Trilhas',
+  'Pet Táxi', 'Transporte', 'Funerária / Cremação',
   'Emergência 24h', 'Internamento', 'UTI',
 ];
 
@@ -93,6 +96,14 @@ export default function CadastroClient() {
         ? prev.servicos.filter((s) => s !== servico)
         : [...prev.servicos, servico],
     }));
+  };
+
+  const [novoServico, setNovoServico] = useState('');
+  const adicionarServicoCustom = () => {
+    const nome = novoServico.trim();
+    if (!nome || form.servicos.includes(nome)) return;
+    setForm((prev) => ({ ...prev, servicos: [...prev.servicos, nome] }));
+    setNovoServico('');
   };
 
   const [buscandoCep, setBuscandoCep] = useState(false);
@@ -565,6 +576,33 @@ export default function CadastroClient() {
                         {servico}
                       </button>
                     ))}
+                    {form.servicos.filter((s) => !servicosOferecidos.includes(s)).map((servico) => (
+                      <button
+                        key={servico} type="button"
+                        onClick={() => toggleServico(servico)}
+                        className="rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-500/20"
+                      >
+                        {servico} ✕
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 flex gap-2">
+                    <input
+                      type="text"
+                      value={novoServico}
+                      onChange={(e) => setNovoServico(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); adicionarServicoCustom(); } }}
+                      placeholder="Não achou o seu serviço? Digite aqui"
+                      className="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    />
+                    <button
+                      type="button"
+                      onClick={adicionarServicoCustom}
+                      className="rounded-xl bg-slate-100 dark:bg-slate-800 px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 transition hover:bg-slate-200 dark:hover:bg-slate-700"
+                    >
+                      + Adicionar
+                    </button>
                   </div>
                 </div>
 
