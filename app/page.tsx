@@ -144,6 +144,13 @@ export default function HomePage() {
             >
               Cadastrar meu pet agora
             </Link>
+
+            <Link
+              href="/parceiro/dashboard"
+              className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-slate-200 px-8 py-3 text-sm font-semibold text-slate-500 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+            >
+              Sou parceiro (vet/petshop) → ir para meu painel
+            </Link>
           </section>
         </main>
         <Footer />
@@ -262,6 +269,12 @@ export default function HomePage() {
                 </div>
               </Link>
             </div>
+
+            <div className="mt-6 text-center">
+              <Link href="/parceiro/dashboard" className="text-xs font-semibold text-slate-400 underline-offset-2 hover:text-slate-600 hover:underline dark:hover:text-slate-300">
+                Sou parceiro (vet/petshop) → ir para meu painel
+              </Link>
+            </div>
           </div>
         </main>
         <Footer />
@@ -330,6 +343,12 @@ export default function HomePage() {
               className="inline-flex flex-1 items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-6 py-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               Já tenho conta
+            </Link>
+          </div>
+
+          <div className="mx-auto mt-4 max-w-md text-center">
+            <Link href="/parceiro/dashboard" className="text-xs font-semibold text-slate-400 underline-offset-2 hover:text-slate-600 hover:underline dark:hover:text-slate-300">
+              Sou parceiro (vet/petshop) → ir para meu painel
             </Link>
           </div>
 
