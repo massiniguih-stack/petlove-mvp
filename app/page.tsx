@@ -268,6 +268,19 @@ export default function HomePage() {
                   </p>
                 </div>
               </Link>
+
+              <Link
+                href="/comparar"
+                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-500 to-purple-500 p-6 text-white shadow-lg shadow-violet-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className="relative">
+                  <div className="flex h-16 w-16 items-center justify-center">
+                    <ChartIcon3D size={56} />
+                  </div>
+                  <h3 className="mt-3 text-xl font-black">Comparar pets</h3>
+                  <p className="mt-1.5 text-sm text-violet-100">Compare seus pets lado a lado.</p>
+                </div>
+              </Link>
             </div>
 
             <div className="mt-6 flex justify-center">

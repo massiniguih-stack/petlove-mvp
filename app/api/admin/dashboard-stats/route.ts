@@ -36,13 +36,17 @@ export async function GET() {
     tutorNovos30Res,
     petTotalRes,
     subscriptionsRes,
+    eventosRes,
+    servicosRealizadosRes,
   ] = await Promise.all([
-    supabaseAdmin.from('partners').select('tipo, status, email'),
+    supabaseAdmin.from('partners').select('tipo, status, email, user_id, premium'),
     supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }),
     supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }).gte('created_at', diasAtras(7)),
     supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }).gte('created_at', diasAtras(30)),
     supabaseAdmin.from('pet').select('*', { count: 'exact', head: true }),
     supabaseAdmin.from('subscriptions').select('status, plan_type'),
+    supabaseAdmin.from('partner_events').select('event_type').gte('created_at', diasAtras(30)),
+    supabaseAdmin.from('service_logs').select('origem').gte('created_at', diasAtras(30)),
   ]);
 
   const partners = partnersRes.data || [];
@@ -50,12 +54,24 @@ export async function GET() {
   let convitesEnviados = 0;
   let comEmail = 0;
   let pendentesComEmail = 0;
+  let painelAtivado = 0;
+  let premiumSemPainel = 0;
   for (const p of partners) {
     porTipo[p.tipo] = (porTipo[p.tipo] || 0) + 1;
     if (p.status === 'sent') convitesEnviados++;
     if (p.email) comEmail++;
     if (p.email && p.status !== 'sent') pendentesComEmail++;
+    if (p.user_id) painelAtivado++;
+    if (p.premium && !p.user_id) premiumSemPainel++;
   }
+
+  const eventos = eventosRes.data || [];
+  const visualizacoes30dias = eventos.filter((e) => e.event_type === 'view').length;
+  const whatsappCliques30dias = eventos.filter((e) => e.event_type === 'whatsapp_click').length;
+
+  const servicosRealizados = servicosRealizadosRes.data || [];
+  const registradosPorParceiros30dias = servicosRealizados.filter((s) => s.origem === 'parceiro').length;
+  const confirmadosPorTutores30dias = servicosRealizados.filter((s) => s.origem === 'tutor').length;
 
   const subscriptions = subscriptionsRes.data || [];
   const ativas = subscriptions.filter((s) => s.status === 'active');
@@ -73,6 +89,8 @@ export async function GET() {
       comEmail,
       convitesEnviados,
       pendentesComEmail,
+      painelAtivado,
+      premiumSemPainel,
     },
     tutores: {
       total: tutorTotalRes.count || 0,
@@ -86,6 +104,14 @@ export async function GET() {
       ativas: ativas.length,
       porPlano,
       mrrEstimado: Math.round(mrrEstimado * 100) / 100,
+    },
+    mapa30dias: {
+      visualizacoes: visualizacoes30dias,
+      whatsappCliques: whatsappCliques30dias,
+    },
+    servicos30dias: {
+      registradosPorParceiros: registradosPorParceiros30dias,
+      confirmadosPorTutores: confirmadosPorTutores30dias,
     },
   });
 }
