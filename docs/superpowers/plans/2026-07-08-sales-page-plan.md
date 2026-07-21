@@ -276,7 +276,7 @@ export default function Hero() {
                   <path d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582" />
                 </svg>
               </div>
-              <p className="text-sm font-bold text-white">PetLove</p>
+              <p className="text-sm font-bold text-white">Patinha</p>
               <p className="text-xs text-slate-400">Dashboard</p>
             </div>
           </div>
@@ -470,7 +470,7 @@ export default function Demo() {
                 <div className={`flex h-[350px] w-[200px] items-center justify-center rounded-[1.5rem] bg-gradient-to-br ${s.color}`}>
                   <div className="text-center">
                     <p className="text-lg font-black text-white">{s.title}</p>
-                    <p className="mt-1 text-xs text-white/70">PetLove</p>
+                    <p className="mt-1 text-xs text-white/70">Patinha</p>
                   </div>
                 </div>
               </div>
@@ -763,7 +763,7 @@ git commit -m "feat: add free vs premium pricing section"
 const testimonials = [
   {
     name: 'Ana Carolina',
-    text: 'O PetLove mudou como eu cuido do meu Golden. O controle de peso e vacinas e incrivel!',
+    text: 'O Patinha mudou como eu cuido do meu Golden. O controle de peso e vacinas e incrivel!',
     stars: 5,
     initials: 'AC',
     gradient: 'from-purple-500 to-pink-500',
@@ -862,7 +862,7 @@ import { useState } from 'react';
 
 const faqs = [
   {
-    q: 'O PetLove e gratuito?',
+    q: 'O Patinha e gratuito?',
     a: 'Sim! Voce pode usar as funcionalidades basicas gratuitamente. Para desbloquear tudo, assine o Premium por R$ 19,90/mes.',
   },
   {
@@ -1029,7 +1029,7 @@ export default function Footer() {
           </div>
         </div>
         <p className="mt-8 text-center text-xs text-slate-600">
-          &copy; 2026 PetLove. Todos os direitos reservados.
+          &copy; 2026 Patinha. Todos os direitos reservados.
         </p>
       </div>
     </footer>
@@ -1111,7 +1111,7 @@ git commit -m "feat: integrate scroll reveal animations across all sections"
 
 **Interfaces:**
 - Consumes: All previous tasks
-- Produces: Live page at https://petlove-mvp.vercel.app/app
+- Produces: Live page at https://patinha-mvp.vercel.app/app
 
 - [ ] **Step 1: Run production build**
 
@@ -1125,14 +1125,14 @@ Expected: Deployment succeeds
 
 - [ ] **Step 3: Verify in production**
 
-Open: `https://petlove-mvp.vercel.app/app`
+Open: `https://patinha-mvp.vercel.app/app`
 Check: All sections render, animations work, links function
 
 - [ ] **Step 4: Update docs/links.md**
 
 Add to `docs/links.md`:
 ```markdown
-- Pagina de vendas: https://petlove-mvp.vercel.app/app
+- Pagina de vendas: https://patinha-mvp.vercel.app/app
 ```
 
 - [ ] **Step 5: Commit**

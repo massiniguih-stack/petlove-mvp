@@ -1,8 +1,8 @@
-# PetLove MVP — Autenticação Implementation Plan
+# Patinha MVP — Autenticação Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Implement complete authentication system for PetLove MVP with Supabase Auth (email/senha + Google), email verification, password recovery, and route protection.
+**Goal:** Implement complete authentication system for Patinha MVP with Supabase Auth (email/senha + Google), email verification, password recovery, and route protection.
 
 **Architecture:** Supabase Auth handles authentication, a trigger auto-creates tutor profiles, RLS ensures data isolation, and Next.js middleware protects routes.
 
@@ -846,7 +846,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">🐕 PetLove</h1>
+          <h1 className="text-3xl font-bold text-gray-800">🐕 Patinha</h1>
           <p className="text-gray-600 mt-2">Bem-vindo de volta!</p>
         </div>
 
@@ -890,7 +890,7 @@ export default function CadastroPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">🐕 PetLove</h1>
+          <h1 className="text-3xl font-bold text-gray-800">🐕 Patinha</h1>
           <p className="text-gray-600 mt-2">Crie sua conta</p>
         </div>
 
@@ -932,7 +932,7 @@ export default function VerificarEmailPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">🐕 PetLove</h1>
+          <h1 className="text-3xl font-bold text-gray-800">🐕 Patinha</h1>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -955,7 +955,7 @@ export default function RecuperarSenhaPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">🐕 PetLove</h1>
+          <h1 className="text-3xl font-bold text-gray-800">🐕 Patinha</h1>
           <p className="text-gray-600 mt-2">Redefina sua senha</p>
         </div>
 
@@ -996,7 +996,7 @@ import { AuthProvider } from '@/providers/AuthProvider'
 import './globals.css'
 
 export const metadata = {
-  title: 'PetLove - Cuidados para seu pet',
+  title: 'Patinha - Cuidados para seu pet',
   description: 'Encontre os melhores serviços para seu animal de estimação',
 }
 
@@ -1018,7 +1018,7 @@ export default function RootLayout({
 - [ ] **Step 2: Update schema.sql**
 
 ```sql
--- PetLove MVP - Schema com Supabase Auth
+-- Patinha MVP - Schema com Supabase Auth
 
 -- Tabela de tutor (atualizada para Supabase Auth)
 create table public.tutor (
