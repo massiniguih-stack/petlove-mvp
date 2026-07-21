@@ -21,6 +21,7 @@ export default function AdminUsuariosPage() {
   const [total, setTotal] = useState(0);
   const [confirmandoId, setConfirmandoId] = useState<string | null>(null);
   const [excluindoId, setExcluindoId] = useState<string | null>(null);
+  const [erroExclusao, setErroExclusao] = useState<string | null>(null);
   const limit = 50;
 
   const carregarUsuarios = () => {
@@ -52,6 +53,7 @@ export default function AdminUsuariosPage() {
     }
     setConfirmandoId(null);
     setExcluindoId(id);
+    setErroExclusao(null);
     try {
       const res = await fetch(`/api/admin/usuarios?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
@@ -59,10 +61,10 @@ export default function AdminUsuariosPage() {
         setTotal((t) => Math.max(0, t - 1));
       } else {
         const data = await res.json().catch(() => ({}));
-        alert(data.error || 'Erro ao excluir usuário');
+        setErroExclusao(data.error || 'Erro ao excluir usuário');
       }
     } catch {
-      alert('Erro de conexão ao excluir usuário');
+      setErroExclusao('Erro de conexão ao excluir usuário');
     } finally {
       setExcluindoId(null);
     }
@@ -90,6 +92,13 @@ export default function AdminUsuariosPage() {
           <p className="mt-1 text-3xl font-black text-emerald-700 dark:text-emerald-300">{usuarios.filter((u) => u.telefone).length}</p>
         </div>
       </div>
+
+      {erroExclusao && (
+        <div className="mb-6 flex items-center justify-between rounded-2xl border border-red-200 bg-red-50 px-4 py-3 dark:border-red-900 dark:bg-red-950">
+          <p className="text-sm font-semibold text-red-700 dark:text-red-400">{erroExclusao}</p>
+          <button onClick={() => setErroExclusao(null)} className="text-xs font-bold text-red-500 hover:text-red-700">✕</button>
+        </div>
+      )}
 
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
         <input

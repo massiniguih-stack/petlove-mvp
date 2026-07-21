@@ -12,7 +12,6 @@ const menuItems = [
   { href: '/admin/servicos', label: 'Servi\u00e7os', icone: '🏪' },
   { href: '/admin/usuarios', label: 'Usu\u00e1rios', icone: '👥' },
   { href: '/admin/feedback', label: 'Feedback', icone: '💬' },
-  { href: '/admin/dispatch', label: 'Dispatch', icone: '📨' },
 ];
 
 const pageNames: Record<string, string> = {
@@ -21,7 +20,6 @@ const pageNames: Record<string, string> = {
   '/admin/servicos': 'Servi\u00e7os',
   '/admin/usuarios': 'Usu\u00e1rios',
   '/admin/feedback': 'Feedback',
-  '/admin/dispatch': 'Dispatch',
 };
 
 function UserMenu() {
