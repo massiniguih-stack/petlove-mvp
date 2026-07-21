@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -73,7 +73,6 @@ function deslocarMes(mes: string, delta: number) {
 }
 
 export default function ParceiroDashboardPage() {
-  const router = useRouter();
   const [carregando, setCarregando] = useState(true);
   const [naoEhParceiro, setNaoEhParceiro] = useState(false);
   const [partner, setPartner] = useState<PartnerProfile | null>(null);
@@ -205,8 +204,31 @@ export default function ParceiroDashboardPage() {
   };
 
   if (!carregando && naoEhParceiro) {
-    router.push('/dashboard');
-    return null;
+    return (
+      <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
+        <Navbar />
+        <main className="flex-1">
+          <div className="mx-auto max-w-3xl px-4 py-10">
+            <BackButton href="/dashboard" label="Voltar ao app" />
+            <div className="mt-10 rounded-3xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-3xl dark:bg-slate-800">🏪</div>
+              <h1 className="mt-4 text-xl font-black text-slate-900 dark:text-white">Essa conta não é de um parceiro</h1>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                O painel do parceiro só existe pra contas de vet/petshop com assinatura Premium ativa. Se você é dono de um negócio pet, cadastre-o em{' '}
+                <Link href="/parceiros/cadastro" className="font-semibold text-amber-600 hover:underline">/parceiros/cadastro</Link>.
+              </p>
+              <Link
+                href="/dashboard"
+                className="mt-6 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-md"
+              >
+                Voltar ao app
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   return (
