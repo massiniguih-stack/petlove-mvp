@@ -74,14 +74,14 @@ export default function AdminPartnerEmailsPage() {
     </div>
 
     <div style="text-align: center; margin: 32px 0;">
-      <a href="https://petlove-mvp.vercel.app/parceiros/cadastro" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #9333ea); color: #ffffff; padding: 16px 40px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px; letter-spacing: -0.3px; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);">
+      <a href="https://patinha-mvp.vercel.app/parceiros/cadastro" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #9333ea); color: #ffffff; padding: 16px 40px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px; letter-spacing: -0.3px; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);">
         Quero ser parceiro
       </a>
     </div>
 
     <div style="background: #f1f5f9; border-radius: 12px; padding: 20px; margin: 24px 0; text-align: center;">
       <p style="color: #64748b; font-size: 13px; margin: 0 0 8px 0;">Conheca nosso app:</p>
-      <a href="https://petlove-mvp.vercel.app" style="color: #7c3aed; font-size: 15px; font-weight: 700; text-decoration: none;">petlove-mvp.vercel.app</a>
+      <a href="https://patinha-mvp.vercel.app" style="color: #7c3aed; font-size: 15px; font-weight: 700; text-decoration: none;">patinha-mvp.vercel.app</a>
     </div>
 
     <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 24px 0 0 0; text-align: center;">
@@ -92,7 +92,7 @@ export default function AdminPartnerEmailsPage() {
   <div style="background: #f8fafc; padding: 24px 30px; text-align: center; border-radius: 0 0 16px 16px; border-top: 1px solid #e2e8f0;">
     <p style="color: #94a3b8; font-size: 12px; margin: 0;">Patinha - Cuidados premium para quem ama pets</p>
     <p style="color: #94a3b8; font-size: 12px; margin: 8px 0 0 0;">
-      <a href="https://petlove-mvp.vercel.app" style="color: #7c3aed; text-decoration: none;">petlove-mvp.vercel.app</a>
+      <a href="https://patinha-mvp.vercel.app" style="color: #7c3aed; text-decoration: none;">patinha-mvp.vercel.app</a>
     </p>
   </div>
 </div>`);
