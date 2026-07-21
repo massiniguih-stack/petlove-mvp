@@ -146,7 +146,7 @@ export default function HomePage() {
             </Link>
 
             <Link
-              href="/parceiro/dashboard"
+              href="/parceiros/cadastro"
               className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
             >
               Sou parceiro (vet/petshop)
@@ -355,7 +355,7 @@ export default function HomePage() {
 
           <div className="mx-auto mt-4 max-w-md">
             <Link
-              href="/parceiro/dashboard"
+              href="/parceiros/cadastro"
               className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
             >
               Sou parceiro (vet/petshop)

@@ -187,9 +187,24 @@ export default function CadastroClient() {
                 📧 Enviamos um e-mail de confirmação para <strong>{form.email}</strong>
               </p>
             </div>
+
+            <div className="mt-8 rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-left text-white shadow-xl shadow-amber-500/30">
+              <p className="text-sm font-bold uppercase tracking-wide text-amber-100">Não quer esperar?</p>
+              <h2 className="mt-1 text-xl font-black">Apareça em destaque no mapa agora mesmo</h2>
+              <p className="mt-2 text-sm text-amber-50">
+                Assinando o Premium, seu negócio já entra em destaque hoje, sem esperar a análise da nossa equipe.
+              </p>
+              <a
+                href="/parceiros/premium"
+                className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 text-sm font-black text-orange-600 shadow-lg transition hover:shadow-xl"
+              >
+                🏆 Assinar Premium agora
+              </a>
+            </div>
+
             <a
               href="/mapa"
-              className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 px-8 py-4 text-lg font-black text-white shadow-xl shadow-blue-500/30 transition hover:shadow-2xl hover:shadow-blue-500/40"
+              className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-slate-200 px-8 py-4 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               📍 Voltar ao Mapa
             </a>
