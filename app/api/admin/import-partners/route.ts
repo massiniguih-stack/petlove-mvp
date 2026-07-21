@@ -122,7 +122,14 @@ export async function PATCH(req: NextRequest) {
   const supabaseAdmin = getSupabaseAdmin();
 
   const updates: Record<string, unknown> = {};
-  if (email !== undefined) updates.email = email;
+  if (email !== undefined) {
+    updates.email = email;
+    // O vínculo com a conta de login (user_id) foi feito pro e-mail antigo —
+    // trocar o e-mail sem limpar deixaria a conta errada com acesso ao
+    // painel deste parceiro em /parceiro/dashboard. O auto-link (ver
+    // lib/partner.ts) recria o vínculo certo assim que o dono de fato logar.
+    updates.user_id = null;
+  }
   if (marcarWhatsapp) updates.whatsapp_contatado_em = new Date().toISOString();
 
   const { error } = await supabaseAdmin

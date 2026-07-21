@@ -10,6 +10,8 @@ interface DashboardStats {
     comEmail: number;
     convitesEnviados: number;
     pendentesComEmail: number;
+    painelAtivado: number;
+    premiumSemPainel: number;
   };
   tutores: {
     total: number;
@@ -23,6 +25,14 @@ interface DashboardStats {
     ativas: number;
     porPlano: Record<string, number>;
     mrrEstimado: number;
+  };
+  mapa30dias: {
+    visualizacoes: number;
+    whatsappCliques: number;
+  };
+  servicos30dias: {
+    registradosPorParceiros: number;
+    confirmadosPorTutores: number;
   };
 }
 
@@ -145,6 +155,36 @@ export default function AdminDashboardPage() {
         <Card href="/admin/parceiros" label="Convites enviados" value={stats.parceiros.convitesEnviados} color="border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300" />
         <Card href="/admin/parceiros" label="Pendentes com email" value={stats.parceiros.pendentesComEmail} color="border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300" />
         <Card href="/admin/parceiros" label="Sem email cadastrado" value={stats.parceiros.total - stats.parceiros.comEmail} color="border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-white" />
+      </div>
+
+      {/* Painel dos parceiros (self-service) */}
+      <h2 className="mb-3 mt-8 text-lg font-black text-slate-900 dark:text-white">Painel dos parceiros</h2>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card
+          href="/admin/parceiros"
+          label="Parceiros com painel ativado"
+          value={stats.parceiros.painelAtivado}
+          sub={stats.parceiros.premiumSemPainel > 0 ? `${stats.parceiros.premiumSemPainel} premium sem ativar ainda` : 'Todos os premium já ativaram'}
+          color="border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950 dark:text-blue-300"
+        />
+        <Card
+          label="Visualizações no mapa (30 dias)"
+          value={stats.mapa30dias.visualizacoes}
+          sub="Soma de todos os parceiros"
+          color="border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+        />
+        <Card
+          label="Cliques no WhatsApp (30 dias)"
+          value={stats.mapa30dias.whatsappCliques}
+          sub="Soma de todos os parceiros"
+          color="border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+        />
+        <Card
+          label="Atendimentos registrados (30 dias)"
+          value={stats.servicos30dias.registradosPorParceiros + stats.servicos30dias.confirmadosPorTutores}
+          sub={`${stats.servicos30dias.registradosPorParceiros} pelo parceiro · ${stats.servicos30dias.confirmadosPorTutores} confirmados por tutor`}
+          color="border-slate-200 bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-white"
+        />
       </div>
 
       {/* Parceiros por tipo */}
