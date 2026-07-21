@@ -282,15 +282,6 @@ export default function HomePage() {
                 </div>
               </Link>
             </div>
-
-            <div className="mt-6 flex justify-center">
-              <Link
-                href="/parceiro/dashboard"
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
-              >
-                Sou parceiro (vet/petshop)
-              </Link>
-            </div>
           </div>
         </main>
         <Footer />
