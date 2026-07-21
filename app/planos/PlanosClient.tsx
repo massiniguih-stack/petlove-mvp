@@ -19,8 +19,14 @@ const funcionalidades = [
   { nome: 'Comparacao entre pets', gratis: false, premium: true },
 ];
 
+// Valores reais de lastlink_products (não estimados) — ver
+// app/api/admin/dashboard-stats/route.ts, que já usava o mesmo R$115/ano.
+const PRECO_MENSAL = 19.9;
+const PRECO_ANUAL = 115;
+
 export default function PlanosClient() {
   const [loading, setLoading] = useState(false);
+  const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -28,7 +34,7 @@ export default function PlanosClient() {
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planType: 'tutor_monthly' }),
+        body: JSON.stringify({ planType: periodo === 'anual' ? 'tutor_annual' : 'tutor_monthly' }),
       });
       if (!res.ok) throw new Error('Erro ao criar checkout');
       const { url } = await res.json();
@@ -56,6 +62,24 @@ export default function PlanosClient() {
                 Cuide do seu pet com <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-purple-500">tudo que ele merece</span>
               </h1>
               <p className="mt-3 text-lg text-slate-500 dark:text-slate-400">Escolha o plano ideal para voce e seu pet</p>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <div className="inline-flex rounded-2xl bg-slate-100 dark:bg-slate-800 p-1">
+                <button
+                  onClick={() => setPeriodo('mensal')}
+                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'mensal' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                >
+                  Mensal
+                </button>
+                <button
+                  onClick={() => setPeriodo('anual')}
+                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'anual' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
+                >
+                  Anual
+                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">-52%</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -114,10 +138,19 @@ export default function PlanosClient() {
               <div className="mt-6">
                 <div className="flex items-baseline gap-1">
                   <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
-                  <span className="text-5xl font-black text-slate-900 dark:text-white">19,90</span>
+                  <span className="text-5xl font-black text-slate-900 dark:text-white">
+                    {periodo === 'mensal' ? PRECO_MENSAL.toFixed(2).replace('.', ',') : (PRECO_ANUAL / 12).toFixed(2).replace('.', ',')}
+                  </span>
                   <span className="text-sm text-slate-500 dark:text-slate-400">/mes</span>
                 </div>
-                <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Cobrado mensalmente</p>
+                <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                  {periodo === 'mensal' ? 'Cobrado mensalmente' : `R$ ${PRECO_ANUAL.toFixed(2).replace('.', ',')} cobrado anualmente`}
+                </p>
+                {periodo === 'anual' && (
+                  <p className="mt-1 text-xs font-semibold text-emerald-600">
+                    💰 Economia de R$ {((PRECO_MENSAL * 12) - PRECO_ANUAL).toFixed(2).replace('.', ',')} no ano
+                  </p>
+                )}
               </div>
 
               <ul className="mt-8 space-y-4">

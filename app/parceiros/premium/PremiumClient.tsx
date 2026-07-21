@@ -164,7 +164,7 @@ export default function PremiumClient() {
                 <div className="flex items-baseline gap-1">
                   <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
                   <span className="text-4xl font-black text-slate-900 dark:text-white">
-                    {periodo === 'mensal' ? plano.mensal.toFixed(2).replace('.', ',') : Math.floor(plano.anual / 12).toFixed(2).replace('.', ',')}
+                    {periodo === 'mensal' ? plano.mensal.toFixed(2).replace('.', ',') : (plano.anual / 12).toFixed(2).replace('.', ',')}
                   </span>
                   <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
                 </div>
