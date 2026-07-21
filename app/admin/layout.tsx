@@ -9,16 +9,18 @@ import { DarkModeToggle } from '@/components/DarkModeToggle';
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icone: '📊' },
   { href: '/admin/parceiros', label: 'Parceiros', icone: '🤝' },
-  { href: '/admin/servicos', label: 'Servi\u00e7os', icone: '🏪' },
   { href: '/admin/usuarios', label: 'Usu\u00e1rios', icone: '👥' },
+  { href: '/admin/emails', label: 'E-mails (tutores)', icone: '📧' },
+  { href: '/admin/parceiros-emails', label: 'E-mails (parceiros)', icone: '📨' },
   { href: '/admin/feedback', label: 'Feedback', icone: '💬' },
 ];
 
 const pageNames: Record<string, string> = {
   '/admin': 'Dashboard',
   '/admin/parceiros': 'Parceiros',
-  '/admin/servicos': 'Servi\u00e7os',
   '/admin/usuarios': 'Usu\u00e1rios',
+  '/admin/emails': 'E-mails (tutores)',
+  '/admin/parceiros-emails': 'E-mails (parceiros)',
   '/admin/feedback': 'Feedback',
 };
 
