@@ -57,6 +57,14 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'id é obrigatório' }, { status: 400 });
   }
 
+  // A lista de usuários mostra todo mundo que já se cadastrou como tutor,
+  // incluindo o próprio admin se ele também tiver uma conta de tutor —
+  // sem essa checagem, dava pra apagar a própria conta por engano (já
+  // aconteceu) e ficar sem acesso ao painel.
+  if (id === user.id) {
+    return NextResponse.json({ error: 'Você não pode excluir a própria conta por aqui.' }, { status: 400 });
+  }
+
   const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
 
