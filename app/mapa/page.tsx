@@ -235,6 +235,7 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
 export default function MapaPage() {
   const [cidade, setCidade] = useState('Maringá');
   const [filtro, setFiltro] = useState<string>('todos');
+  const [busca, setBusca] = useState('');
   const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(null);
   const [coordenadasUsuario, setCoordenadasUsuario] = useState<{ lat: number; lng: number } | null>(null);
   const [souParceiro, setSouParceiro] = useState(false);
@@ -281,8 +282,14 @@ export default function MapaPage() {
     return 2 * R * Math.asin(Math.sqrt(h));
   };
 
+  const buscaNormalizada = busca.trim().toLowerCase();
   const listaFiltrada = servicosDaCidade
     .filter((s) => filtro === 'todos' || s.tipo === filtro)
+    .filter((s) => {
+      if (!buscaNormalizada) return true;
+      const alvo = [s.nome, labels[s.tipo], ...(s.servicos || [])].join(' ').toLowerCase();
+      return alvo.includes(buscaNormalizada);
+    })
     .sort((a, b) => {
       if (a.premium && !b.premium) return -1;
       if (!a.premium && b.premium) return 1;
@@ -335,6 +342,26 @@ export default function MapaPage() {
         </section>
 
         <div className="mx-auto max-w-7xl px-4 py-8">
+
+          {/* Busca por serviço */}
+          <div className="mb-3 relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">🔎</span>
+            <input
+              type="text"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              placeholder="O que você está procurando? Ex: castração, banho, hotel..."
+              className="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 pl-11 pr-10 py-4 text-sm font-semibold text-slate-700 dark:text-slate-300 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            />
+            {busca && (
+              <button
+                onClick={() => setBusca('')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            )}
+          </div>
 
           {/* Cidade + Ordenação */}
           <div className="mb-6 flex flex-col gap-3 sm:flex-row">
@@ -442,9 +469,11 @@ export default function MapaPage() {
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
                 <SearchIcon3D size={40} />
               </div>
-              <h2 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">Nenhum serviço em {cidade}</h2>
-              <p className="mt-1 text-slate-500 dark:text-slate-400">Tente outra cidade ou filtro.</p>
-              <button onClick={() => setFiltro('todos')} className="mt-4 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-600 hover:shadow-lg">
+              <h2 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">
+                {busca ? `Nada encontrado para "${busca}" em ${cidade}` : `Nenhum serviço em ${cidade}`}
+              </h2>
+              <p className="mt-1 text-slate-500 dark:text-slate-400">Tente outra cidade, filtro ou termo de busca.</p>
+              <button onClick={() => { setFiltro('todos'); setBusca(''); }} className="mt-4 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-600 hover:shadow-lg">
                 Limpar filtros
               </button>
             </div>
