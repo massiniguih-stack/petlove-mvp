@@ -173,15 +173,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 });
     }
 
-    // Planos de parceiro (vet/petshop) não têm login próprio — a única forma
-    // de ligar o pagamento ao perfil dele no /mapa é casar o e-mail de quem
-    // pagou com partners.email (o mesmo e-mail cadastrado em
-    // /parceiros/cadastro). Sem isso, pagar não mudava nada no mapa.
+    // Ligamos o pagamento ao perfil do parceiro no /mapa casando o e-mail
+    // de quem pagou com partners.email (o mesmo e-mail cadastrado em
+    // /parceiros/cadastro) — e aproveitamos pra gravar user_id, que é o
+    // que dá acesso ao painel em /parceiro/dashboard.
     if (planType?.startsWith('partner_')) {
       const ativo = status === 'active';
+      // O checkout de /parceiros/premium já exige login (mesma conta de
+      // tutor), então `user` (achado acima por e-mail) é a conta que
+      // comprou — gravamos o vínculo aqui pra habilitar o painel do
+      // parceiro em /parceiro/dashboard sem precisar de convite separado.
       const { error: partnerError, count } = await supabaseAdmin
         .from('partners')
-        .update({ premium: ativo, destaque: ativo }, { count: 'exact' })
+        .update({ premium: ativo, destaque: ativo, user_id: user.id }, { count: 'exact' })
         .eq('email', buyerEmail);
       if (partnerError) {
         console.error('Failed to update partner premium status:', partnerError);
