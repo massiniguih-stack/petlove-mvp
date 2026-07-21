@@ -342,15 +342,6 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
 
   const marcos = useMemo(() => {
     const lista: { mes: number; label: string; emoji: string; icone?: string; IconComp?: typeof PawIcon3D; cor: string; momento?: Momento }[] = [];
-    
-    const nascimentoMomento = momentos.find((m) => m.categoria === 'nascimento');
-    lista.push({ 
-      mes: 0, 
-      label: 'Nascimento', 
-      emoji: '🍼', 
-      cor: 'from-pink-500 to-rose-500',
-      momento: nascimentoMomento 
-    });
 
     const marcosImportantes = [
       { mes: 2, label: '2 meses', emoji: '🐾', IconComp: PawIcon3D, cor: 'from-amber-400 to-orange-400' },
@@ -374,8 +365,8 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
       }
     }
 
-    const outrosMomentos = momentosComMes.filter((m) => 
-      !lista.some((l) => l.mes === m.mes) && m.categoria !== 'nascimento'
+    const outrosMomentos = momentosComMes.filter((m) =>
+      !lista.some((l) => l.mes === m.mes)
     );
     
     for (const m of outrosMomentos) {
@@ -390,7 +381,7 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
     }
 
     return lista.sort((a, b) => a.mes - b.mes);
-  }, [momentos, momentosComMes, totalMeses]);
+  }, [momentosComMes, totalMeses]);
 
   const getMesLabel = (mes: number) => {
     if (mes === 0) return 'Nascimento';
