@@ -9,6 +9,7 @@ import { BackButton } from '@/components/BackButton';
 import { SearchIcon3D } from '@/components/Icons3D';
 import { cidades, type Servico } from '@/data/servicos';
 import { emojiServico } from '@/lib/tiposServico';
+import { usePetStore } from '@/lib/store';
 
 const PetMap = dynamic(() => import('@/components/PetMap'), { ssr: false });
 
@@ -38,8 +39,83 @@ function registrarEvento(partnerId: string, eventType: 'view' | 'whatsapp_click'
   }).catch(() => {});
 }
 
+function RegistrarAtendimentoForm({ servico, onFechar }: { servico: Servico; onFechar: () => void }) {
+  const { pets } = usePetStore();
+  const [petId, setPetId] = useState(pets[0]?.id || '');
+  const [tipoServico, setTipoServico] = useState('');
+  const [data, setData] = useState(new Date().toISOString().slice(0, 10));
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const [enviado, setEnviado] = useState(false);
+
+  const enviar = async () => {
+    setEnviando(true);
+    setErro(null);
+    try {
+      const res = await fetch('/api/servico-usado', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ partnerId: servico.id, petId, tipoServico, data }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || 'Erro ao registrar');
+      }
+      setEnviado(true);
+      setTimeout(onFechar, 1500);
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : 'Erro inesperado');
+    } finally {
+      setEnviando(false);
+    }
+  };
+
+  if (pets.length === 0) {
+    return <p className="mt-3 text-xs text-slate-400">Cadastre um pet pra poder confirmar o uso de um serviço.</p>;
+  }
+
+  return (
+    <div className="mt-3 rounded-xl bg-slate-50 p-3 dark:bg-slate-800" onClick={(e) => e.stopPropagation()}>
+      {enviado ? (
+        <p className="text-xs font-semibold text-emerald-600">Atendimento confirmado, obrigado!</p>
+      ) : (
+        <>
+          <div className="grid gap-2 sm:grid-cols-3">
+            <select value={petId} onChange={(e) => setPetId(e.target.value)} className="rounded-lg border border-slate-200 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white">
+              {pets.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
+            </select>
+            <input
+              list={`servicos-${servico.id}`}
+              value={tipoServico}
+              onChange={(e) => setTipoServico(e.target.value)}
+              placeholder="Qual serviço?"
+              className="rounded-lg border border-slate-200 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+            />
+            <datalist id={`servicos-${servico.id}`}>
+              {(servico.servicos || []).map((s) => <option key={s} value={s} />)}
+            </datalist>
+            <input type="date" value={data} onChange={(e) => setData(e.target.value)} className="rounded-lg border border-slate-200 bg-white p-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white" />
+          </div>
+          {erro && <p className="mt-2 text-[11px] text-red-600">{erro}</p>}
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={enviar}
+              disabled={enviando || !tipoServico}
+              className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-40"
+            >
+              {enviando ? 'Enviando...' : 'Confirmar'}
+            </button>
+            <button onClick={onFechar} className="rounded-lg px-3 py-1.5 text-xs font-bold text-slate-500">Cancelar</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onSelect?: (s: Servico) => void; onCenterMap?: (s: Servico) => void }) {
   const [expandido, setExpandido] = useState(false);
+  const [registrandoAtendimento, setRegistrandoAtendimento] = useState(false);
 
   return (
     <div
@@ -139,7 +215,16 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
                 📸 Instagram
               </a>
             )}
+            <button
+              onClick={() => setRegistrandoAtendimento((v) => !v)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-slate-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-slate-800"
+            >
+              ✅ Registrar atendimento
+            </button>
           </div>
+          {registrandoAtendimento && (
+            <RegistrarAtendimentoForm servico={servico} onFechar={() => setRegistrandoAtendimento(false)} />
+          )}
           <p className="mt-2 text-[10px] font-medium text-slate-400 dark:text-slate-500 text-center">Clique no card para ver no mapa</p>
         </div>
       </div>
