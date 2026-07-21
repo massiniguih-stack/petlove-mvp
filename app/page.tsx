@@ -147,9 +147,9 @@ export default function HomePage() {
 
             <Link
               href="/parceiro/dashboard"
-              className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-slate-200 px-8 py-3 text-sm font-semibold text-slate-500 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+              className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
             >
-              Sou parceiro (vet/petshop) → ir para meu painel
+              Sou parceiro (vet/petshop)
             </Link>
           </section>
         </main>
@@ -270,9 +270,12 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="mt-6 text-center">
-              <Link href="/parceiro/dashboard" className="text-xs font-semibold text-slate-400 underline-offset-2 hover:text-slate-600 hover:underline dark:hover:text-slate-300">
-                Sou parceiro (vet/petshop) → ir para meu painel
+            <div className="mt-6 flex justify-center">
+              <Link
+                href="/parceiro/dashboard"
+                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
+              >
+                Sou parceiro (vet/petshop)
               </Link>
             </div>
           </div>
@@ -346,9 +349,12 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="mx-auto mt-4 max-w-md text-center">
-            <Link href="/parceiro/dashboard" className="text-xs font-semibold text-slate-400 underline-offset-2 hover:text-slate-600 hover:underline dark:hover:text-slate-300">
-              Sou parceiro (vet/petshop) → ir para meu painel
+          <div className="mx-auto mt-4 max-w-md">
+            <Link
+              href="/parceiro/dashboard"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
+            >
+              Sou parceiro (vet/petshop)
             </Link>
           </div>
 
