@@ -653,7 +653,14 @@ export default function RacaoPage() {
                       <div className="flex-1">
                         <p className={`text-sm font-bold ${s.cor.split(' ')[1]}`}>{s.nome}</p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">{s.beneficio}</p>
-                        <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">{s.quando}</p>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold text-slate-600 ring-1 ring-inset ring-slate-200 dark:bg-slate-900/50 dark:text-slate-300 dark:ring-slate-700">
+                            💊 {s.dosagem}
+                          </span>
+                          <span className="inline-flex items-center gap-1 rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold text-slate-600 ring-1 ring-inset ring-slate-200 dark:bg-slate-900/50 dark:text-slate-300 dark:ring-slate-700">
+                            ⏰ {s.quando}
+                          </span>
+                        </div>
                       </div>
                       <svg className="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-slate-600 group-hover:translate-x-0.5 dark:text-slate-500 dark:group-hover:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="9 18 15 12 9 6"/>
