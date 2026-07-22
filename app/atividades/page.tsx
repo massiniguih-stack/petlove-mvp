@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePetStore } from '@/lib/store';
+import { usePetStore, type Pet } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -236,24 +236,14 @@ function getIntensidadeInfo(int: string) {
   return info[int] || info.baixa;
 }
 
-export default function AtividadesPage() {
-  const { pet, isPremium } = usePetStore();
-  const [filtroCat, setFiltroCat] = useState<string>('caminhada');
-  const [filtroIntensidade, setFiltroIntensidade] = useState<string>('baixa');
-  const [expandida, setExpandida] = useState<string | null>(null);
+// Checklist do dia de UM pet — extraído pra poder mostrar o de todos os
+// pets ao mesmo tempo (em vez de só o pet selecionado no topo), já que a
+// navegação de dia (diaOffset) é compartilhada entre eles.
+function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje }: { pet: Pet; diaOffset: number; diaVisualizado: Date; ehHoje: boolean }) {
   const [checklist, setChecklist] = useState<CheckItem[]>([]);
   const [novaAtividade, setNovaAtividade] = useState(false);
-  const [diaOffset, setDiaOffset] = useState(0); // 0 = hoje, 1 = ontem, etc.
-
-  const diaVisualizado = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() - diaOffset);
-    return d;
-  })();
-  const ehHoje = diaOffset === 0;
 
   useEffect(() => {
-    if (!pet) return;
     const supabase = createClient();
     const diaAlvo = diaISO(diaVisualizado);
     supabase
@@ -295,7 +285,7 @@ export default function AtividadesPage() {
         const criados = inseridos || rows;
         setChecklist(criados.map((r) => ({ id: r.id, hora: r.hora, atividade: r.nome, icone: r.detalhe || '🐾', concluida: r.concluida })));
       });
-  }, [pet?.id, diaOffset]);
+  }, [pet.id, diaOffset, diaVisualizado, ehHoje]);
 
   const concluirAtividade = (id: string) => {
     setChecklist((prev) => prev.map((c) => (c.id === id ? { ...c, concluida: true } : c)));
@@ -316,7 +306,6 @@ export default function AtividadesPage() {
   };
 
   const adicionarAtividade = () => {
-    if (!pet) return;
     const agora = new Date();
     const hora = `${agora.getHours().toString().padStart(2, '0')}:${agora.getMinutes().toString().padStart(2, '0')}`;
     const id = crypto.randomUUID();
@@ -332,6 +321,119 @@ export default function AtividadesPage() {
 
   const pendentes = checklist.filter((c) => !c.concluida);
   const concluidas = checklist.filter((c) => c.concluida);
+
+  return (
+    <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-600 p-5 text-white shadow-xl shadow-blue-500/30">
+      <div className="flex items-center justify-between">
+        <h3 className="flex items-center gap-1.5 text-sm font-bold">🐾 {pet.nome}</h3>
+        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold backdrop-blur-sm">
+          {concluidas.length}/{checklist.length}
+        </span>
+      </div>
+
+      <div className="mt-4 space-y-2">
+        {pendentes.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-center gap-3 rounded-xl bg-white/15 p-3 backdrop-blur-sm transition-all hover:bg-white/25"
+          >
+            <button
+              onClick={() => concluirAtividade(item.id)}
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-white/40 transition hover:border-white hover:bg-white/20"
+            >
+              <span className="text-xs">✓</span>
+            </button>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-white/80">{item.hora}</span>
+                <span className="text-sm font-bold">{item.atividade}</span>
+              </div>
+            </div>
+            <span className="text-lg">{item.icone}</span>
+            <button
+              onClick={() => removerAtividade(item.id)}
+              className="text-white/50 hover:text-white/80 transition"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        ))}
+
+        {concluidas.length > 0 && (
+          <div className="border-t border-white/20 pt-2">
+            <p className="text-xs font-bold text-white/60 mb-2">✓ Concluídas</p>
+            {concluidas.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-3 rounded-xl bg-white/10 p-2.5 opacity-60 transition-all"
+              >
+                <button
+                  onClick={() => desfazerAtividade(item.id)}
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/30 transition hover:bg-white/40"
+                >
+                  <span className="text-[10px]">↩</span>
+                </button>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-white/60 line-through">{item.hora}</span>
+                    <span className="text-xs font-bold text-white/60 line-through">{item.atividade}</span>
+                  </div>
+                </div>
+                <span className="text-sm opacity-60">{item.icone}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {ehHoje && (
+        <button
+          onClick={() => setNovaAtividade(true)}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
+        >
+          <span>+</span> Adicionar atividade
+        </button>
+      )}
+
+      {novaAtividade && ehHoje && (
+        <div className="mt-3 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
+          <h4 className="text-xs font-bold text-white">Nova atividade pra {pet.nome}</h4>
+          <div className="mt-3 space-y-2">
+            <button
+              onClick={adicionarAtividade}
+              className="w-full rounded-xl bg-white py-2.5 text-xs font-bold text-blue-600 transition hover:shadow-lg"
+            >
+              🐾 Adicionar agora
+            </button>
+            <button
+              onClick={() => setNovaAtividade(false)}
+              className="w-full rounded-xl border border-white/30 py-2 text-xs font-bold text-white/80 transition hover:bg-white/10"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function AtividadesPage() {
+  const { pet, pets, isPremium } = usePetStore();
+  const [filtroCat, setFiltroCat] = useState<string>('caminhada');
+  const [filtroIntensidade, setFiltroIntensidade] = useState<string>('baixa');
+  const [expandida, setExpandida] = useState<string | null>(null);
+  const [diaOffset, setDiaOffset] = useState(0); // 0 = hoje, 1 = ontem, etc.
+
+  const diaVisualizado = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - diaOffset);
+    return d;
+  })();
+  const ehHoje = diaOffset === 0;
 
   if (!pet) {
     return (
@@ -589,127 +691,40 @@ export default function AtividadesPage() {
             </div>
 
             <div className="space-y-6">
-              {/* Checklist Diário */}
-              <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-600 p-5 text-white shadow-xl shadow-blue-500/30">
+              {/* Navegação de dia — compartilhada entre os checklists de todos os pets */}
+              <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold">{ehHoje ? 'Checklist de Hoje' : diaVisualizado.toLocaleDateString('pt-BR')}</h3>
-                  <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold backdrop-blur-sm">
-                    {concluidas.length}/{checklist.length}
-                  </span>
-                </div>
-
-                <div className="mt-2 flex items-center justify-between">
-                  <button
-                    onClick={() => {
-                      if (!isPremium && diaOffset === 0) return;
-                      setDiaOffset((d) => d + 1);
-                    }}
-                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
-                  >
-                    ← Dia anterior {!isPremium && diaOffset === 0 && <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[9px] font-bold">PRO</span>}
-                  </button>
-                  <button
-                    onClick={() => setDiaOffset((d) => Math.max(0, d - 1))}
-                    disabled={ehHoje}
-                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
-                  >
-                    Próximo dia →
-                  </button>
-                </div>
-                {!isPremium && diaOffset === 0 && (
-                  <a href="/planos" className="mt-1 block text-center text-[10px] text-white/70 hover:text-white hover:underline">
-                    Assine Premium para ver dias anteriores
-                  </a>
-                )}
-
-                <div className="mt-4 space-y-2">
-                  {pendentes.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center gap-3 rounded-xl bg-white/15 p-3 backdrop-blur-sm transition-all hover:bg-white/25"
-                    >
-                      <button
-                        onClick={() => concluirAtividade(item.id)}
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-white/40 transition hover:border-white hover:bg-white/20"
-                      >
-                        <span className="text-xs">✓</span>
-                      </button>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-white/80">{item.hora}</span>
-                          <span className="text-sm font-bold">{item.atividade}</span>
-                        </div>
-                      </div>
-                      <span className="text-lg">{item.icone}</span>
-                      <button
-                        onClick={() => removerAtividade(item.id)}
-                        className="text-white/50 hover:text-white/80 transition"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <line x1="18" y1="6" x2="6" y2="18"/>
-                          <line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-
-                  {concluidas.length > 0 && (
-                    <div className="border-t border-white/20 pt-2">
-                      <p className="text-xs font-bold text-white/60 mb-2">✓ Concluídas</p>
-                      {concluidas.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-3 rounded-xl bg-white/10 p-2.5 opacity-60 transition-all"
-                        >
-                          <button
-                            onClick={() => desfazerAtividade(item.id)}
-                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/30 transition hover:bg-white/40"
-                          >
-                            <span className="text-[10px]">↩</span>
-                          </button>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-white/60 line-through">{item.hora}</span>
-                              <span className="text-xs font-bold text-white/60 line-through">{item.atividade}</span>
-                            </div>
-                          </div>
-                          <span className="text-sm opacity-60">{item.icone}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {ehHoje && (
-                  <button
-                    onClick={() => setNovaAtividade(true)}
-                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
-                  >
-                    <span>+</span> Adicionar atividade
-                  </button>
-                )}
-              </div>
-
-              {/* Modal Nova Atividade */}
-              {novaAtividade && ehHoje && (
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">Nova Atividade</h3>
-                  <div className="mt-3 space-y-3">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">{ehHoje ? 'Checklist de Hoje' : diaVisualizado.toLocaleDateString('pt-BR')}</h3>
+                  <div className="flex items-center gap-1">
                     <button
-                      onClick={adicionarAtividade}
-                      className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 py-3 text-sm font-bold text-white transition hover:shadow-lg"
+                      onClick={() => {
+                        if (!isPremium && diaOffset === 0) return;
+                        setDiaOffset((d) => d + 1);
+                      }}
+                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
                     >
-                      🐾 Adicionar agora
+                      ← {!isPremium && diaOffset === 0 && <span className="rounded-full bg-slate-200 px-1.5 py-0.5 text-[9px] font-bold dark:bg-slate-700">PRO</span>}
                     </button>
                     <button
-                      onClick={() => setNovaAtividade(false)}
-                      className="w-full rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+                      onClick={() => setDiaOffset((d) => Math.max(0, d - 1))}
+                      disabled={ehHoje}
+                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 disabled:opacity-40"
                     >
-                      Cancelar
+                      →
                     </button>
                   </div>
                 </div>
-              )}
+                {!isPremium && diaOffset === 0 && (
+                  <a href="/planos" className="mt-1 block text-center text-[10px] text-slate-400 hover:text-slate-600 hover:underline dark:hover:text-slate-300">
+                    Assine Premium para ver dias anteriores
+                  </a>
+                )}
+              </div>
+
+              {/* Um checklist por pet — todos os pets do tutor aparecem aqui */}
+              {pets.map((p) => (
+                <ChecklistDoPet key={p.id} pet={p} diaOffset={diaOffset} diaVisualizado={diaVisualizado} ehHoje={ehHoje} />
+              ))}
 
               <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Rotina semanal</h3>
