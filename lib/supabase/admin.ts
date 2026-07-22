@@ -7,7 +7,7 @@ export function getSupabaseAdmin() {
   );
 }
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
+export const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
 
 export function isAdmin(email: string | null | undefined): boolean {
   return !!email && ADMIN_EMAILS.includes(email);

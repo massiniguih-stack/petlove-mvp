@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
+import { getSupabaseAdmin, isAdmin, ADMIN_EMAILS } from '@/lib/supabase/admin';
 
 // Monthly price (BRL) for plan types with a known, stable price — used only
 // to estimate MRR. Plans not listed here are still counted but excluded
@@ -29,6 +29,14 @@ export async function GET() {
 
   const supabaseAdmin = getSupabaseAdmin();
 
+  // Contas de admin (o time interno) não são "clientes" — excluídas das
+  // métricas de tutores/pets pra não inflar os números com quem só está
+  // usando a própria conta pra testar o app.
+  const emailsAdminLista = `(${ADMIN_EMAILS.map((e) => `"${e}"`).join(',')})`;
+  const { data: tutoresAdmin } = await supabaseAdmin.from('tutor').select('id').in('email', ADMIN_EMAILS);
+  const idsAdmin = (tutoresAdmin || []).map((t) => t.id);
+  const idsAdminLista = idsAdmin.length > 0 ? `(${idsAdmin.join(',')})` : '(00000000-0000-0000-0000-000000000000)';
+
   const [
     partnersRes,
     tutorTotalRes,
@@ -40,11 +48,11 @@ export async function GET() {
     servicosRealizadosRes,
   ] = await Promise.all([
     supabaseAdmin.from('partners').select('tipo, status, email, user_id, premium'),
-    supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }),
-    supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }).gte('created_at', diasAtras(7)),
-    supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }).gte('created_at', diasAtras(30)),
-    supabaseAdmin.from('pet').select('*', { count: 'exact', head: true }),
-    supabaseAdmin.from('subscriptions').select('status, plan_type'),
+    supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }).not('email', 'in', emailsAdminLista),
+    supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }).not('email', 'in', emailsAdminLista).gte('created_at', diasAtras(7)),
+    supabaseAdmin.from('tutor').select('*', { count: 'exact', head: true }).not('email', 'in', emailsAdminLista).gte('created_at', diasAtras(30)),
+    supabaseAdmin.from('pet').select('*', { count: 'exact', head: true }).not('tutor_id', 'in', idsAdminLista),
+    supabaseAdmin.from('subscriptions').select('status, plan_type').not('user_id', 'in', idsAdminLista),
     supabaseAdmin.from('partner_events').select('event_type').gte('created_at', diasAtras(30)),
     supabaseAdmin.from('service_logs').select('origem').gte('created_at', diasAtras(30)),
   ]);
