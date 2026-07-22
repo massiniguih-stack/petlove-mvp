@@ -146,7 +146,7 @@ export default function Navbar() {
                 Ração
               </Link>
               <Link href="/vida" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
-                Vida
+                Saúde
               </Link>
               <Link href="/planos" className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-violet-500 to-purple-500 px-3 py-2 text-xs font-bold text-white shadow-sm hover:shadow-md">
                 ⭐ Premium
