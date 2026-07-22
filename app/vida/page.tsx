@@ -325,7 +325,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClos
   );
 }
 
-function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]; pet: { nome: string; dataNascimento: string; fotoUrl: string | null }; onEdit: (m: Momento) => void; onDelete: (id: string) => void }) {
+function LinhaDoTempo({ momentos, pet, onEdit, onDelete, onMarcarTomada }: { momentos: Momento[]; pet: { nome: string; dataNascimento: string; fotoUrl: string | null }; onEdit: (m: Momento) => void; onDelete: (id: string) => void; onMarcarTomada: (id: string) => void }) {
   const nascimento = new Date(pet.dataNascimento);
   const hoje = new Date();
   const totalMeses = differenceInMonths(hoje, nascimento);
@@ -485,7 +485,15 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete }: { momentos: Momento[]
                       className="mt-2 h-24 w-24 rounded-xl object-cover shadow-md"
                     />
                   )}
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    {marcoDetalhe.momento.categoria === 'vacina' && marcoDetalhe.momento.statusVacina === 'pendente' && (
+                      <button
+                        onClick={() => onMarcarTomada(marcoDetalhe.momento!.id)}
+                        className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600"
+                      >
+                        ✅ Já tomou
+                      </button>
+                    )}
                     <button
                       onClick={() => onEdit(marcoDetalhe.momento!)}
                       className="rounded-lg bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 ring-1 ring-slate-200 dark:ring-slate-800 transition hover:bg-slate-50 dark:hover:bg-slate-800"
@@ -617,10 +625,6 @@ export default function VidaPage() {
     supabase.from('momento').update({ status_vacina: 'tomada', data: agora.toISOString() }).eq('id', id).then();
   };
 
-  const vacinasPendentes = momentos.filter((m) => m.categoria === 'vacina' && m.statusVacina === 'pendente');
-  const vacinasTomadas = momentos.filter((m) => m.categoria === 'vacina' && m.statusVacina === 'tomada');
-  const proximasVacinas = vacinasPendentes.sort((a, b) => a.data.getTime() - b.data.getTime());
-
   const primeiraData = momentos.length > 0 ? new Date(Math.min(...momentos.map((m) => m.data.getTime()))) : null;
   const diasVida = primeiraData ? Math.floor((hoje.getTime() - primeiraData.getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
@@ -699,108 +703,6 @@ export default function VidaPage() {
             </button>
           </div>
 
-          {/* Painel de Vacinas */}
-          {(vacinasPendentes.length > 0 || vacinasTomadas.length > 0) && (
-            <div className="mb-8 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-50 p-6 shadow-sm ring-1 ring-blue-100">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/30">
-                    <span className="text-xl">💉</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white">Painel de Vacinas</h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      {vacinasTomadas.length} tomada{vacinasTomadas.length !== 1 ? 's' : ''} · {vacinasPendentes.length} pendente{vacinasPendentes.length !== 1 ? 's' : ''}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {vacinasPendentes.length > 0 && (
-                <div className="mt-6">
-                  <h4 className="mb-3 flex items-center gap-2 text-sm font-bold text-amber-700">
-                    <span className="text-lg">⏰</span> Próximas Vacinas
-                  </h4>
-                  <div className="space-y-3">
-                    {proximasVacinas.map((vacina) => {
-                      const diasAte = differenceInDays(vacina.data, new Date());
-                      const isUrgente = diasAte <= 7;
-                      
-                      return (
-                        <div
-                          key={vacina.id}
-                          className={`group relative flex items-center justify-between rounded-2xl border p-4 transition ${
-                            isUrgente 
-                              ? 'border-amber-200 bg-amber-50 shadow-md' 
-                              : 'border-slate-200 bg-white dark:bg-slate-900 hover:shadow-md'
-                          }`}
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className={`flex h-12 w-12 items-center justify-center rounded-full ${
-                              isUrgente 
-                                ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white' 
-                                : 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white'
-                            }`}>
-                              <span className="text-lg">💉</span>
-                            </div>
-                            <div>
-                              <h5 className="font-bold text-slate-900 dark:text-white">{vacina.titulo}</h5>
-                              <div className="flex items-center gap-2">
-                                <span className={`text-xs font-semibold ${
-                                  isUrgente ? 'text-amber-600' : 'text-slate-500'
-                                }`}>
-                                  {isUrgente 
-                                    ? `Daqui ${diasAte} dia${diasAte !== 1 ? 's' : ''}`
-                                    : format(vacina.data, "dd 'de' MMMM", { locale: ptBR })
-                                  }
-                                </span>
-                                {isUrgente && (
-                                  <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
-                                    Urgente!
-                                  </span>
-                                )}
-                              </div>
-                              {vacina.descricao && (
-                                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{vacina.descricao}</p>
-                              )}
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => handleMarcarComoTomada(vacina.id)}
-                            className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:bg-emerald-600 hover:shadow-lg"
-                          >
-                            ✅ Já tomou
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {vacinasTomadas.length > 0 && (
-                <div className="mt-6">
-                  <h4 className="mb-3 flex items-center gap-2 text-sm font-bold text-emerald-700">
-                    <span className="text-lg">✅</span> Vacinas Tomadas
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {vacinasTomadas.map((vacina) => (
-                      <div
-                        key={vacina.id}
-                        className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-semibold text-emerald-700"
-                      >
-                        <span>💉</span>
-                        {vacina.titulo}
-                        <span className="text-xs text-emerald-500">
-                          {format(vacina.data, "dd/MM/yy")}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Filtros */}
           <div className="mb-6 flex flex-wrap gap-2">
@@ -850,6 +752,7 @@ export default function VidaPage() {
               pet={{ nome: pet.nome, dataNascimento: pet.dataNascimento, fotoUrl: pet.fotoUrl }}
               onEdit={handleEditar}
               onDelete={handleExcluir}
+              onMarcarTomada={handleMarcarComoTomada}
             />
           </div>
 
