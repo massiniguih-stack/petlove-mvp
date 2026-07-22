@@ -83,11 +83,11 @@ function CategoriaBadge({ categoria }: { categoria: Momento['categoria'] }) {
   );
 }
 
-function NovoMomentoForm({ onClose, onSave, editando, dataNascimento }: { onClose: () => void; onSave: (m: Omit<Momento, 'id'>) => void; editando?: Momento; dataNascimento: string }) {
+function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaPadrao }: { onClose: () => void; onSave: (m: Omit<Momento, 'id'>) => void; editando?: Momento; dataNascimento: string; categoriaPadrao?: Momento['categoria'] }) {
   const [data, setData] = useState(editando?.data ? format(editando.data, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'));
   const [titulo, setTitulo] = useState(editando?.titulo || '');
   const [descricao, setDescricao] = useState(editando?.descricao || '');
-  const [categoria, setCategoria] = useState<Momento['categoria']>(editando?.categoria || 'evento');
+  const [categoria, setCategoria] = useState<Momento['categoria']>(editando?.categoria || categoriaPadrao || 'evento');
   const [fotoUrl, setFotoUrl] = useState(editando?.fotoUrl || '');
   const [statusVacina, setStatusVacina] = useState<'tomada' | 'pendente'>(editando?.statusVacina || 'tomada');
   const [dataAgendada, setDataAgendada] = useState(editando?.dataAgendada ? format(editando.dataAgendada, 'yyyy-MM-dd') : '');
@@ -545,6 +545,105 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete, onMarcarTomada }: { mom
   );
 }
 
+function GaleriaFotos({ fotos, onAdicionar, onAbrir, onFechar }: { fotos: Momento[]; onAdicionar: () => void; onAbrir: (m: Momento) => void; onFechar: () => void }) {
+  return (
+    <div id="galeria" className="mb-8 rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-white">📸 Galeria de fotos</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {fotos.length > 0 ? `${fotos.length} foto${fotos.length !== 1 ? 's' : ''}, em ordem cronológica` : 'Nenhuma foto ainda'}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onAdicionar}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-4 py-2 text-xs font-bold text-white shadow-md transition hover:shadow-lg"
+          >
+            📷 Adicionar foto
+          </button>
+          <button
+            onClick={onFechar}
+            className="rounded-lg p-1.5 text-slate-400 dark:text-slate-500 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {fotos.length === 0 ? (
+        <button
+          onClick={onAdicionar}
+          className="mt-4 flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 py-10 text-slate-500 dark:text-slate-400 transition hover:border-rose-400 hover:text-rose-600"
+        >
+          <span className="text-3xl">📷</span>
+          <span className="text-sm font-semibold">Adicionar a primeira foto</span>
+        </button>
+      ) : (
+        <div className="mt-4 flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent" style={{ WebkitOverflowScrolling: 'touch' }}>
+          {fotos.map((foto) => (
+            <button
+              key={foto.id}
+              onClick={() => onAbrir(foto)}
+              className="group flex shrink-0 flex-col items-center gap-1.5"
+            >
+              <div className="relative h-24 w-24 overflow-hidden rounded-2xl shadow-md ring-1 ring-slate-200 dark:ring-slate-800 transition group-hover:ring-2 group-hover:ring-rose-300">
+                <img src={foto.fotoUrl} alt={foto.titulo} className="h-full w-full object-cover transition group-hover:scale-105" />
+              </div>
+              <span className="max-w-[96px] truncate text-[11px] font-semibold text-slate-600 dark:text-slate-400">{foto.titulo}</span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500">{format(foto.data, 'dd/MM/yy')}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FotoAmpliada({ momento, onClose, onEdit, onDelete }: { momento: Momento; onClose: () => void; onEdit: (m: Momento) => void; onDelete: (id: string) => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img src={momento.fotoUrl} alt={momento.titulo} className="w-full object-cover" style={{ maxHeight: '420px' }} />
+        <div className="p-6">
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{momento.titulo}</h3>
+            <CategoriaBadge categoria={momento.categoria} />
+          </div>
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{format(momento.data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</p>
+          {momento.descricao && <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{momento.descricao}</p>}
+          <div className="mt-4 flex flex-wrap justify-end gap-2">
+            <button
+              onClick={onClose}
+              className="rounded-lg border-2 border-slate-200 dark:border-slate-700 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              Fechar
+            </button>
+            <button
+              onClick={() => { onEdit(momento); onClose(); }}
+              className="rounded-lg bg-white dark:bg-slate-900 px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 ring-1 ring-slate-200 dark:ring-slate-800 transition hover:bg-slate-50 dark:hover:bg-slate-800"
+            >
+              ✏️ Editar
+            </button>
+            <button
+              onClick={() => { onDelete(momento.id); onClose(); }}
+              className="rounded-lg bg-white dark:bg-slate-900 px-4 py-2 text-xs font-semibold text-red-500 ring-1 ring-red-100 transition hover:bg-red-50 dark:hover:bg-red-950"
+            >
+              🗑️ Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const DIAS_HISTORICO_GRATIS = 7;
 
 export default function VidaPage() {
@@ -554,6 +653,15 @@ export default function VidaPage() {
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState<Momento | undefined>();
   const [filtro, setFiltro] = useState<Momento['categoria'] | 'todos'>('todos');
+  const [categoriaPadraoForm, setCategoriaPadraoForm] = useState<Momento['categoria']>('evento');
+  const [mostrarGaleria, setMostrarGaleria] = useState(false);
+  const [fotoAmpliada, setFotoAmpliada] = useState<Momento | undefined>();
+
+  useEffect(() => {
+    if (mostrarGaleria) {
+      document.getElementById('galeria')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [mostrarGaleria]);
 
   useEffect(() => {
     if (petsCarregados && !pet) router.push('/onboarding');
@@ -629,6 +737,7 @@ export default function VidaPage() {
   const diasVida = primeiraData ? Math.floor((hoje.getTime() - primeiraData.getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
   const primeiraFoto = momentos.find((m) => m.fotoUrl);
+  const fotosCronologicas = [...momentos].filter((m) => m.fotoUrl).sort((a, b) => a.data.getTime() - b.data.getTime());
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
@@ -648,7 +757,7 @@ export default function VidaPage() {
                 Linha do tempo de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500">{pet.nome}</span>
               </h1>
               <button
-                onClick={() => { setEditando(undefined); setShowForm(true); }}
+                onClick={() => { setEditando(undefined); setCategoriaPadraoForm('evento'); setShowForm(true); }}
                 className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -683,11 +792,11 @@ export default function VidaPage() {
               <div className="mt-1 text-sm font-medium text-rose-100">📅 Dias</div>
             </button>
             <button
-              onClick={() => setFiltro('foto')}
+              onClick={() => setMostrarGaleria(true)}
               className="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-left text-white shadow-lg shadow-emerald-500/20 transition hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5"
             >
-              <div className="text-3xl font-black">{momentos.length}</div>
-              <div className="mt-1 text-sm font-medium text-emerald-100">📸 Momentos</div>
+              <div className="text-3xl font-black">{fotosCronologicas.length}</div>
+              <div className="mt-1 text-sm font-medium text-emerald-100">📸 Fotos</div>
             </button>
             <button
               onClick={() => {
@@ -703,6 +812,16 @@ export default function VidaPage() {
             </button>
           </div>
 
+
+          {/* Galeria de fotos */}
+          {mostrarGaleria && (
+            <GaleriaFotos
+              fotos={fotosCronologicas}
+              onAdicionar={() => { setEditando(undefined); setCategoriaPadraoForm('foto'); setShowForm(true); }}
+              onAbrir={(m) => setFotoAmpliada(m)}
+              onFechar={() => setMostrarGaleria(false)}
+            />
+          )}
 
           {/* Filtros */}
           <div className="mb-6 flex flex-wrap gap-2">
@@ -814,9 +933,19 @@ export default function VidaPage() {
       {showForm && (
         <NovoMomentoForm
           editando={editando}
+          categoriaPadrao={categoriaPadraoForm}
           onClose={() => { setShowForm(false); setEditando(undefined); }}
           onSave={handleSalvar}
           dataNascimento={pet.dataNascimento}
+        />
+      )}
+
+      {fotoAmpliada && (
+        <FotoAmpliada
+          momento={fotoAmpliada}
+          onClose={() => setFotoAmpliada(undefined)}
+          onEdit={handleEditar}
+          onDelete={handleExcluir}
         />
       )}
     </div>
