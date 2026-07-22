@@ -239,9 +239,10 @@ function getIntensidadeInfo(int: string) {
 // Checklist do dia de UM pet — extraído pra poder mostrar o de todos os
 // pets ao mesmo tempo (em vez de só o pet selecionado no topo), já que a
 // navegação de dia (diaOffset) é compartilhada entre eles.
-function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje }: { pet: Pet; diaOffset: number; diaVisualizado: Date; ehHoje: boolean }) {
+function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }: { pet: Pet; diaOffset: number; diaVisualizado: Date; ehHoje: boolean; refreshTick: number }) {
   const [checklist, setChecklist] = useState<CheckItem[]>([]);
   const [novaAtividade, setNovaAtividade] = useState(false);
+  const [editandoHoraId, setEditandoHoraId] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -286,6 +287,36 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje }: { pet: Pet; 
         setChecklist(criados.map((r) => ({ id: r.id, hora: r.hora, atividade: r.nome, icone: r.detalhe || '🐾', concluida: r.concluida })));
       });
   }, [pet.id, diaOffset, diaVisualizado, ehHoje]);
+
+  // Refetch leve disparado por uma atividade adicionada em outro lugar da
+  // página (o CTA "+ Adicionar ao dia"). Fica separado do efeito acima de
+  // propósito: aquele também semeia o checklist padrão quando está vazio, e
+  // se os dois disparassem juntos um clique rápido no CTA logo após montar
+  // a página corria o risco de rodar a semeadura duas vezes (checklist
+  // duplicado). Esse aqui só lê o que já existe, nunca insere.
+  useEffect(() => {
+    if (refreshTick === 0) return;
+    const supabase = createClient();
+    const diaAlvo = diaISO(diaVisualizado);
+    supabase
+      .from('checklist_item')
+      .select('*')
+      .eq('pet_id', pet.id)
+      .eq('lista', 'atividade')
+      .eq('dia', diaAlvo)
+      .order('hora')
+      .then(({ data, error }) => {
+        if (error || !data) return;
+        setChecklist(data.map((r) => ({ id: r.id, hora: r.hora, atividade: r.nome, icone: r.detalhe || '🐾', concluida: r.concluida })));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshTick]);
+
+  const alterarHora = (id: string, hora: string) => {
+    setChecklist((prev) => prev.map((c) => (c.id === id ? { ...c, hora } : c)));
+    const supabase = createClient();
+    supabase.from('checklist_item').update({ hora }).eq('id', id).then();
+  };
 
   const concluirAtividade = (id: string) => {
     setChecklist((prev) => prev.map((c) => (c.id === id ? { ...c, concluida: true } : c)));
@@ -339,24 +370,44 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje }: { pet: Pet; 
           >
             <button
               onClick={() => concluirAtividade(item.id)}
+              title="Marcar como concluída"
               className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-white/40 transition hover:border-white hover:bg-white/20"
-            >
-              <span className="text-xs">✓</span>
-            </button>
+            />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-white/80">{item.hora}</span>
+                {editandoHoraId === item.id ? (
+                  <input
+                    type="time"
+                    autoFocus
+                    value={item.hora}
+                    onChange={(e) => alterarHora(item.id, e.target.value)}
+                    onBlur={() => setEditandoHoraId(null)}
+                    className="rounded bg-white/20 px-1 py-0.5 text-xs font-bold text-white [color-scheme:dark]"
+                  />
+                ) : (
+                  <button
+                    onClick={() => setEditandoHoraId(item.id)}
+                    title="Editar horário"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-white/80 hover:text-white hover:underline"
+                  >
+                    {item.hora} ✏️
+                  </button>
+                )}
                 <span className="text-sm font-bold">{item.atividade}</span>
               </div>
             </div>
             <span className="text-lg">{item.icone}</span>
             <button
               onClick={() => removerAtividade(item.id)}
+              title="Remover atividade"
               className="text-white/50 hover:text-white/80 transition"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6"/>
+                <path d="M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
               </svg>
             </button>
           </div>
@@ -427,6 +478,8 @@ export default function AtividadesPage() {
   const [filtroIntensidade, setFiltroIntensidade] = useState<string>('baixa');
   const [expandida, setExpandida] = useState<string | null>(null);
   const [diaOffset, setDiaOffset] = useState(0); // 0 = hoje, 1 = ontem, etc.
+  const [refreshTick, setRefreshTick] = useState(0);
+  const [adicionadaId, setAdicionadaId] = useState<string | null>(null);
 
   const diaVisualizado = (() => {
     const d = new Date();
@@ -462,6 +515,30 @@ export default function AtividadesPage() {
   const categorias = ['caminhada', 'brincadeira', 'treino', 'natacao', 'obediencia', 'agility'];
   const intensidades = ['baixa', 'media', 'alta'];
 
+  // Pet selecionado (o do "Perfil do pet" acima) sempre primeiro na lista
+  // de checklists, pra não parecer que o app "esqueceu" quem está ativo.
+  const petsOrdenados = [pet, ...pets.filter((p) => p.id !== pet.id)];
+
+  const adicionarAoDia = async (atividade: Atividade) => {
+    const agora = new Date();
+    const hora = `${agora.getHours().toString().padStart(2, '0')}:${agora.getMinutes().toString().padStart(2, '0')}`;
+    const catInfo = getCategoriaInfo(atividade.categoria);
+    const supabase = createClient();
+    await supabase.from('checklist_item').insert({
+      id: crypto.randomUUID(),
+      pet_id: pet.id,
+      lista: 'atividade',
+      dia: diaISO(agora),
+      hora,
+      nome: atividade.nome,
+      detalhe: catInfo.icone,
+      concluida: false,
+    });
+    setRefreshTick((t) => t + 1);
+    setAdicionadaId(atividade.id);
+    setTimeout(() => setAdicionadaId((cur) => (cur === atividade.id ? null : cur)), 2000);
+  };
+
   const rotinaSugerida = [
     { dia: 'Seg', atividade: 'Passeio + Adestramento', duracao: '40 min', icone: '🐕', cor: 'bg-emerald-50 text-emerald-700' },
     { dia: 'Ter', atividade: 'Buscar (fetch)', duracao: '20 min', icone: '🎾', cor: 'bg-blue-50 text-blue-700' },
@@ -481,7 +558,7 @@ export default function AtividadesPage() {
             <BackButton href="/dashboard" />
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
               <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-              {atividadesFiltradas.length} atividades disponíveis
+              {atividadesFiltradas.length} {atividadesFiltradas.length === 1 ? 'atividade disponível' : 'atividades disponíveis'}
             </div>
             <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
               Atividades para <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">{pet.nome}</span>
@@ -526,7 +603,7 @@ export default function AtividadesPage() {
                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Filtre por categoria e intensidade</p>
                   </div>
                   <span className="rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-3 py-1 text-xs font-bold text-white shadow-md">
-                    {atividadesFiltradas.length} atividades
+                    {atividadesFiltradas.length} {atividadesFiltradas.length === 1 ? 'atividade' : 'atividades'}
                   </span>
                 </div>
 
@@ -540,7 +617,7 @@ export default function AtividadesPage() {
                         onClick={() => setFiltroCat(c)}
                         className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
                           isActive
-                            ? 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg scale-105'
+                            ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105'
                             : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-700'
                         }`}
                       >
@@ -561,7 +638,7 @@ export default function AtividadesPage() {
                         onClick={() => setFiltroIntensidade(i)}
                         className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
                           isActive
-                            ? 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg scale-105'
+                            ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105'
                             : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-700'
                         }`}
                       >
@@ -604,7 +681,7 @@ export default function AtividadesPage() {
                             </div>
                             <h3 className="mt-2 text-lg font-black text-slate-900 group-hover:text-slate-950 dark:text-white dark:group-hover:text-white">{atividade.nome}</h3>
                             <p className="mt-1 text-sm text-slate-500 line-clamp-2 dark:text-slate-400">{atividade.descricao}</p>
-                            <div className="mt-2.5 flex items-center gap-3">
+                            <div className="mt-2.5 flex flex-wrap items-center gap-2">
                               <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <circle cx="12" cy="12" r="10"/>
@@ -612,16 +689,29 @@ export default function AtividadesPage() {
                                 </svg>
                                 {atividade.duracao}
                               </span>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); adicionarAoDia(atividade); }}
+                                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition ${
+                                  adicionadaId === atividade.id
+                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300'
+                                    : 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900'
+                                }`}
+                              >
+                                {adicionadaId === atividade.id ? `✓ Adicionada ao dia de ${pet.nome}` : `+ Adicionar ao dia de ${pet.nome}`}
+                              </button>
                             </div>
                           </div>
-                          <svg
-                            className={`h-6 w-6 flex-shrink-0 text-slate-400 transition-transform ${isExpandida ? 'rotate-180 text-blue-500' : ''}`}
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
+                          <div className="flex flex-shrink-0 flex-col items-center gap-1">
+                            <svg
+                              className={`h-6 w-6 text-slate-400 transition-transform ${isExpandida ? 'rotate-180 text-blue-500' : ''}`}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                            <span className="text-[9px] font-semibold text-slate-400">{isExpandida ? 'ocultar' : 'detalhes'}</span>
+                          </div>
                         </div>
 
                         {isExpandida && (
@@ -721,9 +811,9 @@ export default function AtividadesPage() {
                 )}
               </div>
 
-              {/* Um checklist por pet — todos os pets do tutor aparecem aqui */}
-              {pets.map((p) => (
-                <ChecklistDoPet key={p.id} pet={p} diaOffset={diaOffset} diaVisualizado={diaVisualizado} ehHoje={ehHoje} />
+              {/* Um checklist por pet — o selecionado acima vem primeiro */}
+              {petsOrdenados.map((p) => (
+                <ChecklistDoPet key={p.id} pet={p} diaOffset={diaOffset} diaVisualizado={diaVisualizado} ehHoje={ehHoje} refreshTick={refreshTick} />
               ))}
 
               <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">

@@ -2,10 +2,12 @@
 
 import { usePetStore } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
+import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { format, differenceInMonths } from 'date-fns';
 import {
   PawIcon3D,
   DogIcon3D,
@@ -83,10 +85,32 @@ export default function HomePage() {
   const { pet } = usePetStore();
   const { user, loading: authLoading } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const [proximaVacina, setProximaVacina] = useState<{ titulo: string; data: Date } | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!pet?.id) { setProximaVacina(null); return; }
+    const supabase = createClient();
+    supabase
+      .from('momento')
+      .select('titulo, data_agendada')
+      .eq('pet_id', pet.id)
+      .eq('categoria', 'vacina')
+      .eq('status_vacina', 'pendente')
+      .not('data_agendada', 'is', null)
+      .order('data_agendada', { ascending: true })
+      .limit(1)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setProximaVacina({ titulo: data[0].titulo as string, data: new Date(data[0].data_agendada as string) });
+        } else {
+          setProximaVacina(null);
+        }
+      });
+  }, [pet?.id]);
 
   if (!mounted || authLoading) {
     return (
@@ -176,12 +200,22 @@ export default function HomePage() {
               <p className="mt-3 text-slate-500 dark:text-slate-400">
                 O que você quer fazer agora?
               </p>
-              <Link
-                href="/dashboard"
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-amber-500/25"
-              >
-                Ir para o painel
-              </Link>
+              <div className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-800">
+                <span>🐾 {(() => {
+                  const meses = differenceInMonths(new Date(), new Date(pet.dataNascimento));
+                  return meses < 12 ? `${meses} ${meses === 1 ? 'mês' : 'meses'}` : `${Math.floor(meses / 12)} ${Math.floor(meses / 12) === 1 ? 'ano' : 'anos'}`;
+                })()}</span>
+                <span className="text-slate-300 dark:text-slate-700">·</span>
+                <span>⚖️ {pet.peso.toLocaleString('pt-BR')} kg</span>
+                <span className="text-slate-300 dark:text-slate-700">·</span>
+                {proximaVacina ? (
+                  <Link href="/vida" className="text-amber-600 hover:underline dark:text-amber-400">
+                    💉 Próxima vacina: {format(proximaVacina.data, 'dd/MM')}
+                  </Link>
+                ) : (
+                  <span>💉 Nenhuma vacina agendada</span>
+                )}
+              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -254,16 +288,16 @@ export default function HomePage() {
 
               <Link
                 href="/onboarding"
-                className="group relative overflow-hidden rounded-3xl border-2 border-dashed border-slate-300 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-slate-400 hover:shadow-lg dark:border-slate-700 dark:bg-slate-900"
+                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-600 to-slate-800 p-6 text-white shadow-lg shadow-slate-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
                   <div className="flex h-16 w-16 items-center justify-center">
                     <GearIcon3D size={56} />
                   </div>
-                  <h3 className="mt-3 text-xl font-black text-slate-700 dark:text-slate-200">
+                  <h3 className="mt-3 text-xl font-black">
                     Editar perfil
                   </h3>
-                  <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="mt-1.5 text-sm text-slate-300">
                     Atualize dados de {pet.nome}.
                   </p>
                 </div>

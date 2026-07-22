@@ -23,7 +23,12 @@ export default function PetSelector() {
         <span className="text-xl">{petAtual ? getPetEmoji(petAtual.sexo) : '🐾'}</span>
         <span className="text-sm font-bold text-slate-900">{petAtual?.nome || 'Selecionar pet'}</span>
         {pets.length > 1 && (
-          <span className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-600">{pets.length}</span>
+          <span
+            title={`Você tem ${pets.length} pets cadastrados`}
+            className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-600"
+          >
+            {pets.length}
+          </span>
         )}
         <svg className={`h-4 w-4 text-slate-400 transition ${aberto ? 'rotate-180' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <polyline points="6 9 12 15 18 9"/>
