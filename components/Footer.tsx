@@ -9,6 +9,9 @@ export default function Footer() {
           <Link href="/politica-de-privacidade" className="text-slate-500 underline transition hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-400">
             Política de Privacidade
           </Link>
+          <Link href="/termos-de-uso" className="text-slate-500 underline transition hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-400">
+            Termos de Uso
+          </Link>
         </div>
         <p className="mt-2">Em caso de emergência, procure um veterinário.</p>
       </div>
