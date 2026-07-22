@@ -3,10 +3,39 @@
 import { usePetStore, type Pet } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { calcularMeta } from '@/lib/metaDiaria';
+
+function GraficoComparativo({ titulo, icone, sufixo, dados, cor, unidade }: {
+  titulo: string;
+  icone: string;
+  sufixo: string;
+  dados: { nome: string; valor: number }[];
+  cor: string;
+  unidade: string;
+}) {
+  return (
+    <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+      <h3 className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-white">
+        <span>{icone}</span> {titulo}
+      </h3>
+      <div className="mt-3 h-48">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={dados} barCategoryGap="30%" margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+            <XAxis dataKey="nome" tick={{ fontSize: 11 }} />
+            <YAxis tick={{ fontSize: 11 }} unit={unidade} width={48} />
+            <Tooltip formatter={(value: number) => [`${value.toLocaleString('pt-BR')}${sufixo}`, titulo]} />
+            <Bar dataKey="valor" fill={cor} radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
 
 function idadeEmMesesDe(pet: Pet): number {
   const diff = new Date().getTime() - new Date(pet.dataNascimento).getTime();
@@ -72,8 +101,44 @@ export default function CompararPage() {
               </a>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <table className="w-full min-w-[640px]">
+            <>
+              <div className="mb-6 grid gap-4 sm:grid-cols-2">
+                <GraficoComparativo
+                  titulo="Peso"
+                  icone="⚖️"
+                  sufixo=" kg"
+                  unidade="kg"
+                  cor="#8b5cf6"
+                  dados={pets.map((pet) => ({ nome: pet.nome, valor: pet.peso }))}
+                />
+                <GraficoComparativo
+                  titulo="Calorias por dia"
+                  icone="🔥"
+                  sufixo=" kcal"
+                  unidade=""
+                  cor="#f59e0b"
+                  dados={pets.map((pet) => ({ nome: pet.nome, valor: calcularMeta(idadeEmMesesDe(pet), pet.peso, pet.objetivo).caloriasDiarias }))}
+                />
+                <GraficoComparativo
+                  titulo="Ração por dia"
+                  icone="🍖"
+                  sufixo=" g"
+                  unidade="g"
+                  cor="#3b82f6"
+                  dados={pets.map((pet) => ({ nome: pet.nome, valor: Math.round(calcularMeta(idadeEmMesesDe(pet), pet.peso, pet.objetivo).racaoDiaria) }))}
+                />
+                <GraficoComparativo
+                  titulo="Exercício por dia"
+                  icone="🏃"
+                  sufixo=" min"
+                  unidade="min"
+                  cor="#10b981"
+                  dados={pets.map((pet) => ({ nome: pet.nome, valor: calcularMeta(idadeEmMesesDe(pet), pet.peso, pet.objetivo).exercicioMinutos }))}
+                />
+              </div>
+
+              <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <table className="w-full min-w-[640px]">
                 <thead>
                   <tr className="border-b border-slate-100 dark:border-slate-800">
                     <th className="p-4 text-left text-xs font-bold uppercase tracking-wide text-slate-400 dark:text-slate-500">Pet</th>
@@ -161,8 +226,9 @@ export default function CompararPage() {
                     })}
                   </tr>
                 </tbody>
-              </table>
-            </div>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </main>
