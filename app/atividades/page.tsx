@@ -539,6 +539,27 @@ export default function AtividadesPage() {
     setTimeout(() => setAdicionadaId((cur) => (cur === atividade.id ? null : cur)), 2000);
   };
 
+  // Dicas gerais personalizadas: antes era uma lista fixa igual pra
+  // qualquer pet. Agora mistura dicas específicas pro perfil (fase, porte,
+  // objetivo) com um núcleo de segurança que vale pra todo mundo.
+  const dicasCandidatas: { emoji: string; texto: string; relevante: boolean }[] = [
+    { emoji: '🐣', texto: 'Filhote: evite impacto forte em superfícies duras — ossos e articulações ainda estão se formando', relevante: fase === 'Filhote' },
+    { emoji: '⏱️', texto: 'Filhote: prefira sessões curtas e frequentes em vez de uma única atividade longa', relevante: fase === 'Filhote' },
+    { emoji: '🦴', texto: 'Sênior: dê preferência a atividades de baixo impacto, como natação ou passeios calmos', relevante: fase === 'Sênior' },
+    { emoji: '🩹', texto: 'Sênior: fique atento a sinais de dor articular durante e depois do exercício', relevante: fase === 'Sênior' },
+    { emoji: '🏋️', texto: 'Porte grande: aqueça bem antes — o risco de lesão articular é maior nesse porte', relevante: porte === 'Grande' },
+    { emoji: '🪜', texto: 'Porte pequeno: cuidado com saltos de altura e escadas durante a brincadeira', relevante: porte === 'Pequeno' },
+    { emoji: '🔥', texto: 'Emagrecimento: exercícios mais longos e de intensidade moderada queimam mais gordura com menos impacto', relevante: pet.objetivo === 'emagrecimento' },
+    { emoji: '🏆', texto: 'Desempenho: inclua dias de descanso entre atividades intensas pra evitar sobrecarga', relevante: pet.objetivo === 'desempenho' },
+    { emoji: '✨', texto: 'Pelagem: manter o pet bem hidratado durante o exercício também ajuda na saúde do pelo', relevante: pet.objetivo === 'pelagem' },
+    { emoji: '📅', texto: 'Manutenção: constância importa mais que intensidade — mantenha a rotina regular', relevante: pet.objetivo === 'manutencao' },
+    { emoji: '💧', texto: 'Mantenha água disponível durante as atividades', relevante: true },
+    { emoji: '👀', texto: 'Observe sinais de cansaço e pare se necessário', relevante: true },
+    { emoji: '⏰', texto: 'Evite exercícios logo após as refeições', relevante: true },
+    { emoji: '🩺', texto: 'Consulte o veterinário antes de iniciar nova rotina', relevante: true },
+  ];
+  const dicasGerais = [...dicasCandidatas].sort((a, b) => Number(b.relevante) - Number(a.relevante)).slice(0, 5);
+
   // Rotina semanal personalizada: em vez de uma lista fixa igual pra
   // qualquer pet, monta os 7 dias a partir do mesmo pool de atividades já
   // filtrado pelo perfil (fase/porte/objetivo) usado acima — só que sem o
@@ -846,27 +867,14 @@ export default function AtividadesPage() {
 
               <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-5 text-white shadow-lg shadow-amber-500/30">
                 <h3 className="text-sm font-bold">Dicas gerais</h3>
+                <p className="mt-0.5 text-xs text-white/70">Pro perfil de {pet.nome} ({fase.toLowerCase()}, porte {porte.toLowerCase()})</p>
                 <ul className="mt-3 space-y-2 text-xs text-white/90">
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">💡</span>
-                    Sempre aqueça o pet antes de exercícios intensos
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">💧</span>
-                    Mantenha água disponível durante as atividades
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">👀</span>
-                    Observe sinais de cansaço e pare se necessário
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">⏰</span>
-                    Evite exercícios logo após as refeições
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="mt-0.5">🩺</span>
-                    Consulte o veterinário antes de iniciar nova rotina
-                  </li>
+                  {dicasGerais.map((dica) => (
+                    <li key={dica.texto} className="flex items-start gap-2">
+                      <span className="mt-0.5">{dica.emoji}</span>
+                      {dica.texto}
+                    </li>
+                  ))}
                 </ul>
               </div>
 
