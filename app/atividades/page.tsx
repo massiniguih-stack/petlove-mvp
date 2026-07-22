@@ -539,15 +539,18 @@ export default function AtividadesPage() {
     setTimeout(() => setAdicionadaId((cur) => (cur === atividade.id ? null : cur)), 2000);
   };
 
-  const rotinaSugerida = [
-    { dia: 'Seg', atividade: 'Passeio + Adestramento', duracao: '40 min', icone: '🐕', cor: 'bg-emerald-50 text-emerald-700' },
-    { dia: 'Ter', atividade: 'Buscar (fetch)', duracao: '20 min', icone: '🎾', cor: 'bg-blue-50 text-blue-700' },
-    { dia: 'Qua', atividade: 'Passeio longo', duracao: '45 min', icone: '🦴', cor: 'bg-emerald-50 text-emerald-700' },
-    { dia: 'Qui', atividade: 'Treino de truques', duracao: '15 min', icone: '🎯', cor: 'bg-amber-50 text-amber-700' },
-    { dia: 'Sex', atividade: 'Passeio + Natação', duracao: '50 min', icone: '🏊', cor: 'bg-cyan-50 text-cyan-700' },
-    { dia: 'Sáb', atividade: 'Agility caseiro', duracao: '25 min', icone: '🐾', cor: 'bg-rose-50 text-rose-700' },
-    { dia: 'Dom', atividade: 'Passeio leve', duracao: '30 min', icone: '🐕', cor: 'bg-purple-50 text-purple-700' },
-  ];
+  // Rotina semanal personalizada: em vez de uma lista fixa igual pra
+  // qualquer pet, monta os 7 dias a partir do mesmo pool de atividades já
+  // filtrado pelo perfil (fase/porte/objetivo) usado acima — só que sem o
+  // filtro manual de categoria/intensidade, pra variar ao longo da semana.
+  const poolPerfil = getAtividadesPorPerfil(pet.raca, pet.peso, idadeEmMeses, pet.objetivo);
+  const diasSemana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+  const hojeIndiceSemana = (new Date().getDay() + 6) % 7; // getDay(): 0=dom → aqui 0=seg
+  const rotinaSugerida = diasSemana.map((dia, i) => {
+    const atividade = poolPerfil.length > 0 ? poolPerfil[i % poolPerfil.length] : null;
+    const catInfo = atividade ? getCategoriaInfo(atividade.categoria) : null;
+    return { dia, atividade, catInfo, ehHoje: i === hojeIndiceSemana };
+  });
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
@@ -818,15 +821,24 @@ export default function AtividadesPage() {
 
               <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Rotina semanal</h3>
+                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">Sugestão personalizada pro perfil de {pet.nome}</p>
                 <div className="mt-4 space-y-2">
                   {rotinaSugerida.map((r) => (
-                    <div key={r.dia} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 ${r.cor}`}>
-                      <span className="text-lg">{r.icone}</span>
+                    <div
+                      key={r.dia}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition ${
+                        r.catInfo ? `${r.catInfo.bg} ${r.catInfo.cor}` : 'bg-slate-50 text-slate-400 dark:bg-slate-800 dark:text-slate-500'
+                      } ${r.ehHoje ? 'ring-2 ring-blue-400 dark:ring-blue-600' : ''}`}
+                    >
+                      <span className="text-lg">{r.catInfo?.icone || '—'}</span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold">{r.dia}</p>
-                        <p className="text-xs opacity-80 truncate">{r.atividade}</p>
+                        <p className="flex items-center gap-1.5 text-xs font-bold">
+                          {r.dia}
+                          {r.ehHoje && <span className="rounded-full bg-blue-500 px-1.5 py-0.5 text-[9px] font-bold text-white">HOJE</span>}
+                        </p>
+                        <p className="text-xs opacity-80 truncate">{r.atividade ? r.atividade.nome : 'Sem sugestão pro perfil'}</p>
                       </div>
-                      <span className="text-xs font-medium opacity-70">{r.duracao}</span>
+                      {r.atividade && <span className="text-xs font-medium opacity-70 shrink-0">{r.atividade.duracao}</span>}
                     </div>
                   ))}
                 </div>
