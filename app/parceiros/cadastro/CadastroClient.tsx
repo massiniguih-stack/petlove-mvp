@@ -203,10 +203,10 @@ export default function CadastroClient() {
             </div>
 
             <a
-              href="/mapa"
+              href="/"
               className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-slate-200 px-8 py-4 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
             >
-              📍 Voltar ao Mapa
+              🏠 Voltar ao início
             </a>
           </div>
         </main>
@@ -223,7 +223,7 @@ export default function CadastroClient() {
 
           {/* Header */}
           <div className="mb-8">
-            <BackButton href="/mapa" label="Voltar ao mapa" />
+            <BackButton href="/" label="Voltar ao início" />
             <div className="mt-4 flex items-center gap-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-xl shadow-blue-500/30">
                 <span className="text-3xl">💼</span>
