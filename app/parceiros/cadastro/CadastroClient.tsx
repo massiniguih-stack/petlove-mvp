@@ -630,9 +630,9 @@ export default function CadastroClient() {
                     />
                     <span className="text-sm text-slate-600 dark:text-slate-400">
                       Li e aceito os{' '}
-                      <a href="#" className="font-semibold text-blue-600 hover:underline">Termos de Uso</a>
+                      <a href="/termos-de-uso" target="_blank" className="font-semibold text-blue-600 hover:underline">Termos de Uso</a>
                       {' '}e{' '}
-                      <a href="#" className="font-semibold text-blue-600 hover:underline">Política de Privacidade</a>.
+                      <a href="/politica-de-privacidade" target="_blank" className="font-semibold text-blue-600 hover:underline">Política de Privacidade</a>.
                       Estou ciente de que meus dados serão utilizados para divulgação no Patinha.
                     </span>
                   </label>

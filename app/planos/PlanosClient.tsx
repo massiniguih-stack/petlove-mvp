@@ -27,22 +27,27 @@ const PRECO_ANUAL = 115;
 export default function PlanosClient() {
   const [loading, setLoading] = useState(false);
   const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
+  const [erro, setErro] = useState<string | null>(null);
 
   const handleCheckout = async () => {
     setLoading(true);
+    setErro(null);
     try {
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planType: periodo === 'anual' ? 'tutor_annual' : 'tutor_monthly' }),
       });
-      if (!res.ok) throw new Error('Erro ao criar checkout');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Erro ao criar checkout');
+      }
       const { url } = await res.json();
       window.location.href = url;
     } catch (err) {
-      console.error(err);
+      setErro(err instanceof Error ? err.message : 'Erro inesperado ao iniciar o pagamento');
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -168,6 +173,12 @@ export default function PlanosClient() {
                   </li>
                 ))}
               </ul>
+
+              {erro && (
+                <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400">
+                  {erro}
+                </div>
+              )}
 
               <button
                 onClick={handleCheckout}
