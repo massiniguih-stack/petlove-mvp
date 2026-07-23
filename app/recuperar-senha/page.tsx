@@ -3,15 +3,7 @@
 import { ForgotPassword } from '@/components/auth/ForgotPassword'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-
-function LockIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-    </svg>
-  )
-}
+import { ShieldIcon3D } from '@/components/Icons3D'
 
 export default function RecuperarSenhaPage() {
   const [mounted, setMounted] = useState(false)
@@ -40,9 +32,9 @@ export default function RecuperarSenhaPage() {
           <div className="mb-8 text-center">
             <div className="flex justify-center">
               <div className="relative">
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-2xl" />
-                <div className="relative rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-xl ring-1 ring-amber-100/50">
-                  <LockIcon />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 opacity-25 blur-2xl" />
+                <div className="relative flex items-center justify-center p-2">
+                  <ShieldIcon3D size={88} />
                 </div>
               </div>
             </div>

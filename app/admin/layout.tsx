@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { PawIcon3D } from '@/components/Icons3D';
 
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icone: '📊' },
@@ -64,7 +65,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setMobileOpen(false);
   }, [pathname]);
 
-  if (loading) {
+  const openAccess = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true';
+
+  if (loading && !openAccess) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
@@ -72,7 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (!user) {
+  if (!user && !openAccess) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
         <div className="text-center">
@@ -99,14 +102,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }`}
       >
         <div className="flex h-16 items-center gap-3 border-b border-slate-100 px-6 dark:border-slate-800">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/25">
-            <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
-              <ellipse cx="20" cy="18" rx="6" ry="7" fill="white" />
-              <ellipse cx="44" cy="18" rx="6" ry="7" fill="white" />
-              <ellipse cx="12" cy="32" rx="5" ry="6" fill="white" />
-              <ellipse cx="52" cy="32" rx="5" ry="6" fill="white" />
-              <ellipse cx="32" cy="44" rx="14" ry="12" fill="white" />
-            </svg>
+          <div className="flex h-10 w-10 items-center justify-center">
+            <PawIcon3D size={36} />
           </div>
           <div>
             <h1 className="text-sm font-black text-slate-900 dark:text-white">Painel Admin</h1>

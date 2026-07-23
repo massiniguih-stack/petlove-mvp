@@ -5,18 +5,16 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
+import { PremiumIcon3D, PinIcon3D, MedalIcon3D, StarIcon3D } from '@/components/Icons3D';
+import type { ComponentType } from 'react';
 
-// Só existe um nível real de benefício hoje (destaque + selo + WhatsApp —
-// ver app/api/lastlink/webhook/route.ts e app/mapa/page.tsx). Os 3 planos
-// antigos (Básico/Profissional/Empresarial) prometiam diferenças — fotos,
-// painel de métricas, múltiplas unidades — que nenhum código implementa.
-// Um plano único, honesto, até essas diferenças existirem de verdade.
+// Um plano real (partner_basic) — sem toggle anual cosmético (EXP-13A).
+// 50% OFF removido (EXP-14). Plano anual real = EXP-13B depois + LastLink.
 const plano = {
-  planType: 'partner_basic',
+  planType: 'partner_basic' as const,
   nome: 'Parceiro Premium',
   descricao: 'Destaque seu negócio para quem está perto',
-  mensal: 39.80,
-  anual: 238.80,
+  mensal: 39.8,
   features: [
     'Listagem no mapa',
     'Selo Premium',
@@ -26,31 +24,34 @@ const plano = {
   ],
 };
 
-const beneficios = [
+const beneficios: {
+  Icon: ComponentType<{ size?: number; className?: string }>;
+  titulo: string;
+  descricao: string;
+}[] = [
   {
-    icon: '⭐',
+    Icon: StarIcon3D,
     titulo: 'Destaque no Mapa',
     descricao: 'Seu negócio aparece no topo da lista e com selo de destaque na sua cidade.',
   },
   {
-    icon: '📍',
+    Icon: PinIcon3D,
     titulo: 'Prioridade na Busca',
     descricao: 'Quando alguém buscar na sua cidade, você aparece primeiro — antes dos concorrentes.',
   },
   {
-    icon: '🏅',
+    Icon: MedalIcon3D,
     titulo: 'Selo Premium',
     descricao: 'Badge exclusivo que transmite confiança e credibilidade para novos clientes.',
   },
   {
-    icon: '💬',
+    Icon: PremiumIcon3D,
     titulo: 'WhatsApp Direto',
     descricao: 'Botão de WhatsApp no perfil para clientes chamarem direto pelo app.',
   },
 ];
 
 export default function PremiumClient() {
-  const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -88,7 +89,7 @@ export default function PremiumClient() {
       <Navbar />
       <main className="flex-1">
 
-        {/* Hero */}
+        {/* Hero — EXP-16: CTA de compra */}
         <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 px-4 py-20 text-white">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white" />
@@ -96,55 +97,39 @@ export default function PremiumClient() {
           </div>
           <div className="relative mx-auto max-w-5xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm">
-              <span>🏆</span> Parceiro Premium
+              <PremiumIcon3D size={28} /> Parceiro Premium
             </div>
             <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
               Seja o <span className="text-yellow-200">Primeiro</span> que os<br />tutores encontram
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-orange-100">
-              Apareça no topo do mapa, ganhe um selo de destaque e atraira mais clientes para sua clínica ou pet shop.
+              Apareça no topo do mapa, ganhe um selo de destaque e atrairá mais clientes para sua clínica ou pet shop.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a
+                href="#planos"
+                className="rounded-2xl bg-white px-8 py-4 text-lg font-bold text-orange-600 shadow-lg transition hover:bg-orange-50"
+              >
+                Ver plano e assinar
+              </a>
               <a href="#beneficios" className="rounded-2xl border-2 border-white/30 px-8 py-4 text-lg font-bold text-white transition hover:bg-white/10">
-                Conhecer Benefícios
+                Conhecer benefícios
               </a>
             </div>
           </div>
         </section>
 
-        {/* Plano */}
+        {/* Plano — um preço real (EXP-13A, EXP-14) */}
         <section id="planos" className="px-4 py-16">
           <div className="mx-auto max-w-md">
             <div className="text-center">
               <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
-                <span>🏆</span> Plano Premium
+                <PremiumIcon3D size={28} /> Plano Premium
               </div>
               <h2 className="mt-4 text-3xl font-black text-slate-900 dark:text-white">
                 Um plano, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">tudo incluso</span>
               </h2>
               <p className="mt-2 text-slate-500 dark:text-slate-400">Invista na visibilidade do seu estabelecimento</p>
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-700">
-                🎉 50% OFF para membros Patinha — Desconto aplicado automaticamente
-              </div>
-            </div>
-
-            {/* Seletor */}
-            <div className="mt-8 flex justify-center">
-              <div className="inline-flex rounded-2xl bg-slate-100 dark:bg-slate-800 p-1">
-                <button
-                  onClick={() => setPeriodo('mensal')}
-                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'mensal' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
-                >
-                  Mensal
-                </button>
-                <button
-                  onClick={() => setPeriodo('anual')}
-                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'anual' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
-                >
-                  Anual
-                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">-20%</span>
-                </button>
-              </div>
             </div>
 
             {error && (
@@ -153,10 +138,9 @@ export default function PremiumClient() {
               </div>
             )}
 
-            {/* Card */}
             <div className="mt-10 rounded-3xl border-2 border-amber-400 bg-white dark:bg-slate-900 p-6 shadow-lg shadow-amber-500/10">
-              <div className="rounded-2xl bg-blue-50 p-4">
-                <h3 className="text-xl font-black text-blue-600">{plano.nome}</h3>
+              <div className="rounded-2xl bg-blue-50 p-4 dark:bg-blue-950/40">
+                <h3 className="text-xl font-black text-blue-600 dark:text-blue-400">{plano.nome}</h3>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{plano.descricao}</p>
               </div>
 
@@ -164,28 +148,19 @@ export default function PremiumClient() {
                 <div className="flex items-baseline gap-1">
                   <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
                   <span className="text-4xl font-black text-slate-900 dark:text-white">
-                    {periodo === 'mensal' ? plano.mensal.toFixed(2).replace('.', ',') : (plano.anual / 12).toFixed(2).replace('.', ',')}
+                    {plano.mensal.toFixed(2).replace('.', ',')}
                   </span>
                   <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
                 </div>
-                <p className="mt-1 text-xs text-slate-400">
-                  <span className="line-through">R$ {(plano.mensal * 2).toFixed(2).replace('.', ',')}</span>{' '}
-                  <span className="font-bold text-emerald-600">50% OFF</span>
-                </p>
-                {periodo === 'anual' && (
-                  <p className="mt-1 text-xs font-semibold text-emerald-600">
-                    💰 Economia de R$ {((plano.mensal * 2 * 12) - plano.anual).toFixed(2)} no ano
-                  </p>
-                )}
                 <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-                  {periodo === 'mensal' ? 'Cobrado mensalmente' : `R$ ${plano.anual.toFixed(2)} cobrado anualmente`}
+                  Cobrado mensalmente · pagamento via LastLink
                 </p>
               </div>
 
               <ul className="mt-6 space-y-3">
                 {plano.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-xs text-blue-600">✓</span>
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-xs text-blue-600 dark:bg-blue-950 dark:text-blue-300">✓</span>
                     {feature}
                   </li>
                 ))}
@@ -204,31 +179,30 @@ export default function PremiumClient() {
                     </svg>
                     Processando…
                   </span>
-                ) : 'Assinar Agora'}
+                ) : 'Assinar agora'}
               </button>
             </div>
 
-            <div className="mt-6 flex items-center justify-center gap-4 text-xs text-slate-400 dark:text-slate-500">
-              <span>🔒 Pagamento seguro via LastLink</span>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500">
+              <span>Pagamento seguro via LastLink</span>
               <span>·</span>
-              <span>Cancelamento grátis</span>
+              <span>Cancele quando quiser na área de membros</span>
             </div>
           </div>
         </section>
 
-        {/* Benefícios */}
         <section id="beneficios" className="bg-white dark:bg-slate-900 px-4 py-16">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
               Tudo que você precisa para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">crescer</span>
             </h2>
-            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Benefícios exclusivos para parceiros Premium</p>
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Benefícios do Parceiro Premium</p>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {beneficios.map((b) => (
                 <div key={b.titulo} className="group rounded-3xl border border-slate-100 dark:border-slate-700 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 p-6 transition-all hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-1">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 text-3xl transition group-hover:scale-110">
-                    {b.icon}
+                  <div className="icon-3d-slot h-20 w-20 transition group-hover:scale-110">
+                    <b.Icon size={64} />
                   </div>
                   <h3 className="mt-4 text-lg font-black text-slate-900 dark:text-white">{b.titulo}</h3>
                   <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{b.descricao}</p>

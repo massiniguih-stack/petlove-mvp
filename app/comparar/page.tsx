@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { calcularMeta } from '@/lib/metaDiaria';
+import { PremiumIcon3D, PawIcon3D } from '@/components/Icons3D';
 
 function GraficoComparativo({ titulo, icone, sufixo, dados, cor, unidade }: {
   titulo: string;
@@ -84,16 +85,18 @@ export default function CompararPage() {
 
           {!isPremium ? (
             <div className="rounded-3xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 p-8 text-center text-white shadow-xl shadow-violet-500/20">
-              <span className="text-4xl">🔒</span>
+              <div className="mx-auto flex justify-center"><PremiumIcon3D size={72} /></div>
               <h2 className="mt-3 text-xl font-black">Comparação entre pets é um recurso Premium</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm text-violet-100">Assine o Premium para comparar peso, idade, objetivo e recomendações entre todos os seus pets.</p>
+              <p className="mx-auto mt-2 max-w-md text-sm text-violet-100">
+                A partir de R$ 19,90/mês: comparar pets, pets ilimitados e histórico completo (além de 7 dias).
+              </p>
               <a href="/planos" className="mt-5 inline-block rounded-2xl bg-white px-6 py-3 text-sm font-black text-violet-600 shadow-lg transition hover:bg-violet-50 hover:shadow-xl">
-                Ver Planos →
+                Ver planos e assinar →
               </a>
             </div>
           ) : pets.length < 2 ? (
             <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <span className="text-4xl">🐾</span>
+              <div className="mx-auto flex justify-center"><PawIcon3D size={72} /></div>
               <h2 className="mt-3 text-lg font-black text-slate-900 dark:text-white">Cadastre mais um pet para comparar</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">Você só tem 1 pet cadastrado. Adicione outro para ver a comparação lado a lado.</p>
               <a href="/onboarding" className="mt-5 inline-block rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:shadow-xl">
@@ -149,7 +152,9 @@ export default function CompararPage() {
                             {pet.fotoUrl ? (
                               <img src={pet.fotoUrl} alt={pet.nome} className="h-full w-full object-cover" />
                             ) : (
-                              <div className="flex h-full w-full items-center justify-center text-xl">🐾</div>
+                              <div className="flex h-full w-full items-center justify-center">
+                                <PawIcon3D size={40} />
+                              </div>
                             )}
                           </div>
                           <span className="text-sm font-black text-slate-900 dark:text-white">{pet.nome}</span>

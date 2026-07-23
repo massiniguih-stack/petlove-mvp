@@ -40,3 +40,9 @@ next-env.d.ts
 
 # opencode
 .opencode/
+
+# opensquad local/runtime artifacts
+_opensquad/_browser_profile/
+_opensquad/logs/
+dashboard/test-results/
+*.bak

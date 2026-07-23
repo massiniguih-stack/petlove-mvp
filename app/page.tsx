@@ -19,62 +19,6 @@ import {
   ChartIcon3D,
 } from '@/components/Icons3D';
 
-function DogIcon({ size = 24, className = '' }: { size?: number; className?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" className={className}>
-      <defs>
-        <linearGradient id="bodyGradHome" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#fbbf24" />
-          <stop offset="100%" stopColor="#f59e0b" />
-        </linearGradient>
-        <linearGradient id="earGradHome" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#d97706" />
-          <stop offset="100%" stopColor="#b45309" />
-        </linearGradient>
-        <linearGradient id="bellyGradHome" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#fef3c7" />
-          <stop offset="100%" stopColor="#fde68a" />
-        </linearGradient>
-        <linearGradient id="noseGradHome" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#374151" />
-          <stop offset="100%" stopColor="#1f2937" />
-        </linearGradient>
-        <filter id="shadowHome" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="2" dy="3" stdDeviation="2" floodOpacity="0.2" />
-        </filter>
-      </defs>
-
-      <ellipse cx="32" cy="58" rx="18" ry="4" fill="#000" opacity="0.1" />
-      <ellipse cx="32" cy="42" rx="16" ry="14" fill="url(#bodyGradHome)" filter="url(#shadowHome)" />
-      <ellipse cx="32" cy="44" rx="10" ry="8" fill="url(#bellyGradHome)" />
-      <ellipse cx="18" cy="22" rx="8" ry="12" fill="url(#earGradHome)" transform="rotate(-15 18 22)" />
-      <ellipse cx="46" cy="22" rx="8" ry="12" fill="url(#earGradHome)" transform="rotate(15 46 22)" />
-      <circle cx="32" cy="28" r="16" fill="url(#bodyGradHome)" filter="url(#shadowHome)" />
-      <ellipse cx="32" cy="32" rx="10" ry="8" fill="url(#bellyGradHome)" />
-      <circle cx="26" cy="26" r="3" fill="#1f2937" />
-      <circle cx="25" cy="25" r="1" fill="white" />
-      <circle cx="38" cy="26" r="3" fill="#1f2937" />
-      <circle cx="37" cy="25" r="1" fill="white" />
-      <ellipse cx="32" cy="32" rx="4" ry="3" fill="url(#noseGradHome)" />
-      <ellipse cx="32" cy="31.5" rx="2" ry="1" fill="#6b7280" opacity="0.5" />
-      <path d="M32 35 Q28 39 24 37" fill="none" stroke="#d97706" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M32 35 Q36 39 40 37" fill="none" stroke="#d97706" strokeWidth="1.5" strokeLinecap="round" />
-      <ellipse cx="32" cy="38" rx="3" ry="4" fill="#f472b6" />
-      <ellipse cx="32" cy="37" rx="2" ry="2" fill="#f9a8d4" />
-      <circle cx="22" cy="30" r="3" fill="#fbcfe8" opacity="0.6" />
-      <circle cx="42" cy="30" r="3" fill="#fbcfe8" opacity="0.6" />
-      <ellipse cx="24" cy="52" rx="5" ry="4" fill="url(#bodyGradHome)" />
-      <ellipse cx="40" cy="52" rx="5" ry="4" fill="url(#bodyGradHome)" />
-      <circle cx="22" cy="51" r="1.5" fill="url(#bellyGradHome)" />
-      <circle cx="24" cy="50" r="1.5" fill="url(#bellyGradHome)" />
-      <circle cx="26" cy="51" r="1.5" fill="url(#bellyGradHome)" />
-      <circle cx="38" cy="51" r="1.5" fill="url(#bellyGradHome)" />
-      <circle cx="40" cy="50" r="1.5" fill="url(#bellyGradHome)" />
-      <circle cx="42" cy="51" r="1.5" fill="url(#bellyGradHome)" />
-    </svg>
-  );
-}
-
 const benefits = [
   { title: 'Saúde e peso', desc: 'Acompanhe o crescimento do seu pet.', Icon: ChartIcon3D },
   { title: 'Ração certa', desc: 'Sugestões por raça e objetivo.', Icon: BowlIcon3D },
@@ -82,7 +26,7 @@ const benefits = [
 ];
 
 export default function HomePage() {
-  const { pet } = usePetStore();
+  const { pet, isPremium } = usePetStore();
   const { user, loading: authLoading } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [proximaVacina, setProximaVacina] = useState<{ titulo: string; data: Date } | null>(null);
@@ -131,8 +75,8 @@ export default function HomePage() {
         <Navbar />
         <main className="flex-1">
           <section className="mx-auto max-w-lg px-4 py-16 text-center md:py-24">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 shadow-lg ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-              <DogIcon3D size={44} />
+            <div className="icon-3d-slot mx-auto">
+              <DogIcon3D size={72} />
             </div>
             <h1 className="mt-8 text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
               Falta só cadastrar seu pet
@@ -171,9 +115,9 @@ export default function HomePage() {
 
             <Link
               href="/parceiros/cadastro"
-              className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
+              className="mt-3 inline-flex w-full items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-8 py-3.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
             >
-              Sou parceiro (vet/petshop)
+              Sou parceiro pet (vet / petshop)
             </Link>
           </section>
         </main>
@@ -200,6 +144,15 @@ export default function HomePage() {
               <p className="mt-3 text-slate-500 dark:text-slate-400">
                 O que você quer fazer agora?
               </p>
+              {/* EXP-05: upsell só com benefícios já gateados */}
+              {!isPremium && (
+                <Link
+                  href="/planos"
+                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700 ring-1 ring-violet-200 transition hover:bg-violet-100 dark:bg-violet-950 dark:text-violet-300 dark:ring-violet-800"
+                >
+                  Premium: comparar pets · histórico completo · pets ilimitados →
+                </Link>
+              )}
               <div className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-800">
                 <span>🐾 {(() => {
                   const meses = differenceInMonths(new Date(), new Date(pet.dataNascimento));
@@ -224,8 +177,8 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white shadow-lg shadow-amber-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/35"
               >
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center">
-                    <PawIcon3D size={56} />
+                  <div className="icon-3d-slot h-20 w-20">
+                    <PawIcon3D size={72} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Dashboard</h3>
                   <p className="mt-1.5 text-sm text-amber-100">
@@ -239,8 +192,8 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-rose-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center">
-                    <CalendarIcon3D size={56} />
+                  <div className="icon-3d-slot h-20 w-20">
+                    <CalendarIcon3D size={72} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Linha do tempo</h3>
                   <p className="mt-1.5 text-sm text-rose-100">Marcos, vacinas e conquistas.</p>
@@ -252,8 +205,8 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-500 p-6 text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center">
-                    <ActivityIcon3D size={56} />
+                  <div className="icon-3d-slot h-20 w-20">
+                    <ActivityIcon3D size={72} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Atividades</h3>
                   <p className="mt-1.5 text-sm text-blue-100">Exercícios e dicas para {pet.nome}.</p>
@@ -265,8 +218,8 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 p-6 text-white shadow-lg shadow-emerald-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center">
-                    <BowlIcon3D size={56} />
+                  <div className="icon-3d-slot h-20 w-20">
+                    <BowlIcon3D size={72} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Ração</h3>
                   <p className="mt-1.5 text-sm text-emerald-100">Porções e nutrição ideal.</p>
@@ -278,8 +231,8 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-500 to-pink-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center">
-                    <PinIcon3D size={56} />
+                  <div className="icon-3d-slot h-20 w-20">
+                    <PinIcon3D size={72} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Serviços</h3>
                   <p className="mt-1.5 text-sm text-rose-100">Veterinários, parques e hotéis.</p>
@@ -291,8 +244,8 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-600 to-slate-800 p-6 text-white shadow-lg shadow-slate-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center">
-                    <GearIcon3D size={56} />
+                  <div className="icon-3d-slot h-20 w-20">
+                    <GearIcon3D size={72} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">
                     Editar perfil
@@ -308,8 +261,8 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-500 to-purple-500 p-6 text-white shadow-lg shadow-violet-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center">
-                    <ChartIcon3D size={56} />
+                  <div className="icon-3d-slot h-20 w-20">
+                    <ChartIcon3D size={72} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Comparar pets</h3>
                   <p className="mt-1.5 text-sm text-violet-100">Compare seus pets lado a lado.</p>
@@ -333,8 +286,8 @@ export default function HomePage() {
             <div className="flex justify-center">
               <div className="relative">
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-2xl" />
-                <div className="relative rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 p-8 dark:from-amber-950 dark:to-orange-950">
-                  <DogIcon size={72} />
+                <div className="icon-3d-slot relative p-2 md:p-3">
+                  <DogIcon3D size={120} />
                 </div>
               </div>
             </div>
@@ -343,11 +296,11 @@ export default function HomePage() {
                 Patinha
               </span>
             </h1>
-            <p className="mt-3 text-sm font-bold tracking-[0.3em] text-slate-400 uppercase">
-              Cuidados premium para seu melhor amigo
+            <p className="mt-3 text-sm font-bold tracking-[0.3em] text-slate-400 uppercase dark:text-slate-500">
+              Cuidados para o seu melhor amigo
             </p>
             <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-slate-500 dark:text-slate-400">
-              Saúde, ração e serviços perto de você — comece em 2 passos simples.
+              Saúde, ração e serviços perto de você. <span className="font-semibold text-slate-700 dark:text-slate-300">Grátis para começar · Premium opcional</span>
             </p>
           </div>
 
@@ -371,7 +324,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* CTAs principais */}
+          {/* CTAs — EXP-03: tutor primário, parceiro secundário */}
           <div className="mx-auto mt-10 flex max-w-md flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/cadastro"
@@ -390,9 +343,9 @@ export default function HomePage() {
           <div className="mx-auto mt-4 max-w-md">
             <Link
               href="/parceiros/cadastro"
-              className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
+              className="inline-flex w-full items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
             >
-              Sou parceiro (vet/petshop)
+              Sou parceiro pet (vet / petshop)
             </Link>
           </div>
 
@@ -401,10 +354,12 @@ export default function HomePage() {
             {benefits.map((b) => (
               <div
                 key={b.title}
-                className="rounded-2xl bg-white p-5 text-center ring-1 ring-slate-100 dark:bg-slate-900 dark:ring-slate-800"
+                className="rounded-2xl bg-white p-6 text-center ring-1 ring-slate-100 dark:bg-slate-900/90 dark:ring-slate-700/80"
               >
-                <div className="flex justify-center"><b.Icon size={32} /></div>
-                <h3 className="mt-2 text-sm font-bold text-slate-800 dark:text-slate-100">{b.title}</h3>
+                <div className="icon-3d-slot mx-auto mb-1 h-16 w-16">
+                  <b.Icon size={56} />
+                </div>
+                <h3 className="mt-3 text-sm font-bold text-slate-800 dark:text-slate-100">{b.title}</h3>
                 <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{b.desc}</p>
               </div>
             ))}

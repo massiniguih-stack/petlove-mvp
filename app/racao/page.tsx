@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
 import { BackButton } from '@/components/BackButton';
-import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D, DogIcon3D, BowlIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D, DogIcon3D, BowlIcon3D, CrownIcon3D, PremiumIcon3D, PawIcon3D, ShieldIcon3D } from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';
 
 interface MarcaRacao {
@@ -21,6 +21,7 @@ interface MarcaRacao {
   cuidados: string[];
   preco: string;
   logo: string;
+  logoSrc: string;
 }
 
 interface Refeicao {
@@ -56,6 +57,7 @@ const marcas: MarcaRacao[] = [
     cuidados: ['Preço elevado', 'Contém grãos', 'Ingredientes vegetais'],
     preco: '$$$$',
     logo: '👑',
+    logoSrc: '/icons/3d/crown.png',
   },
   {
     nome: 'Hills Science Diet',
@@ -68,6 +70,7 @@ const marcas: MarcaRacao[] = [
     cuidados: ['Preço elevado', 'Disponibilidade limitada'],
     preco: '$$$$',
     logo: '🔬',
+    logoSrc: '/icons/3d/shield.png',
   },
   {
     nome: 'Blue Buffalo',
@@ -80,6 +83,7 @@ const marcas: MarcaRacao[] = [
     cuidados: ['Disponibilidade limitada', 'Preço médio-alto'],
     preco: '$$$',
     logo: '🦬',
+    logoSrc: '/icons/3d/racao.png',
   },
   {
     nome: 'Orijen',
@@ -92,6 +96,7 @@ const marcas: MarcaRacao[] = [
     cuidados: ['Muito rica para cães sedentários', 'Preço muito elevado', 'Não indicada para filhotes'],
     preco: '$$$$$',
     logo: '🌿',
+    logoSrc: '/icons/3d/saude.png',
   },
   {
     nome: 'GranPlus',
@@ -104,6 +109,7 @@ const marcas: MarcaRacao[] = [
     cuidados: ['Contém grãos', 'Alguns ingredientes vegetais'],
     preco: '$$',
     logo: '🐾',
+    logoSrc: '/icons/3d/patinha.png',
   },
   {
     nome: 'Golden',
@@ -116,6 +122,7 @@ const marcas: MarcaRacao[] = [
     cuidados: ['Ingredientes inferiores', 'Subprodutos', 'Corantes', 'Não indicada para exigentes'],
     preco: '$',
     logo: '⭐',
+    logoSrc: '/icons/3d/premium.png',
   },
 ];
 
@@ -161,7 +168,7 @@ function getSuplementos(objetivo: string): SuplementoDetalhe[] {
         beneficio: 'Força muscular e resistência',
         quando: 'Pré-treino, 30min antes',
         icone: '💪',
-        iconeImg: '/icons/weight.png',
+        iconeImg: '/icons/3d/peso.png',
         cor: 'bg-rose-50 text-rose-700',
         descricao: 'Aminoácido que aumenta a disponibilidade de energia muscular, melhorando força e performance em exercícios de curta duração e alta intensidade.',
         dosagem: '5-10g por dia para cães de grande porte',
@@ -184,7 +191,7 @@ function getSuplementos(objetivo: string): SuplementoDetalhe[] {
         beneficio: 'Proteção antioxidante',
         quando: 'Diário',
         icone: '🛡️',
-        iconeImg: '/icons/shield.png',
+        iconeImg: '/icons/3d/shield.png',
         cor: 'bg-amber-50 text-amber-700',
         descricao: 'Antioxidante poderoso que protege as células contra radicais livres, fortalece o sistema imunológico e melhora a recuperação muscular.',
         dosagem: '1-2 UI por kg de peso corporal ao dia',
@@ -296,7 +303,7 @@ function getDicasDesenvolvimento(idadeEmMeses: number, objetivo: string) {
 
   if (objetivo === 'desempenho') {
     dicas.push(
-      { titulo: 'Treino progressivo', descricao: 'Aumente gradualmente a intensidade dos exercícios.', icone: '📈', iconeImg: '/icons/chart.png', cor: 'bg-amber-50 text-amber-700' },
+      { titulo: 'Treino progressivo', descricao: 'Aumente gradualmente a intensidade dos exercícios.', icone: '📈', iconeImg: '/icons/3d/chart.png', cor: 'bg-amber-50 text-amber-700' },
       { titulo: 'Hidratação', descricao: 'Garanta água fresca sempre disponível.', icone: '💧', cor: 'bg-blue-50 text-blue-700' },
       { titulo: 'Descanso ativo', descricao: 'Mesmo cães ativos precisam de 12-14h de sono.', icone: '😴', cor: 'bg-purple-50 text-purple-700' },
     );
@@ -457,25 +464,33 @@ export default function RacaoPage() {
               <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                   <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
-                     <DogIcon3D size={28} className="mx-auto" />
+                   <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
+                     <div className="icon-3d-slot mx-auto h-20 w-20">
+                       <DogIcon3D size={72} />
+                     </div>
                      <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
-                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
-                     <ScaleIcon3D size={28} className="mx-auto" />
+                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-5 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
+                     <div className="icon-3d-slot mx-auto h-20 w-20">
+                       <ScaleIcon3D size={72} />
+                     </div>
                      <p className="mt-2 text-xs font-medium text-blue-600">Peso</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
-                   <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
-                     <CalendarIcon3D size={28} className="mx-auto" />
+                   <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
+                     <div className="icon-3d-slot mx-auto h-20 w-20">
+                       <CalendarIcon3D size={72} />
+                     </div>
                      <p className="mt-2 text-xs font-medium text-emerald-600">Idade</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {idadeEmMeses < 12 ? `${idadeEmMeses} meses` : `${Math.floor(idadeEmMeses / 12)} anos`}
                     </p>
                   </div>
-                   <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">
-                     <TargetIcon3D size={28} className="mx-auto" />
+                   <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">
+                     <div className="icon-3d-slot mx-auto h-20 w-20">
+                       <TargetIcon3D size={72} />
+                     </div>
                      <p className="mt-2 text-xs font-medium text-purple-600">Objetivo</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {objetivo === 'manutencao' ? 'Manutenção' : objetivo === 'pelagem' ? 'Pelagem' : objetivo === 'emagrecimento' ? 'Emagrecimento' : 'Desempenho'}
@@ -521,8 +536,8 @@ export default function RacaoPage() {
                       }`}
                     >
                       <div className="flex items-start gap-4">
-                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 text-3xl dark:from-slate-800 dark:to-slate-700">
-                          {marca.logo}
+                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700">
+                          <Image src={marca.logoSrc} alt="" width={40} height={40} unoptimized className="icon-3d" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
@@ -646,7 +661,7 @@ export default function RacaoPage() {
                       className={`group flex items-start gap-3 rounded-xl p-4 text-left ring-1 ring-inset transition-all hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${s.cor.split(' ')[0].replace('bg-', 'ring-')}/30 ${s.cor.split(' ')[0]}`}
                     >
                       {s.iconeImg ? (
-                        <Image src={s.iconeImg} alt="" width={28} height={28} unoptimized className="transition group-hover:scale-110" />
+                        <Image src={s.iconeImg} alt="" width={40} height={40} unoptimized className="icon-3d transition group-hover:scale-110" />
                       ) : (
                         <span className="text-2xl transition group-hover:scale-110">{s.icone}</span>
                       )}
@@ -680,7 +695,7 @@ export default function RacaoPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         {suplementoExpandido.iconeImg ? (
-                          <Image src={suplementoExpandido.iconeImg} alt="" width={44} height={44} unoptimized />
+                          <Image src={suplementoExpandido.iconeImg} alt="" width={44} height={44} unoptimized className="icon-3d" />
                         ) : (
                           <span className="text-4xl">{suplementoExpandido.icone}</span>
                         )}
@@ -881,14 +896,14 @@ export default function RacaoPage() {
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">Porções diárias</h3>
                 <div className="mt-4 space-y-3">
                   <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-3 ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
-                    <BowlIcon3D size={28} />
+                    <BowlIcon3D size={40} />
                     <div>
                       <p className="text-xs font-medium text-amber-600">Quantidade</p>
                       <p className="text-lg font-black text-slate-900 dark:text-white">{recomendacao.quantidadeDiaria}g/dia</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 p-3 ring-1 ring-rose-100 dark:from-rose-950 dark:to-pink-950">
-                    <FireIcon3D size={28} />
+                    <FireIcon3D size={40} />
                     <div>
                       <p className="text-xs font-medium text-rose-600">Calorias</p>
                       <p className="text-lg font-black text-slate-900 dark:text-white">{recomendacao.caloriasDiarias} kcal</p>
@@ -910,7 +925,7 @@ export default function RacaoPage() {
                   {dicas.map((d) => (
                     <div key={d.titulo} className={`flex items-start gap-3 rounded-xl p-3 ${d.cor.split(' ')[0]}`}>
                       {'iconeImg' in d && d.iconeImg ? (
-                        <Image src={d.iconeImg} alt="" width={20} height={20} />
+                        <Image src={d.iconeImg} alt="" width={32} height={32} unoptimized className="icon-3d" />
                       ) : (
                         <span className="text-lg">{d.icone}</span>
                       )}

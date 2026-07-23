@@ -6,6 +6,7 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
+import { BriefcaseIcon3D } from '@/components/Icons3D';
 
 interface PartnerProfile {
   id: string;
@@ -211,7 +212,9 @@ export default function ParceiroDashboardPage() {
           <div className="mx-auto max-w-3xl px-4 py-10">
             <BackButton href="/dashboard" label="Voltar ao app" />
             <div className="mt-10 rounded-3xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-3xl dark:bg-slate-800">🏪</div>
+              <div className="icon-3d-slot mx-auto h-16 w-16 rounded-2xl bg-slate-100 dark:bg-slate-800">
+                <BriefcaseIcon3D size={48} />
+              </div>
               <h1 className="mt-4 text-xl font-black text-slate-900 dark:text-white">Essa conta não é de um parceiro</h1>
               <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                 O painel do parceiro só existe pra contas de vet/petshop com assinatura Premium ativa. Se você é dono de um negócio pet, cadastre-o em{' '}
@@ -245,7 +248,9 @@ export default function ParceiroDashboardPage() {
           ) : partner ? (
             <>
               <div className="mt-4 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-2xl">🏪</div>
+                <div className="icon-3d-slot h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500">
+                  <BriefcaseIcon3D size={36} />
+                </div>
                 <div>
                   <h1 className="text-2xl font-black text-slate-900 dark:text-white">{partner.nome}</h1>
                   <p className="text-sm text-slate-500 dark:text-slate-400">Painel do parceiro · {partner.cidade || '—'}</p>

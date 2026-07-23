@@ -3,15 +3,7 @@
 import { NewPassword } from '@/components/auth/NewPassword'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-
-function ShieldIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      <polyline points="9 12 11 14 15 10"/>
-    </svg>
-  )
-}
+import { ShieldIcon3D } from '@/components/Icons3D'
 
 export default function NovaSenhaPage() {
   const [mounted, setMounted] = useState(false)
@@ -40,9 +32,9 @@ export default function NovaSenhaPage() {
           <div className="mb-8 text-center">
             <div className="flex justify-center">
               <div className="relative">
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-2xl" />
-                <div className="relative rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-xl ring-1 ring-amber-100/50">
-                  <ShieldIcon />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 opacity-25 blur-2xl" />
+                <div className="relative flex items-center justify-center p-2">
+                  <ShieldIcon3D size={88} />
                 </div>
               </div>
             </div>
