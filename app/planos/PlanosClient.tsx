@@ -20,9 +20,9 @@ const funcionalidades = [
 ];
 
 // Valores reais de lastlink_products (não estimados) — ver
-// app/api/admin/dashboard-stats/route.ts, que já usava o mesmo R$115/ano.
+// app/api/admin/dashboard-stats/route.ts, que já usava o mesmo valor/ano.
 const PRECO_MENSAL = 19.9;
-const PRECO_ANUAL = 115;
+const PRECO_ANUAL = 239;
 
 export default function PlanosClient() {
   const [loading, setLoading] = useState(false);
@@ -82,7 +82,7 @@ export default function PlanosClient() {
                   className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'anual' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
                 >
                   Anual
-                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">-52%</span>
+                  <span className="ml-1.5 rounded-full bg-slate-200 dark:bg-slate-700 px-2 py-0.5 text-xs font-black text-slate-600 dark:text-slate-300">1x/ano</span>
                 </button>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function PlanosClient() {
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                   {periodo === 'mensal' ? 'Cobrado mensalmente' : `R$ ${PRECO_ANUAL.toFixed(2).replace('.', ',')} cobrado anualmente`}
                 </p>
-                {periodo === 'anual' && (
+                {periodo === 'anual' && (PRECO_MENSAL * 12) - PRECO_ANUAL > 0 && (
                   <p className="mt-1 text-xs font-semibold text-emerald-600">
                     💰 Economia de R$ {((PRECO_MENSAL * 12) - PRECO_ANUAL).toFixed(2).replace('.', ',')} no ano
                   </p>

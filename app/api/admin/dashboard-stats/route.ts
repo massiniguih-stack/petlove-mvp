@@ -7,7 +7,7 @@ import { getSupabaseAdmin, isAdmin, ADMIN_EMAILS } from '@/lib/supabase/admin';
 // from the revenue estimate rather than guessed at.
 const PRECO_MENSAL: Record<string, number> = {
   tutor_monthly: 19.9,
-  tutor_annual: 115 / 12, // R$115/ano (ver lastlink_products) convertido pra equivalente mensal
+  tutor_annual: 239 / 12, // R$239/ano (ver lastlink_products) convertido pra equivalente mensal
   partner_basic: 39.8,
   partner_pro: 69.8,
   partner_enterprise: 129.8,
