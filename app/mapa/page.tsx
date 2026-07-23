@@ -6,9 +6,10 @@ import { StarIcon, MapPinIcon } from '@/components/Icons';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
+import Image from 'next/image';
 import { SearchIcon3D } from '@/components/Icons3D';
 import { cidades, type Servico } from '@/data/servicos';
-import { emojiServico } from '@/lib/tiposServico';
+import { icon3dServico } from '@/lib/tiposServico';
 import { usePetStore } from '@/lib/store';
 
 const PetMap = dynamic(() => import('@/components/PetMap'), { ssr: false });
@@ -128,13 +129,17 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-2">
             {servico.premium && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-amber-500/20">🏆 Premium</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-amber-500/20">
+                <Image src="/icons/3d/premium.png" alt="" width={14} height={14} unoptimized className="icon-3d" /> Premium
+              </span>
             )}
             {servico.destaque && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-purple-500/20">⭐ Destaque</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm shadow-purple-500/20">
+                <Image src="/icons/3d/premium.png" alt="" width={14} height={14} unoptimized className="icon-3d" /> Destaque
+              </span>
             )}
             <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${coresBg[servico.tipo]}`}>
-              {emojiServico(servico.tipo)} {labels[servico.tipo]}
+              <Image src={icon3dServico(servico.tipo)} alt="" width={14} height={14} unoptimized className="icon-3d" /> {labels[servico.tipo]}
             </span>
             {servico.plantao24h && (
               <span className="inline-flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">🚨 24h</span>
@@ -440,7 +445,7 @@ export default function MapaPage() {
                         : 'bg-white text-slate-700 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
                     }`}
                   >
-                    <span className="text-2xl">{emojiServico(tipo)}</span>
+                    <Image src={icon3dServico(tipo)} alt="" width={28} height={28} unoptimized className="icon-3d" />
                     <div className="text-left">
                       <p className={`text-sm font-bold ${isActive ? 'text-white' : 'text-slate-900'}`}>{labels[tipo]}</p>
                       <p className={`text-xs ${isActive ? 'text-white/80' : 'text-slate-500'}`}>{count} encontrado{count !== 1 ? 's' : ''}</p>
@@ -467,7 +472,7 @@ export default function MapaPage() {
           {!carregandoServicos && listaFiltrada.length === 0 && (
             <div className="rounded-3xl bg-white dark:bg-slate-900 py-16 text-center ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
-                <SearchIcon3D size={40} />
+                <SearchIcon3D size={64} />
               </div>
               <h2 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">
                 {busca ? `Nada encontrado para "${busca}" em ${cidade}` : `Nenhum serviço em ${cidade}`}
@@ -498,7 +503,16 @@ export default function MapaPage() {
                 href={souParceiro ? '/parceiro/dashboard' : '/parceiros/premium'}
                 className="relative rounded-2xl bg-white dark:bg-slate-900 px-8 py-4 text-lg font-black text-orange-600 shadow-xl transition hover:bg-orange-50 hover:shadow-2xl hover:scale-105 active:scale-95"
               >
-                {souParceiro ? '📊 Meu Painel' : '🏆 Ser Premium'}
+                <span className="inline-flex items-center gap-2">
+                  {souParceiro ? (
+                    <>Meu painel</>
+                  ) : (
+                    <>
+                      <Image src="/icons/3d/premium.png" alt="" width={28} height={28} unoptimized className="icon-3d" />
+                      Ser Premium
+                    </>
+                  )}
+                </span>
               </a>
             </div>
           </div>

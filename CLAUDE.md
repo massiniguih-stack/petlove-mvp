@@ -4,13 +4,21 @@ Next.js 14 (App Router) + Supabase app for pet tutors (main app) and a
 staff-only admin panel. Payments via LastLink (webhook-driven), email via
 Resend, push notifications via Firebase Cloud Messaging.
 
-## Not using Opensquad here
+## Opensquad neste projeto
 
-A `~/CLAUDE.md` at the home-directory level describes an "Opensquad"
-multi-agent framework (`/opensquad` commands, `_opensquad/` core files,
-`squads/`) — that setup is **not** used in this project. Ignore those
-instructions when working in this repo; there is no `_opensquad/` directory
-and no `.mcp.json` configuring it here.
+Este projeto agora usa **Opensquad** para squads locais de agentes. Use:
+
+- `/opensquad` — abrir menu principal
+- `/opensquad run sales-page-optimizer` — rodar o squad de otimização das páginas de venda
+- `/opensquad edit sales-page-optimizer` — ajustar o squad
+
+Estrutura OpenSquad:
+
+- `_opensquad/` — arquivos core do Opensquad; não editar manualmente
+- `_opensquad/_memory/` — contexto persistente de empresa/preferências
+- `squads/` — squads criados pelo projeto
+- `squads/{name}/output/` — artefatos gerados pelos agentes
+- `_opensquad/_browser_profile/` — sessões Playwright locais, privadas e ignoradas pelo git
 
 ## Structure
 

@@ -5,24 +5,7 @@ import { GoogleButton } from '@/components/auth/GoogleButton'
 import Link from 'next/link'
 import { Suspense, useState, useEffect } from 'react'
 import { DarkModeToggle } from '@/components/DarkModeToggle'
-
-function DogPawIcon({ size = 48 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
-      <defs>
-        <linearGradient id="pawGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#fbbf24"/>
-          <stop offset="100%" stopColor="#f59e0b"/>
-        </linearGradient>
-      </defs>
-      <ellipse cx="20" cy="18" rx="6" ry="7" fill="url(#pawGrad)"/>
-      <ellipse cx="44" cy="18" rx="6" ry="7" fill="url(#pawGrad)"/>
-      <ellipse cx="12" cy="32" rx="5" ry="6" fill="url(#pawGrad)"/>
-      <ellipse cx="52" cy="32" rx="5" ry="6" fill="url(#pawGrad)"/>
-      <ellipse cx="32" cy="44" rx="14" ry="12" fill="url(#pawGrad)"/>
-    </svg>
-  )
-}
+import { PawIcon3D } from '@/components/Icons3D'
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false)
@@ -55,9 +38,9 @@ export default function LoginPage() {
           <div className="mb-8 text-center">
             <div className="flex justify-center">
               <div className="relative">
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-2xl" />
-                <div className="relative rounded-3xl bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-xl ring-1 ring-amber-100/50 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900/50">
-                  <DogPawIcon size={56} />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 opacity-25 blur-2xl" />
+                <div className="relative flex items-center justify-center p-2">
+                  <PawIcon3D size={88} />
                 </div>
               </div>
             </div>

@@ -10,7 +10,23 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
-import { CalendarIcon3D, PawIcon3D, DogIcon3D } from '@/components/Icons3D';
+import {
+  CalendarIcon3D,
+  PawIcon3D,
+  DogIcon3D,
+  CakeIcon3D,
+  PartyIcon3D,
+  BoneIcon3D,
+  TrophyIcon3D,
+  ScaleIcon3D,
+  MedalIcon3D,
+  PremiumIcon3D,
+  CrownIcon3D,
+} from '@/components/Icons3D';
+
+/** Tamanho único dos ícones nos círculos da linha do tempo */
+const MARCO_ICON_SIZE = 44;
+const MARCO_CIRCLE = 64; // h/w do círculo em px
 
 interface Momento {
   id: string;
@@ -62,13 +78,13 @@ const vacinasComuns = [
 ];
 
 const categorias = [
-  { id: 'nascimento', label: 'Nascimento', cor: 'bg-pink-500', corGrad: 'from-pink-500 to-rose-500', emoji: '🍼' },
-  { id: 'vacina', label: 'Vacina', cor: 'bg-blue-500', corGrad: 'from-blue-500 to-indigo-500', emoji: '💉' },
-  { id: 'doenca', label: 'Doença', cor: 'bg-red-500', corGrad: 'from-red-500 to-rose-500', emoji: '🏥' },
-  { id: 'conquista', label: 'Conquista', cor: 'bg-amber-500', corGrad: 'from-amber-500 to-orange-500', emoji: '🏆' },
-  { id: 'evento', label: 'Evento', cor: 'bg-purple-500', corGrad: 'from-purple-500 to-pink-500', emoji: '🎉' },
-  { id: 'foto', label: 'Foto', cor: 'bg-emerald-500', corGrad: 'from-emerald-500 to-teal-500', emoji: '📸' },
-  { id: 'viagem', label: 'Viagem', cor: 'bg-cyan-500', corGrad: 'from-cyan-500 to-blue-500', emoji: '✈️' },
+  { id: 'nascimento', label: 'Nascimento', cor: 'bg-pink-500', corGrad: 'from-pink-500 to-rose-500', emoji: '🍼', iconSrc: '/icons/3d/dog.png' },
+  { id: 'vacina', label: 'Vacina', cor: 'bg-blue-500', corGrad: 'from-blue-500 to-indigo-500', emoji: '💉', iconSrc: '/icons/3d/saude.png' },
+  { id: 'doenca', label: 'Doença', cor: 'bg-red-500', corGrad: 'from-red-500 to-rose-500', emoji: '🏥', iconSrc: '/icons/3d/shield.png' },
+  { id: 'conquista', label: 'Conquista', cor: 'bg-amber-500', corGrad: 'from-amber-500 to-orange-500', emoji: '🏆', iconSrc: '/icons/3d/trophy.png' },
+  { id: 'evento', label: 'Evento', cor: 'bg-purple-500', corGrad: 'from-purple-500 to-pink-500', emoji: '🎉', iconSrc: '/icons/3d/festa.png' },
+  { id: 'foto', label: 'Foto', cor: 'bg-emerald-500', corGrad: 'from-emerald-500 to-teal-500', emoji: '📸', iconSrc: '/icons/3d/check.png' },
+  { id: 'viagem', label: 'Viagem', cor: 'bg-cyan-500', corGrad: 'from-cyan-500 to-blue-500', emoji: '✈️', iconSrc: '/icons/3d/servicos.png' },
 ];
 
 function CategoriaBadge({ categoria }: { categoria: Momento['categoria'] }) {
@@ -77,7 +93,7 @@ function CategoriaBadge({ categoria }: { categoria: Momento['categoria'] }) {
 
   return (
     <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold text-white ${cat.cor}`}>
-      <span>{cat.emoji}</span>
+      <Image src={cat.iconSrc} alt="" width={14} height={14} unoptimized className="icon-3d" />
       {cat.label}
     </span>
   );
@@ -167,7 +183,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
                       : ' bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                   }`}
                 >
-                  <span>{cat.emoji}</span>
+                  <Image src={cat.iconSrc} alt="" width={18} height={18} unoptimized className="icon-3d" />
                   {cat.label}
                 </button>
               ))}
@@ -341,21 +357,37 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete, onMarcarTomada }: { mom
   }, [momentos, nascimento]);
 
   const marcos = useMemo(() => {
-    const lista: { mes: number; label: string; emoji: string; icone?: string; IconComp?: typeof PawIcon3D; cor: string; momento?: Momento }[] = [];
+    type MarcoIcon = typeof PawIcon3D;
+    const lista: {
+      mes: number;
+      label: string;
+      emoji: string;
+      icone?: string;
+      IconComp?: MarcoIcon;
+      cor: string;
+      momento?: Momento;
+    }[] = [];
 
-    const marcosImportantes = [
+    // Todos com IconComp + mesmo tamanho no render — evita misturar Image solto (miúdo) com Soft 3D (maior).
+    const marcosImportantes: {
+      mes: number;
+      label: string;
+      emoji: string;
+      IconComp: MarcoIcon;
+      cor: string;
+    }[] = [
       { mes: 2, label: '2 meses', emoji: '🐾', IconComp: PawIcon3D, cor: 'from-amber-400 to-orange-400' },
-      { mes: 4, label: '4 meses', emoji: '🦴', icone: '/icons/bone.png', cor: 'from-emerald-400 to-teal-400' },
-      { mes: 6, label: '6 meses', emoji: '🎂', cor: 'from-purple-400 to-pink-400' },
+      { mes: 4, label: '4 meses', emoji: '🦴', IconComp: BoneIcon3D, cor: 'from-emerald-400 to-teal-400' },
+      { mes: 6, label: '6 meses', emoji: '🎂', IconComp: CakeIcon3D, cor: 'from-purple-400 to-pink-400' },
       { mes: 9, label: '9 meses', emoji: '🐕', IconComp: DogIcon3D, cor: 'from-blue-400 to-indigo-400' },
-      { mes: 12, label: '1 ano', emoji: '🎉', cor: 'from-rose-400 to-pink-400' },
-      { mes: 18, label: '1.5 anos', emoji: '🌟', icone: '/icons/star.png', cor: 'from-cyan-400 to-blue-400' },
-      { mes: 24, label: '2 anos', emoji: '🏆', icone: '/icons/trophy.png', cor: 'from-amber-500 to-orange-500' },
-      { mes: 36, label: '3 anos', emoji: '💪', icone: '/icons/weight.png', cor: 'from-violet-500 to-purple-500' },
-      { mes: 48, label: '4 anos', emoji: '🎖️', icone: '/icons/medal.png', cor: 'from-indigo-500 to-blue-500' },
-      { mes: 60, label: '5 anos', emoji: '⭐', icone: '/icons/star.png', cor: 'from-yellow-500 to-amber-500' },
-      { mes: 84, label: '7 anos', emoji: '🏅', icone: '/icons/medal.png', cor: 'from-emerald-500 to-green-500' },
-      { mes: 120, label: '10 anos', emoji: '👑', icone: '/icons/crown.png', cor: 'from-pink-500 to-rose-500' },
+      { mes: 12, label: '1 ano', emoji: '🎉', IconComp: PartyIcon3D, cor: 'from-rose-400 to-pink-400' },
+      { mes: 18, label: '1.5 anos', emoji: '🌟', IconComp: PremiumIcon3D, cor: 'from-cyan-400 to-blue-400' },
+      { mes: 24, label: '2 anos', emoji: '🏆', IconComp: TrophyIcon3D, cor: 'from-amber-500 to-orange-500' },
+      { mes: 36, label: '3 anos', emoji: '💪', IconComp: ScaleIcon3D, cor: 'from-violet-500 to-purple-500' },
+      { mes: 48, label: '4 anos', emoji: '🎖️', IconComp: MedalIcon3D, cor: 'from-indigo-500 to-blue-500' },
+      { mes: 60, label: '5 anos', emoji: '⭐', IconComp: PremiumIcon3D, cor: 'from-yellow-500 to-amber-500' },
+      { mes: 84, label: '7 anos', emoji: '🏅', IconComp: MedalIcon3D, cor: 'from-emerald-500 to-green-500' },
+      { mes: 120, label: '10 anos', emoji: '👑', IconComp: CrownIcon3D, cor: 'from-pink-500 to-rose-500' },
     ];
 
     for (const marco of marcosImportantes) {
@@ -408,32 +440,49 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete, onMarcarTomada }: { mom
               key={marco.mes}
               type="button"
               onClick={() => setMarcoSelecionado(isSelected ? null : marco.mes)}
-              className={`flex flex-col items-center rounded-xl p-3 transition-all shrink-0 w-20 ${
-                isSelected 
-                  ? 'bg-rose-50 ring-2 ring-rose-300 dark:ring-rose-700' 
-                  : 'hover:bg-slate-50'
-              }`}
+              className="flex w-20 shrink-0 flex-col items-center gap-2 bg-transparent p-1 transition-all focus:outline-none"
             >
-              <div className={`relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${marco.cor} text-white shadow-sm transition-all hover:scale-110 ${
-                isAtual ? 'ring-2 ring-rose-400 ring-offset-1' : ''
-              } ${isProximo ? 'ring-2 ring-amber-400 ring-offset-1 animate-pulse' : ''}`}>
+              {/* Só o círculo recebe estado de seleção — sem “quadrado” no botão */}
+              <div
+                className={[
+                  'relative flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-br text-white shadow-md transition-all',
+                  marco.cor,
+                  'hover:scale-105',
+                  isSelected
+                    ? 'scale-110 ring-2 ring-rose-400 ring-offset-2 ring-offset-white dark:ring-offset-slate-950'
+                    : '',
+                  !isSelected && isAtual ? 'ring-2 ring-rose-400 ring-offset-1' : '',
+                  !isSelected && isProximo ? 'ring-2 ring-amber-400 ring-offset-1 animate-pulse' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                style={{ width: MARCO_CIRCLE, height: MARCO_CIRCLE }}
+              >
                 {marco.IconComp ? (
-                  <marco.IconComp size={26} />
+                  <marco.IconComp size={MARCO_ICON_SIZE} />
                 ) : marco.icone ? (
-                  <Image src={marco.icone} alt="" width={26} height={26} unoptimized />
+                  <Image
+                    src={marco.icone}
+                    alt=""
+                    width={MARCO_ICON_SIZE}
+                    height={MARCO_ICON_SIZE}
+                    unoptimized
+                    className="icon-3d object-contain"
+                    style={{ width: MARCO_ICON_SIZE, height: MARCO_ICON_SIZE }}
+                  />
                 ) : (
-                  <span className="text-lg">{marco.emoji}</span>
+                  <span className="text-2xl leading-none">{marco.emoji}</span>
                 )}
                 {isAtual && (
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-1 ring-white" />
+                  <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-rose-500 ring-2 ring-white" />
                 )}
               </div>
-              <div className="mt-1.5 text-center">
-                <div className={`text-[11px] font-bold leading-tight ${isAtual ? 'text-rose-600' : isProximo ? 'text-amber-600' : 'text-slate-600'}`}>
+              <div className="text-center">
+                <div className={`text-xs font-bold leading-tight ${isAtual ? 'text-rose-600' : isProximo ? 'text-amber-600' : 'text-slate-600 dark:text-slate-300'}`}>
                   {getMesLabel(marco.mes)}
                 </div>
                 {marco.momento && (
-                  <div className="mt-0.5 text-[10px] text-slate-400 dark:text-slate-500 truncate max-w-[68px]">
+                  <div className="mt-0.5 max-w-[72px] truncate text-[10px] text-slate-400 dark:text-slate-500">
                     {marco.momento.titulo}
                   </div>
                 )}
@@ -445,13 +494,24 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete, onMarcarTomada }: { mom
       {marcoDetalhe && (
         <div className="mt-4 rounded-2xl border border-rose-100 bg-gradient-to-br from-amber-50 to-rose-50 p-4 shadow-sm">
           <div className="flex items-start gap-3">
-            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${marcoDetalhe.cor} text-white shadow-md`}>
+            <div
+              className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br ${marcoDetalhe.cor} text-white shadow-md`}
+              style={{ width: MARCO_CIRCLE, height: MARCO_CIRCLE }}
+            >
               {marcoDetalhe.IconComp ? (
-                <marcoDetalhe.IconComp size={28} />
+                <marcoDetalhe.IconComp size={MARCO_ICON_SIZE} />
               ) : marcoDetalhe.icone ? (
-                <Image src={marcoDetalhe.icone} alt="" width={28} height={28} unoptimized />
+                <Image
+                  src={marcoDetalhe.icone}
+                  alt=""
+                  width={MARCO_ICON_SIZE}
+                  height={MARCO_ICON_SIZE}
+                  unoptimized
+                  className="icon-3d object-contain"
+                  style={{ width: MARCO_ICON_SIZE, height: MARCO_ICON_SIZE }}
+                />
               ) : (
-                <span className="text-xl">{marcoDetalhe.emoji}</span>
+                <span className="text-2xl leading-none">{marcoDetalhe.emoji}</span>
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -652,7 +712,6 @@ export default function VidaPage() {
   const [momentos, setMomentos] = useState<Momento[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editando, setEditando] = useState<Momento | undefined>();
-  const [filtro, setFiltro] = useState<Momento['categoria'] | 'todos'>('todos');
   const [categoriaPadraoForm, setCategoriaPadraoForm] = useState<Momento['categoria']>('evento');
   const [mostrarGaleria, setMostrarGaleria] = useState(false);
   const [fotoAmpliada, setFotoAmpliada] = useState<Momento | undefined>();
@@ -707,7 +766,8 @@ export default function VidaPage() {
   };
 
   const momentosOrdenados = [...momentos].sort((a, b) => b.data.getTime() - a.data.getTime());
-  const momentosFiltrados = filtro === 'todos' ? momentosOrdenados : momentosOrdenados.filter((m) => m.categoria === filtro);
+  // Filtros por categoria (chips) removidos da UI — lista sempre completa.
+  const momentosFiltrados = momentosOrdenados;
 
   // Grátis só vê os últimos DIAS_HISTORICO_GRATIS dias da linha do tempo;
   // as estatísticas do topo (meses de vida, vacinas, etc.) continuam
@@ -808,7 +868,9 @@ export default function VidaPage() {
               <div className="text-3xl font-black">
                 {totalAnos > 0 ? totalAnos : mesesRestantes}
               </div>
-              <div className="mt-1 text-sm font-medium text-amber-100">🎂 Idade</div>
+              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-amber-100">
+                <CakeIcon3D size={20} /> Idade
+              </div>
             </button>
           </div>
 
@@ -823,39 +885,15 @@ export default function VidaPage() {
             />
           )}
 
-          {/* Filtros */}
-          <div className="mb-6 flex flex-wrap gap-2">
-            {filtro !== 'todos' && (
-              <button
-                onClick={() => setFiltro('todos')}
-                className="rounded-full bg-white dark:bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 ring-1 ring-slate-200 dark:ring-slate-800 transition hover:bg-slate-50 dark:hover:bg-slate-800"
-              >
-                ✕ Limpar filtro
-              </button>
-            )}
-            {categorias.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setFiltro(cat.id as Momento['categoria'])}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition ${
-                  filtro === cat.id ? `${cat.cor} text-white shadow-md` : ' bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
-                }`}
-              >
-                <span>{cat.emoji}</span>
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Timeline */}
-          <div id="timeline">
+          {/* Timeline — marcos (filtros por categoria removidos da UI) */}
+          <div id="timeline" className="mb-2">
             {momentosOcultosPorPlano > 0 && (
               <a
                 href="/planos"
                 className="mb-4 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-white shadow-lg shadow-purple-500/20 transition hover:shadow-xl"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">🔒</span>
+                  <Image src="/icons/3d/premium.png" alt="" width={36} height={36} unoptimized className="icon-3d" />
                   <div>
                     <p className="text-sm font-bold">
                       {momentosOcultosPorPlano} {momentosOcultosPorPlano === 1 ? 'momento mais antigo' : 'momentos mais antigos'} disponíve{momentosOcultosPorPlano === 1 ? 'l' : 'is'} só no Premium
@@ -906,7 +944,7 @@ export default function VidaPage() {
           {momentos.length === 0 && (
             <div className="mt-12 rounded-3xl bg-white dark:bg-slate-900 py-20 text-center shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
               <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-rose-100">
-                <CalendarIcon3D size={56} />
+                <CalendarIcon3D size={72} />
               </div>
               <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
                 Comece a contar a história de {pet.nome}

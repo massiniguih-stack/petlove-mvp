@@ -3,7 +3,7 @@
 import { usePetStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { ScaleIcon3D, TargetIcon3D, CalendarIcon3D, BowlIcon3D, ActivityIcon3D, PinIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, TargetIcon3D, CalendarIcon3D, BowlIcon3D, ActivityIcon3D, PinIcon3D, FireIcon3D } from '@/components/Icons3D';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
@@ -38,8 +38,8 @@ export default function DesempenhoPage() {
           <div className="mb-8">
             <BackButton href="/dashboard" label="Voltar ao dashboard" />
             <div className="mt-4 flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-xl shadow-amber-500/30">
-                <ScaleIcon3D size={40} />
+              <div className="icon-3d-slot h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-xl shadow-amber-500/30">
+                <ScaleIcon3D size={48} />
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -56,8 +56,8 @@ export default function DesempenhoPage() {
               <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10 transition group-hover:scale-110" />
               <div className="absolute -bottom-10 -right-10 h-36 w-36 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-                  <ScaleIcon3D size={30} />
+                <div className="icon-3d-slot h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-sm">
+                  <ScaleIcon3D size={44} />
                 </div>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-amber-100">Peso atual</p>
                 <p className="mt-1 text-4xl font-black leading-tight">{ultimoPeso.toLocaleString('pt-BR')} <span className="text-lg font-bold">kg</span></p>
@@ -68,8 +68,8 @@ export default function DesempenhoPage() {
               <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10 transition group-hover:scale-110" />
               <div className="absolute -bottom-10 -right-10 h-36 w-36 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-                  <CalendarIcon3D size={30} />
+                <div className="icon-3d-slot h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-sm">
+                  <CalendarIcon3D size={44} />
                 </div>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-rose-100">Idade</p>
                 <p className="mt-1 text-4xl font-black leading-tight">
@@ -83,8 +83,8 @@ export default function DesempenhoPage() {
               <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10 transition group-hover:scale-110" />
               <div className="absolute -bottom-10 -right-10 h-36 w-36 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-                  <TargetIcon3D size={30} />
+                <div className="icon-3d-slot h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-sm">
+                  <TargetIcon3D size={44} />
                 </div>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-emerald-100">Objetivo</p>
                 <p className="mt-1 text-2xl font-black capitalize leading-tight">
@@ -97,8 +97,8 @@ export default function DesempenhoPage() {
           {/* Recomendações */}
           <section className="mt-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-lg shadow-slate-200/50 ring-1 ring-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:ring-slate-800">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg shadow-amber-500/20">
-                <span className="text-lg">💡</span>
+              <div className="icon-3d-slot h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-lg shadow-amber-500/20">
+                <FireIcon3D size={36} />
               </div>
               <div>
                 <h2 className="text-xl font-black text-slate-900 dark:text-white">Recomendações para {pet.nome}</h2>
@@ -109,8 +109,8 @@ export default function DesempenhoPage() {
             <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
               <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 ring-1 ring-amber-100/50 transition-all hover:shadow-md hover:ring-amber-200">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-400 shadow-md shadow-amber-400/20">
-                    <BowlIcon3D size={22} />
+                  <div className="icon-3d-slot h-11 w-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-400 shadow-md shadow-amber-400/20">
+                    <FireIcon3D size={36} />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-amber-500">Calorias</p>
@@ -121,8 +121,8 @@ export default function DesempenhoPage() {
 
               <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-4 ring-1 ring-blue-100/50 transition-all hover:shadow-md hover:ring-blue-200">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-400 to-indigo-400 shadow-md shadow-blue-400/20">
-                    <BowlIcon3D size={22} />
+                  <div className="icon-3d-slot h-11 w-11 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-400 shadow-md shadow-blue-400/20">
+                    <BowlIcon3D size={36} />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-blue-500">Ração</p>
@@ -133,8 +133,8 @@ export default function DesempenhoPage() {
 
               <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 ring-1 ring-emerald-100/50 transition-all hover:shadow-md hover:ring-emerald-200">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-400 shadow-md shadow-emerald-400/20">
-                    <ActivityIcon3D size={22} />
+                  <div className="icon-3d-slot h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-400 shadow-md shadow-emerald-400/20">
+                    <ActivityIcon3D size={36} />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">Exercício</p>
@@ -145,8 +145,8 @@ export default function DesempenhoPage() {
 
               <div className="rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 ring-1 ring-purple-100/50 transition-all hover:shadow-md hover:ring-purple-200">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-400 to-pink-400 shadow-md shadow-purple-400/20">
-                    <PinIcon3D size={22} />
+                  <div className="icon-3d-slot h-11 w-11 rounded-xl bg-gradient-to-br from-purple-400 to-pink-400 shadow-md shadow-purple-400/20">
+                    <PinIcon3D size={36} />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-purple-500">Água</p>

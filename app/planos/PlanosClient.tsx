@@ -1,22 +1,27 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
+import { PremiumIcon3D, PawIcon3D } from '@/components/Icons3D';
+import { createClient } from '@/lib/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
+// EXP-02A: alertas de vacina existem no produto free (cron não filtra Premium)
 const funcionalidades = [
   { nome: 'Perfil do pet', gratis: true, premium: true },
   { nome: 'Cadastro de 1 pet', gratis: true, premium: true },
-  { nome: 'Controle de peso basico', gratis: true, premium: true },
-  { nome: 'Linha do tempo (ultimos 7 dias)', gratis: true, premium: true },
-  { nome: 'Mapa de servicos', gratis: true, premium: true },
+  { nome: 'Controle de peso básico', gratis: true, premium: true },
+  { nome: 'Linha do tempo (últimos 7 dias)', gratis: true, premium: true },
+  { nome: 'Mapa de serviços', gratis: true, premium: true },
+  { nome: 'Alertas de vacinas e consultas', gratis: true, premium: true },
   { nome: 'Cadastro ilimitado de pets', gratis: false, premium: true },
-  { nome: 'Historico completo da linha do tempo', gratis: false, premium: true },
-  { nome: 'Historico completo de refeicoes', gratis: false, premium: true },
-  { nome: 'Historico completo de atividades', gratis: false, premium: true },
-  { nome: 'Alertas de vacinas e consultas', gratis: false, premium: true },
-  { nome: 'Comparacao entre pets', gratis: false, premium: true },
+  { nome: 'Histórico completo da linha do tempo', gratis: false, premium: true },
+  { nome: 'Histórico completo de refeições', gratis: false, premium: true },
+  { nome: 'Histórico completo de atividades', gratis: false, premium: true },
+  { nome: 'Comparação entre pets', gratis: false, premium: true },
 ];
 
 // Valores reais de lastlink_products (não estimados) — ver
@@ -28,11 +33,20 @@ export default function PlanosClient() {
   const [loading, setLoading] = useState(false);
   const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
   const [erro, setErro] = useState<string | null>(null);
+  const router = useRouter();
+  const { user } = useAuth();
 
+  // EXP-01: deslogado → login com retorno; logado → LastLink
   const handleCheckout = async () => {
     setLoading(true);
     setErro(null);
     try {
+      const supabase = createClient();
+      const { data: { user: sessionUser } } = await supabase.auth.getUser();
+      if (!sessionUser) {
+        router.push('/login?next=/planos');
+        return;
+      }
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -40,6 +54,10 @@ export default function PlanosClient() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        if (res.status === 401) {
+          router.push('/login?next=/planos');
+          return;
+        }
         throw new Error(data.error || 'Erro ao criar checkout');
       }
       const { url } = await res.json();
@@ -56,17 +74,20 @@ export default function PlanosClient() {
       <main className="flex-1">
         <div className="mx-auto max-w-4xl px-4 py-10">
 
-          {/* Header */}
+          {/* Header — EXP-09: back contextual */}
           <div className="mb-10">
-            <BackButton href="/dashboard" label="Voltar ao dashboard" />
+            <BackButton
+              href={user ? '/dashboard' : '/'}
+              label={user ? 'Voltar ao dashboard' : 'Voltar ao início'}
+            />
             <div className="mt-4 text-center">
               <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
-                <span>⭐</span> Patinha Premium
+                <span className="icon-3d-slot"><PremiumIcon3D size={28} /></span> Patinha Premium
               </div>
               <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
                 Cuide do seu pet com <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-purple-500">tudo que ele merece</span>
               </h1>
-              <p className="mt-3 text-lg text-slate-500 dark:text-slate-400">Escolha o plano ideal para voce e seu pet</p>
+              <p className="mt-3 text-lg text-slate-500 dark:text-slate-400">Escolha o plano ideal para você e seu pet</p>
             </div>
 
             <div className="mt-6 flex justify-center">
@@ -93,8 +114,8 @@ export default function PlanosClient() {
             {/* Plano Gratuito */}
             <div className="rounded-3xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 shadow-sm">
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800">
-                  <span className="text-3xl">🐾</span>
+                <div className="icon-3d-slot h-14 w-14">
+                  <PawIcon3D size={52} />
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-slate-900 dark:text-white">Gratuito</h3>
@@ -105,7 +126,7 @@ export default function PlanosClient() {
               <div className="mt-6">
                 <div className="flex items-baseline gap-1">
                   <span className="text-5xl font-black text-slate-900 dark:text-white">R$ 0</span>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">/mes</span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
                 </div>
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Sempre gratuito</p>
               </div>
@@ -127,12 +148,12 @@ export default function PlanosClient() {
             {/* Plano Premium */}
             <div className="relative rounded-3xl border-2 border-violet-400 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/50 dark:to-purple-950/50 p-8 shadow-lg shadow-violet-500/10 md:-translate-y-2">
               <div className="absolute -top-3 right-6 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-4 py-1 text-xs font-black text-white shadow-md">
-                ⭐ RECOMENDADO
+                RECOMENDADO
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-500 shadow-lg shadow-violet-500/30">
-                  <span className="text-3xl">👑</span>
+                <div className="icon-3d-slot h-14 w-14">
+                  <PremiumIcon3D size={52} />
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-slate-900 dark:text-white">Premium</h3>
@@ -146,14 +167,14 @@ export default function PlanosClient() {
                   <span className="text-5xl font-black text-slate-900 dark:text-white">
                     {periodo === 'mensal' ? PRECO_MENSAL.toFixed(2).replace('.', ',') : (PRECO_ANUAL / 12).toFixed(2).replace('.', ',')}
                   </span>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">/mes</span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
                 </div>
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                  {periodo === 'mensal' ? 'Cobrado mensalmente' : `R$ ${PRECO_ANUAL.toFixed(2).replace('.', ',')} cobrado anualmente`}
+                  {periodo === 'mensal' ? 'Cobrado mensalmente' : `R$ ${PRECO_ANUAL.toFixed(2).replace('.', ',')} cobrados uma vez ao ano`}
                 </p>
                 {periodo === 'anual' && (
                   <p className="mt-1 text-xs font-semibold text-emerald-600">
-                    💰 Economia de R$ {((PRECO_MENSAL * 12) - PRECO_ANUAL).toFixed(2).replace('.', ',')} no ano
+                    Economia de R$ {((PRECO_MENSAL * 12) - PRECO_ANUAL).toFixed(2).replace('.', ',')} no ano
                   </p>
                 )}
               </div>
@@ -185,14 +206,18 @@ export default function PlanosClient() {
                 disabled={loading}
                 className="mt-8 w-full rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-center text-sm font-bold text-white shadow-lg transition hover:shadow-xl disabled:opacity-50"
               >
-                {loading ? 'Carregando...' : 'Assinar Premium'}
+                {loading ? 'Carregando...' : periodo === 'anual' ? 'Assinar Premium anual' : 'Assinar Premium'}
               </button>
+              {/* EXP-07 */}
+              <p className="mt-3 text-center text-xs text-slate-500 dark:text-slate-400">
+                Pagamento processado pela LastLink · cancele quando quiser em Gerenciar assinatura
+              </p>
             </div>
           </div>
 
           {/* Comparativo */}
           <section className="mt-16">
-            <h2 className="text-center text-2xl font-black text-slate-900 dark:text-white">Comparacao completa</h2>
+            <h2 className="text-center text-2xl font-black text-slate-900 dark:text-white">Comparação completa</h2>
             <div className="mt-8 overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
               <table className="w-full">
                 <thead>
@@ -225,22 +250,22 @@ export default function PlanosClient() {
             </div>
           </section>
 
-          {/* FAQ */}
+          {/* FAQ — EXP-07/08 */}
           <section className="mt-16">
             <h2 className="text-center text-2xl font-black text-slate-900 dark:text-white">Perguntas Frequentes</h2>
             <div className="mx-auto mt-8 max-w-3xl space-y-4">
               {[
                 {
                   pergunta: 'Posso cancelar a qualquer momento?',
-                  resposta: 'Sim! Nao ha multa ou taxa de cancelamento. Voce pode cancelar a qualquer momento.',
+                  resposta: 'Sim. Não há multa de cancelamento no Patinha. O pagamento é processado pela LastLink — você cancela na área de membros ou em Conta → Gerenciar assinatura.',
                 },
                 {
                   pergunta: 'O que acontece com meus dados se eu cancelar?',
-                  resposta: 'Seus dados permanecem seguros. Voce volta a ter acesso ao plano gratuito.',
+                  resposta: 'Seus dados permanecem seguros. Você volta a ter acesso ao plano gratuito.',
                 },
                 {
-                  pergunta: 'Posso usar em varios dispositivos?',
-                  resposta: 'Sim! Sua conta e sincronizada na nuvem. Use no celular, tablet ou computador.',
+                  pergunta: 'Posso usar em vários dispositivos?',
+                  resposta: 'Sim! Sua conta é sincronizada na nuvem. Use no celular, tablet ou computador.',
                 },
               ].map((faq) => (
                 <details key={faq.pergunta} className="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">

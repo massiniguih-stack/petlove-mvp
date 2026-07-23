@@ -181,18 +181,50 @@ export const usePetStore = create<PetState>((set, get) => {
     pet: null,
 
     hydrate: () => {
-      const pets = loadPets();
-      const selectedId = loadSelectedId();
-      const isPremium = loadPremium();
+      let pets = loadPets();
+      let selectedId = loadSelectedId();
+      let isPremium = loadPremium();
       const planCache = loadPlanCache();
+
+      // Modo revisão: se não houver pet local, cria um demo para liberar as telas
+      const openAccess =
+        typeof process !== 'undefined' &&
+        process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true';
+      if (openAccess && pets.length === 0) {
+        const demo: Pet = {
+          id: 'demo-pet-preview',
+          nome: 'Mel',
+          raca: 'Poodle',
+          dataNascimento: '2020-06-15',
+          peso: 6,
+          sexo: 'femea',
+          objetivo: 'manutencao',
+          fotoUrl: null,
+          tutor: {
+            nome: 'Preview',
+            email: 'preview@patinha.local',
+            telefone: '',
+            endereco: '',
+          },
+        };
+        pets = [demo];
+        selectedId = demo.id;
+        isPremium = true; // ver também telas/CTAs premium
+        savePets(pets);
+        saveSelectedId(demo.id);
+        savePremium(true);
+      }
+
       const currentPet = pets.find((p) => p.id === selectedId) || pets[0] || null;
 
       set({
         pets,
         selectedPetId: currentPet?.id || null,
         isPremium,
-        plan: planCache?.plan || null,
+        plan: planCache?.plan || (openAccess ? 'tutor_monthly' : null),
+        subscriptionStatus: openAccess ? 'active' : null,
         pet: currentPet,
+        petsCarregados: openAccess ? true : false,
         hydrated: true,
       });
     },

@@ -6,8 +6,24 @@ import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
-import { ScaleIcon3D, SearchIcon3D, DogIcon3D } from '@/components/Icons3D';
+import Image from 'next/image';
+import {
+  ScaleIcon3D,
+  SearchIcon3D,
+  DogIcon3D,
+  TargetIcon3D,
+  ChartIcon3D,
+  CalendarIcon3D,
+  BoneIcon3D,
+  ShieldIcon3D,
+  FireIcon3D,
+  TrophyIcon3D,
+  BowlIcon3D,
+  HealthIcon3D,
+} from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';
+
+type Icon3DComp = typeof DogIcon3D;
 
 interface Atividade {
   id: string;
@@ -216,13 +232,13 @@ function getAtividadesPorPerfil(raca: string, peso: number, idadeEmMeses: number
 }
 
 function getCategoriaInfo(cat: string) {
-  const info: Record<string, { label: string; cor: string; bg: string; icone: string }> = {
-    caminhada: { label: 'Caminhada', cor: 'text-emerald-700', bg: 'bg-emerald-50', icone: '🐕' },
-    brincadeira: { label: 'Brincadeira', cor: 'text-blue-700', bg: 'bg-blue-50', icone: '🎾' },
-    treino: { label: 'Treino', cor: 'text-purple-700', bg: 'bg-purple-50', icone: '🐾' },
-    natacao: { label: 'Natação', cor: 'text-cyan-700', bg: 'bg-cyan-50', icone: '🏊' },
-    obediencia: { label: 'Obediência', cor: 'text-amber-700', bg: 'bg-amber-50', icone: '🎯' },
-    agility: { label: 'Agility', cor: 'text-rose-700', bg: 'bg-rose-50', icone: '🦴' },
+  const info: Record<string, { label: string; cor: string; bg: string; icone: string; iconSrc: string }> = {
+    caminhada: { label: 'Caminhada', cor: 'text-emerald-700', bg: 'bg-emerald-50', icone: '🐕', iconSrc: '/icons/3d/dog.png' },
+    brincadeira: { label: 'Brincadeira', cor: 'text-blue-700', bg: 'bg-blue-50', icone: '🎾', iconSrc: '/icons/3d/atividades.png' },
+    treino: { label: 'Treino', cor: 'text-purple-700', bg: 'bg-purple-50', icone: '🐾', iconSrc: '/icons/3d/patinha.png' },
+    natacao: { label: 'Natação', cor: 'text-cyan-700', bg: 'bg-cyan-50', icone: '🏊', iconSrc: '/icons/3d/atividades.png' },
+    obediencia: { label: 'Obediência', cor: 'text-amber-700', bg: 'bg-amber-50', icone: '🎯', iconSrc: '/icons/3d/target.png' },
+    agility: { label: 'Agility', cor: 'text-rose-700', bg: 'bg-rose-50', icone: '🦴', iconSrc: '/icons/3d/bone.png' },
   };
   return info[cat] || info.brincadeira;
 }
@@ -396,7 +412,7 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
                 <span className="text-sm font-bold">{item.atividade}</span>
               </div>
             </div>
-            <span className="text-lg">{item.icone}</span>
+            <Image src="/icons/3d/patinha.png" alt="" width={28} height={28} unoptimized className="icon-3d" />
             <button
               onClick={() => removerAtividade(item.id)}
               title="Remover atividade"
@@ -433,7 +449,7 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
                     <span className="text-xs font-bold text-white/60 line-through">{item.atividade}</span>
                   </div>
                 </div>
-                <span className="text-sm opacity-60">{item.icone}</span>
+                <Image src="/icons/3d/patinha.png" alt="" width={22} height={22} unoptimized className="icon-3d opacity-60" />
               </div>
             ))}
           </div>
@@ -539,24 +555,23 @@ export default function AtividadesPage() {
     setTimeout(() => setAdicionadaId((cur) => (cur === atividade.id ? null : cur)), 2000);
   };
 
-  // Dicas gerais personalizadas: antes era uma lista fixa igual pra
-  // qualquer pet. Agora mistura dicas específicas pro perfil (fase, porte,
-  // objetivo) com um núcleo de segurança que vale pra todo mundo.
-  const dicasCandidatas: { emoji: string; texto: string; relevante: boolean }[] = [
-    { emoji: '🐣', texto: 'Filhote: evite impacto forte em superfícies duras — ossos e articulações ainda estão se formando', relevante: fase === 'Filhote' },
-    { emoji: '⏱️', texto: 'Filhote: prefira sessões curtas e frequentes em vez de uma única atividade longa', relevante: fase === 'Filhote' },
-    { emoji: '🦴', texto: 'Sênior: dê preferência a atividades de baixo impacto, como natação ou passeios calmos', relevante: fase === 'Sênior' },
-    { emoji: '🩹', texto: 'Sênior: fique atento a sinais de dor articular durante e depois do exercício', relevante: fase === 'Sênior' },
-    { emoji: '🏋️', texto: 'Porte grande: aqueça bem antes — o risco de lesão articular é maior nesse porte', relevante: porte === 'Grande' },
-    { emoji: '🪜', texto: 'Porte pequeno: cuidado com saltos de altura e escadas durante a brincadeira', relevante: porte === 'Pequeno' },
-    { emoji: '🔥', texto: 'Emagrecimento: exercícios mais longos e de intensidade moderada queimam mais gordura com menos impacto', relevante: pet.objetivo === 'emagrecimento' },
-    { emoji: '🏆', texto: 'Desempenho: inclua dias de descanso entre atividades intensas pra evitar sobrecarga', relevante: pet.objetivo === 'desempenho' },
-    { emoji: '✨', texto: 'Pelagem: manter o pet bem hidratado durante o exercício também ajuda na saúde do pelo', relevante: pet.objetivo === 'pelagem' },
-    { emoji: '📅', texto: 'Manutenção: constância importa mais que intensidade — mantenha a rotina regular', relevante: pet.objetivo === 'manutencao' },
-    { emoji: '💧', texto: 'Mantenha água disponível durante as atividades', relevante: true },
-    { emoji: '👀', texto: 'Observe sinais de cansaço e pare se necessário', relevante: true },
-    { emoji: '⏰', texto: 'Evite exercícios logo após as refeições', relevante: true },
-    { emoji: '🩺', texto: 'Consulte o veterinário antes de iniciar nova rotina', relevante: true },
+  // Dicas personalizadas pro perfil (fase/porte/objetivo) + núcleo de segurança.
+  // Ícones Soft 3D no lugar de emoji; prioridade: o que é específico do pet.
+  const dicasCandidatas: { Icon: Icon3DComp; texto: string; relevante: boolean }[] = [
+    { Icon: BoneIcon3D, texto: 'Filhote: evite impacto forte em superfícies duras — ossos e articulações ainda estão se formando', relevante: fase === 'Filhote' },
+    { Icon: CalendarIcon3D, texto: 'Filhote: prefira sessões curtas e frequentes em vez de uma única atividade longa', relevante: fase === 'Filhote' },
+    { Icon: BoneIcon3D, texto: 'Sênior: dê preferência a atividades de baixo impacto, como natação ou passeios calmos', relevante: fase === 'Sênior' },
+    { Icon: HealthIcon3D, texto: 'Sênior: fique atento a sinais de dor articular durante e depois do exercício', relevante: fase === 'Sênior' },
+    { Icon: ScaleIcon3D, texto: 'Porte grande: aqueça bem antes — o risco de lesão articular é maior nesse porte', relevante: porte === 'Grande' },
+    { Icon: ShieldIcon3D, texto: 'Porte pequeno: cuidado com saltos de altura e escadas durante a brincadeira', relevante: porte === 'Pequeno' },
+    { Icon: FireIcon3D, texto: 'Emagrecimento: exercícios mais longos e de intensidade moderada queimam mais gordura com menos impacto', relevante: pet.objetivo === 'emagrecimento' },
+    { Icon: TrophyIcon3D, texto: 'Desempenho: inclua dias de descanso entre atividades intensas pra evitar sobrecarga', relevante: pet.objetivo === 'desempenho' },
+    { Icon: DogIcon3D, texto: 'Pelagem: manter o pet bem hidratado durante o exercício também ajuda na saúde do pelo', relevante: pet.objetivo === 'pelagem' },
+    { Icon: CalendarIcon3D, texto: 'Manutenção: constância importa mais que intensidade — mantenha a rotina regular', relevante: pet.objetivo === 'manutencao' },
+    { Icon: BowlIcon3D, texto: 'Mantenha água disponível durante as atividades', relevante: true },
+    { Icon: SearchIcon3D, texto: 'Observe sinais de cansaço e pare se necessário', relevante: true },
+    { Icon: BowlIcon3D, texto: 'Evite exercícios logo após as refeições', relevante: true },
+    { Icon: HealthIcon3D, texto: 'Consulte o veterinário antes de iniciar nova rotina', relevante: true },
   ];
   const dicasGerais = [...dicasCandidatas].sort((a, b) => Number(b.relevante) - Number(a.relevante)).slice(0, 5);
 
@@ -597,27 +612,68 @@ export default function AtividadesPage() {
               <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-4 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-                    <DogIcon3D size={28} className="mx-auto" />
+                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
+                    <div className="icon-3d-slot mx-auto h-20 w-20">
+                      <DogIcon3D size={72} />
+                    </div>
                     <p className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400">Raça</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-4 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950 dark:ring-blue-900">
-                    <ScaleIcon3D size={28} className="mx-auto" />
+                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-5 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950 dark:ring-blue-900">
+                    <div className="icon-3d-slot mx-auto h-20 w-20">
+                      <ScaleIcon3D size={72} />
+                    </div>
                     <p className="mt-2 text-xs font-medium text-blue-600 dark:text-blue-400">Peso</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-4 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950 dark:ring-emerald-900">
-                    <span className="text-2xl">🌱</span>
+                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950 dark:ring-emerald-900">
+                    <div className="icon-3d-slot mx-auto h-20 w-20">
+                      <ChartIcon3D size={72} />
+                    </div>
                     <p className="mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">Fase</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{fase}</p>
                   </div>
-                  <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-4 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950 dark:ring-purple-900">
-                    <span className="text-2xl">📏</span>
+                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950 dark:ring-purple-900">
+                    <div className="icon-3d-slot mx-auto h-20 w-20">
+                      <TargetIcon3D size={72} />
+                    </div>
                     <p className="mt-2 text-xs font-medium text-purple-600 dark:text-purple-400">Porte</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{porte}</p>
                   </div>
                 </div>
+              </section>
+
+              {/* Cuidados do perfil — logo após o resumo do pet, antes de escolher atividade */}
+              <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <div className="flex items-start gap-3">
+                  <div className="icon-3d-slot h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
+                    <ShieldIcon3D size={44} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                      Cuidados para {pet.nome}
+                    </h2>
+                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                      Baseado em {fase.toLowerCase()} · porte {porte.toLowerCase()}
+                      {pet.objetivo ? ` · objetivo ${pet.objetivo}` : ''}
+                    </p>
+                  </div>
+                </div>
+                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {dicasGerais.map((dica) => (
+                    <li
+                      key={dica.texto}
+                      className="flex items-start gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-100 dark:bg-slate-800/60 dark:ring-slate-700/60"
+                    >
+                      <span className="icon-3d-slot mt-0.5 h-10 w-10 shrink-0">
+                        <dica.Icon size={36} />
+                      </span>
+                      <span className="text-sm leading-snug text-slate-700 dark:text-slate-200">
+                        {dica.texto}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </section>
 
               <section className="rounded-3xl bg-gradient-to-br from-white to-blue-50/30 p-6 shadow-lg ring-1 ring-slate-100 dark:from-slate-900 dark:to-blue-950/30 dark:ring-slate-800">
@@ -645,7 +701,7 @@ export default function AtividadesPage() {
                             : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-700'
                         }`}
                       >
-                        <span className="text-lg">{info.icone}</span>
+                        <Image src={info.iconSrc} alt="" width={22} height={22} unoptimized className="icon-3d" />
                         {info.label}
                       </button>
                     );
@@ -691,8 +747,8 @@ export default function AtividadesPage() {
                           className="flex cursor-pointer items-start gap-4 p-5"
                           onClick={() => setExpandida(isExpandida ? null : atividade.id)}
                         >
-                          <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl text-3xl transition group-hover:scale-110 ${catInfo.bg}`}>
-                            {catInfo.icone}
+                          <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition group-hover:scale-110 ${catInfo.bg}`}>
+                            <Image src={catInfo.iconSrc} alt="" width={40} height={40} unoptimized className="icon-3d" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
@@ -795,7 +851,7 @@ export default function AtividadesPage() {
 
                   {atividadesFiltradas.length === 0 && (
                     <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 py-12 text-center dark:from-slate-900 dark:to-slate-800">
-                      <SearchIcon3D size={56} className="mx-auto" />
+                      <SearchIcon3D size={64} className="mx-auto" />
                       <p className="mt-4 text-base font-bold text-slate-700 dark:text-slate-300">Nenhuma atividade encontrada</p>
                       <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Tente outros filtros</p>
                     </div>
@@ -864,20 +920,6 @@ export default function AtividadesPage() {
                   ))}
                 </div>
               </div>
-
-              <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-5 text-white shadow-lg shadow-amber-500/30">
-                <h3 className="text-sm font-bold">Dicas gerais</h3>
-                <p className="mt-0.5 text-xs text-white/70">Pro perfil de {pet.nome} ({fase.toLowerCase()}, porte {porte.toLowerCase()})</p>
-                <ul className="mt-3 space-y-2 text-xs text-white/90">
-                  {dicasGerais.map((dica) => (
-                    <li key={dica.texto} className="flex items-start gap-2">
-                      <span className="mt-0.5">{dica.emoji}</span>
-                      {dica.texto}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
 
             </div>
           </div>

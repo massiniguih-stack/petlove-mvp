@@ -26,6 +26,16 @@ export async function middleware(request: NextRequest) {
   const { response, isLoggedIn, email } = await updateSession(request)
   const path = request.nextUrl.pathname
 
+  // Modo revisão local: liberar todas as rotas (sem login)
+  // Ativar com OPEN_ACCESS=true no .env.local — desligar antes de produção.
+  const openAccess =
+    process.env.OPEN_ACCESS === 'true' ||
+    process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
+
+  if (openAccess) {
+    return response
+  }
+
   // Já logado nas telas de auth → manda para o app (dashboard redireciona se faltar pet)
   if (authRoutes.includes(path) && isLoggedIn) {
     return NextResponse.redirect(new URL('/dashboard', request.url))

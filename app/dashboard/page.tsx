@@ -4,7 +4,7 @@ import { usePetStore } from '@/lib/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D } from '@/components/Icons3D';
+import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D, DogIcon3D, PremiumIcon3D } from '@/components/Icons3D';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NotificationBanner from '@/components/NotificationBanner';
@@ -33,10 +33,8 @@ function PetPhoto({ pet, onPhotoChange }: { pet: { nome: string; fotoUrl: string
         {pet.fotoUrl ? (
           <img src={pet.fotoUrl} alt={pet.nome} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" className="text-slate-300 dark:text-slate-600">
-              <path d="M18 9V7c0-1.1-.9-2-2-2h-1V3.5C15 2.12 13.88 1 12.5 1S10 2.12 10 3.5V5H9C7.9 5 7 5.9 7 7v2c0 .55.23 1.05.59 1.41L6 12v2c0 1.1.9 2 2 2h1v1.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V16h1c1.1 0 2-.9 2-2v-2l-1.59-1.59c.36-.36.59-.86.59-1.41z"/>
-            </svg>
+          <div className="icon-3d-slot h-full w-full">
+            <DogIcon3D size={72} />
           </div>
         )}
         <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity hover:opacity-100">
@@ -147,7 +145,9 @@ export default function DashboardPage() {
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <ScaleIcon3D size={40} />
+                <div className="icon-3d-slot">
+                  <ScaleIcon3D size={56} />
+                </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Peso atual</p>
                 <p className="text-2xl font-bold">{pet.peso.toLocaleString('pt-BR')} kg</p>
               </div>
@@ -157,7 +157,9 @@ export default function DashboardPage() {
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <TargetIcon3D size={40} />
+                <div className="icon-3d-slot">
+                  <TargetIcon3D size={56} />
+                </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Objetivo</p>
                 <p className="text-2xl font-bold">{pet.objetivo === 'manutencao' ? 'Manutenção' : pet.objetivo === 'pelagem' ? 'Pelagem' : pet.objetivo === 'emagrecimento' ? 'Emagrecimento' : 'Desempenho'}</p>
               </div>
@@ -167,7 +169,9 @@ export default function DashboardPage() {
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <PinIcon3D size={40} />
+                <div className="icon-3d-slot">
+                  <PinIcon3D size={56} />
+                </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Serviços</p>
                 <p className="text-2xl font-bold">Vets e parques</p>
               </div>
@@ -177,7 +181,9 @@ export default function DashboardPage() {
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <CalendarIcon3D size={40} />
+                <div className="icon-3d-slot">
+                  <CalendarIcon3D size={56} />
+                </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Linha do tempo</p>
                 <p className="text-2xl font-bold">
                   {idadeEmMeses < 12 ? `${idadeEmMeses}m` : `${Math.floor(idadeEmMeses / 12)}a ${idadeEmMeses % 12}m`}
@@ -189,12 +195,12 @@ export default function DashboardPage() {
           {/* CTA Premium */}
           <div className="mt-8 rounded-3xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 p-6 text-white shadow-xl shadow-violet-500/20">
             <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-                <span className="text-3xl">👑</span>
+              <div className="icon-3d-slot h-24 w-24 shrink-0 sm:h-28 sm:w-28">
+                <PremiumIcon3D size={96} />
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-black">Desbloqueie o Patinha Premium</h3>
-                <p className="mt-1 text-sm text-violet-100">Pets ilimitados, alertas de vacinas, histórico completo e comparação entre pets por apenas <strong>R$ 19,90/mês</strong>.</p>
+                <p className="mt-1 text-sm text-violet-100">Pets ilimitados, histórico completo e comparação entre pets a partir de <strong>R$ 19,90/mês</strong>.</p>
               </div>
               <a
                 href="/planos"

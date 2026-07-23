@@ -4,15 +4,17 @@ import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
-import { CheckIcon3D } from '@/components/Icons3D';
+import Image from 'next/image';
+import { CheckIcon3D, BriefcaseIcon3D } from '@/components/Icons3D';
+import { icon3dServico } from '@/lib/tiposServico';
 
 const tiposServico = [
-  { id: 'veterinario', label: 'Veterinário', emoji: '🩺' },
-  { id: 'petshop', label: 'Pet Shop', emoji: '🛁' },
-  { id: 'creche', label: 'Creche / Day Care', emoji: '🏫' },
-  { id: 'hotel', label: 'Hotel Pet', emoji: '🏨' },
-  { id: 'petsitter', label: 'Pet Sitter', emoji: '🐾' },
-  { id: 'parque', label: 'Parque / Área Pet', emoji: '🌳' },
+  { id: 'veterinario', label: 'Veterinário' },
+  { id: 'petshop', label: 'Pet Shop' },
+  { id: 'creche', label: 'Creche / Day Care' },
+  { id: 'hotel', label: 'Hotel Pet' },
+  { id: 'petsitter', label: 'Pet Sitter' },
+  { id: 'parque', label: 'Parque / Área Pet' },
 ];
 
 const estados = [
@@ -184,7 +186,7 @@ export default function CadastroClient() {
             </p>
             <div className="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950 p-4 ring-1 ring-emerald-200 dark:ring-emerald-800">
               <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-                📧 Enviamos um e-mail de confirmação para <strong>{form.email}</strong>
+                📧 Você deve receber um e-mail de confirmação em <strong>{form.email}</strong> (verifique o spam). Analisamos em até 48 horas.
               </p>
             </div>
 
@@ -225,8 +227,8 @@ export default function CadastroClient() {
           <div className="mb-8">
             <BackButton href="/" label="Voltar ao início" />
             <div className="mt-4 flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-xl shadow-blue-500/30">
-                <span className="text-3xl">💼</span>
+              <div className="icon-3d-slot h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-xl shadow-blue-500/30">
+                <BriefcaseIcon3D size={48} />
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -250,7 +252,7 @@ export default function CadastroClient() {
               />
             </div>
             <div className="mt-3 flex justify-between">
-              {['Negociação', 'Localização', 'Contato', 'Serviços'].map((label, i) => (
+              {['Negócio', 'Localização', 'Contato', 'Serviços'].map((label, i) => (
                 <button
                   key={label}
                   onClick={() => setStep(i + 1)}
@@ -294,7 +296,7 @@ export default function CadastroClient() {
                               : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'
                           }`}
                         >
-                          <span>{tipo.emoji}</span>
+                          <Image src={icon3dServico(tipo.id)} alt="" width={24} height={24} unoptimized className="icon-3d" />
                           <span className="text-left">{tipo.label}</span>
                         </button>
                       ))}
@@ -305,7 +307,8 @@ export default function CadastroClient() {
                           const tipoInfo = tiposServico.find((ts) => ts.id === t);
                           return (
                             <span key={t} className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
-                              {tipoInfo?.emoji} {tipoInfo?.label}
+                              <Image src={icon3dServico(t)} alt="" width={14} height={14} unoptimized className="icon-3d" />
+                              {tipoInfo?.label}
                               <button type="button" onClick={() => toggleTipo(t)} className="ml-0.5 hover:text-blue-900">✕</button>
                             </span>
                           );

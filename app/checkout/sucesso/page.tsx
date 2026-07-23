@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { usePetStore } from '@/lib/store';
+import { CheckIcon3D, PremiumIcon3D } from '@/components/Icons3D';
 
 export default function CheckoutSuccessPage() {
   const [loading, setLoading] = useState(true);
@@ -51,8 +52,8 @@ export default function CheckoutSuccessPage() {
         <Navbar />
         <main className="flex-1 flex items-center justify-center px-4 py-12">
           <div className="max-w-md text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/30">
-              <span className="text-4xl">⏳</span>
+            <div className="mx-auto flex items-center justify-center">
+              <PremiumIcon3D size={80} />
             </div>
             <h1 className="mt-6 text-3xl font-black text-slate-900 dark:text-white">
               Ainda confirmando seu pagamento
@@ -86,8 +87,8 @@ export default function CheckoutSuccessPage() {
       <Navbar />
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="max-w-md text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30">
-            <span className="text-4xl">&#10003;</span>
+          <div className="mx-auto flex items-center justify-center">
+            <CheckIcon3D size={88} />
           </div>
           <h1 className="mt-6 text-3xl font-black text-slate-900 dark:text-white">
             Pagamento confirmado!
@@ -97,7 +98,7 @@ export default function CheckoutSuccessPage() {
           </p>
           {(planTutor || planParceiro) && (
             <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-violet-100 px-4 py-2 text-sm font-bold text-violet-700 dark:bg-violet-950 dark:text-violet-300">
-              <span>&#11088;</span>
+              <PremiumIcon3D size={28} />
               Plano: {(planTutor || planParceiro || '').replace('_', ' ')}
             </div>
           )}
