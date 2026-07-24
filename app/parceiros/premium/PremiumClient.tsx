@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import { PremiumIcon3D, PinIcon3D, MedalIcon3D, StarIcon3D } from '@/components/Icons3D';
+import { trackMetaEvent } from '@/components/MetaPixel';
 import type { ComponentType } from 'react';
 
 type PaidPlanType = 'partner_basic' | 'partner_pro' | 'partner_enterprise';
@@ -130,6 +131,7 @@ export default function PremiumClient() {
         router.push('/login?next=/parceiros/premium');
         return;
       }
+      trackMetaEvent('InitiateCheckout', { content_name: planType });
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

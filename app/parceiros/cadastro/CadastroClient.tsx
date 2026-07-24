@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import Image from 'next/image';
 import { CheckIcon3D, BriefcaseIcon3D } from '@/components/Icons3D';
+import { trackMetaEvent } from '@/components/MetaPixel';
 import { icon3dServico } from '@/lib/tiposServico';
 
 const tiposServico = [
@@ -160,6 +161,7 @@ export default function CadastroClient() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Erro ao enviar cadastro');
       }
+      trackMetaEvent('Lead', { content_name: 'parceiro_cadastro' });
       setEnviado(true);
     } catch (err) {
       setErroEnvio(err instanceof Error ? err.message : 'Erro ao enviar cadastro');
