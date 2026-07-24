@@ -8,21 +8,17 @@ import { createClient } from '@/lib/supabase/client';
 import { PremiumIcon3D, PinIcon3D, MedalIcon3D, StarIcon3D } from '@/components/Icons3D';
 import type { ComponentType } from 'react';
 
-// Um plano real (partner_basic) — sem toggle anual cosmético (EXP-13A).
-// 50% OFF removido (EXP-14). Plano anual real = EXP-13B depois + LastLink.
-const plano = {
-  planType: 'partner_basic' as const,
-  nome: 'Parceiro Premium',
-  descricao: 'Destaque seu negócio para quem está perto',
-  mensal: 39.8,
-  features: [
-    'Listagem no mapa',
-    'Selo Premium',
-    'Destaque no topo da busca da sua cidade',
-    'WhatsApp direto no perfil',
-    'Informações de contato completas',
-  ],
-};
+// Preços reais de UI (EXP-13B): mensal partner_basic · anual partner_annual no LastLink.
+const PRECO_MENSAL = 39.8;
+const PRECO_ANUAL = 238.8; // ~50% off vs 12 × mensal (R$ 477,60)
+
+const features = [
+  'Listagem no mapa',
+  'Selo Premium',
+  'Destaque no topo da busca da sua cidade',
+  'WhatsApp direto no perfil',
+  'Informações de contato completas',
+];
 
 const beneficios: {
   Icon: ComponentType<{ size?: number; className?: string }>;
@@ -51,11 +47,21 @@ const beneficios: {
   },
 ];
 
+function formatBRL(valor: number) {
+  return valor.toFixed(2).replace('.', ',');
+}
+
 export default function PremiumClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
   const router = useRouter();
   const supabase = createClient();
+
+  const planType = periodo === 'anual' ? 'partner_annual' : 'partner_basic';
+  const precoExibidoMes = periodo === 'mensal' ? PRECO_MENSAL : PRECO_ANUAL / 12;
+  const economiaAnual = PRECO_MENSAL * 12 - PRECO_ANUAL;
+  const descontoPct = Math.round((economiaAnual / (PRECO_MENSAL * 12)) * 100);
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -69,7 +75,7 @@ export default function PremiumClient() {
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planType: plano.planType }),
+        body: JSON.stringify({ planType }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -89,7 +95,7 @@ export default function PremiumClient() {
       <Navbar />
       <main className="flex-1">
 
-        {/* Hero — EXP-16: CTA de compra */}
+        {/* Hero */}
         <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 px-4 py-20 text-white">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white" />
@@ -110,7 +116,7 @@ export default function PremiumClient() {
                 href="#planos"
                 className="rounded-2xl bg-white px-8 py-4 text-lg font-bold text-orange-600 shadow-lg transition hover:bg-orange-50"
               >
-                Ver plano e assinar
+                Ver planos e assinar
               </a>
               <a href="#beneficios" className="rounded-2xl border-2 border-white/30 px-8 py-4 text-lg font-bold text-white transition hover:bg-white/10">
                 Conhecer benefícios
@@ -119,7 +125,7 @@ export default function PremiumClient() {
           </div>
         </section>
 
-        {/* Plano — um preço real (EXP-13A, EXP-14) */}
+        {/* Planos — mensal + anual */}
         <section id="planos" className="px-4 py-16">
           <div className="mx-auto max-w-md">
             <div className="text-center">
@@ -127,38 +133,77 @@ export default function PremiumClient() {
                 <PremiumIcon3D size={28} /> Plano Premium
               </div>
               <h2 className="mt-4 text-3xl font-black text-slate-900 dark:text-white">
-                Um plano, <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">tudo incluso</span>
+                Escolha o <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">período</span>
               </h2>
-              <p className="mt-2 text-slate-500 dark:text-slate-400">Invista na visibilidade do seu estabelecimento</p>
+              <p className="mt-2 text-slate-500 dark:text-slate-400">Mesmo benefícios · pague mensal ou economize no anual</p>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <div className="inline-flex rounded-2xl bg-slate-100 p-1 dark:bg-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setPeriodo('mensal')}
+                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${
+                    periodo === 'mensal'
+                      ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
+                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
+                  }`}
+                >
+                  Mensal
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPeriodo('anual')}
+                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${
+                    periodo === 'anual'
+                      ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
+                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
+                  }`}
+                >
+                  Anual
+                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">
+                    -{descontoPct}%
+                  </span>
+                </button>
+              </div>
             </div>
 
             {error && (
-              <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-700">
+              <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
                 {error}
               </div>
             )}
 
-            <div className="mt-10 rounded-3xl border-2 border-amber-400 bg-white dark:bg-slate-900 p-6 shadow-lg shadow-amber-500/10">
+            <div className="mt-10 rounded-3xl border-2 border-amber-400 bg-white p-6 shadow-lg shadow-amber-500/10 dark:bg-slate-900">
               <div className="rounded-2xl bg-blue-50 p-4 dark:bg-blue-950/40">
-                <h3 className="text-xl font-black text-blue-600 dark:text-blue-400">{plano.nome}</h3>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{plano.descricao}</p>
+                <h3 className="text-xl font-black text-blue-600 dark:text-blue-400">Parceiro Premium</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  Destaque seu negócio para quem está perto
+                </p>
               </div>
 
               <div className="mt-6">
                 <div className="flex items-baseline gap-1">
                   <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
                   <span className="text-4xl font-black text-slate-900 dark:text-white">
-                    {plano.mensal.toFixed(2).replace('.', ',')}
+                    {formatBRL(precoExibidoMes)}
                   </span>
                   <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
                 </div>
                 <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-                  Cobrado mensalmente · pagamento via LastLink
+                  {periodo === 'mensal'
+                    ? 'Cobrado mensalmente · pagamento via LastLink'
+                    : `R$ ${formatBRL(PRECO_ANUAL)} cobrados uma vez ao ano · LastLink`}
                 </p>
+                {periodo === 'anual' && (
+                  <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    Economia de R$ {formatBRL(economiaAnual)} no ano
+                  </p>
+                )}
               </div>
 
               <ul className="mt-6 space-y-3">
-                {plano.features.map((feature) => (
+                {features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-xs text-blue-600 dark:bg-blue-950 dark:text-blue-300">✓</span>
                     {feature}
@@ -167,9 +212,10 @@ export default function PremiumClient() {
               </ul>
 
               <button
+                type="button"
                 onClick={handleCheckout}
                 disabled={loading}
-                className={`mt-6 w-full rounded-2xl py-4 text-sm font-black transition ${loading ? 'bg-slate-200 dark:bg-slate-700 text-slate-500 cursor-wait' : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg hover:shadow-2xl'}`}
+                className={`mt-6 w-full rounded-2xl py-4 text-sm font-black transition ${loading ? 'cursor-wait bg-slate-200 text-slate-500 dark:bg-slate-700' : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg hover:shadow-2xl'}`}
               >
                 {loading ? (
                   <span className="inline-flex items-center gap-2">
@@ -179,7 +225,11 @@ export default function PremiumClient() {
                     </svg>
                     Processando…
                   </span>
-                ) : 'Assinar agora'}
+                ) : periodo === 'anual' ? (
+                  'Assinar Premium anual'
+                ) : (
+                  'Assinar Premium mensal'
+                )}
               </button>
             </div>
 
@@ -191,7 +241,7 @@ export default function PremiumClient() {
           </div>
         </section>
 
-        <section id="beneficios" className="bg-white dark:bg-slate-900 px-4 py-16">
+        <section id="beneficios" className="bg-white px-4 py-16 dark:bg-slate-900">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
               Tudo que você precisa para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">crescer</span>
@@ -200,7 +250,7 @@ export default function PremiumClient() {
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {beneficios.map((b) => (
-                <div key={b.titulo} className="group rounded-3xl border border-slate-100 dark:border-slate-700 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 p-6 transition-all hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-1">
+                <div key={b.titulo} className="group rounded-3xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white p-6 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900">
                   <div className="icon-3d-slot h-20 w-20 transition group-hover:scale-110">
                     <b.Icon size={64} />
                   </div>

@@ -22,6 +22,8 @@ import {
   MedalIcon3D,
   PremiumIcon3D,
   CrownIcon3D,
+  CheckIcon3D,
+  HealthIcon3D,
 } from '@/components/Icons3D';
 
 /** Tamanho único dos ícones nos círculos da linha do tempo */
@@ -589,13 +591,14 @@ function LinhaDoTempo({ momentos, pet, onEdit, onDelete, onMarcarTomada }: { mom
 
       {/* Resumo */}
       {marcos.length > 0 && (
-        <div className="mt-4 rounded-xl bg-gradient-to-r from-amber-50 to-rose-50 p-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-600">
-              📅 <span className="font-bold text-slate-900 dark:text-white">{pet.nome}</span> tem{' '}
+        <div className="mt-4 rounded-xl bg-gradient-to-r from-amber-50 to-rose-50 p-3 dark:from-amber-950/40 dark:to-rose-950/40">
+          <div className="flex items-center justify-between gap-2 text-xs">
+            <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+              <span className="icon-3d-slot"><CalendarIcon3D size={16} /></span>
+              <span className="font-bold text-slate-900 dark:text-white">{pet.nome}</span> tem{' '}
               <span className="font-bold text-rose-600">{totalMeses} {totalMeses === 1 ? 'mês' : 'meses'}</span>
             </span>
-            <span className="text-slate-500">
+            <span className="text-slate-500 dark:text-slate-400">
               {momentos.length} momento{momentos.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -610,7 +613,10 @@ function GaleriaFotos({ fotos, onAdicionar, onAbrir, onFechar }: { fotos: Moment
     <div id="galeria" className="mb-8 rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white">📸 Galeria de fotos</h2>
+          <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
+            <span className="icon-3d-slot"><CheckIcon3D size={28} /></span>
+            Galeria de fotos
+          </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {fotos.length > 0 ? `${fotos.length} foto${fotos.length !== 1 ? 's' : ''}, em ordem cronológica` : 'Nenhuma foto ainda'}
           </p>
@@ -807,15 +813,30 @@ export default function VidaPage() {
           {/* Header */}
           <div className="mb-8">
             <BackButton href="/dashboard" />
-            <div className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-700">
-              <span className="text-lg">📅</span>
+            <div className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-700 dark:bg-rose-950 dark:text-rose-300">
+              <span className="icon-3d-slot">
+                <CalendarIcon3D size={18} />
+              </span>
               {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'} de história
               {diasVida > 0 && ` · ${diasVida} dias`}
             </div>
-            <div className="mt-3 flex flex-col items-center justify-between gap-4 sm:flex-row">
-              <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                Linha do tempo de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500">{pet.nome}</span>
-              </h1>
+            <div className="mt-3 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+              <div>
+                <h1 className="flex flex-wrap items-center gap-2 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
+                  <span className="icon-3d-slot shrink-0">
+                    <HealthIcon3D size={40} />
+                  </span>
+                  <span>
+                    Saúde de{' '}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500">
+                      {pet.nome}
+                    </span>
+                  </span>
+                </h1>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  Linha do tempo · vacinas · momentos e fotos
+                </p>
+              </div>
               <button
                 onClick={() => { setEditando(undefined); setCategoriaPadraoForm('evento'); setShowForm(true); }}
                 className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40"
@@ -829,47 +850,53 @@ export default function VidaPage() {
             </div>
           </div>
 
-          {/* Stats Cards */}
+          {/* Stats Cards — Soft 3D (sem emoji solto) */}
           <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <button
               onClick={() => {
                 const el = document.getElementById('timeline');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 p-4 text-left text-white shadow-lg shadow-pink-500/20 transition hover:shadow-xl hover:shadow-pink-500/30 hover:-translate-y-0.5"
+              className="rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 p-4 text-left text-white shadow-lg shadow-pink-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/30"
             >
               <div className="text-3xl font-black">{totalMeses}</div>
-              <div className="mt-1 text-sm font-medium text-pink-100">🍼 Meses</div>
+              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-pink-100">
+                <span className="icon-3d-slot"><PawIcon3D size={20} /></span> Meses
+              </div>
             </button>
             <button
               onClick={() => {
                 const el = document.getElementById('timeline');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-4 text-left text-white shadow-lg shadow-rose-500/20 transition hover:shadow-xl hover:shadow-rose-500/30 hover:-translate-y-0.5"
+              className="rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-4 text-left text-white shadow-lg shadow-rose-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-rose-500/30"
             >
               <div className="text-3xl font-black">{totalDias}</div>
-              <div className="mt-1 text-sm font-medium text-rose-100">📅 Dias</div>
+              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-rose-100">
+                <span className="icon-3d-slot"><CalendarIcon3D size={20} /></span> Dias
+              </div>
             </button>
             <button
               onClick={() => setMostrarGaleria(true)}
-              className="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-left text-white shadow-lg shadow-emerald-500/20 transition hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5"
+              className="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-left text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-500/30"
             >
               <div className="text-3xl font-black">{fotosCronologicas.length}</div>
-              <div className="mt-1 text-sm font-medium text-emerald-100">📸 Fotos</div>
+              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-emerald-100">
+                <span className="icon-3d-slot"><CheckIcon3D size={20} /></span> Fotos
+              </div>
             </button>
             <button
               onClick={() => {
                 const el = document.getElementById('timeline');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-left text-white shadow-lg shadow-amber-500/20 transition hover:shadow-xl hover:shadow-amber-500/30 hover:-translate-y-0.5"
+              className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-left text-white shadow-lg shadow-amber-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/30"
             >
               <div className="text-3xl font-black">
                 {totalAnos > 0 ? totalAnos : mesesRestantes}
               </div>
               <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-amber-100">
-                <CakeIcon3D size={20} /> Idade
+                <span className="icon-3d-slot"><CakeIcon3D size={20} /></span> Idade
               </div>
             </button>
           </div>
@@ -917,8 +944,8 @@ export default function VidaPage() {
           {primeiraFoto && (
             <div className="mt-12 rounded-3xl bg-gradient-to-br from-amber-50 to-rose-50 p-6 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-rose-500 text-white shadow-lg shadow-rose-500/30">
-                  <span className="text-xl">📸</span>
+                <div className="icon-3d-slot h-12 w-12 rounded-full bg-gradient-to-br from-amber-500 to-rose-500 shadow-lg shadow-rose-500/30">
+                  <CheckIcon3D size={36} />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white">Primeira foto registrada</h3>
