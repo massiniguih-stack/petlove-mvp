@@ -2,22 +2,86 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import { PremiumIcon3D, PinIcon3D, MedalIcon3D, StarIcon3D } from '@/components/Icons3D';
 import type { ComponentType } from 'react';
 
-// Preços reais de UI (EXP-13B): mensal partner_basic · anual partner_annual no LastLink.
-const PRECO_MENSAL = 39.8;
-const PRECO_ANUAL = 238.8; // ~50% off vs 12 × mensal (R$ 477,60)
+type PaidPlanType = 'partner_basic' | 'partner_pro' | 'partner_enterprise';
 
-const features = [
-  'Listagem no mapa',
-  'Selo Premium',
-  'Destaque no topo da busca da sua cidade',
-  'WhatsApp direto no perfil',
-  'Informações de contato completas',
+// Preços alinhados a app/api/admin/dashboard-stats (MRR). Ajuste se LastLink divergir.
+const planos: {
+  id: 'free' | PaidPlanType;
+  nome: string;
+  descricao: string;
+  mensal: number | null;
+  planType: PaidPlanType | null;
+  cta: string;
+  destaque?: boolean;
+  features: string[];
+}[] = [
+  {
+    id: 'free',
+    nome: 'Grátis',
+    descricao: 'Entre no mapa e comece a aparecer',
+    mensal: null,
+    planType: null,
+    cta: 'Cadastrar grátis',
+    features: [
+      'Cadastro do negócio no app',
+      'Listagem no mapa (após análise)',
+      'Perfil com contato e serviços',
+      'Sem destaque nem selo Premium',
+    ],
+  },
+  {
+    id: 'partner_basic',
+    nome: 'Básico',
+    descricao: 'Destaque essencial na sua cidade',
+    mensal: 39.8,
+    planType: 'partner_basic',
+    cta: 'Assinar Básico',
+    features: [
+      'Tudo do Grátis',
+      'Selo Premium no mapa',
+      'Destaque na busca da cidade',
+      'Botão de WhatsApp no perfil',
+      'Ativação após pagamento',
+    ],
+  },
+  {
+    id: 'partner_pro',
+    nome: 'Profissional',
+    descricao: 'Para quem quer crescer com o app',
+    mensal: 69.8,
+    planType: 'partner_pro',
+    cta: 'Assinar Profissional',
+    destaque: true,
+    features: [
+      'Tudo do Básico',
+      'Prioridade comercial no mapa',
+      'Painel do parceiro (métricas)',
+      'Registro de serviços realizados',
+      'Melhor custo-benefício',
+    ],
+  },
+  {
+    id: 'partner_enterprise',
+    nome: 'Empresarial',
+    descricao: 'Redes, franquias e multi-unidade',
+    mensal: 129.8,
+    planType: 'partner_enterprise',
+    cta: 'Assinar Empresarial',
+    features: [
+      'Tudo do Profissional',
+      'Ideal para redes e filiais',
+      'Visibilidade máxima na região',
+      'Canal preferencial com o time Patinha',
+      'Plano para operação maior',
+    ],
+  },
 ];
 
 const beneficios: {
@@ -28,22 +92,22 @@ const beneficios: {
   {
     Icon: StarIcon3D,
     titulo: 'Destaque no Mapa',
-    descricao: 'Seu negócio aparece no topo da lista e com selo de destaque na sua cidade.',
+    descricao: 'Planos pagos aparecem com selo e prioridade na lista da sua cidade.',
   },
   {
     Icon: PinIcon3D,
     titulo: 'Prioridade na Busca',
-    descricao: 'Quando alguém buscar na sua cidade, você aparece primeiro — antes dos concorrentes.',
+    descricao: 'Quando o tutor busca perto, negócios Premium sobem na fila.',
   },
   {
     Icon: MedalIcon3D,
     titulo: 'Selo Premium',
-    descricao: 'Badge exclusivo que transmite confiança e credibilidade para novos clientes.',
+    descricao: 'Badge de confiança no card e no perfil do estabelecimento.',
   },
   {
     Icon: PremiumIcon3D,
     titulo: 'WhatsApp Direto',
-    descricao: 'Botão de WhatsApp no perfil para clientes chamarem direto pelo app.',
+    descricao: 'Nos planos pagos, o tutor chama você em um toque pelo app.',
   },
 ];
 
@@ -52,19 +116,13 @@ function formatBRL(valor: number) {
 }
 
 export default function PremiumClient() {
-  const [loading, setLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<PaidPlanType | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [periodo, setPeriodo] = useState<'mensal' | 'anual'>('mensal');
   const router = useRouter();
   const supabase = createClient();
 
-  const planType = periodo === 'anual' ? 'partner_annual' : 'partner_basic';
-  const precoExibidoMes = periodo === 'mensal' ? PRECO_MENSAL : PRECO_ANUAL / 12;
-  const economiaAnual = PRECO_MENSAL * 12 - PRECO_ANUAL;
-  const descontoPct = Math.round((economiaAnual / (PRECO_MENSAL * 12)) * 100);
-
-  const handleCheckout = async () => {
-    setLoading(true);
+  const handleCheckout = async (planType: PaidPlanType) => {
+    setLoadingPlan(planType);
     setError(null);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -86,7 +144,7 @@ export default function PremiumClient() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro inesperado');
     } finally {
-      setLoading(false);
+      setLoadingPlan(null);
     }
   };
 
@@ -95,7 +153,6 @@ export default function PremiumClient() {
       <Navbar />
       <main className="flex-1">
 
-        {/* Hero */}
         <section className="relative overflow-hidden bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 px-4 py-20 text-white">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white" />
@@ -103,20 +160,20 @@ export default function PremiumClient() {
           </div>
           <div className="relative mx-auto max-w-5xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm">
-              <PremiumIcon3D size={28} /> Parceiro Premium
+              <PremiumIcon3D size={28} /> Planos para parceiros
             </div>
             <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              Seja o <span className="text-yellow-200">Primeiro</span> que os<br />tutores encontram
+              Do grátis ao <span className="text-yellow-200">destaque</span> na cidade
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-orange-100">
-              Apareça no topo do mapa, ganhe um selo de destaque e atrairá mais clientes para sua clínica ou pet shop.
+              Escolha o plano certo pro tamanho do seu negócio: listagem gratuita ou Premium com selo, WhatsApp e prioridade no mapa.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <a
                 href="#planos"
                 className="rounded-2xl bg-white px-8 py-4 text-lg font-bold text-orange-600 shadow-lg transition hover:bg-orange-50"
               >
-                Ver planos e assinar
+                Ver planos
               </a>
               <a href="#beneficios" className="rounded-2xl border-2 border-white/30 px-8 py-4 text-lg font-bold text-white transition hover:bg-white/10">
                 Conhecer benefícios
@@ -125,118 +182,117 @@ export default function PremiumClient() {
           </div>
         </section>
 
-        {/* Planos — mensal + anual */}
         <section id="planos" className="px-4 py-16">
-          <div className="mx-auto max-w-md">
+          <div className="mx-auto max-w-6xl">
             <div className="text-center">
               <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
-                <PremiumIcon3D size={28} /> Plano Premium
+                <PremiumIcon3D size={28} /> Grátis · Básico · Profissional · Empresarial
               </div>
               <h2 className="mt-4 text-3xl font-black text-slate-900 dark:text-white">
-                Escolha o <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">período</span>
+                Um plano para cada <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">momento</span>
               </h2>
-              <p className="mt-2 text-slate-500 dark:text-slate-400">Mesmo benefícios · pague mensal ou economize no anual</p>
-            </div>
-
-            <div className="mt-6 flex justify-center">
-              <div className="inline-flex rounded-2xl bg-slate-100 p-1 dark:bg-slate-800">
-                <button
-                  type="button"
-                  onClick={() => setPeriodo('mensal')}
-                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${
-                    periodo === 'mensal'
-                      ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
-                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
-                  }`}
-                >
-                  Mensal
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPeriodo('anual')}
-                  className={`rounded-xl px-6 py-3 text-sm font-bold transition ${
-                    periodo === 'anual'
-                      ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-white'
-                      : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
-                  }`}
-                >
-                  Anual
-                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">
-                    -{descontoPct}%
-                  </span>
-                </button>
-              </div>
+              <p className="mt-2 text-slate-500 dark:text-slate-400">
+                Comece grátis ou assine Premium com pagamento via LastLink
+              </p>
             </div>
 
             {error && (
-              <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+              <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
                 {error}
               </div>
             )}
 
-            <div className="mt-10 rounded-3xl border-2 border-amber-400 bg-white p-6 shadow-lg shadow-amber-500/10 dark:bg-slate-900">
-              <div className="rounded-2xl bg-blue-50 p-4 dark:bg-blue-950/40">
-                <h3 className="text-xl font-black text-blue-600 dark:text-blue-400">Parceiro Premium</h3>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  Destaque seu negócio para quem está perto
-                </p>
-              </div>
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              {planos.map((plano) => {
+                const isPaid = plano.planType != null;
+                const loading = isPaid && loadingPlan === plano.planType;
+                return (
+                  <div
+                    key={plano.id}
+                    className={`relative flex flex-col rounded-3xl border-2 bg-white p-6 shadow-sm dark:bg-slate-900 ${
+                      plano.destaque
+                        ? 'border-amber-400 shadow-lg shadow-amber-500/15 xl:-translate-y-1'
+                        : 'border-slate-200 dark:border-slate-700'
+                    }`}
+                  >
+                    {plano.destaque && (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1 text-[10px] font-black uppercase tracking-wide text-white shadow-md">
+                        Recomendado
+                      </span>
+                    )}
 
-              <div className="mt-6">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
-                  <span className="text-4xl font-black text-slate-900 dark:text-white">
-                    {formatBRL(precoExibidoMes)}
-                  </span>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
-                </div>
-                <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-                  {periodo === 'mensal'
-                    ? 'Cobrado mensalmente · pagamento via LastLink'
-                    : `R$ ${formatBRL(PRECO_ANUAL)} cobrados uma vez ao ano · LastLink`}
-                </p>
-                {periodo === 'anual' && (
-                  <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                    Economia de R$ {formatBRL(economiaAnual)} no ano
-                  </p>
-                )}
-              </div>
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white">{plano.nome}</h3>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{plano.descricao}</p>
 
-              <ul className="mt-6 space-y-3">
-                {features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-50 text-xs text-blue-600 dark:bg-blue-950 dark:text-blue-300">✓</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+                    <div className="mt-5">
+                      {plano.mensal == null ? (
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-black text-slate-900 dark:text-white">R$ 0</span>
+                          <span className="text-sm text-slate-500">/mês</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-sm font-bold text-slate-400">R$</span>
+                          <span className="text-4xl font-black text-slate-900 dark:text-white">
+                            {formatBRL(plano.mensal)}
+                          </span>
+                          <span className="text-sm text-slate-500">/mês</span>
+                        </div>
+                      )}
+                      <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                        {isPaid ? 'Cobrado mensalmente · LastLink' : 'Sem cartão · análise em até 48h'}
+                      </p>
+                    </div>
 
-              <button
-                type="button"
-                onClick={handleCheckout}
-                disabled={loading}
-                className={`mt-6 w-full rounded-2xl py-4 text-sm font-black transition ${loading ? 'cursor-wait bg-slate-200 text-slate-500 dark:bg-slate-700' : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg hover:shadow-2xl'}`}
-              >
-                {loading ? (
-                  <span className="inline-flex items-center gap-2">
-                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Processando…
-                  </span>
-                ) : periodo === 'anual' ? (
-                  'Assinar Premium anual'
-                ) : (
-                  'Assinar Premium mensal'
-                )}
-              </button>
+                    <ul className="mt-6 flex-1 space-y-2.5">
+                      {plano.features.map((f) => (
+                        <li key={f} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300">
+                          <span className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs ${
+                            plano.id === 'free'
+                              ? 'bg-slate-100 text-slate-500 dark:bg-slate-800'
+                              : 'bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-300'
+                          }`}>
+                            ✓
+                          </span>
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {isPaid && plano.planType ? (
+                      <button
+                        type="button"
+                        onClick={() => handleCheckout(plano.planType!)}
+                        disabled={loadingPlan != null}
+                        className={`mt-6 w-full rounded-2xl py-3.5 text-sm font-black transition ${
+                          loading
+                            ? 'cursor-wait bg-slate-200 text-slate-500 dark:bg-slate-700'
+                            : plano.destaque
+                              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg hover:shadow-xl'
+                              : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md hover:shadow-lg'
+                        }`}
+                      >
+                        {loading ? 'Processando…' : plano.cta}
+                      </button>
+                    ) : (
+                      <Link
+                        href="/parceiros/cadastro"
+                        className="mt-6 block w-full rounded-2xl border-2 border-slate-200 bg-white py-3.5 text-center text-sm font-black text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                      >
+                        {plano.cta}
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500">
               <span>Pagamento seguro via LastLink</span>
               <span>·</span>
               <span>Cancele quando quiser na área de membros</span>
+              <span>·</span>
+              <span>Planos pagos ativam selo e destaque no mapa</span>
             </div>
           </div>
         </section>
@@ -244,9 +300,9 @@ export default function PremiumClient() {
         <section id="beneficios" className="bg-white px-4 py-16 dark:bg-slate-900">
           <div className="mx-auto max-w-6xl">
             <h2 className="text-center text-3xl font-black text-slate-900 dark:text-white">
-              Tudo que você precisa para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">crescer</span>
+              Por que assinar um plano <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">pago</span>
             </h2>
-            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Benefícios do Parceiro Premium</p>
+            <p className="mt-2 text-center text-slate-500 dark:text-slate-400">Benefícios dos planos Básico, Profissional e Empresarial</p>
 
             <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {beneficios.map((b) => (

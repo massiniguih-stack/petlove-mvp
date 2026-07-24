@@ -38,8 +38,8 @@ interface SubscriptionInfo {
 }
 
 const planNames: Record<string, string> = {
-  partner_basic: 'Parceiro Premium (mensal)',
-  partner_annual: 'Parceiro Premium (anual)',
+  partner_basic: 'Parceiro Básico',
+  partner_annual: 'Parceiro Anual',
   partner_pro: 'Parceiro Profissional',
   partner_enterprise: 'Parceiro Empresarial',
 };
