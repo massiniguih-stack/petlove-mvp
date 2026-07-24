@@ -7,6 +7,7 @@ const PLAN_SLUGS: Record<string, string> = {
   tutor_monthly: process.env.LASTLINK_TUTOR_MONTHLY_SLUG || '',
   tutor_annual: process.env.LASTLINK_TUTOR_ANNUAL_SLUG || '',
   partner_basic: process.env.LASTLINK_PARTNER_BASIC_SLUG || '',
+  partner_annual: process.env.LASTLINK_PARTNER_ANNUAL_SLUG || '',
   partner_pro: process.env.LASTLINK_PARTNER_PRO_SLUG || '',
   partner_enterprise: process.env.LASTLINK_PARTNER_ENTERPRISE_SLUG || '',
 };
