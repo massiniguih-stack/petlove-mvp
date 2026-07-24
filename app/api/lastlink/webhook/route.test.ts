@@ -190,7 +190,7 @@ describe('POST /api/lastlink/webhook', () => {
     );
   });
 
-  it('activates partner premium and links user_id when the plan is a partner plan', async () => {
+  it('activates partner premium+destaque for pro plan and links user_id', async () => {
     setupSupabaseMock({
       users: [{ id: 'user-1', email: 'parceiro@example.com' }],
       products: [{ plan_type: 'partner_pro', price: 99 }],
@@ -205,6 +205,22 @@ describe('POST /api/lastlink/webhook', () => {
       { count: 'exact' }
     );
     expect(partnersEqMock).toHaveBeenCalledWith('email', 'parceiro@example.com');
+  });
+
+  it('activates partner premium without destaque for basic plan', async () => {
+    setupSupabaseMock({
+      users: [{ id: 'user-1', email: 'basico@example.com' }],
+      products: [{ plan_type: 'partner_basic', price: 39.8 }],
+    });
+
+    const res = await POST(buildRequest(baseEvent({
+      Data: { Buyer: { Email: 'basico@example.com', Name: 'Basico' } },
+    })));
+    expect(res.status).toBe(200);
+    expect(partnersUpdateMock).toHaveBeenCalledWith(
+      { premium: true, destaque: false, user_id: 'user-1' },
+      { count: 'exact' }
+    );
   });
 
   it('returns 500 when the subscription upsert fails, without throwing', async () => {

@@ -31,6 +31,7 @@ export default function AssinaturaPage() {
     tutor_monthly: 'Premium Mensal',
     tutor_annual: 'Premium Anual',
     partner_basic: 'Parceiro Básico',
+    partner_annual: 'Parceiro Anual',
     partner_pro: 'Parceiro Profissional',
     partner_enterprise: 'Parceiro Empresarial',
   };

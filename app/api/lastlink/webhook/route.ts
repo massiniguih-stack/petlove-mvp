@@ -177,15 +177,29 @@ export async function POST(request: NextRequest) {
     // de quem pagou com partners.email (o mesmo e-mail cadastrado em
     // /parceiros/cadastro) — e aproveitamos pra gravar user_id, que é o
     // que dá acesso ao painel em /parceiro/dashboard.
+    //
+    // Escada de planos no mapa:
+    // - free (sem pagamento): premium=false, destaque=false
+    // - partner_basic: selo Premium, sem “Destaque” no topo
+    // - partner_pro / partner_enterprise / partner_annual: Premium + Destaque
     if (planType?.startsWith('partner_')) {
       const ativo = status === 'active';
+      const isTopTier =
+        planType === 'partner_pro' ||
+        planType === 'partner_enterprise' ||
+        planType === 'partner_annual';
+      const partnerFlags = {
+        premium: ativo,
+        destaque: ativo && isTopTier,
+        user_id: user.id,
+      };
       // O checkout de /parceiros/premium já exige login (mesma conta de
       // tutor), então `user` (achado acima por e-mail) é a conta que
       // comprou — gravamos o vínculo aqui pra habilitar o painel do
       // parceiro em /parceiro/dashboard sem precisar de convite separado.
       const { error: partnerError, count } = await supabaseAdmin
         .from('partners')
-        .update({ premium: ativo, destaque: ativo, user_id: user.id }, { count: 'exact' })
+        .update(partnerFlags, { count: 'exact' })
         .eq('email', buyerEmail);
       if (partnerError) {
         console.error('Failed to update partner premium status:', partnerError);
