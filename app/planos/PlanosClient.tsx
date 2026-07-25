@@ -8,6 +8,7 @@ import { BackButton } from '@/components/BackButton';
 import { PremiumIcon3D, PawIcon3D } from '@/components/Icons3D';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { trackMetaEvent } from '@/components/MetaPixel';
 
 // EXP-02A: alertas de vacina existem no produto free (cron não filtra Premium)
 const funcionalidades = [
@@ -24,10 +25,11 @@ const funcionalidades = [
   { nome: 'Comparação entre pets', gratis: false, premium: true },
 ];
 
-// Valores reais de lastlink_products (não estimados) — ver
-// app/api/admin/dashboard-stats/route.ts, que já usava o mesmo R$115/ano.
-const PRECO_MENSAL = 19.9;
-const PRECO_ANUAL = 115;
+// EXP-18 (aprovado 2026-07-24): mensal R$ 29,49 · anual R$ 238,80
+// (equiv. R$ 19,90/mês). Atualizar produtos LastLink com os mesmos valores.
+const PRECO_MENSAL = 29.49;
+const PRECO_ANUAL = 238.8;
+const DESCONTO_ANUAL_PCT = Math.round((1 - PRECO_ANUAL / (PRECO_MENSAL * 12)) * 100);
 
 export default function PlanosClient() {
   const [loading, setLoading] = useState(false);
@@ -44,13 +46,18 @@ export default function PlanosClient() {
       const supabase = createClient();
       const { data: { user: sessionUser } } = await supabase.auth.getUser();
       if (!sessionUser) {
+        trackMetaEvent('ViewContent', { content_name: 'tutor_auth_redirect_planos' });
+        setLoading(false);
         router.push('/login?next=/planos');
         return;
       }
+      const planType = periodo === 'anual' ? 'tutor_annual' : 'tutor_monthly';
+      // EXP-17: funil comercial mínimo (Meta Pixel, se configurado)
+      trackMetaEvent('InitiateCheckout', { content_name: planType });
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planType: periodo === 'anual' ? 'tutor_annual' : 'tutor_monthly' }),
+        body: JSON.stringify({ planType }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -103,7 +110,9 @@ export default function PlanosClient() {
                   className={`rounded-xl px-6 py-3 text-sm font-bold transition ${periodo === 'anual' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
                 >
                   Anual
-                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">-52%</span>
+                  <span className="ml-1.5 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-black text-emerald-700">
+                    -{DESCONTO_ANUAL_PCT}%
+                  </span>
                 </button>
               </div>
             </div>
@@ -206,7 +215,11 @@ export default function PlanosClient() {
                 disabled={loading}
                 className="mt-8 w-full rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-center text-sm font-bold text-white shadow-lg transition hover:shadow-xl disabled:opacity-50"
               >
-                {loading ? 'Carregando...' : periodo === 'anual' ? 'Assinar Premium anual' : 'Assinar Premium'}
+                {loading
+                  ? 'Carregando...'
+                  : periodo === 'anual'
+                    ? 'Liberar histórico e comparar pets (anual)'
+                    : 'Liberar histórico e comparar pets'}
               </button>
               {/* EXP-07 */}
               <p className="mt-3 text-center text-xs text-slate-500 dark:text-slate-400">

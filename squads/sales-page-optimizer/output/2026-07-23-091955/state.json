@@ -1,0 +1,44 @@
+{
+  "squad": "sales-page-optimizer",
+  "status": "completed",
+  "step": { "current": 5, "total": 5, "label": "step-05-checkpoint" },
+  "agents": [
+    {
+      "id": "carla-conversao",
+      "name": "Carla Conversao",
+      "icon": "📈",
+      "status": "done",
+      "desk": { "col": 1, "row": 1 }
+    },
+    {
+      "id": "bruno-branding",
+      "name": "Bruno Branding",
+      "icon": "✍️",
+      "status": "done",
+      "desk": { "col": 2, "row": 1 }
+    },
+    {
+      "id": "paula-prova",
+      "name": "Paula Prova",
+      "icon": "🔍",
+      "status": "done",
+      "desk": { "col": 3, "row": 1 }
+    },
+    {
+      "id": "valeria-validacao",
+      "name": "Valeria Validacao",
+      "icon": "✅",
+      "status": "done",
+      "desk": { "col": 1, "row": 2 }
+    }
+  ],
+  "handoff": {
+    "from": "valeria-validacao",
+    "to": "user",
+    "message": "Checkpoint concluído: remover 50% OFF e milhares; toggle parceiro cosmético fora; preços novos sob confirmação LastLink.",
+    "completedAt": "2026-07-23T17:20:00Z"
+  },
+  "startedAt": "2026-07-23T12:19:55Z",
+  "updatedAt": "2026-07-23T17:20:00Z",
+  "completedAt": "2026-07-23T17:20:00Z"
+}

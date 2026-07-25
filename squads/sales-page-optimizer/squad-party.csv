@@ -1,0 +1,5 @@
+id,name,role,path
+carla-conversao,Carla Conversao,Conversion strategist,./agents/carla-conversao.agent.md
+bruno-branding,Bruno Branding,Brand and UX writer,./agents/bruno-branding.agent.md
+paula-prova,Paula Prova,Proof and trust analyst,./agents/paula-prova.agent.md
+valeria-validacao,Valeria Validacao,QA and experiment validator,./agents/valeria-validacao.agent.md

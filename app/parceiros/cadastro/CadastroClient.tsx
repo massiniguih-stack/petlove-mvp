@@ -193,16 +193,16 @@ export default function CadastroClient() {
             </div>
 
             <div className="mt-8 rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-left text-white shadow-xl shadow-amber-500/30">
-              <p className="text-sm font-bold uppercase tracking-wide text-amber-100">Não quer esperar?</p>
-              <h2 className="mt-1 text-xl font-black">Apareça em destaque no mapa agora mesmo</h2>
+              <p className="text-sm font-bold uppercase tracking-wide text-amber-100">Quer mais visibilidade?</p>
+              <h2 className="mt-1 text-xl font-black">Planos pagos a partir de R$ 39,80/mês</h2>
               <p className="mt-2 text-sm text-amber-50">
-                Assinando o Premium, seu negócio já entra em destaque hoje, sem esperar a análise da nossa equipe.
+                Básico (selo + WhatsApp), Profissional e Empresarial (badge Destaque no mapa). Ativação após confirmação do pagamento — use o mesmo e-mail deste cadastro.
               </p>
               <a
                 href="/parceiros/premium"
                 className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 text-sm font-black text-orange-600 shadow-lg transition hover:shadow-xl"
               >
-                🏆 Assinar Premium agora
+                🏆 Ver planos e assinar
               </a>
             </div>
 
@@ -237,6 +237,12 @@ export default function CadastroClient() {
                   Seja um <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">Parceiro</span>
                 </h1>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no Patinha</p>
+                <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                  Listagem grátis após análise · destaque pago opcional a partir de R$ 39,80/mês ·{' '}
+                  <a href="/parceiros/premium" className="font-semibold text-blue-600 underline-offset-2 hover:underline dark:text-blue-400">
+                    ver planos
+                  </a>
+                </p>
               </div>
             </div>
           </div>

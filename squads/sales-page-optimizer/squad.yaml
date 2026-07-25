@@ -1,0 +1,31 @@
+id: sales-page-optimizer
+name: Sales Page Optimizer
+description: Otimiza páginas de venda do Patinha para conversão, clareza, prova e consistência visual sem prometer funcionalidades inexistentes.
+language: pt-BR
+version: 1.0.0
+status: active
+owner: Guilherme Massini
+entrypoint: pipeline/pipeline.yaml
+pages:
+  tutor:
+    - app/page.tsx
+    - app/cadastro/page.tsx
+    - app/planos/page.tsx
+    - app/planos/PlanosClient.tsx
+    - app/comparar/page.tsx
+  partner:
+    - app/parceiros/cadastro/page.tsx
+    - app/parceiros/cadastro/CadastroClient.tsx
+    - app/parceiros/premium/page.tsx
+    - app/parceiros/premium/PremiumClient.tsx
+constraints:
+  - Nao inventar funcionalidades ainda nao implementadas.
+  - Preservar fluxo LastLink em /api/lastlink/checkout.
+  - Preservar checks de login e rotas existentes.
+  - Recomendar alteracoes pequenas, testaveis e orientadas a impacto.
+outputs:
+  - squads/sales-page-optimizer/output/page-inventory.md
+  - squads/sales-page-optimizer/output/conversion-audit.md
+  - squads/sales-page-optimizer/output/messaging-proof-map.md
+  - squads/sales-page-optimizer/output/experiment-backlog.md
+  - squads/sales-page-optimizer/output/user-approval.md

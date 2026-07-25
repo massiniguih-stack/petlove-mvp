@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { calcularMeta } from '@/lib/metaDiaria';
 import { PremiumIcon3D, PawIcon3D } from '@/components/Icons3D';
+import { trackMetaEvent } from '@/components/MetaPixel';
 
 function GraficoComparativo({ titulo, icone, sufixo, dados, cor, unidade }: {
   titulo: string;
@@ -88,9 +89,13 @@ export default function CompararPage() {
               <div className="mx-auto flex justify-center"><PremiumIcon3D size={72} /></div>
               <h2 className="mt-3 text-xl font-black">Comparação entre pets é um recurso Premium</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-violet-100">
-                A partir de R$ 19,90/mês: comparar pets, pets ilimitados e histórico completo (além de 7 dias).
+                A partir de R$ 29,49/mês (ou R$ 19,90/mês no anual): comparar pets, pets ilimitados e histórico completo (além de 7 dias).
               </p>
-              <a href="/planos" className="mt-5 inline-block rounded-2xl bg-white px-6 py-3 text-sm font-black text-violet-600 shadow-lg transition hover:bg-violet-50 hover:shadow-xl">
+              <a
+                href="/planos"
+                onClick={() => trackMetaEvent('ViewContent', { content_name: 'paywall_comparar_cta' })}
+                className="mt-5 inline-block rounded-2xl bg-white px-6 py-3 text-sm font-black text-violet-600 shadow-lg transition hover:bg-violet-50 hover:shadow-xl"
+              >
                 Ver planos e assinar →
               </a>
             </div>

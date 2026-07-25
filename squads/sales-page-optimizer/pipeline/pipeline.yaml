@@ -1,0 +1,25 @@
+id: sales-page-optimizer-pipeline
+name: Sales Page Optimizer Pipeline
+description: Auditoria e plano de otimização das páginas comerciais do Patinha.
+language: pt-BR
+steps:
+  - id: step-01-map-pages
+    file: steps/step-01-map-pages.md
+    agent: carla-conversao
+    output: squads/sales-page-optimizer/output/page-inventory.md
+  - id: step-02-conversion-audit
+    file: steps/step-02-conversion-audit.md
+    agent: carla-conversao
+    output: squads/sales-page-optimizer/output/conversion-audit.md
+  - id: step-03-message-proof
+    file: steps/step-03-message-proof.md
+    agent: paula-prova
+    output: squads/sales-page-optimizer/output/messaging-proof-map.md
+  - id: step-04-experiment-plan
+    file: steps/step-04-experiment-plan.md
+    agent: valeria-validacao
+    output: squads/sales-page-optimizer/output/experiment-backlog.md
+  - id: step-05-checkpoint
+    file: steps/step-05-checkpoint.md
+    type: checkpoint
+    output: squads/sales-page-optimizer/output/user-approval.md

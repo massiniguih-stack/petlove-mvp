@@ -44,5 +44,19 @@ next-env.d.ts
 # opensquad local/runtime artifacts
 _opensquad/_browser_profile/
 _opensquad/logs/
+dashboard/node_modules/
+dashboard/dist/
 dashboard/test-results/
 *.bak
+
+# playwright / browser automation local state
+.playwright-mcp/
+
+# hyperframes / video renders (keep source, ignore heavy outputs)
+videos/**/output.mp4
+videos/**/frame-*.jpg
+videos/**/node_modules/
+videos/**/dist/
+
+# local agent scratch (not product source)
+agent/

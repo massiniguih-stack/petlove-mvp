@@ -1,0 +1,45 @@
+{
+  "squad": "sales-page-optimizer",
+  "status": "completed",
+  "step": { "current": 5, "total": 5, "label": "step-05-checkpoint" },
+  "agents": [
+    {
+      "id": "carla-conversao",
+      "name": "Carla Conversao",
+      "icon": "📈",
+      "status": "done",
+      "desk": { "col": 1, "row": 1 }
+    },
+    {
+      "id": "bruno-branding",
+      "name": "Bruno Branding",
+      "icon": "✍️",
+      "status": "done",
+      "desk": { "col": 2, "row": 1 }
+    },
+    {
+      "id": "paula-prova",
+      "name": "Paula Prova",
+      "icon": "🔍",
+      "status": "done",
+      "desk": { "col": 3, "row": 1 }
+    },
+    {
+      "id": "valeria-validacao",
+      "name": "Valeria Validacao",
+      "icon": "✅",
+      "status": "done",
+      "desk": { "col": 1, "row": 2 }
+    }
+  ],
+  "handoff": {
+    "from": "valeria-validacao",
+    "to": "user",
+    "message": "Checkpoint A2+B1 implementados. Atualizar LastLink 29,49 e 238,80 antes do deploy prod.",
+    "completedAt": "2026-07-24T23:55:00Z"
+  },
+  "startedAt": "2026-07-24T23:41:01Z",
+  "updatedAt": "2026-07-24T23:55:00Z",
+  "completedAt": "2026-07-24T23:55:00Z",
+  "runId": "2026-07-24-234101"
+}

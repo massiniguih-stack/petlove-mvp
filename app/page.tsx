@@ -18,6 +18,7 @@ import {
   GearIcon3D,
   ChartIcon3D,
 } from '@/components/Icons3D';
+import { trackMetaEvent } from '@/components/MetaPixel';
 
 const benefits = [
   { title: 'Saúde e peso', desc: 'Acompanhe o crescimento do seu pet.', Icon: ChartIcon3D },
@@ -148,9 +149,10 @@ export default function HomePage() {
               {!isPremium && (
                 <Link
                   href="/planos"
+                  onClick={() => trackMetaEvent('ViewContent', { content_name: 'upsell_hub_click' })}
                   className="mt-4 inline-flex items-center gap-2 rounded-full bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700 ring-1 ring-violet-200 transition hover:bg-violet-100 dark:bg-violet-950 dark:text-violet-300 dark:ring-violet-800"
                 >
-                  Premium: comparar pets · histórico completo · pets ilimitados →
+                  Premium a partir de R$ 29,49/mês · comparar · histórico · pets ilimitados →
                 </Link>
               )}
               <div className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-800">
@@ -324,10 +326,11 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* CTAs — EXP-03: tutor primário, parceiro secundário */}
+          {/* CTAs — EXP-03: tutor primário, parceiro secundário · EXP-17 eventos */}
           <div className="mx-auto mt-10 flex max-w-md flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/cadastro"
+              onClick={() => trackMetaEvent('ViewContent', { content_name: 'cta_home_tutor' })}
               className="inline-flex flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
             >
               Começar grátis
@@ -343,6 +346,7 @@ export default function HomePage() {
           <div className="mx-auto mt-4 max-w-md">
             <Link
               href="/parceiros/cadastro"
+              onClick={() => trackMetaEvent('ViewContent', { content_name: 'cta_home_parceiro' })}
               className="inline-flex w-full items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               Sou parceiro pet (vet / petshop)
