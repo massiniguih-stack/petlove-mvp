@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import { PremiumIcon3D, PinIcon3D, MedalIcon3D, StarIcon3D } from '@/components/Icons3D';
+import { trackMetaEvent } from '@/components/MetaPixel';
 import type { ComponentType } from 'react';
 
 type PaidPlanType = 'partner_basic' | 'partner_pro' | 'partner_enterprise';
@@ -22,6 +23,7 @@ const planos: {
   destaque?: boolean;
   features: string[];
 }[] = [
+  // EXP-19: bullets alinhados ao produto real (mapa: premium/destaque; WhatsApp se premium; painel se user_id)
   {
     id: 'free',
     nome: 'Grátis',
@@ -33,53 +35,53 @@ const planos: {
       'Cadastro do negócio no app',
       'Listagem no mapa (após análise)',
       'Perfil com contato e serviços',
-      'Sem destaque nem selo Premium',
+      'Sem selo Premium, destaque nem WhatsApp no app',
     ],
   },
   {
     id: 'partner_basic',
     nome: 'Básico',
-    descricao: 'Destaque essencial na sua cidade',
+    descricao: 'Selo e WhatsApp na sua cidade',
     mensal: 39.8,
     planType: 'partner_basic',
     cta: 'Assinar Básico',
     features: [
       'Tudo do Grátis',
-      'Selo Premium no mapa',
-      'Destaque na busca da cidade',
-      'Botão de WhatsApp no perfil',
-      'Ativação após pagamento',
+      'Selo Premium no card e no perfil',
+      'Sobe na lista da cidade (acima do grátis)',
+      'Botão de WhatsApp no perfil do mapa',
+      'Ativação após pagamento confirmado',
     ],
   },
   {
     id: 'partner_pro',
     nome: 'Profissional',
-    descricao: 'Para quem quer crescer com o app',
+    descricao: 'Destaque no topo + painel',
     mensal: 69.8,
     planType: 'partner_pro',
     cta: 'Assinar Profissional',
     destaque: true,
     features: [
       'Tudo do Básico',
-      'Prioridade comercial no mapa',
-      'Painel do parceiro (métricas)',
+      'Badge Destaque no mapa (prioridade extra)',
+      'Painel do parceiro com métricas',
       'Registro de serviços realizados',
-      'Melhor custo-benefício',
+      'Melhor custo-benefício para operação ativa',
     ],
   },
   {
     id: 'partner_enterprise',
     nome: 'Empresarial',
-    descricao: 'Redes, franquias e multi-unidade',
+    descricao: 'Máxima prioridade e canal com o time',
     mensal: 129.8,
     planType: 'partner_enterprise',
     cta: 'Assinar Empresarial',
     features: [
       'Tudo do Profissional',
-      'Ideal para redes e filiais',
-      'Visibilidade máxima na região',
+      'Mesmos benefícios de destaque no mapa',
+      'Plano para quem investe mais em visibilidade',
       'Canal preferencial com o time Patinha',
-      'Plano para operação maior',
+      'Ativação após pagamento confirmado',
     ],
   },
 ];
@@ -90,24 +92,24 @@ const beneficios: {
   descricao: string;
 }[] = [
   {
+    Icon: MedalIcon3D,
+    titulo: 'Selo Premium',
+    descricao: 'Nos planos pagos, o card ganha selo de confiança no mapa.',
+  },
+  {
     Icon: StarIcon3D,
-    titulo: 'Destaque no Mapa',
-    descricao: 'Planos pagos aparecem com selo e prioridade na lista da sua cidade.',
+    titulo: 'Badge Destaque',
+    descricao: 'No Pro e Empresarial, o negócio sobe ainda mais na lista da cidade.',
   },
   {
     Icon: PinIcon3D,
-    titulo: 'Prioridade na Busca',
-    descricao: 'Quando o tutor busca perto, negócios Premium sobem na fila.',
-  },
-  {
-    Icon: MedalIcon3D,
-    titulo: 'Selo Premium',
-    descricao: 'Badge de confiança no card e no perfil do estabelecimento.',
+    titulo: 'Ordem na busca',
+    descricao: 'Premium e Destaque entram na frente do grátis quando o tutor filtra perto.',
   },
   {
     Icon: PremiumIcon3D,
-    titulo: 'WhatsApp Direto',
-    descricao: 'Nos planos pagos, o tutor chama você em um toque pelo app.',
+    titulo: 'WhatsApp no app',
+    descricao: 'Planos pagos liberam o botão de WhatsApp no perfil do mapa.',
   },
 ];
 
@@ -130,6 +132,7 @@ export default function PremiumClient() {
         router.push('/login?next=/parceiros/premium');
         return;
       }
+      trackMetaEvent('InitiateCheckout', { content_name: planType });
       const res = await fetch('/api/lastlink/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

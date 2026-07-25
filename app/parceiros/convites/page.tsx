@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 
+const SITE = 'https://patinha-mvp.vercel.app';
+
 const mensagens = [
   {
     id: 'whatsapp',
@@ -15,20 +17,23 @@ const mensagens = [
     corText: 'text-emerald-700',
     mensagem: `🐾 Olá! Somos do Patinha, o app que conecta tutores de pets aos melhores serviços da cidade.
 
-Vi que a ${'{CLINICA}'} é uma ótima opção para os tutores da região e gostaríamos de convidá-la para ser nossa parceira Premium!
+Vi que a ${'{CLINICA}'} é uma ótima opção para os tutores da região e gostaríamos de convidá-los a entrar no mapa.
 
-✅ Destaque no mapa para toda a cidade
-✅ Selo de credibilidade no seu perfil
-✅ Acesso a milhares de tutores ativos
-✅ Métricas de visualização e contato
-✅ Suporte dedicado para seu negócio
+✅ Listagem grátis (após análise)
+✅ Planos pagos com selo e destaque
+✅ WhatsApp direto no perfil
+✅ Painel de métricas nos planos pagos
 
-🔥 Oferta exclusiva: 50% OFF para novos parceiros!
-De R$ 49,90 por apenas R$ 24,90/mês
+📋 Planos:
+• Grátis
+• Básico — R$ 39,80/mês
+• Profissional — R$ 69,80/mês
+• Empresarial — R$ 129,80/mês
 
-Quer saber mais? Acesse: patinha.app/parceiros/premium
+Veja os planos: ${SITE}/parceiros/premium
+Cadastro: ${SITE}/parceiros/cadastro
 
-Estamos à disposição para qualquer dúvida! 😊`,
+Estamos à disposição! 😊`,
   },
   {
     id: 'email',
@@ -37,35 +42,31 @@ Estamos à disposição para qualquer dúvida! 😊`,
     cor: 'from-blue-500 to-indigo-500',
     corBg: 'bg-blue-50',
     corText: 'text-blue-700',
-    mensagem: `Assunto: Convite para ser Parceiro Patinha — 50% OFF para sua clínica
+    mensagem: `Assunto: Convite para ser parceiro Patinha — mapa de serviços pet
 
 Prezado(a),
 
-Sou da equipe do Patinha, plataforma que conecta tutores de pets aos melhores serviços veterinários e pet shops do Brasil.
+Sou da equipe do Patinha, plataforma que conecta tutores de pets aos melhores serviços veterinários e pet shops.
 
-Identificamos que a ${'{CLINICA}'} seria um parceiro ideal para nossa rede, e gostaríamos de convidá-la a se juntar ao nosso programa de parceiros Premium.
+Identificamos que a ${'{CLINICA}'} seria um parceiro ideal e gostaríamos de convidá-los a se juntar ao mapa.
 
-Benefícios do Plano Premium:
-• Destaque no topo do mapa para sua região
-• Selo de credibilidade no perfil do estabelecimento
-• Galeria de até 20 fotos do seu espaço
-• Botão de WhatsApp para contato direto
-• Painel completo de métricas e analytics
-• Suporte prioritário 24 horas
+Planos disponíveis:
+• Grátis — listagem após análise
+• Básico — R$ 39,80/mês (selo Premium)
+• Profissional — R$ 69,80/mês (selo + destaque)
+• Empresarial — R$ 129,80/mês (máxima visibilidade)
 
-💰 Oferta Especial de Lançamento:
-Plano Básico: R$ 24,90/mês (era R$ 49,90)
-Plano Profissional: R$ 49,90/mês (era R$ 99,90)
-Plano Empresarial: R$ 99,90/mês (era R$ 199,90)
+Benefícios dos planos pagos:
+• Selo de credibilidade no mapa
+• Destaque na busca da cidade (Pro e Empresarial)
+• Botão de WhatsApp no perfil
+• Painel de métricas
 
-Para se cadastrar, acesse:
-https://patinha.app/parceiros/cadastro
-
-Ficamos à disposição para esclarecer qualquer dúvida.
+Cadastro: ${SITE}/parceiros/cadastro
+Planos: ${SITE}/parceiros/premium
 
 Atenciosamente,
-Equipe Patinha
-contato@patinha.app`,
+Equipe Patinha`,
   },
   {
     id: 'instagram',
@@ -78,19 +79,15 @@ contato@patinha.app`,
 
 Vi o perfil da ${'{CLINICA}'} e amei o trabalho de vocês! 🐶🐱
 
-Sou do Patinha, um app que ajuda tutores a encontrarem os melhores serviços para seus pets.
+Sou do Patinha, app que ajuda tutores a encontrarem serviços pet perto de casa.
 
-Estamos convidando clínicas e pet shops da região para serem nossos parceiros Premium. É uma chance incrível de ganhar visibilidade e atrair novos clientes!
+Estamos convidando clínicas e pet shops da região para entrarem no mapa — tem opção grátis e planos pagos com selo e destaque.
 
-Os benefícios são:
-⭐ Destaque no mapa
-📸 Galeria de fotos
-💬 WhatsApp direto no perfil
-📊 Métricas de visualização
+Planos: Grátis · Básico R$ 39,80 · Pro R$ 69,80 · Empresarial R$ 129,80
 
-E o melhor: estamos com 50% OFF para novos parceiros! Apenas R$ 24,90/mês.
+Quer saber mais? ${SITE}/parceiros/premium
 
-Quer saber mais? Me manda que te explico tudo! 😄`,
+Me manda que te explico! 😄`,
   },
   {
     id: 'presencial',
@@ -102,21 +99,21 @@ Quer saber mais? Me manda que te explico tudo! 😄`,
     mensagem: `Script de abordagem presencial:
 
 1. Apresentação:
-"Olá! Tudo bem? Meu nome é [SEU NOME], sou representante do Patinha. Posso falar com o(a) dono(a) ou responsável?"
+"Olá! Tudo bem? Meu nome é [SEU NOME], sou da Patinha. Posso falar com o(a) dono(a) ou responsável?"
 
-2. Apresentação do app:
-"O Patinha é um aplicativo que conecta tutores de pets aos melhores serviços da cidade. Temos milhares de usuários ativos buscando clínicas e pet shops."
+2. App:
+"O Patinha é um aplicativo que conecta tutores de pets aos serviços da cidade — mapa, saúde e ração."
 
 3. Convite:
-"Estamos convidando estabelecimentos da região para serem nossos parceiros Premium. Com o plano, a ${'{CLINICA}'} ganharia destaque no mapa, um selo de credibilidade e acesso direto a novos clientes."
+"Estamos convidando estabelecimentos da região. A ${'{CLINICA}'} pode entrar grátis (após análise) ou assinar Básico, Profissional ou Empresarial para selo e destaque."
 
-4. Oferta:
-"Estamos com uma promoção de lançamento: 50% OFF para novos parceiros. O plano Básico sai por apenas R$ 24,90 por mês."
+4. Preços:
+"Básico R$ 39,80 · Profissional R$ 69,80 · Empresarial R$ 129,80 por mês."
 
 5. Próximo passo:
-"Posso deixar este material informativo? E se quiser, posso fazer o cadastro agora mesmo pelo meu celular!"
+"Posso deixar o link de cadastro? ${SITE}/parceiros/cadastro"
 
-Material de apoio: Cartão de visita + Flyer com QR Code para cadastro.`,
+Material: cartão + QR Code para cadastro.`,
   },
   {
     id: 'ligacao',
@@ -128,27 +125,26 @@ Material de apoio: Cartão de visita + Flyer com QR Code para cadastro.`,
     mensagem: `Script de ligação:
 
 1. Abertura:
-"Boa tarde! Falo com o(a) dono(a) da ${'{CLINICA}'}? 
-Meu nome é [SEU NOME], ligando em nome do Patinha."
+"Boa tarde! Falo com o(a) dono(a) da ${'{CLINICA}'}?
+Meu nome é [SEU NOME], da Patinha."
 
 2. Contexto:
-"O Patinha é um aplicativo que conecta tutores de pets a clínicas e pet shops. Estamos expandindo na região e identificamos que a ${'{CLINICA}'} seria um parceiro ideal."
+"O Patinha é um app que conecta tutores a clínicas e pet shops. Estamos expandindo na região e a ${'{CLINICA}'} seria um parceiro ideal."
 
 3. Benefícios:
-"Com o plano Premium, a clínica ganharia:
-- Destaque no topo do mapa para toda a cidade
-- Selo de credibilidade no perfil
-- Botão de WhatsApp para contato direto
-- Acesso a milhares de tutores ativos"
+"- Entrada grátis no mapa (após análise)
+- Planos pagos com selo Premium e destaque
+- WhatsApp no perfil
+- Painel de métricas"
 
-4. Oferta:
-"Estamos com uma condição especial de lançamento: 50% OFF para novos parceiros. A partir de R$ 24,90 por mês, sem contrato mínimo."
+4. Preços:
+"Básico R$ 39,80 · Profissional R$ 69,80 · Empresarial R$ 129,80 / mês."
 
 5. Fechamento:
-"Posso enviar mais informações por WhatsApp? Ou se preferir, posso fazer o cadastro agora mesmo em poucos minutos!"
+"Posso enviar o link por WhatsApp? ${SITE}/parceiros/premium"
 
 Se não tiver interesse:
-"Sem problemas! Posso deixar nosso contato para quando tiver interesse? Obrigado pela atenção!"`,
+"Sem problemas! Deixo nosso contato para quando quiser. Obrigado!"`,
   },
 ];
 
@@ -164,96 +160,58 @@ export default function ConvitesPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-amber-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-amber-950/30">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-violet-950/30">
       <Navbar />
       <main className="flex-1">
-        <div className="mx-auto max-w-5xl px-4 py-10">
+        <div className="mx-auto max-w-4xl px-4 py-10">
+          <BackButton href="/admin" label="Voltar ao admin" />
+          <h1 className="mt-4 text-3xl font-black text-slate-900 dark:text-white">
+            Scripts de convite a parceiros
+          </h1>
+          <p className="mt-2 text-slate-500 dark:text-slate-400">
+            Preços reais: Grátis · Básico R$ 39,80 · Pro R$ 69,80 · Empresarial R$ 129,80
+          </p>
 
-          {/* Header */}
-          <div className="mb-8">
-            <BackButton href="/parceiros/premium" label="Voltar" />
-            <div className="mt-4 text-center">
-              <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
-                <span>📨</span> Convites para Parceiros
-              </div>
-              <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                Mensagens prontas para <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">convite</span>
-              </h1>
-              <p className="mt-3 text-slate-500 dark:text-slate-400">Copie e envie para clínicas e pet shops da sua região</p>
-            </div>
-          </div>
-
-          {/* Input da clínica */}
-          <div className="mb-8 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Nome da clínica/pet shop (opcional)</label>
+          <div className="mt-6">
+            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+              Nome da clínica (substitui {'{CLINICA}'})
+            </label>
             <input
-              type="text"
               value={clinica}
               onChange={(e) => setClinica(e.target.value)}
-              placeholder="Ex: VetCare Clínica Veterinária"
-              className="mt-2 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              placeholder="Ex: Clínica Vet Amor"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-900"
             />
-            <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-              Se preencher, o nome será inserido automaticamente nas mensagens
-            </p>
           </div>
 
-          {/* Mensagens */}
-          <div className="space-y-6">
+          <div className="mt-8 space-y-6">
             {mensagens.map((m) => (
-              <div key={m.id} className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-                <div className={`flex items-center justify-between bg-gradient-to-r ${m.cor} p-4`}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{m.icone}</span>
-                    <h3 className="text-lg font-black text-white">{m.titulo}</h3>
-                  </div>
-                  <button
-                    onClick={() => copiarMensagem(m.mensagem, m.id)}
-                    className={`rounded-xl px-4 py-2 text-sm font-bold transition ${
-                      mensagemCopiada === m.id
-                        ? 'bg-white text-emerald-600'
-                        : 'bg-white/20 text-white hover:bg-white/30'
-                    }`}
-                  >
-                    {mensagemCopiada === m.id ? '✓ Copiado!' : '📋 Copiar'}
-                  </button>
+              <div
+                key={m.id}
+                className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+              >
+                <div className={`bg-gradient-to-r ${m.cor} px-5 py-3 text-white`}>
+                  <h2 className="text-lg font-black">
+                    {m.icone} {m.titulo}
+                  </h2>
                 </div>
-                <div className="p-6">
-                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                <div className="p-5">
+                  <pre className="whitespace-pre-wrap rounded-2xl bg-slate-50 p-4 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-200">
                     {m.mensagem.replace(/{CLINICA}/g, clinica || '[Nome da Clínica]')}
                   </pre>
+                  <button
+                    type="button"
+                    onClick={() => copiarMensagem(m.mensagem, m.id)}
+                    className={`mt-4 rounded-xl px-5 py-2.5 text-sm font-bold text-white ${
+                      mensagemCopiada === m.id ? 'bg-emerald-500' : 'bg-slate-900 dark:bg-violet-600'
+                    }`}
+                  >
+                    {mensagemCopiada === m.id ? '✓ Copiado!' : 'Copiar mensagem'}
+                  </button>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Dicas */}
-          <div className="mt-12 rounded-3xl border border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950 dark:to-orange-950 p-8">
-            <h2 className="text-xl font-black text-slate-900 dark:text-white">💡 Dicas para o convite</h2>
-            <ul className="mt-4 space-y-3 text-sm text-slate-700 dark:text-slate-300">
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-amber-500">✓</span>
-                <span>Pesquise o nome do estabelecimento antes de enviar o convite</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-amber-500">✓</span>
-                <span>Personalize a mensagem mencionando algo específico do negócio</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-amber-500">✓</span>
-                <span>Envie em horário comercial (9h-18h) para melhor resposta</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-amber-500">✓</span>
-                <span>Se não responder em 3 dias, faça um follow-up educado</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-amber-500">✓</span>
-                <span>Ofereça fazer o cadastro gratuitamente para facilitar o processo</span>
-              </li>
-            </ul>
-          </div>
-
         </div>
       </main>
       <Footer />

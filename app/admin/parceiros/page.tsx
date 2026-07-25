@@ -32,7 +32,7 @@ function linkWhatsapp(parceiro: Partner): string | null {
   const check = '✅';
   const fogo = '\u{1F525}';
   const sorriso = '\u{1F60A}';
-  const mensagem = `${pata} Olá! Somos do Patinha, o app que conecta tutores de pets aos melhores serviços da cidade.\n\nVi que a ${parceiro.nome} é uma ótima opção para os tutores de ${parceiro.cidade || 'sua região'} e gostaríamos de convidá-la para ser nossa parceira Premium!\n\n${check} Destaque no mapa\n${check} Selo de credibilidade\n${check} Acesso a milhares de tutores ativos\n\n${fogo} 50% OFF pra novos parceiros: patinha.app/parceiros/premium\n\nEstamos à disposição! ${sorriso}`;
+  const mensagem = `${pata} Olá! Somos do *Patinha*, o app que conecta tutores de pets aos melhores serviços da cidade.\n\nVi que a *${parceiro.nome}* é uma ótima opção para os tutores de ${parceiro.cidade || 'sua região'} e gostaríamos de convidá-los a entrar no mapa.\n\n${check} Listagem grátis (após análise)\n${check} Planos pagos com selo e destaque\n${check} WhatsApp direto no perfil\n\n${fogo} Planos:\n• Grátis\n• Básico — R$ 39,80/mês\n• Profissional — R$ 69,80/mês\n• Empresarial — R$ 129,80/mês\n\nVeja os planos: https://patinha-mvp.vercel.app/parceiros/premium\nCadastro: https://patinha-mvp.vercel.app/parceiros/cadastro\n\nEstamos à disposição! ${sorriso}`;
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 }
 

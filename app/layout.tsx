@@ -2,6 +2,7 @@ import { AuthProvider } from '@/providers/AuthProvider'
 import { DarkModeProvider } from '@/providers/DarkModeProvider'
 import { SubscriptionLoader } from '@/components/SubscriptionLoader'
 import { UtmCapture } from '@/components/UtmCapture'
+import { MetaPixel } from '@/components/MetaPixel'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import '../styles/globals.css'
 
@@ -46,6 +47,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={jakarta.variable} suppressHydrationWarning>
       <body className={`${jakarta.className} antialiased`}>
+        <MetaPixel />
         <UtmCapture />
         <DarkModeProvider>
           <AuthProvider>

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
+import { trackMetaEvent } from '@/components/MetaPixel'
 
 export function SignupForm() {
   const [nome, setNome] = useState('')
@@ -28,6 +29,8 @@ export function SignupForm() {
       setLoading(false)
       return
     }
+
+    trackMetaEvent('CompleteRegistration', { content_name: 'tutor_signup' })
 
     if (hasSession) {
       // Conta pronta: próximo passo é cadastrar o pet

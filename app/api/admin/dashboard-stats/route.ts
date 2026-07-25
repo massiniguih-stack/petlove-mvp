@@ -6,8 +6,8 @@ import { getSupabaseAdmin, isAdmin, ADMIN_EMAILS } from '@/lib/supabase/admin';
 // to estimate MRR. Plans not listed here are still counted but excluded
 // from the revenue estimate rather than guessed at.
 const PRECO_MENSAL: Record<string, number> = {
-  tutor_monthly: 19.9,
-  tutor_annual: 115 / 12, // R$115/ano (ver lastlink_products) convertido pra equivalente mensal
+  tutor_monthly: 29.49,
+  tutor_annual: 238.8 / 12, // R$238,80/ano ≈ R$19,90/mês (EXP-18)
   partner_basic: 39.8,
   partner_annual: 238.8 / 12, // legado / opcional se existir produto anual
   partner_pro: 69.8,
