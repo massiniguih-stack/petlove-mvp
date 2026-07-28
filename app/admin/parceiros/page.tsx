@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { emojiServico } from '@/lib/tiposServico';
+import { buildPartnerWhatsAppMessage, buildPartnerWhatsAppUrl } from '@/lib/partner-invite-messages';
 
 interface Partner {
   id: string;
@@ -26,14 +27,10 @@ interface Partner {
 
 function linkWhatsapp(parceiro: Partner): string | null {
   if (!parceiro.telefone) return null;
-  const digitos = parceiro.telefone.replace(/\D/g, '');
-  const numero = digitos.startsWith('55') ? digitos : `55${digitos}`;
-  const pata = '\u{1F43E}';
-  const check = '✅';
-  const fogo = '\u{1F525}';
-  const sorriso = '\u{1F60A}';
-  const mensagem = `${pata} Olá! Somos do *Patinha*, o app que conecta tutores de pets aos melhores serviços da cidade.\n\nVi que a *${parceiro.nome}* é uma ótima opção para os tutores de ${parceiro.cidade || 'sua região'} e gostaríamos de convidá-los a entrar no mapa.\n\n${check} Listagem grátis (após análise)\n${check} Planos pagos com selo e destaque\n${check} WhatsApp direto no perfil\n\n${fogo} Planos:\n• Grátis\n• Básico — R$ 39,80/mês\n• Profissional — R$ 69,80/mês\n• Empresarial — R$ 129,80/mês\n\nVeja os planos: https://patinha-mvp.vercel.app/parceiros/premium\nCadastro: https://patinha-mvp.vercel.app/parceiros/cadastro\n\nEstamos à disposição! ${sorriso}`;
-  return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+  return buildPartnerWhatsAppUrl(parceiro.telefone, {
+    nome: parceiro.nome,
+    cidade: parceiro.cidade,
+  });
 }
 
 export default function AdminParceirosPage() {
@@ -221,8 +218,23 @@ export default function AdminParceirosPage() {
     <div className="p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Parceiros</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Gerencie os parceiros cadastrados no banco de dados</p>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Gerencie parceiros e dispare WhatsApp com a mensagem de apresentação do Patinha (marcação de contatado já integrada).
+        </p>
       </div>
+
+      <details className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950">
+        <summary className="cursor-pointer text-sm font-bold text-emerald-900 dark:text-emerald-200">
+          💬 Prévia da mensagem de WhatsApp (apresentação do app)
+        </summary>
+        <pre className="mt-3 whitespace-pre-wrap rounded-xl bg-white/80 p-3 text-xs leading-relaxed text-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
+          {buildPartnerWhatsAppMessage({ nome: '[Nome do parceiro]', cidade: '[cidade]' })}
+        </pre>
+        <p className="mt-2 text-[11px] text-emerald-800/80 dark:text-emerald-300/80">
+          Essa é a mensagem que a fila e o botão WhatsApp abrem no wa.me. Edite em{' '}
+          <code className="rounded bg-white/60 px-1 dark:bg-slate-800">lib/partner-invite-messages.ts</code>.
+        </p>
+      </details>
 
       <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950 sm:flex-row sm:items-center sm:justify-between">
         <div>
