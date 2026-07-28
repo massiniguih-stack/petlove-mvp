@@ -4,36 +4,18 @@ import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
-
-const SITE = 'https://patinha-mvp.vercel.app';
+import { SITE, partnerWhatsAppTemplate } from '@/lib/partner-invite-messages';
 
 const mensagens = [
   {
     id: 'whatsapp',
-    titulo: 'WhatsApp — Convite Direto',
+    titulo: 'WhatsApp — Apresentação + convite',
     icone: '💬',
     cor: 'from-emerald-500 to-green-500',
     corBg: 'bg-emerald-50',
     corText: 'text-emerald-700',
-    mensagem: `🐾 Olá! Somos do Patinha, o app que conecta tutores de pets aos melhores serviços da cidade.
-
-Vi que a ${'{CLINICA}'} é uma ótima opção para os tutores da região e gostaríamos de convidá-los a entrar no mapa.
-
-✅ Listagem grátis (após análise)
-✅ Planos pagos com selo e destaque
-✅ WhatsApp direto no perfil
-✅ Painel de métricas nos planos pagos
-
-📋 Planos:
-• Grátis
-• Básico — R$ 39,80/mês
-• Profissional — R$ 69,80/mês
-• Empresarial — R$ 129,80/mês
-
-Veja os planos: ${SITE}/parceiros/premium
-Cadastro: ${SITE}/parceiros/cadastro
-
-Estamos à disposição! 😊`,
+    // Mesmo texto da fila do admin (/admin/parceiros)
+    mensagem: partnerWhatsAppTemplate('{CLINICA}'),
   },
   {
     id: 'email',
@@ -169,7 +151,7 @@ export default function ConvitesPage() {
             Scripts de convite a parceiros
           </h1>
           <p className="mt-2 text-slate-500 dark:text-slate-400">
-            Preços reais: Grátis · Básico R$ 39,80 · Pro R$ 69,80 · Empresarial R$ 129,80
+            Texto de WhatsApp = o mesmo da fila em /admin/parceiros. Preços: Grátis · Básico R$ 39,80 · Pro R$ 69,80 · Empresarial R$ 129,80
           </p>
 
           <div className="mt-6">
