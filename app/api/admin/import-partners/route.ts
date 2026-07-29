@@ -118,8 +118,25 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id, email, marcarWhatsapp } = await req.json();
+  const { id, email, marcarWhatsapp, limparWhatsappTodos } = await req.json();
   const supabaseAdmin = getSupabaseAdmin();
+
+  // Zera a marca "WhatsApp contatado" de todos (fila recomeça do zero)
+  if (limparWhatsappTodos) {
+    const { data, error } = await supabaseAdmin
+      .from('partners')
+      .update({ whatsapp_contatado_em: null })
+      .not('whatsapp_contatado_em', 'is', null)
+      .select('id');
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ success: true, cleared: data?.length || 0 });
+  }
+
+  if (!id) {
+    return NextResponse.json({ error: 'id is required' }, { status: 400 });
+  }
 
   const updates: Record<string, unknown> = {};
   if (email !== undefined) {
@@ -130,7 +147,12 @@ export async function PATCH(req: NextRequest) {
     // lib/partner.ts) recria o vínculo certo assim que o dono de fato logar.
     updates.user_id = null;
   }
-  if (marcarWhatsapp) updates.whatsapp_contatado_em = new Date().toISOString();
+  if (marcarWhatsapp === true) updates.whatsapp_contatado_em = new Date().toISOString();
+  if (marcarWhatsapp === false) updates.whatsapp_contatado_em = null;
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: 'nothing to update' }, { status: 400 });
+  }
 
   const { error } = await supabaseAdmin
     .from('partners')
