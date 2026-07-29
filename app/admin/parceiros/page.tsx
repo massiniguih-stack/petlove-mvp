@@ -223,16 +223,20 @@ export default function AdminParceirosPage() {
         </p>
       </div>
 
-      <details className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950">
+      <details className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950" open>
         <summary className="cursor-pointer text-sm font-bold text-emerald-900 dark:text-emerald-200">
-          💬 Prévia da mensagem de WhatsApp (apresentação do app)
+          💬 Mensagem única de WhatsApp (persuasiva — crescimento e reconhecimento)
         </summary>
         <pre className="mt-3 whitespace-pre-wrap rounded-xl bg-white/80 p-3 text-xs leading-relaxed text-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
           {buildPartnerWhatsAppMessage({ nome: '[Nome do parceiro]', cidade: '[cidade]' })}
         </pre>
         <p className="mt-2 text-[11px] text-emerald-800/80 dark:text-emerald-300/80">
-          Essa é a mensagem que a fila e o botão WhatsApp abrem no wa.me. Edite em{' '}
-          <code className="rounded bg-white/60 px-1 dark:bg-slate-800">lib/partner-invite-messages.ts</code>.
+          Única mensagem da fila e do botão WhatsApp. Fonte:{' '}
+          <code className="rounded bg-white/60 px-1 dark:bg-slate-800">lib/partner-invite-messages.ts</code>
+          {' · '}
+          <Link href="/parceiros/convites" className="underline">
+            ver e copiar
+          </Link>
         </p>
       </details>
 
@@ -263,7 +267,7 @@ export default function AdminParceirosPage() {
             target="_blank"
             className="inline-flex items-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
           >
-            ✉️ Ver textos de convite
+            💬 Ver mensagem de WhatsApp
           </Link>
         </div>
       </div>

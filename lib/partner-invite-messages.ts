@@ -1,6 +1,6 @@
 /**
- * Textos de outreach a parceiros (WhatsApp, e-mail, etc.).
- * Fonte única: admin /parceiros e scripts em /parceiros/convites.
+ * Única mensagem de outreach a parceiros: WhatsApp.
+ * Usada em /admin/parceiros (fila) e /parceiros/convites.
  */
 
 export const SITE = 'https://patinha-mvp.vercel.app';
@@ -10,38 +10,36 @@ export type PartnerInviteContext = {
   cidade?: string | null;
 };
 
-/** Mensagem de apresentação + convite para WhatsApp (wa.me). */
+/**
+ * Mensagem persuasiva para o dono da clínica/pet shop:
+ * facilidade, crescimento e reconhecimento no mapa do Patinha.
+ */
 export function buildPartnerWhatsAppMessage(parceiro: PartnerInviteContext): string {
-  const cidade = parceiro.cidade?.trim() || 'sua região';
-  const nome = parceiro.nome.trim() || 'seu negócio';
+  const cidade = parceiro.cidade?.trim() || 'sua cidade';
+  const nome = parceiro.nome.trim() || 'sua clínica';
 
   return (
-    `🐾 *Patinha* — apresentação rápida\n` +
+    `Olá! Tudo bem? 🐾\n` +
     `\n` +
-    `Olá! Tudo bem?\n` +
+    `Falo da equipe do *Patinha* — o app em que tutores de ${cidade} cuidam do pet e *buscam clínicas e pet shops perto de casa*.\n` +
     `\n` +
-    `Somos do *Patinha*, um app para tutores de cães e gatos organizarem o dia a dia do pet (saúde, peso, ração, vacinas e atividades) e *encontrarem serviços perto de casa* no mapa.\n` +
+    `A *${nome}* pode estar *lá*, na frente dos tutores certos, com *muito pouco esforço* da sua parte.\n` +
     `\n` +
-    `Vi a *${nome}* em *${cidade}* e achei que faz muito sentido aparecerem para esses tutores.\n` +
+    `✨ *Por que isso importa pra você*\n` +
+    `• *Crescimento* — mais tutores te encontram quando precisam de consulta, banho, hotel…\n` +
+    `• *Reconhecimento* — seu nome e serviços aparecem com clareza no mapa da região\n` +
+    `• *Facilidade* — cadastro rápido, sem complicação; a gente te ajuda se precisar\n` +
     `\n` +
-    `✅ *Listagem grátis* no mapa (após uma análise rápida)\n` +
-    `✅ Perfil com serviços e contato\n` +
-    `✅ Planos pagos opcionais: selo Premium, WhatsApp no app e destaque na cidade\n` +
+    `📍 Dá pra *começar grátis* (listagem no mapa após uma análise simples). Se quiser ainda mais visibilidade, tem planos com selo e destaque — mas o primeiro passo é entrar.\n` +
     `\n` +
-    `📋 *Planos*\n` +
-    `• Grátis — entrar no mapa\n` +
-    `• Básico — R$ 39,80/mês (selo + WhatsApp)\n` +
-    `• Profissional — R$ 69,80/mês (selo + *Destaque* + painel)\n` +
-    `• Empresarial — R$ 129,80/mês (máxima prioridade)\n` +
+    `👉 Cadastro em poucos minutos:\n` +
+    `${SITE}/parceiros/cadastro\n` +
     `\n` +
-    `🔗 Ver planos: ${SITE}/parceiros/premium\n` +
-    `📝 Cadastro: ${SITE}/parceiros/cadastro\n` +
-    `\n` +
-    `Se quiser, respondo por aqui e te ajudo no cadastro. Obrigado! 😊`
+    `Se preferir, responde aqui que eu te oriento passo a passo. Vale a pena estar onde o tutor já está olhando. 😊`
   );
 }
 
-/** Monta URL wa.me com a mensagem de apresentação. */
+/** Monta URL wa.me com a mensagem única de WhatsApp. */
 export function buildPartnerWhatsAppUrl(telefone: string, parceiro: PartnerInviteContext): string | null {
   const digitos = telefone.replace(/\D/g, '');
   if (digitos.length < 10) return null;
@@ -50,10 +48,10 @@ export function buildPartnerWhatsAppUrl(telefone: string, parceiro: PartnerInvit
   return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 }
 
-/** Template genérico com placeholder {CLINICA} (página de scripts). */
+/** Template com placeholder {CLINICA} (página de prévia). */
 export function partnerWhatsAppTemplate(clinicaPlaceholder = '{CLINICA}'): string {
   return buildPartnerWhatsAppMessage({
     nome: clinicaPlaceholder,
-    cidade: 'sua região',
+    cidade: 'sua cidade',
   });
 }
