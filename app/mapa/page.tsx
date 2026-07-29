@@ -368,6 +368,18 @@ export default function MapaPage() {
             )}
           </div>
 
+          {busca && !carregandoServicos && (
+            <p
+              className={`mb-3 px-1 text-xs font-bold ${
+                listaFiltrada.length === 0 ? 'text-red-500' : 'text-slate-500 dark:text-slate-400'
+              }`}
+            >
+              {listaFiltrada.length === 0
+                ? `Nada encontrado para "${busca}" em ${cidade}.`
+                : `${listaFiltrada.length} resultado${listaFiltrada.length !== 1 ? 's' : ''} para "${busca}"`}
+            </p>
+          )}
+
           {/* Cidade + Ordenação */}
           <div className="mb-6 flex flex-col gap-3 sm:flex-row">
             <div className="flex-1 relative">
