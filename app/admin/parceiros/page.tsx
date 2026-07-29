@@ -50,6 +50,7 @@ export default function AdminParceirosPage() {
   const [filaAtiva, setFilaAtiva] = useState(false);
   const [puladosNaFila, setPuladosNaFila] = useState<Set<string>>(new Set());
   const [contatandoFila, setContatandoFila] = useState(false);
+  const [limpandoWhatsapp, setLimpandoWhatsapp] = useState(false);
 
   const carregarParceiros = useCallback(async () => {
     setLoading(true);
@@ -137,8 +138,18 @@ export default function AdminParceirosPage() {
 
   const contatarWhatsapp = async (parceiro: Partner) => {
     const url = linkWhatsapp(parceiro);
-    if (!url) return;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    if (!url) {
+      setMensagem(
+        `Telefone inválido em “${parceiro.nome}” (${parceiro.telefone || 'vazio'}). Use só números com DDD (ex.: 11999998888) ou Pular na fila.`
+      );
+      return;
+    }
+    const opened = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!opened) {
+      // Brave/pop-up: tenta na mesma aba de fallback
+      window.location.href = url;
+      return;
+    }
     try {
       await fetch('/api/admin/import-partners', {
         method: 'PATCH',
@@ -181,16 +192,42 @@ export default function AdminParceirosPage() {
     return { total, comEmail, enviados, pendentesComEmail, comTelefone, contatadosWhatsapp };
   }, [partners]);
 
-  // Fila: usa a mesma lista já filtrada (busca/tipo), restrita a quem tem
-  // telefone e ainda não foi contatado — e vai sumindo sozinha conforme
-  // contatarWhatsapp() marca cada um, sem precisar voltar pra lista.
+  // Fila: lista filtrada, telefone com ≥10 dígitos (evita "sadsa"), não contatado.
   const filaPendentes = useMemo(() => {
-    return parceiros.filter((p) => p.telefone && !p.whatsapp_contatado_em && !puladosNaFila.has(p.id));
+    return parceiros.filter((p) => {
+      const digitos = (p.telefone || '').replace(/\D/g, '');
+      return digitos.length >= 10 && !p.whatsapp_contatado_em && !puladosNaFila.has(p.id);
+    });
   }, [parceiros, puladosNaFila]);
 
   const iniciarFila = () => {
     setPuladosNaFila(new Set());
     setFilaAtiva(true);
+  };
+
+  const limparMarcasWhatsapp = async () => {
+    if (!confirm('Desmarcar TODOS os WhatsApp como “contatado”? A fila volta do zero.')) return;
+    setLimpandoWhatsapp(true);
+    setMensagem(null);
+    try {
+      const res = await fetch('/api/admin/import-partners', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ limparWhatsappTodos: true }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPartners((prev) => prev.map((p) => ({ ...p, whatsapp_contatado_em: null })));
+        setPuladosNaFila(new Set());
+        setMensagem(`✓ WhatsApp desmarcado em ${data.cleared ?? 0} parceiro(s) — fila liberada`);
+      } else {
+        setMensagem(data.error || 'Erro ao desmarcar WhatsApp');
+      }
+    } catch {
+      setMensagem('Erro ao desmarcar WhatsApp');
+    } finally {
+      setLimpandoWhatsapp(false);
+    }
   };
 
   const contatarNaFila = async (parceiro: Partner) => {
@@ -261,6 +298,14 @@ export default function AdminParceirosPage() {
             className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
           >
             {importando ? '...' : '⬆️ Importar dados de exemplo'}
+          </button>
+          <button
+            type="button"
+            onClick={limparMarcasWhatsapp}
+            disabled={limpandoWhatsapp || stats.contatadosWhatsapp === 0}
+            className="rounded-xl border border-green-300 bg-white px-4 py-2.5 text-sm font-bold text-green-800 shadow-sm transition hover:bg-green-50 disabled:opacity-50 dark:border-green-800 dark:bg-slate-900 dark:text-green-300 dark:hover:bg-green-950"
+          >
+            {limpandoWhatsapp ? '...' : `🔄 Zerar marcas WhatsApp (${stats.contatadosWhatsapp})`}
           </button>
           <Link
             href="/parceiros/convites"
