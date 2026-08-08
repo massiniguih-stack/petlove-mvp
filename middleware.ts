@@ -29,8 +29,8 @@ export async function middleware(request: NextRequest) {
   // Modo revisão local: liberar todas as rotas (sem login)
   // Ativar com OPEN_ACCESS=true no .env.local — desligar antes de produção.
   const openAccess =
-    process.env.OPEN_ACCESS === 'true' ||
-    process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
+    process.env.NODE_ENV !== 'production' &&
+    (process.env.OPEN_ACCESS === 'true' || process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true')
 
   if (openAccess) {
     return response
