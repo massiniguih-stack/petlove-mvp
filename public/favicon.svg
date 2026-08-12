@@ -1,48 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24"/>
-      <stop offset="100%" stop-color="#f59e0b"/>
-    </linearGradient>
-    <linearGradient id="earGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#d97706"/>
-      <stop offset="100%" stop-color="#b45309"/>
-    </linearGradient>
-    <linearGradient id="bellyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#fef3c7"/>
-      <stop offset="100%" stop-color="#fde68a"/>
-    </linearGradient>
-    <linearGradient id="noseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#374151"/>
-      <stop offset="100%" stop-color="#1f2937"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea580c"/>
     </linearGradient>
   </defs>
-  
-  <ellipse cx="32" cy="58" rx="18" ry="4" fill="#000" opacity="0.1"/>
-  <ellipse cx="32" cy="42" rx="16" ry="14" fill="url(#bodyGrad)"/>
-  <ellipse cx="32" cy="44" rx="10" ry="8" fill="url(#bellyGrad)"/>
-  <ellipse cx="18" cy="22" rx="8" ry="12" fill="url(#earGrad)" transform="rotate(-15 18 22)"/>
-  <ellipse cx="46" cy="22" rx="8" ry="12" fill="url(#earGrad)" transform="rotate(15 46 22)"/>
-  <circle cx="32" cy="28" r="16" fill="url(#bodyGrad)"/>
-  <ellipse cx="32" cy="32" rx="10" ry="8" fill="url(#bellyGrad)"/>
-  <circle cx="26" cy="26" r="3" fill="#1f2937"/>
-  <circle cx="25" cy="25" r="1" fill="white"/>
-  <circle cx="38" cy="26" r="3" fill="#1f2937"/>
-  <circle cx="37" cy="25" r="1" fill="white"/>
-  <ellipse cx="32" cy="32" rx="4" ry="3" fill="url(#noseGrad)"/>
-  <ellipse cx="32" cy="31.5" rx="2" ry="1" fill="#6b7280" opacity="0.5"/>
-  <path d="M32 35 Q28 39 24 37" fill="none" stroke="#d97706" strokeWidth="1.5" stroke-linecap="round"/>
-  <path d="M32 35 Q36 39 40 37" fill="none" stroke="#d97706" strokeWidth="1.5" stroke-linecap="round"/>
-  <ellipse cx="32" cy="38" rx="3" ry="4" fill="#f472b6"/>
-  <ellipse cx="32" cy="37" rx="2" ry="2" fill="#f9a8d4"/>
-  <circle cx="22" cy="30" r="3" fill="#fbcfe8" opacity="0.6"/>
-  <circle cx="42" cy="30" r="3" fill="#fbcfe8" opacity="0.6"/>
-  <ellipse cx="24" cy="52" rx="5" ry="4" fill="url(#bodyGrad)"/>
-  <ellipse cx="40" cy="52" rx="5" ry="4" fill="url(#bodyGrad)"/>
-  <circle cx="22" cy="51" r="1.5" fill="url(#bellyGrad)"/>
-  <circle cx="24" cy="50" r="1.5" fill="url(#bellyGrad)"/>
-  <circle cx="26" cy="51" r="1.5" fill="url(#bellyGrad)"/>
-  <circle cx="38" cy="51" r="1.5" fill="url(#bellyGrad)"/>
-  <circle cx="40" cy="50" r="1.5" fill="url(#bellyGrad)"/>
-  <circle cx="42" cy="51" r="1.5" fill="url(#bellyGrad)"/>
+  <!-- rounded orange tile -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- soft pads (complete paw: 4 toes + main pad) -->
+  <ellipse cx="18" cy="26" rx="6.2" ry="7.5" fill="#fff7ed" transform="rotate(-28 18 26)"/>
+  <ellipse cx="27" cy="17" rx="6.5" ry="8.2" fill="#fff7ed" transform="rotate(-8 27 17)"/>
+  <ellipse cx="39" cy="17" rx="6.5" ry="8.2" fill="#fff7ed" transform="rotate(8 39 17)"/>
+  <ellipse cx="48" cy="26" rx="6.2" ry="7.5" fill="#fff7ed" transform="rotate(28 48 26)"/>
+  <!-- main pad — full cloud shape (no missing lobe) -->
+  <path
+    fill="#fff7ed"
+    d="M32 28
+       C40 28 48 34 48 42.5
+       C48 51 41 56 32 56
+       C23 56 16 51 16 42.5
+       C16 34 24 28 32 28
+       C29 31 27 34 27 37
+       C27 34 29 31 32 28
+       C35 31 37 34 37 37
+       C37 34 35 31 32 28Z"
+  />
+  <ellipse cx="32" cy="44" rx="14" ry="11.5" fill="#fff7ed"/>
+  <!-- upper lobes of main pad (the piece that was missing) -->
+  <ellipse cx="24.5" cy="38" rx="7" ry="6" fill="#fff7ed"/>
+  <ellipse cx="39.5" cy="38" rx="7" ry="6" fill="#fff7ed"/>
+  <ellipse cx="32" cy="36" rx="6" ry="5" fill="#fff7ed"/>
 </svg>
