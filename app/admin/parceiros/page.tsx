@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import { emojiServico } from '@/lib/tiposServico';
-import { buildPartnerWhatsAppMessage, buildPartnerWhatsAppUrl } from '@/lib/partner-invite-messages';
+import { buildPartnerWhatsAppUrl } from '@/lib/partner-invite-messages';
 
 interface Partner {
   id: string;
@@ -251,302 +250,290 @@ export default function AdminParceirosPage() {
     setEnviandoLote(false);
   };
 
+  const inputClass =
+    'rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-500 dark:focus:ring-slate-800';
+
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Parceiros</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Gerencie parceiros e dispare WhatsApp com a mensagem de apresentação do Patinha (marcação de contatado já integrada).
-        </p>
-      </div>
-
-      <details className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950" open>
-        <summary className="cursor-pointer text-sm font-bold text-emerald-900 dark:text-emerald-200">
-          💬 Mensagem única de WhatsApp (persuasiva — crescimento e reconhecimento)
-        </summary>
-        <pre className="mt-3 whitespace-pre-wrap rounded-xl bg-white/80 p-3 text-xs leading-relaxed text-slate-700 dark:bg-slate-900/80 dark:text-slate-200">
-          {buildPartnerWhatsAppMessage({ nome: '[Nome do parceiro]', cidade: '[cidade]' })}
-        </pre>
-        <p className="mt-2 text-[11px] text-emerald-800/80 dark:text-emerald-300/80">
-          Única mensagem da fila e do botão WhatsApp. Fonte:{' '}
-          <code className="rounded bg-white/60 px-1 dark:bg-slate-800">lib/partner-invite-messages.ts</code>
-          {' · '}
-          <Link href="/parceiros/convites" className="underline">
-            ver e copiar
-          </Link>
-        </p>
-      </details>
-
-      <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950 sm:flex-row sm:items-center sm:justify-between">
+    <div className="p-6 sm:p-8">
+      {/* Header */}
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-sm font-bold text-blue-900 dark:text-blue-200">
-            {loading ? 'Carregando...' : `${stats.total} parceiros no banco (mesma fonte do /mapa)`}
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            Parceiros
+          </h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {loading ? 'Carregando…' : `${stats.total} no mapa`}
+            {!loading && (
+              <span className="text-slate-400">
+                {' '}
+                · {stats.pendentesComEmail} convite pendente
+                {' · '}
+                {filaPendentes.length} WhatsApp na fila
+              </span>
+            )}
           </p>
-          {mensagem && <p className="mt-1 text-xs font-semibold text-blue-900 dark:text-blue-200">{mensagem}</p>}
+          {mensagem && (
+            <p className="mt-2 text-xs font-medium text-slate-600 dark:text-slate-300">{mensagem}</p>
+          )}
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={iniciarFila}
+            disabled={filaPendentes.length === 0}
+            className="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-500 disabled:opacity-40"
+          >
+            Fila WhatsApp ({filaPendentes.length})
+          </button>
           <button
             onClick={enviarLotePendentes}
             disabled={enviandoLote || stats.pendentesComEmail === 0}
-            className="rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-600 disabled:opacity-50"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
           >
-            {enviandoLote ? 'Enviando...' : `📤 Enviar convites pendentes (${stats.pendentesComEmail})`}
+            {enviandoLote ? 'Enviando…' : `E-mails (${stats.pendentesComEmail})`}
           </button>
-          <button
-            onClick={importarParaBanco}
-            disabled={importando}
-            className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
-          >
-            {importando ? '...' : '⬆️ Importar dados de exemplo'}
-          </button>
-          <button
-            type="button"
-            onClick={limparMarcasWhatsapp}
-            disabled={limpandoWhatsapp || stats.contatadosWhatsapp === 0}
-            className="rounded-xl border border-green-300 bg-white px-4 py-2.5 text-sm font-bold text-green-800 shadow-sm transition hover:bg-green-50 disabled:opacity-50 dark:border-green-800 dark:bg-slate-900 dark:text-green-300 dark:hover:bg-green-950"
-          >
-            {limpandoWhatsapp ? '...' : `🔄 Zerar marcas WhatsApp (${stats.contatadosWhatsapp})`}
-          </button>
-          <Link
-            href="/parceiros/convites"
-            target="_blank"
-            className="inline-flex items-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
-          >
-            💬 Ver mensagem de WhatsApp
-          </Link>
+          <details className="relative">
+            <summary className="cursor-pointer list-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 [&::-webkit-details-marker]:hidden">
+              Mais
+            </summary>
+            <div className="absolute right-0 z-20 mt-1 w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+              <button
+                type="button"
+                onClick={importarParaBanco}
+                disabled={importando}
+                className="block w-full px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                {importando ? 'Importando…' : 'Importar dados de exemplo'}
+              </button>
+              <button
+                type="button"
+                onClick={limparMarcasWhatsapp}
+                disabled={limpandoWhatsapp || stats.contatadosWhatsapp === 0}
+                className="block w-full px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                {limpandoWhatsapp ? '…' : `Zerar marcas WhatsApp (${stats.contatadosWhatsapp})`}
+              </button>
+            </div>
+          </details>
         </div>
       </div>
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Total</p>
-          <p className="mt-1 text-3xl font-black text-slate-900 dark:text-white">{stats.total}</p>
-        </div>
-        <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-4 shadow-sm dark:border-emerald-900 dark:from-emerald-950 dark:to-teal-950">
-          <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">✓ Convite enviado</p>
-          <p className="mt-1 text-3xl font-black text-emerald-700 dark:text-emerald-300">{stats.enviados}</p>
-        </div>
-        <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-4 shadow-sm dark:border-amber-900 dark:from-amber-950 dark:to-orange-950">
-          <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">⏳ Pendente com email</p>
-          <p className="mt-1 text-3xl font-black text-amber-700 dark:text-amber-300">{stats.pendentesComEmail}</p>
-        </div>
-        <div className="rounded-2xl border border-pink-200 bg-pink-50 p-4 shadow-sm dark:border-pink-900 dark:bg-pink-950">
-          <p className="text-sm font-semibold text-pink-600 dark:text-pink-400">✉️ Com email cadastrado</p>
-          <p className="mt-1 text-3xl font-black text-pink-700 dark:text-pink-300">{stats.comEmail}</p>
-        </div>
-        <div className="rounded-2xl border border-green-200 bg-green-50 p-4 shadow-sm dark:border-green-900 dark:bg-green-950">
-          <p className="text-sm font-semibold text-green-600 dark:text-green-400">💬 Contatados no WhatsApp</p>
-          <p className="mt-1 text-3xl font-black text-green-700 dark:text-green-300">{stats.contatadosWhatsapp} <span className="text-base font-bold text-green-500">/ {stats.comTelefone}</span></p>
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <button
-          onClick={iniciarFila}
-          disabled={filaPendentes.length === 0}
-          className="rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:shadow-md disabled:opacity-40"
-        >
-          🚀 Iniciar fila de WhatsApp ({filaPendentes.length} pendente{filaPendentes.length === 1 ? '' : 's'} nesse filtro)
-        </button>
-      </div>
-
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+      {/* Filtros */}
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
         <input
           type="text"
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
-          placeholder="Buscar por nome ou cidade..."
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:w-80 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-400"
+          placeholder="Buscar nome ou cidade…"
+          className={`${inputClass} w-full sm:min-w-[200px] sm:flex-1`}
         />
-        <select
-          value={filtroTipo}
-          onChange={(e) => setFiltroTipo(e.target.value)}
-          className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-blue-400"
-        >
-          <option value="todos">Todos os tipos</option>
+        <select value={filtroTipo} onChange={(e) => setFiltroTipo(e.target.value)} className={inputClass}>
+          <option value="todos">Tipo</option>
           <option value="veterinario">Veterinário</option>
           <option value="petshop">Pet Shop</option>
           <option value="creche">Creche</option>
           <option value="parque">Parque</option>
           <option value="hotel">Hotel</option>
         </select>
-        <select
-          value={filtroStatus}
-          onChange={(e) => setFiltroStatus(e.target.value)}
-          className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-blue-400"
-        >
-          <option value="todos">Todos os status</option>
-          <option value="pendente">⏳ Pendente</option>
-          <option value="enviado">✓ Convite enviado</option>
-          <option value="sem_email">Sem email</option>
+        <select value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value)} className={inputClass}>
+          <option value="todos">E-mail</option>
+          <option value="pendente">Pendente</option>
+          <option value="enviado">Enviado</option>
+          <option value="sem_email">Sem e-mail</option>
         </select>
-        <select
-          value={filtroWhatsapp}
-          onChange={(e) => setFiltroWhatsapp(e.target.value)}
-          className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:focus:border-blue-400"
-        >
-          <option value="todos">WhatsApp: todos</option>
-          <option value="pendente">💬 Falta contatar</option>
-          <option value="contatado">✓ Já contatado</option>
+        <select value={filtroWhatsapp} onChange={(e) => setFiltroWhatsapp(e.target.value)} className={inputClass}>
+          <option value="todos">WhatsApp</option>
+          <option value="pendente">Falta contatar</option>
+          <option value="contatado">Já contatado</option>
         </select>
-        <span className="text-sm text-slate-500 dark:text-slate-400">{parceiros.length} parceiros</span>
+        <span className="text-xs text-slate-400 sm:ml-1">{parceiros.length} na lista</span>
       </div>
 
+      {/* Lista */}
       {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+        <div className="flex items-center justify-center py-20">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-300 border-t-slate-600" />
+        </div>
+      ) : parceiros.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-200 py-16 text-center dark:border-slate-700">
+          <p className="text-sm font-semibold text-slate-500">Nenhum parceiro neste filtro</p>
+          {stats.total === 0 && (
+            <p className="mt-1 text-xs text-slate-400">Use “Mais → Importar dados de exemplo” se o banco estiver vazio.</p>
+          )}
         </div>
       ) : (
-        <div className="space-y-3">
-          {parceiros.map((parceiro) => {
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          {parceiros.map((parceiro, i) => {
             const enviado = parceiro.status === 'sent';
             return (
               <div
                 key={parceiro.id}
-                className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
+                className={`flex items-center gap-3 px-4 py-3 transition hover:bg-slate-50 dark:hover:bg-slate-800/60 ${
+                  i > 0 ? 'border-t border-slate-100 dark:border-slate-800' : ''
+                }`}
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
-                  <span className="text-xl">{emojiServico(parceiro.tipo)}</span>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-bold truncate text-slate-900 dark:text-white">{parceiro.nome}</h3>
+                <span className="text-lg opacity-80" title={parceiro.tipo}>
+                  {emojiServico(parceiro.tipo)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditando(parceiro);
+                    setEmailEditando(parceiro.email || '');
+                  }}
+                  className="min-w-0 flex-1 text-left"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="truncate text-sm font-semibold text-slate-900 dark:text-white">
+                      {parceiro.nome}
+                    </span>
+                    {parceiro.premium && (
+                      <span className="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-bold text-violet-700 dark:bg-violet-950 dark:text-violet-300">
+                        Premium
+                      </span>
+                    )}
                     {enviado ? (
-                      <span className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300">✓ Enviado</span>
+                      <span className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">e-mail ok</span>
+                    ) : parceiro.email ? (
+                      <span className="text-[10px] font-medium text-amber-600 dark:text-amber-400">e-mail pendente</span>
                     ) : (
-                      <span className="shrink-0 rounded-full bg-amber-100 px-2.5 py-0.5 text-[10px] font-bold text-amber-600 dark:bg-amber-900 dark:text-amber-300">⏳ Pendente</span>
+                      <span className="text-[10px] font-medium text-slate-400">sem e-mail</span>
+                    )}
+                    {parceiro.whatsapp_contatado_em && (
+                      <span className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">WhatsApp ok</span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500 truncate dark:text-slate-400">
-                    {parceiro.tipo} · {parceiro.cidade} · {parceiro.email || 'sem email cadastrado'}
+                  <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                    {[parceiro.cidade, parceiro.email || null].filter(Boolean).join(' · ')}
                   </p>
-                </div>
-
-                <button
-                  onClick={() => { setEditando(parceiro); setEmailEditando(parceiro.email || ''); }}
-                  className="rounded-lg bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
-                >
-                  Editar
                 </button>
-                <button
-                  onClick={() => enviarConviteUnico(parceiro.id)}
-                  disabled={!parceiro.email || enviandoId === parceiro.id}
-                  className="rounded-lg bg-amber-50 px-3 py-2 text-xs font-bold text-amber-600 transition hover:bg-amber-100 disabled:opacity-40 dark:bg-amber-900 dark:text-amber-300"
-                >
-                  {enviandoId === parceiro.id ? '...' : enviado ? 'Reenviar' : '📤 Enviar'}
-                </button>
-                {parceiro.telefone && (
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {parceiro.telefone && (
+                    <button
+                      type="button"
+                      onClick={() => contatarWhatsapp(parceiro)}
+                      className={`rounded-lg px-2.5 py-1.5 text-xs font-bold transition ${
+                        parceiro.whatsapp_contatado_em
+                          ? 'text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950'
+                          : 'bg-emerald-600 text-white hover:bg-emerald-500'
+                      }`}
+                    >
+                      WhatsApp
+                    </button>
+                  )}
                   <button
-                    onClick={() => contatarWhatsapp(parceiro)}
-                    className={`rounded-lg px-3 py-2 text-xs font-bold transition ${
-                      parceiro.whatsapp_contatado_em
-                        ? 'bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-950 dark:text-green-400'
-                        : 'bg-emerald-500 text-white hover:bg-emerald-600'
-                    }`}
+                    type="button"
+                    onClick={() => {
+                      setEditando(parceiro);
+                      setEmailEditando(parceiro.email || '');
+                    }}
+                    className="rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
                   >
-                    {parceiro.whatsapp_contatado_em ? '✓ WhatsApp' : '💬 WhatsApp'}
+                    Abrir
                   </button>
-                )}
+                </div>
               </div>
             );
           })}
         </div>
       )}
 
-      {!loading && parceiros.length === 0 && (
-        <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-lg font-bold text-slate-400">Nenhum parceiro encontrado</p>
-          {stats.total === 0 && (
-            <p className="mt-2 text-sm text-slate-400">O banco está vazio — clique em &quot;Importar dados de exemplo&quot; acima.</p>
-          )}
-        </div>
-      )}
-
+      {/* Modal editar */}
       {editando && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setEditando(null)}>
-          <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-900" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-black text-slate-900 dark:text-white">{editando.nome}</h2>
-              <button onClick={() => setEditando(null)} className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">✕</button>
-            </div>
-            <div className="mt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Tipo</label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900 capitalize dark:text-white">{editando.tipo}</p>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Cidade</label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.cidade}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Telefone</label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.telefone || '—'}</p>
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Website</label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.website || '—'}</p>
-                </div>
-              </div>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-[2px]"
+          onClick={() => setEditando(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3">
               <div>
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Endereço</label>
-                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{editando.endereco || '—'}</p>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white">{editando.nome}</h2>
+                <p className="mt-0.5 text-xs text-slate-500 capitalize">
+                  {editando.tipo} · {editando.cidade || '—'}
+                </p>
               </div>
-              <div>
-                <label className="text-xs font-bold text-slate-500 dark:text-slate-400">Email para convite</label>
-                <div className="mt-1 flex gap-2">
-                  <input
-                    type="email"
-                    value={emailEditando}
-                    onChange={(e) => setEmailEditando(e.target.value)}
-                    placeholder="contato@clinica.com.br"
-                    className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                  />
-                  <button
-                    onClick={salvarEmail}
-                    disabled={salvandoEmail}
-                    className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    {salvandoEmail ? '...' : 'Salvar'}
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="mt-6 flex gap-3">
-              <button onClick={() => setEditando(null)} className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
-                Fechar
-              </button>
               <button
-                onClick={() => enviarConviteUnico(editando.id)}
-                disabled={!editando.email || enviandoId === editando.id}
-                className="flex-1 rounded-xl bg-amber-500 py-3 text-sm font-bold text-white transition hover:bg-amber-600 disabled:opacity-40"
+                type="button"
+                onClick={() => setEditando(null)}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
               >
-                {enviandoId === editando.id ? 'Enviando...' : editando.status === 'sent' ? 'Reenviar convite' : '📤 Enviar convite'}
+                ✕
               </button>
+            </div>
+
+            <dl className="mt-5 space-y-2 text-sm">
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">Telefone</dt>
+                <dd className="font-medium text-slate-900 dark:text-white">{editando.telefone || '—'}</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">Endereço</dt>
+                <dd className="max-w-[60%] text-right font-medium text-slate-900 dark:text-white">
+                  {editando.endereco || '—'}
+                </dd>
+              </div>
+            </dl>
+
+            <div className="mt-5">
+              <label className="text-xs font-semibold text-slate-500">E-mail do convite</label>
+              <div className="mt-1.5 flex gap-2">
+                <input
+                  type="email"
+                  value={emailEditando}
+                  onChange={(e) => setEmailEditando(e.target.value)}
+                  placeholder="contato@clinica.com.br"
+                  className={`${inputClass} min-w-0 flex-1`}
+                />
+                <button
+                  type="button"
+                  onClick={salvarEmail}
+                  disabled={salvandoEmail}
+                  className="rounded-xl bg-slate-900 px-3 py-2 text-sm font-bold text-white disabled:opacity-50 dark:bg-white dark:text-slate-900"
+                >
+                  {salvandoEmail ? '…' : 'Salvar'}
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-2 sm:flex-row">
               {editando.telefone && (
                 <button
+                  type="button"
                   onClick={() => contatarWhatsapp(editando)}
-                  className="flex-1 rounded-xl bg-emerald-500 py-3 text-sm font-bold text-white transition hover:bg-emerald-600"
+                  className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-sm font-bold text-white hover:bg-emerald-500"
                 >
-                  {editando.whatsapp_contatado_em ? '✓ Abrir WhatsApp de novo' : '💬 WhatsApp'}
+                  WhatsApp
                 </button>
               )}
+              <button
+                type="button"
+                onClick={() => enviarConviteUnico(editando.id)}
+                disabled={!editando.email || enviandoId === editando.id}
+                className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                {enviandoId === editando.id
+                  ? '…'
+                  : editando.status === 'sent'
+                    ? 'Reenviar e-mail'
+                    : 'Enviar e-mail'}
+              </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Modal fila */}
       {filaAtiva && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-[2px]">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-black text-slate-900 dark:text-white">🚀 Fila de WhatsApp</h2>
+              <h2 className="text-base font-black text-slate-900 dark:text-white">Fila WhatsApp</h2>
               <button
+                type="button"
                 onClick={() => setFilaAtiva(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
               >
                 ✕
               </button>
@@ -554,48 +541,43 @@ export default function AdminParceirosPage() {
 
             {filaPendentes.length === 0 ? (
               <div className="mt-8 text-center">
-                <p className="text-4xl">🎉</p>
-                <p className="mt-3 text-lg font-bold text-slate-900 dark:text-white">Fila concluída!</p>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Não sobrou ninguém pendente nesse filtro.</p>
+                <p className="text-sm font-bold text-slate-900 dark:text-white">Fila vazia</p>
+                <p className="mt-1 text-xs text-slate-500">Ninguém pendente neste filtro.</p>
                 <button
+                  type="button"
                   onClick={() => setFilaAtiva(false)}
-                  className="mt-6 w-full rounded-xl bg-slate-100 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+                  className="mt-5 w-full rounded-xl bg-slate-100 py-2.5 text-sm font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200"
                 >
                   Fechar
                 </button>
               </div>
             ) : (
               <>
-                <p className="mt-1 text-xs font-semibold text-slate-400 dark:text-slate-500">{filaPendentes.length} restante{filaPendentes.length === 1 ? '' : 's'}</p>
-
-                <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center dark:border-slate-700 dark:bg-slate-800">
-                  <span className="text-3xl">{emojiServico(filaPendentes[0].tipo)}</span>
-                  <h3 className="mt-2 text-lg font-black text-slate-900 dark:text-white">{filaPendentes[0].nome}</h3>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                    {filaPendentes[0].tipo} · {filaPendentes[0].cidade || 'sem cidade'}
+                <p className="mt-1 text-xs text-slate-400">{filaPendentes.length} restante(s)</p>
+                <div className="mt-5 rounded-xl bg-slate-50 p-4 text-center dark:bg-slate-800/80">
+                  <p className="text-sm font-black text-slate-900 dark:text-white">{filaPendentes[0].nome}</p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {filaPendentes[0].cidade || '—'} · {filaPendentes[0].telefone}
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-slate-600 dark:text-slate-300">📱 {filaPendentes[0].telefone}</p>
                 </div>
-
-                <div className="mt-6 flex gap-3">
+                <div className="mt-4 flex gap-2">
                   <button
+                    type="button"
                     onClick={() => pularNaFila(filaPendentes[0].id)}
                     disabled={contatandoFila}
-                    className="flex-1 rounded-xl border border-slate-200 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                    className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-bold text-slate-600 disabled:opacity-40 dark:border-slate-700 dark:text-slate-300"
                   >
-                    ⏭️ Pular
+                    Pular
                   </button>
                   <button
+                    type="button"
                     onClick={() => contatarNaFila(filaPendentes[0])}
                     disabled={contatandoFila}
-                    className="flex-1 rounded-xl bg-emerald-500 py-3 text-sm font-bold text-white transition hover:bg-emerald-600 disabled:opacity-60"
+                    className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-sm font-bold text-white disabled:opacity-60"
                   >
-                    {contatandoFila ? '...' : '💬 Contatar via WhatsApp'}
+                    {contatandoFila ? '…' : 'Contatar'}
                   </button>
                 </div>
-                <p className="mt-3 text-center text-[11px] text-slate-400 dark:text-slate-500">
-                  Abre o WhatsApp numa aba nova, marca como contatado e passa pro próximo sozinho.
-                </p>
               </>
             )}
           </div>

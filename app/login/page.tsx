@@ -5,7 +5,7 @@ import { GoogleButton } from '@/components/auth/GoogleButton'
 import Link from 'next/link'
 import { Suspense, useState, useEffect } from 'react'
 import { DarkModeToggle } from '@/components/DarkModeToggle'
-import { PawIcon3D } from '@/components/Icons3D'
+import { DogIcon3D } from '@/components/Icons3D'
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false)
@@ -40,7 +40,7 @@ export default function LoginPage() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 opacity-25 blur-2xl" />
                 <div className="relative flex items-center justify-center p-2">
-                  <PawIcon3D size={88} />
+                  <DogIcon3D size={88} />
                 </div>
               </div>
             </div>

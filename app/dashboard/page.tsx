@@ -4,7 +4,8 @@ import { usePetStore } from '@/lib/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D, DogIcon3D, PremiumIcon3D } from '@/components/Icons3D';
+import Image from 'next/image';
+import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D, PremiumIcon3D } from '@/components/Icons3D';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NotificationBanner from '@/components/NotificationBanner';
@@ -27,14 +28,21 @@ function PetPhoto({ pet, onPhotoChange }: { pet: { nome: string; fotoUrl: string
   return (
     <div className="flex flex-col items-center">
       <div
-        className="relative h-32 w-32 cursor-pointer overflow-hidden rounded-full border-4 border-emerald-200 bg-slate-100 dark:border-emerald-800 dark:bg-slate-800"
+        className="relative h-32 w-32 cursor-pointer overflow-hidden rounded-full border-4 border-amber-200 bg-amber-50 shadow-md shadow-amber-500/20 dark:border-amber-700 dark:bg-amber-950"
         onClick={() => fileInputRef.current?.click()}
       >
         {pet.fotoUrl ? (
           <img src={pet.fotoUrl} alt={pet.nome} className="h-full w-full object-cover" />
         ) : (
-          <div className="icon-3d-slot h-full w-full">
-            <DogIcon3D size={72} />
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-400 to-orange-500 p-4">
+            <Image
+              src="/icons/3d/dashboard-paw.png"
+              alt="Patinha"
+              width={96}
+              height={96}
+              unoptimized
+              className="h-full w-full object-contain"
+            />
           </div>
         )}
         <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity hover:opacity-100">
@@ -141,48 +149,49 @@ export default function DashboardPage() {
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Link href="/desempenho" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-5 text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl hover:shadow-amber-500/40">
+            {/* Ícones dos cards resumo: todos iguais e maiores */}
+            <Link href="/desempenho" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-5 text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl hover:shadow-amber-500/40">
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="icon-3d-slot">
-                  <ScaleIcon3D size={56} />
+                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
+                  <ScaleIcon3D size={88} />
                 </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Peso atual</p>
                 <p className="text-2xl font-bold">{pet.peso.toLocaleString('pt-BR')} kg</p>
               </div>
             </Link>
 
-            <Link href="/racao" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-5 text-white shadow-lg shadow-emerald-500/30 transition hover:shadow-xl hover:shadow-emerald-500/40">
+            <Link href="/racao" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-5 text-white shadow-lg shadow-emerald-500/30 transition hover:shadow-xl hover:shadow-emerald-500/40">
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="icon-3d-slot">
-                  <TargetIcon3D size={56} />
+                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
+                  <TargetIcon3D size={88} />
                 </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Objetivo</p>
                 <p className="text-2xl font-bold">{pet.objetivo === 'manutencao' ? 'Manutenção' : pet.objetivo === 'pelagem' ? 'Pelagem' : pet.objetivo === 'emagrecimento' ? 'Emagrecimento' : 'Desempenho'}</p>
               </div>
             </Link>
 
-            <Link href="/mapa" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
+            <Link href="/mapa" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="icon-3d-slot">
-                  <PinIcon3D size={56} />
+                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
+                  <PinIcon3D size={88} />
                 </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Serviços</p>
                 <p className="text-2xl font-bold">Vets e parques</p>
               </div>
             </Link>
 
-            <Link href="/vida" className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
+            <Link href="/vida" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
               <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
               <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="icon-3d-slot">
-                  <CalendarIcon3D size={56} />
+                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
+                  <CalendarIcon3D size={88} />
                 </div>
                 <p className="mt-3 text-sm font-medium text-white/80">Linha do tempo</p>
                 <p className="text-2xl font-bold">

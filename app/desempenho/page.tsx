@@ -38,8 +38,8 @@ export default function DesempenhoPage() {
           <div className="mb-8">
             <BackButton href="/dashboard" label="Voltar ao dashboard" />
             <div className="mt-4 flex items-center gap-4">
-              <div className="icon-3d-slot h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-xl shadow-amber-500/30">
-                <ScaleIcon3D size={48} />
+              <div className="icon-3d-slot flex h-16 w-16 items-center justify-center overflow-visible rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 shadow-xl shadow-amber-500/30">
+                <ScaleIcon3D size={40} />
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -56,8 +56,8 @@ export default function DesempenhoPage() {
               <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white/10 transition group-hover:scale-110" />
               <div className="absolute -bottom-10 -right-10 h-36 w-36 rounded-full bg-white/5" />
               <div className="relative">
-                <div className="icon-3d-slot h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-sm">
-                  <ScaleIcon3D size={44} />
+                <div className="icon-3d-slot flex h-14 w-14 items-center justify-center overflow-visible rounded-2xl bg-white/20 backdrop-blur-sm">
+                  <ScaleIcon3D size={36} />
                 </div>
                 <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-amber-100">Peso atual</p>
                 <p className="mt-1 text-4xl font-black leading-tight">{ultimoPeso.toLocaleString('pt-BR')} <span className="text-lg font-bold">kg</span></p>

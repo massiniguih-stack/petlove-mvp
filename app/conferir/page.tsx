@@ -48,16 +48,16 @@ export default function ConferirPage() {
       <div className="mx-auto max-w-3xl">
         <div className="rounded-3xl bg-amber-50 p-5 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:ring-amber-900">
           <p className="text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-400">
-            Modo revisão · OPEN_ACCESS
+            Interno · QA de rotas
           </p>
           <h1 className="mt-2 text-2xl font-black text-slate-900 dark:text-white">
-            Acesso liberado para conferir
+            Conferir telas do Patinha
           </h1>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            Login desligado no middleware. Pet demo: <strong>{pet?.nome || 'carregando…'}</strong>
-            {isPremium ? ' · Premium ativo' : ''}.
-            Desligue <code className="rounded bg-white px-1 dark:bg-slate-900">OPEN_ACCESS</code> no{' '}
-            <code className="rounded bg-white px-1 dark:bg-slate-900">.env.local</code> antes de deploy.
+            Página só para staff. Com <code className="rounded bg-white px-1 dark:bg-slate-900">OPEN_ACCESS</code> liberada
+            (local) ou conta em <code className="rounded bg-white px-1 dark:bg-slate-900">ADMIN_EMAILS</code>. Pet demo:{' '}
+            <strong>{pet?.nome || 'carregando…'}</strong>
+            {isPremium ? ' · Premium ativo' : ''}. Em produção pública sem OPEN_ACCESS, não-admin é redirecionado.
           </p>
         </div>
 

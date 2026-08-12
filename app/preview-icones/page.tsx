@@ -24,6 +24,17 @@ import {
   BriefcaseIcon3D,
   CakeIcon3D,
   PartyIcon3D,
+  DogIcon3D,
+  CatIcon3D,
+  VaccineIcon3D,
+  CameraIcon3D,
+  TravelIcon3D,
+  PetshopIcon3D,
+  CrecheIcon3D,
+  ParqueIcon3D,
+  HotelIcon3D,
+  PetsitterIcon3D,
+  PetdriverIcon3D,
 } from '@/components/Icons3D';
 import Link from 'next/link';
 
@@ -36,6 +47,31 @@ const main = [
   { id: '06', name: 'Editar perfil', file: 'perfil.png', gradient: 'from-slate-500 to-slate-600', Icon: GearIcon3D },
   { id: '07', name: 'Vida / Saúde', file: 'saude.png', gradient: 'from-violet-500 to-purple-600', Icon: HealthIcon3D },
   { id: '08', name: 'Premium', file: 'premium.png', gradient: 'from-purple-500 to-fuchsia-600', Icon: PremiumIcon3D },
+] as const;
+
+const servicos = [
+  { id: 'S1', name: 'Veterinário', file: 'saude.png', Icon: HealthIcon3D },
+  { id: 'S2', name: 'Petshop', file: 'petshop.png', Icon: PetshopIcon3D },
+  { id: 'S3', name: 'Creche', file: 'creche.png', Icon: CrecheIcon3D },
+  { id: 'S4', name: 'Parque', file: 'parque.png', Icon: ParqueIcon3D },
+  { id: 'S5', name: 'Hotel', file: 'hotel.png', Icon: HotelIcon3D },
+  { id: 'S6', name: 'Petsitter', file: 'petsitter.png', Icon: PetsitterIcon3D },
+  { id: 'S7', name: 'Petdriver', file: 'petdriver.png', Icon: PetdriverIcon3D },
+] as const;
+
+const marcos = [
+  { id: 'M1', name: 'Nascimento', file: 'bolo.png', Icon: CakeIcon3D },
+  { id: 'M2', name: 'Vacina', file: 'vacina.png', Icon: VaccineIcon3D },
+  { id: 'M3', name: 'Doença', file: 'shield.png', Icon: ShieldIcon3D },
+  { id: 'M4', name: 'Conquista', file: 'trophy.png', Icon: TrophyIcon3D },
+  { id: 'M5', name: 'Evento', file: 'festa.png', Icon: PartyIcon3D },
+  { id: 'M6', name: 'Foto', file: 'foto.png', Icon: CameraIcon3D },
+  { id: 'M7', name: 'Viagem', file: 'viagem.png', Icon: TravelIcon3D },
+] as const;
+
+const especies = [
+  { id: 'E1', name: 'Cão', file: 'dog.png', Icon: DogIcon3D },
+  { id: 'E2', name: 'Gato', file: 'gato.png', Icon: CatIcon3D },
 ] as const;
 
 const aux = [
@@ -62,9 +98,11 @@ export default function PreviewIconesPage() {
       <header className="border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">Patinha · Design</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">Patinha · Design · interno</p>
             <h1 className="text-xl font-black tracking-tight">Ícones 3D — set completo (maiores)</h1>
-            <p className="mt-0.5 text-sm text-slate-500">Set Soft 3D · size = pixels reais · sem corte</p>
+            <p className="mt-0.5 text-sm text-slate-500">
+              Só staff (OPEN_ACCESS local ou ADMIN_EMAILS) · Soft 3D · size = pixels reais
+            </p>
           </div>
           <Link
             href="/"
@@ -95,7 +133,55 @@ export default function PreviewIconesPage() {
         </section>
 
         <section className="mb-12">
-          <h2 className="mb-4 text-lg font-black">Pack auxiliar (dashboard, marcos, empty states)</h2>
+          <h2 className="mb-4 text-lg font-black">Mapa — tipos de serviço</h2>
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+            {servicos.map(({ id, name, Icon }) => (
+              <div
+                key={id}
+                className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+              >
+                <Icon size={64} />
+                <span className="text-[10px] font-bold text-slate-400">{id}</span>
+                <span className="text-center text-xs font-semibold">{name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="mb-4 text-lg font-black">Vida — marcos da linha do tempo</h2>
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+            {marcos.map(({ id, name, Icon }) => (
+              <div
+                key={id}
+                className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+              >
+                <Icon size={64} />
+                <span className="text-[10px] font-bold text-slate-400">{id}</span>
+                <span className="text-center text-xs font-semibold">{name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="mb-4 text-lg font-black">Espécies</h2>
+          <div className="grid grid-cols-2 gap-3 sm:max-w-sm">
+            {especies.map(({ id, name, Icon }) => (
+              <div
+                key={id}
+                className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+              >
+                <Icon size={72} />
+                <span className="text-[10px] font-bold text-slate-400">{id}</span>
+                <span className="text-center text-xs font-semibold">{name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="mb-4 text-lg font-black">Pack auxiliar (dashboard, empty states)</h2>
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
             {aux.map(({ id, name, Icon }) => (
               <div
@@ -113,7 +199,7 @@ export default function PreviewIconesPage() {
         <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
           <h2 className="mb-4 text-lg font-black">Tamanhos pequenos (24 / 32)</h2>
           <div className="flex flex-wrap gap-4">
-            {[...main, ...aux].map(({ id, name, Icon }) => (
+            {[...main, ...servicos, ...marcos, ...especies, ...aux].map(({ id, name, Icon }) => (
               <div key={id} className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800">
                 <Icon size={24} />
                 <Icon size={32} />

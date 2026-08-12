@@ -464,32 +464,32 @@ export default function RacaoPage() {
               <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                   <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
-                     <div className="icon-3d-slot mx-auto h-20 w-20">
-                       <DogIcon3D size={72} />
+                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
+                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                       <DogIcon3D size={80} />
                      </div>
                      <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
-                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-5 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
-                     <div className="icon-3d-slot mx-auto h-20 w-20">
-                       <ScaleIcon3D size={72} />
+                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-5 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
+                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                       <ScaleIcon3D size={80} />
                      </div>
                      <p className="mt-2 text-xs font-medium text-blue-600">Peso</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
-                   <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
-                     <div className="icon-3d-slot mx-auto h-20 w-20">
-                       <CalendarIcon3D size={72} />
+                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
+                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                       <CalendarIcon3D size={80} />
                      </div>
                      <p className="mt-2 text-xs font-medium text-emerald-600">Idade</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">
                       {idadeEmMeses < 12 ? `${idadeEmMeses} meses` : `${Math.floor(idadeEmMeses / 12)} anos`}
                     </p>
                   </div>
-                   <div className="rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">
-                     <div className="icon-3d-slot mx-auto h-20 w-20">
-                       <TargetIcon3D size={72} />
+                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">
+                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                       <TargetIcon3D size={80} />
                      </div>
                      <p className="mt-2 text-xs font-medium text-purple-600">Objetivo</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">

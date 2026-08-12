@@ -59,6 +59,16 @@ Negócios pet locais (clínicas veterinárias, pet shops, hotéis, creches, pass
 
 - **Web app:** https://patinha-mvp.vercel.app/
 - **Instagram / LinkedIn / TikTok:** não cadastrados ainda no perfil Opensquad
+- **Instagram oficial:** ticket Linear [MAS-20](https://linear.app/massini/issue/MAS-20)
+
+## Go-live / operação (Linear PetLove)
+
+- **Tutor + geral:** [MAS-5](https://linear.app/massini/issue/MAS-5) (In Progress)
+- **Parceiro B2B:** [MAS-35](https://linear.app/massini/issue/MAS-35) (In Progress)
+- **Admin staff:** [MAS-43](https://linear.app/massini/issue/MAS-43) + seção Admin em `docs/go-live-beta-checklist.md`
+- **Checklist no repo:** `docs/go-live-beta-checklist.md` (tutor + parceiro + admin)
+- **Ícones / licença:** `docs/auditoria-icones-3d.md`
+- **Rotas internas:** `/conferir`, `/preview-icones` — só OPEN_ACCESS local ou `ADMIN_EMAILS`
 
 ## Tech context (for squads working on the product)
 

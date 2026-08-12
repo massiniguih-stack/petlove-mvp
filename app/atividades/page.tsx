@@ -11,7 +11,6 @@ import {
   ScaleIcon3D,
   SearchIcon3D,
   DogIcon3D,
-  TargetIcon3D,
   ChartIcon3D,
   CalendarIcon3D,
   BoneIcon3D,
@@ -20,6 +19,7 @@ import {
   TrophyIcon3D,
   BowlIcon3D,
   HealthIcon3D,
+  PorteIcon3D,
 } from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';
 
@@ -236,7 +236,7 @@ function getCategoriaInfo(cat: string) {
     caminhada: { label: 'Caminhada', cor: 'text-emerald-700', bg: 'bg-emerald-50', icone: '🐕', iconSrc: '/icons/3d/dog.png' },
     brincadeira: { label: 'Brincadeira', cor: 'text-blue-700', bg: 'bg-blue-50', icone: '🎾', iconSrc: '/icons/3d/atividades.png' },
     treino: { label: 'Treino', cor: 'text-purple-700', bg: 'bg-purple-50', icone: '🐾', iconSrc: '/icons/3d/patinha.png' },
-    natacao: { label: 'Natação', cor: 'text-cyan-700', bg: 'bg-cyan-50', icone: '🏊', iconSrc: '/icons/3d/atividades.png' },
+    natacao: { label: 'Natação', cor: 'text-cyan-700', bg: 'bg-cyan-50', icone: '🏊', iconSrc: '/icons/3d/natacao.png' },
     obediencia: { label: 'Obediência', cor: 'text-amber-700', bg: 'bg-amber-50', icone: '🎯', iconSrc: '/icons/3d/target.png' },
     agility: { label: 'Agility', cor: 'text-rose-700', bg: 'bg-rose-50', icone: '🦴', iconSrc: '/icons/3d/bone.png' },
   };
@@ -613,29 +613,29 @@ export default function AtividadesPage() {
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-                    <div className="icon-3d-slot mx-auto h-20 w-20">
-                      <DogIcon3D size={72} />
+                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                      <DogIcon3D size={80} />
                     </div>
                     <p className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400">Raça</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-5 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950 dark:ring-blue-900">
-                    <div className="icon-3d-slot mx-auto h-20 w-20">
-                      <ScaleIcon3D size={72} />
+                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                      <ScaleIcon3D size={80} />
                     </div>
                     <p className="mt-2 text-xs font-medium text-blue-600 dark:text-blue-400">Peso</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950 dark:ring-emerald-900">
-                    <div className="icon-3d-slot mx-auto h-20 w-20">
-                      <ChartIcon3D size={72} />
+                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                      <ChartIcon3D size={80} />
                     </div>
                     <p className="mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">Fase</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{fase}</p>
                   </div>
                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950 dark:ring-purple-900">
-                    <div className="icon-3d-slot mx-auto h-20 w-20">
-                      <TargetIcon3D size={72} />
+                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
+                      <PorteIcon3D size={80} />
                     </div>
                     <p className="mt-2 text-xs font-medium text-purple-600 dark:text-purple-400">Porte</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{porte}</p>

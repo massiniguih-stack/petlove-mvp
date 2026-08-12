@@ -254,19 +254,33 @@ export default function MapaPage() {
   const [ordenarPor, setOrdenarPor] = useState<'avaliacao' | 'distancia'>('avaliacao');
   const [servicosDaCidade, setServicosDaCidade] = useState<Servico[]>([]);
   const [carregandoServicos, setCarregandoServicos] = useState(true);
+  const [erroServicos, setErroServicos] = useState<string | null>(null);
 
   const cidadeSelecionada = cidades.find((c) => c.nome === cidade) || cidades[0];
 
   useEffect(() => {
     let cancelado = false;
     setCarregandoServicos(true);
+    setErroServicos(null);
     fetch(`/api/servicos?cidade=${encodeURIComponent(cidade)}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (!cancelado) setServicosDaCidade(data.servicos || []);
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || data.hint || `Erro ${res.status}`);
+        }
+        return data;
       })
-      .catch(() => {
-        if (!cancelado) setServicosDaCidade([]);
+      .then((data) => {
+        if (!cancelado) {
+          setServicosDaCidade(data.servicos || []);
+          setErroServicos(null);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelado) {
+          setServicosDaCidade([]);
+          setErroServicos(err instanceof Error ? err.message : 'Não foi possível carregar os serviços');
+        }
       })
       .finally(() => {
         if (!cancelado) setCarregandoServicos(false);
@@ -469,6 +483,13 @@ export default function MapaPage() {
           </div>
 
           {/* Lista de Serviços */}
+          {erroServicos && !carregandoServicos && (
+            <div className="mb-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-800 ring-1 ring-rose-200 dark:bg-rose-950/50 dark:text-rose-200 dark:ring-rose-900">
+              <p className="font-bold">Não foi possível carregar os serviços</p>
+              <p className="mt-0.5 opacity-90">{erroServicos}</p>
+            </div>
+          )}
+
           {carregandoServicos ? (
             <div className="flex items-center justify-center py-16">
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
@@ -481,7 +502,7 @@ export default function MapaPage() {
             </div>
           )}
 
-          {!carregandoServicos && listaFiltrada.length === 0 && (
+          {!carregandoServicos && !erroServicos && listaFiltrada.length === 0 && (
             <div className="rounded-3xl bg-white dark:bg-slate-900 py-16 text-center ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
                 <SearchIcon3D size={64} />

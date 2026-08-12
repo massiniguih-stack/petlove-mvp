@@ -95,6 +95,11 @@ export function MascotTileIcon3D({ size = 56, className = '', scale }: Icon3DPro
   return <IconImage src="/icons/3d/mascote-tile.png" alt="Patinha" size={size} className={className} scale={scale} />;
 }
 
+/** Patinha branca fofinha sem contorno laranja — ideal em cards laranja/âmbar. */
+export function DashboardPawIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/dashboard-paw.png" alt="Dashboard" size={size} className={className} scale={scale} />;
+}
+
 export function ChartIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/chart.png" alt="Progresso" size={size} className={className} scale={scale} />;
 }
@@ -105,6 +110,10 @@ export function StarIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
 
 export function ScaleIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/peso.png" alt="Peso" size={size} className={className} scale={scale} />;
+}
+
+export function PorteIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/porte.png" alt="Porte" size={size} className={className} scale={scale} />;
 }
 
 export function TargetIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
@@ -157,4 +166,46 @@ export function CakeIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
 
 export function PartyIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/festa.png" alt="Celebração" size={size} className={className} scale={scale} />;
+}
+
+// ─── Pack Thiings (serviços, marcos, espécies) ────────────────────────────────
+
+export function CatIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/gato.png" alt="Gato" size={size} className={className} scale={scale} />;
+}
+
+export function VaccineIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/vacina.png" alt="Vacina" size={size} className={className} scale={scale} />;
+}
+
+export function CameraIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/foto.png" alt="Foto" size={size} className={className} scale={scale} />;
+}
+
+export function TravelIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/viagem.png" alt="Viagem" size={size} className={className} scale={scale} />;
+}
+
+export function PetshopIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/petshop.png" alt="Petshop" size={size} className={className} scale={scale} />;
+}
+
+export function CrecheIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/creche.png" alt="Creche" size={size} className={className} scale={scale} />;
+}
+
+export function ParqueIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/parque.png" alt="Parque" size={size} className={className} scale={scale} />;
+}
+
+export function HotelIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/hotel.png" alt="Hotel" size={size} className={className} scale={scale} />;
+}
+
+export function PetsitterIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/petsitter.png" alt="Petsitter" size={size} className={className} scale={scale} />;
+}
+
+export function PetdriverIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+  return <IconImage src="/icons/3d/petdriver.png" alt="Petdriver" size={size} className={className} scale={scale} />;
 }

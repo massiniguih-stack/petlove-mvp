@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { format, differenceInMonths } from 'date-fns';
 import {
-  PawIcon3D,
+  DashboardPawIcon3D,
   DogIcon3D,
   CalendarIcon3D,
   ActivityIcon3D,
@@ -135,12 +135,31 @@ export default function HomePage() {
         <main className="flex-1">
           <div className="mx-auto max-w-5xl px-4 py-12">
             <div className="mb-10 text-center">
-              <h1 className="text-5xl font-black tracking-tight text-slate-900 dark:text-white md:text-6xl">
-                Olá,{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
-                  {pet.nome}
+              <h1 className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-5xl font-black tracking-tight text-slate-900 dark:text-white md:gap-x-4 md:text-6xl">
+                <span>
+                  Olá,{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
+                    {pet.nome}
+                  </span>
+                  !
                 </span>
-                ! 👋
+                <span
+                  className="icon-3d-slot inline-flex shrink-0 items-center justify-center overflow-visible"
+                  title={pet.raca}
+                  aria-label={pet.raca}
+                >
+                  {pet.fotoUrl ? (
+                    // Foto real do pet — sem moldura, só o animal
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={pet.fotoUrl}
+                      alt={pet.raca}
+                      className="h-24 w-24 rounded-2xl object-cover md:h-28 md:w-28"
+                    />
+                  ) : (
+                    <DogIcon3D size={104} />
+                  )}
+                </span>
               </h1>
               <p className="mt-3 text-slate-500 dark:text-slate-400">
                 O que você quer fazer agora?
@@ -174,13 +193,14 @@ export default function HomePage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {/* Ícones do hub: todos iguais (slot 112px / desenho 100px) */}
               <Link
                 href="/dashboard"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white shadow-lg shadow-amber-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/35"
+                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white shadow-lg shadow-amber-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/35"
               >
                 <div className="relative">
-                  <div className="icon-3d-slot h-20 w-20">
-                    <PawIcon3D size={72} />
+                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
+                    <DashboardPawIcon3D size={100} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Dashboard</h3>
                   <p className="mt-1.5 text-sm text-amber-100">
@@ -191,11 +211,11 @@ export default function HomePage() {
 
               <Link
                 href="/vida"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-rose-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-amber-500 to-rose-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="icon-3d-slot h-20 w-20">
-                    <CalendarIcon3D size={72} />
+                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
+                    <CalendarIcon3D size={100} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Linha do tempo</h3>
                   <p className="mt-1.5 text-sm text-rose-100">Marcos, vacinas e conquistas.</p>
@@ -204,11 +224,11 @@ export default function HomePage() {
 
               <Link
                 href="/atividades"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-500 p-6 text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-500 p-6 text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="icon-3d-slot h-20 w-20">
-                    <ActivityIcon3D size={72} />
+                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
+                    <ActivityIcon3D size={100} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Atividades</h3>
                   <p className="mt-1.5 text-sm text-blue-100">Exercícios e dicas para {pet.nome}.</p>
@@ -217,11 +237,11 @@ export default function HomePage() {
 
               <Link
                 href="/racao"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 p-6 text-white shadow-lg shadow-emerald-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 p-6 text-white shadow-lg shadow-emerald-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="icon-3d-slot h-20 w-20">
-                    <BowlIcon3D size={72} />
+                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
+                    <BowlIcon3D size={100} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Ração</h3>
                   <p className="mt-1.5 text-sm text-emerald-100">Porções e nutrição ideal.</p>
@@ -230,11 +250,11 @@ export default function HomePage() {
 
               <Link
                 href="/mapa"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-500 to-pink-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-rose-500 to-pink-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="icon-3d-slot h-20 w-20">
-                    <PinIcon3D size={72} />
+                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
+                    <PinIcon3D size={100} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Serviços</h3>
                   <p className="mt-1.5 text-sm text-rose-100">Veterinários, parques e hotéis.</p>
@@ -243,11 +263,11 @@ export default function HomePage() {
 
               <Link
                 href="/onboarding"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-600 to-slate-800 p-6 text-white shadow-lg shadow-slate-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-slate-600 to-slate-800 p-6 text-white shadow-lg shadow-slate-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="icon-3d-slot h-20 w-20">
-                    <GearIcon3D size={72} />
+                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
+                    <GearIcon3D size={100} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">
                     Editar perfil
@@ -260,11 +280,11 @@ export default function HomePage() {
 
               <Link
                 href="/comparar"
-                className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-500 to-purple-500 p-6 text-white shadow-lg shadow-violet-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-violet-500 to-purple-500 p-6 text-white shadow-lg shadow-violet-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="icon-3d-slot h-20 w-20">
-                    <ChartIcon3D size={72} />
+                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
+                    <ChartIcon3D size={100} />
                   </div>
                   <h3 className="mt-3 text-xl font-black">Comparar pets</h3>
                   <p className="mt-1.5 text-sm text-violet-100">Compare seus pets lado a lado.</p>

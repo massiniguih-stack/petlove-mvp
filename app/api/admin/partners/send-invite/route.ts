@@ -3,7 +3,13 @@ import { createClient } from '@/lib/supabase/server';
 import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) {
+    throw new Error('RESEND_API_KEY não configurada');
+  }
+  return new Resend(key);
+}
 
 function buildInviteEmail(nome: string) {
   return `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background: #ffffff;">
@@ -70,7 +76,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: 'Patinha <onboarding@resend.dev>',
         to: partner.email,
         subject: 'Patinha - Seja nosso parceiro! 🐾',

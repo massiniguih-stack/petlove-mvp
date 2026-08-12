@@ -5,7 +5,7 @@ import { GoogleButton } from '@/components/auth/GoogleButton'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { DarkModeToggle } from '@/components/DarkModeToggle'
-import { PawIcon3D } from '@/components/Icons3D'
+import { DogIcon3D } from '@/components/Icons3D'
 
 export default function CadastroPage() {
   const [mounted, setMounted] = useState(false)
@@ -40,7 +40,7 @@ export default function CadastroPage() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 opacity-25 blur-2xl" />
                 <div className="relative flex items-center justify-center p-2">
-                  <PawIcon3D size={88} />
+                  <DogIcon3D size={88} />
                 </div>
               </div>
             </div>

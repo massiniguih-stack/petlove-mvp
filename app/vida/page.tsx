@@ -12,23 +12,16 @@ import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import {
   CalendarIcon3D,
-  PawIcon3D,
-  DogIcon3D,
   CakeIcon3D,
   PartyIcon3D,
-  BoneIcon3D,
   TrophyIcon3D,
-  ScaleIcon3D,
-  MedalIcon3D,
-  PremiumIcon3D,
-  CrownIcon3D,
+  ShieldIcon3D,
   CheckIcon3D,
   HealthIcon3D,
+  CameraIcon3D,
+  VaccineIcon3D,
+  TravelIcon3D,
 } from '@/components/Icons3D';
-
-/** Tamanho único dos ícones nos círculos da linha do tempo */
-const MARCO_ICON_SIZE = 44;
-const MARCO_CIRCLE = 64; // h/w do círculo em px
 
 interface Momento {
   id: string;
@@ -80,13 +73,13 @@ const vacinasComuns = [
 ];
 
 const categorias = [
-  { id: 'nascimento', label: 'Nascimento', cor: 'bg-pink-500', corGrad: 'from-pink-500 to-rose-500', emoji: '🍼', iconSrc: '/icons/3d/dog.png' },
-  { id: 'vacina', label: 'Vacina', cor: 'bg-blue-500', corGrad: 'from-blue-500 to-indigo-500', emoji: '💉', iconSrc: '/icons/3d/saude.png' },
+  { id: 'nascimento', label: 'Nascimento', cor: 'bg-pink-500', corGrad: 'from-pink-500 to-rose-500', emoji: '🍼', iconSrc: '/icons/3d/bolo.png' },
+  { id: 'vacina', label: 'Vacina', cor: 'bg-blue-500', corGrad: 'from-blue-500 to-indigo-500', emoji: '💉', iconSrc: '/icons/3d/vacina.png' },
   { id: 'doenca', label: 'Doença', cor: 'bg-red-500', corGrad: 'from-red-500 to-rose-500', emoji: '🏥', iconSrc: '/icons/3d/shield.png' },
   { id: 'conquista', label: 'Conquista', cor: 'bg-amber-500', corGrad: 'from-amber-500 to-orange-500', emoji: '🏆', iconSrc: '/icons/3d/trophy.png' },
   { id: 'evento', label: 'Evento', cor: 'bg-purple-500', corGrad: 'from-purple-500 to-pink-500', emoji: '🎉', iconSrc: '/icons/3d/festa.png' },
-  { id: 'foto', label: 'Foto', cor: 'bg-emerald-500', corGrad: 'from-emerald-500 to-teal-500', emoji: '📸', iconSrc: '/icons/3d/check.png' },
-  { id: 'viagem', label: 'Viagem', cor: 'bg-cyan-500', corGrad: 'from-cyan-500 to-blue-500', emoji: '✈️', iconSrc: '/icons/3d/servicos.png' },
+  { id: 'foto', label: 'Foto', cor: 'bg-emerald-500', corGrad: 'from-emerald-500 to-teal-500', emoji: '📸', iconSrc: '/icons/3d/foto.png' },
+  { id: 'viagem', label: 'Viagem', cor: 'bg-cyan-500', corGrad: 'from-cyan-500 to-blue-500', emoji: '✈️', iconSrc: '/icons/3d/viagem.png' },
 ];
 
 function CategoriaBadge({ categoria }: { categoria: Momento['categoria'] }) {
@@ -343,268 +336,225 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
   );
 }
 
-function LinhaDoTempo({ momentos, pet, onEdit, onDelete, onMarcarTomada }: { momentos: Momento[]; pet: { nome: string; dataNascimento: string; fotoUrl: string | null }; onEdit: (m: Momento) => void; onDelete: (id: string) => void; onMarcarTomada: (id: string) => void }) {
-  const nascimento = new Date(pet.dataNascimento);
-  const hoje = new Date();
-  const totalMeses = differenceInMonths(hoje, nascimento);
-  const [marcoSelecionado, setMarcoSelecionado] = useState<number | null>(null);
-
-  const momentosComMes = useMemo(() => {
-    return momentos
-      .map((m) => ({
-        ...m,
-        mes: differenceInMonths(m.data, nascimento),
-      }))
-      .sort((a, b) => a.mes - b.mes);
-  }, [momentos, nascimento]);
-
-  const marcos = useMemo(() => {
-    type MarcoIcon = typeof PawIcon3D;
-    const lista: {
-      mes: number;
-      label: string;
-      emoji: string;
-      icone?: string;
-      IconComp?: MarcoIcon;
-      cor: string;
-      momento?: Momento;
-    }[] = [];
-
-    // Todos com IconComp + mesmo tamanho no render — evita misturar Image solto (miúdo) com Soft 3D (maior).
-    const marcosImportantes: {
-      mes: number;
-      label: string;
-      emoji: string;
-      IconComp: MarcoIcon;
-      cor: string;
-    }[] = [
-      { mes: 2, label: '2 meses', emoji: '🐾', IconComp: PawIcon3D, cor: 'from-amber-400 to-orange-400' },
-      { mes: 4, label: '4 meses', emoji: '🦴', IconComp: BoneIcon3D, cor: 'from-emerald-400 to-teal-400' },
-      { mes: 6, label: '6 meses', emoji: '🎂', IconComp: CakeIcon3D, cor: 'from-purple-400 to-pink-400' },
-      { mes: 9, label: '9 meses', emoji: '🐕', IconComp: DogIcon3D, cor: 'from-blue-400 to-indigo-400' },
-      { mes: 12, label: '1 ano', emoji: '🎉', IconComp: PartyIcon3D, cor: 'from-rose-400 to-pink-400' },
-      { mes: 18, label: '1.5 anos', emoji: '🌟', IconComp: PremiumIcon3D, cor: 'from-cyan-400 to-blue-400' },
-      { mes: 24, label: '2 anos', emoji: '🏆', IconComp: TrophyIcon3D, cor: 'from-amber-500 to-orange-500' },
-      { mes: 36, label: '3 anos', emoji: '💪', IconComp: ScaleIcon3D, cor: 'from-violet-500 to-purple-500' },
-      { mes: 48, label: '4 anos', emoji: '🎖️', IconComp: MedalIcon3D, cor: 'from-indigo-500 to-blue-500' },
-      { mes: 60, label: '5 anos', emoji: '⭐', IconComp: PremiumIcon3D, cor: 'from-yellow-500 to-amber-500' },
-      { mes: 84, label: '7 anos', emoji: '🏅', IconComp: MedalIcon3D, cor: 'from-emerald-500 to-green-500' },
-      { mes: 120, label: '10 anos', emoji: '👑', IconComp: CrownIcon3D, cor: 'from-pink-500 to-rose-500' },
-    ];
-
-    for (const marco of marcosImportantes) {
-      if (marco.mes <= totalMeses + 1) {
-        const momento = momentosComMes.find((m) => m.mes === marco.mes);
-        lista.push({ ...marco, momento });
-      }
-    }
-
-    const outrosMomentos = momentosComMes.filter((m) =>
-      !lista.some((l) => l.mes === m.mes)
-    );
-    
-    for (const m of outrosMomentos) {
-      const cat = categorias.find((c) => c.id === m.categoria);
-      lista.push({
-        mes: m.mes,
-        label: m.titulo,
-        emoji: cat?.emoji || '📌',
-        cor: cat?.corGrad || 'from-slate-400 to-slate-500',
-        momento: m,
-      });
-    }
-
-    return lista.sort((a, b) => a.mes - b.mes);
-  }, [momentosComMes, totalMeses]);
-
-  const getMesLabel = (mes: number) => {
-    if (mes === 0) return 'Nascimento';
-    if (mes < 12) return `${mes}m`;
-    const anos = Math.floor(mes / 12);
-    const mesesRest = mes % 12;
-    if (mesesRest === 0) return `${anos}a`;
-    return `${anos}a ${mesesRest}m`;
-  };
-
-  const marcoDetalhe = marcos.find((m) => m.mes === marcoSelecionado);
+function AtalhosSaude({
+  contagens,
+  onAtalho,
+}: {
+  contagens: { fotos: number; memorias: number; vacinas: number; vacinasPendentes: number };
+  onAtalho: (id: string) => void;
+}) {
+  const atalhos: {
+    id: string;
+    titulo: string;
+    sub: string;
+    Icon: typeof CameraIcon3D;
+    grad: string;
+  }[] = [
+    {
+      id: 'galeria',
+      titulo: 'Galeria',
+      sub: contagens.fotos === 0 ? 'Nenhuma foto' : `${contagens.fotos} foto${contagens.fotos === 1 ? '' : 's'}`,
+      Icon: CameraIcon3D,
+      grad: 'from-emerald-50 to-teal-50 ring-emerald-100 dark:from-emerald-950/50 dark:to-teal-950/50 dark:ring-emerald-900',
+    },
+    {
+      id: 'memorias',
+      titulo: 'Memórias',
+      sub: contagens.memorias === 0 ? 'Linha do tempo' : `${contagens.memorias} momento${contagens.memorias === 1 ? '' : 's'}`,
+      Icon: CalendarIcon3D,
+      grad: 'from-amber-50 to-orange-50 ring-amber-100 dark:from-amber-950/50 dark:to-orange-950/50 dark:ring-amber-900',
+    },
+    {
+      id: 'vacinas',
+      titulo: 'Vacinas',
+      sub: contagens.vacinasPendentes > 0
+        ? `${contagens.vacinasPendentes} pendente${contagens.vacinasPendentes === 1 ? '' : 's'}`
+        : contagens.vacinas === 0
+          ? 'Registrar vacina'
+          : `${contagens.vacinas} registrada${contagens.vacinas === 1 ? '' : 's'}`,
+      Icon: VaccineIcon3D,
+      grad: 'from-sky-50 to-blue-50 ring-sky-100 dark:from-sky-950/50 dark:to-blue-950/50 dark:ring-sky-900',
+    },
+    {
+      id: 'saude',
+      titulo: 'Cuidados',
+      sub: 'Doença e saúde',
+      Icon: ShieldIcon3D,
+      grad: 'from-rose-50 to-red-50 ring-rose-100 dark:from-rose-950/50 dark:to-red-950/50 dark:ring-rose-900',
+    },
+    {
+      id: 'conquistas',
+      titulo: 'Conquistas',
+      sub: 'Vitórias do pet',
+      Icon: TrophyIcon3D,
+      grad: 'from-yellow-50 to-amber-50 ring-yellow-100 dark:from-yellow-950/50 dark:to-amber-950/50 dark:ring-yellow-900',
+    },
+    {
+      id: 'viagens',
+      titulo: 'Viagens',
+      sub: 'Passeios e trips',
+      Icon: TravelIcon3D,
+      grad: 'from-cyan-50 to-blue-50 ring-cyan-100 dark:from-cyan-950/50 dark:to-blue-950/50 dark:ring-cyan-900',
+    },
+    {
+      id: 'aniversario',
+      titulo: 'Aniversário',
+      sub: 'Datas especiais',
+      Icon: CakeIcon3D,
+      grad: 'from-pink-50 to-rose-50 ring-pink-100 dark:from-pink-950/50 dark:to-rose-950/50 dark:ring-pink-900',
+    },
+    {
+      id: 'novo',
+      titulo: 'Novo momento',
+      sub: 'Registrar agora',
+      Icon: PartyIcon3D,
+      grad: 'from-violet-50 to-purple-50 ring-violet-100 dark:from-violet-950/50 dark:to-purple-950/50 dark:ring-violet-900',
+    },
+  ];
 
   return (
-    <div className="relative">
-      {/* Timeline grid - scrollável horizontal */}
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent" style={{ WebkitOverflowScrolling: 'touch' }}>
-        {marcos.map((marco) => {
-          const isAtual = marco.mes === totalMeses;
-          const isProximo = marco.mes === totalMeses + 1;
-          const isSelected = marco.mes === marcoSelecionado;
-          
-          return (
-            <button
-              key={marco.mes}
-              type="button"
-              onClick={() => setMarcoSelecionado(isSelected ? null : marco.mes)}
-              className="flex w-20 shrink-0 flex-col items-center gap-2 bg-transparent p-1 transition-all focus:outline-none"
-            >
-              {/* Só o círculo recebe estado de seleção — sem “quadrado” no botão */}
-              <div
-                className={[
-                  'relative flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-br text-white shadow-md transition-all',
-                  marco.cor,
-                  'hover:scale-105',
-                  isSelected
-                    ? 'scale-110 ring-2 ring-rose-400 ring-offset-2 ring-offset-white dark:ring-offset-slate-950'
-                    : '',
-                  !isSelected && isAtual ? 'ring-2 ring-rose-400 ring-offset-1' : '',
-                  !isSelected && isProximo ? 'ring-2 ring-amber-400 ring-offset-1 animate-pulse' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-                style={{ width: MARCO_CIRCLE, height: MARCO_CIRCLE }}
-              >
-                {marco.IconComp ? (
-                  <marco.IconComp size={MARCO_ICON_SIZE} />
-                ) : marco.icone ? (
-                  <Image
-                    src={marco.icone}
-                    alt=""
-                    width={MARCO_ICON_SIZE}
-                    height={MARCO_ICON_SIZE}
-                    unoptimized
-                    className="icon-3d object-contain"
-                    style={{ width: MARCO_ICON_SIZE, height: MARCO_ICON_SIZE }}
-                  />
-                ) : (
-                  <span className="text-2xl leading-none">{marco.emoji}</span>
-                )}
-                {isAtual && (
-                  <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-rose-500 ring-2 ring-white" />
-                )}
-              </div>
-              <div className="text-center">
-                <div className={`text-xs font-bold leading-tight ${isAtual ? 'text-rose-600' : isProximo ? 'text-amber-600' : 'text-slate-600 dark:text-slate-300'}`}>
-                  {getMesLabel(marco.mes)}
-                </div>
-                {marco.momento && (
-                  <div className="mt-0.5 max-w-[72px] truncate text-[10px] text-slate-400 dark:text-slate-500">
-                    {marco.momento.titulo}
-                  </div>
-                )}
-              </div>
-            </button>
-          );
-        })}
+    <section className="mb-8">
+      <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
+        O que você quer fazer?
+      </h2>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {atalhos.map(({ id, titulo, sub, Icon, grad }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => onAtalho(id)}
+            className={`group flex flex-col items-center rounded-3xl bg-gradient-to-br p-5 text-center ring-1 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${grad}`}
+          >
+            <span className="icon-3d-slot flex h-20 w-20 items-center justify-center overflow-visible transition group-hover:scale-110 sm:h-24 sm:w-24">
+              <Icon size={80} />
+            </span>
+            <span className="mt-3 text-sm font-black text-slate-900 dark:text-white">{titulo}</span>
+            <span className="mt-0.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">{sub}</span>
+          </button>
+        ))}
       </div>
-      {marcoDetalhe && (
-        <div className="mt-4 rounded-2xl border border-rose-100 bg-gradient-to-br from-amber-50 to-rose-50 p-4 shadow-sm">
-          <div className="flex items-start gap-3">
-            <div
-              className={`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br ${marcoDetalhe.cor} text-white shadow-md`}
-              style={{ width: MARCO_CIRCLE, height: MARCO_CIRCLE }}
-            >
-              {marcoDetalhe.IconComp ? (
-                <marcoDetalhe.IconComp size={MARCO_ICON_SIZE} />
-              ) : marcoDetalhe.icone ? (
-                <Image
-                  src={marcoDetalhe.icone}
-                  alt=""
-                  width={MARCO_ICON_SIZE}
-                  height={MARCO_ICON_SIZE}
-                  unoptimized
-                  className="icon-3d object-contain"
-                  style={{ width: MARCO_ICON_SIZE, height: MARCO_ICON_SIZE }}
-                />
-              ) : (
-                <span className="text-2xl leading-none">{marcoDetalhe.emoji}</span>
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{marcoDetalhe.label}</h3>
-                {marcoDetalhe.momento && (
-                  <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-600">
-                    Registrado
-                  </span>
-                )}
-              </div>
-              
-              {marcoDetalhe.momento ? (
-                <div className="mt-2 space-y-2">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{marcoDetalhe.momento.titulo}</p>
-                    {marcoDetalhe.momento.descricao && (
-                      <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">{marcoDetalhe.momento.descricao}</p>
+    </section>
+  );
+}
+
+function ListaMemorias({
+  momentos,
+  petNome,
+  totalMeses,
+  onEdit,
+  onDelete,
+  onMarcarTomada,
+  onNovo,
+}: {
+  momentos: Momento[];
+  petNome: string;
+  totalMeses: number;
+  onEdit: (m: Momento) => void;
+  onDelete: (id: string) => void;
+  onMarcarTomada: (id: string) => void;
+  onNovo: () => void;
+}) {
+  return (
+    <section id="memorias" className="mb-8 scroll-mt-24">
+      <div className="mb-4 flex items-end justify-between gap-3">
+        <div>
+          <h2 className="flex items-center gap-2 text-lg font-black tracking-tight text-slate-900 dark:text-white">
+            <span className="icon-3d-slot"><CalendarIcon3D size={28} /></span>
+            Memórias
+          </h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {petNome} · {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'} · {momentos.length} momento{momentos.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onNovo}
+          className="shrink-0 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-4 py-2 text-xs font-bold text-white shadow-md shadow-rose-500/20"
+        >
+          + Momento
+        </button>
+      </div>
+
+      {momentos.length === 0 ? (
+        <div className="rounded-3xl bg-white py-14 text-center shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center">
+            <CalendarIcon3D size={72} />
+          </div>
+          <p className="mt-4 text-base font-bold text-slate-900 dark:text-white">Nenhuma memória ainda</p>
+          <p className="mt-1 text-sm text-slate-500">Registre fotos, vacinas e momentos especiais.</p>
+          <button
+            type="button"
+            onClick={onNovo}
+            className="mt-5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-5 py-2.5 text-sm font-bold text-white"
+          >
+            Adicionar primeiro momento
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {momentos.map((m) => {
+            const cat = categorias.find((c) => c.id === m.categoria);
+            return (
+              <article
+                key={m.id}
+                className="flex gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+              >
+                <div className="icon-3d-slot flex h-14 w-14 shrink-0 items-center justify-center overflow-visible rounded-2xl bg-slate-50 dark:bg-slate-800">
+                  {cat?.iconSrc ? (
+                    <Image src={cat.iconSrc} alt="" width={48} height={48} unoptimized className="icon-3d object-contain" />
+                  ) : (
+                    <span className="text-2xl">{cat?.emoji || '📌'}</span>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="truncate text-sm font-bold text-slate-900 dark:text-white">{m.titulo}</h3>
+                    <CategoriaBadge categoria={m.categoria} />
+                    {m.categoria === 'vacina' && m.statusVacina === 'pendente' && (
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Pendente</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CategoriaBadge categoria={marcoDetalhe.momento.categoria} />
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500">
-                      {format(marcoDetalhe.momento.data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                    </span>
-                  </div>
-                  {marcoDetalhe.momento.fotoUrl && (
-                    <img 
-                      src={marcoDetalhe.momento.fotoUrl} 
-                      alt={marcoDetalhe.momento.titulo}
-                      className="mt-2 h-24 w-24 rounded-xl object-cover shadow-md"
-                    />
+                  <p className="mt-0.5 text-xs text-slate-400">
+                    {format(m.data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                  </p>
+                  {m.descricao && (
+                    <p className="mt-1 line-clamp-2 text-xs text-slate-600 dark:text-slate-400">{m.descricao}</p>
                   )}
-                  <div className="flex flex-wrap gap-2">
-                    {marcoDetalhe.momento.categoria === 'vacina' && marcoDetalhe.momento.statusVacina === 'pendente' && (
+                  {m.fotoUrl && (
+                    <img src={m.fotoUrl} alt="" className="mt-2 h-20 w-20 rounded-xl object-cover" />
+                  )}
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {m.categoria === 'vacina' && m.statusVacina === 'pendente' && (
                       <button
-                        onClick={() => onMarcarTomada(marcoDetalhe.momento!.id)}
-                        className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600"
+                        type="button"
+                        onClick={() => onMarcarTomada(m.id)}
+                        className="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-100"
                       >
-                        ✅ Já tomou
+                        Marcar como tomada
                       </button>
                     )}
                     <button
-                      onClick={() => onEdit(marcoDetalhe.momento!)}
-                      className="rounded-lg bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 ring-1 ring-slate-200 dark:ring-slate-800 transition hover:bg-slate-50 dark:hover:bg-slate-800"
+                      type="button"
+                      onClick={() => onEdit(m)}
+                      className="rounded-lg bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700"
                     >
-                      ✏️ Editar
+                      Editar
                     </button>
                     <button
-                      onClick={() => { onDelete(marcoDetalhe.momento!.id); setMarcoSelecionado(null); }}
-                      className="rounded-lg bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-semibold text-red-500 ring-1 ring-red-100 transition hover:bg-red-50 dark:hover:bg-red-950"
+                      type="button"
+                      onClick={() => onDelete(m.id)}
+                      className="rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-600 ring-1 ring-red-100"
                     >
-                      🗑️ Excluir
+                      Excluir
                     </button>
                   </div>
                 </div>
-              ) : (
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                  Nenhum momento registrado para este marco.
-                </p>
-              )}
-            </div>
-            <button
-              onClick={() => setMarcoSelecionado(null)}
-              className="shrink-0 rounded-lg p-1 text-slate-400 dark:text-slate-500 transition hover:bg-white hover:text-slate-600"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-          </div>
+              </article>
+            );
+          })}
         </div>
       )}
-
-      {/* Resumo */}
-      {marcos.length > 0 && (
-        <div className="mt-4 rounded-xl bg-gradient-to-r from-amber-50 to-rose-50 p-3 dark:from-amber-950/40 dark:to-rose-950/40">
-          <div className="flex items-center justify-between gap-2 text-xs">
-            <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
-              <span className="icon-3d-slot"><CalendarIcon3D size={16} /></span>
-              <span className="font-bold text-slate-900 dark:text-white">{pet.nome}</span> tem{' '}
-              <span className="font-bold text-rose-600">{totalMeses} {totalMeses === 1 ? 'mês' : 'meses'}</span>
-            </span>
-            <span className="text-slate-500 dark:text-slate-400">
-              {momentos.length} momento{momentos.length !== 1 ? 's' : ''}
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
+    </section>
   );
 }
 
@@ -850,57 +800,79 @@ export default function VidaPage() {
             </div>
           </div>
 
-          {/* Stats Cards — Soft 3D (sem emoji solto) */}
-          <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <button
-              onClick={() => {
-                const el = document.getElementById('timeline');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 p-4 text-left text-white shadow-lg shadow-pink-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-pink-500/30"
-            >
-              <div className="text-3xl font-black">{totalMeses}</div>
-              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-pink-100">
-                <span className="icon-3d-slot"><PawIcon3D size={20} /></span> Meses
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                const el = document.getElementById('timeline');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-4 text-left text-white shadow-lg shadow-rose-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-rose-500/30"
-            >
-              <div className="text-3xl font-black">{totalDias}</div>
-              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-rose-100">
-                <span className="icon-3d-slot"><CalendarIcon3D size={20} /></span> Dias
-              </div>
-            </button>
-            <button
-              onClick={() => setMostrarGaleria(true)}
-              className="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-4 text-left text-white shadow-lg shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-500/30"
-            >
-              <div className="text-3xl font-black">{fotosCronologicas.length}</div>
-              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-emerald-100">
-                <span className="icon-3d-slot"><CheckIcon3D size={20} /></span> Fotos
-              </div>
-            </button>
-            <button
-              onClick={() => {
-                const el = document.getElementById('timeline');
-                el?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-left text-white shadow-lg shadow-amber-500/20 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/30"
-            >
-              <div className="text-3xl font-black">
-                {totalAnos > 0 ? totalAnos : mesesRestantes}
-              </div>
-              <div className="mt-1 flex items-center gap-1.5 text-sm font-medium text-amber-100">
-                <span className="icon-3d-slot"><CakeIcon3D size={20} /></span> Idade
-              </div>
-            </button>
+          {/* Resumo rápido de idade */}
+          <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+            <span className="rounded-full bg-rose-50 px-3 py-1 font-semibold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
+              {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'}
+            </span>
+            <span className="rounded-full bg-amber-50 px-3 py-1 font-semibold text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+              {totalDias} dias
+            </span>
+            <span className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+              {fotosCronologicas.length} foto{fotosCronologicas.length === 1 ? '' : 's'}
+            </span>
+            {totalAnos > 0 && (
+              <span className="rounded-full bg-orange-50 px-3 py-1 font-semibold text-orange-700 dark:bg-orange-950 dark:text-orange-300">
+                {totalAnos} {totalAnos === 1 ? 'ano' : 'anos'}
+                {mesesRestantes > 0 ? ` e ${mesesRestantes}m` : ''}
+              </span>
+            )}
           </div>
 
+          {/* Atalhos grandes — cada ícone = uma situação */}
+          <AtalhosSaude
+            contagens={{
+              fotos: fotosCronologicas.length,
+              memorias: momentosVisiveis.length,
+              vacinas: momentos.filter((m) => m.categoria === 'vacina').length,
+              vacinasPendentes: momentos.filter((m) => m.categoria === 'vacina' && m.statusVacina === 'pendente').length,
+            }}
+            onAtalho={(id) => {
+              if (id === 'galeria') {
+                setMostrarGaleria(true);
+                return;
+              }
+              if (id === 'memorias') {
+                document.getElementById('memorias')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+              }
+              if (id === 'vacinas') {
+                setEditando(undefined);
+                setCategoriaPadraoForm('vacina');
+                setShowForm(true);
+                return;
+              }
+              if (id === 'saude') {
+                setEditando(undefined);
+                setCategoriaPadraoForm('doenca');
+                setShowForm(true);
+                return;
+              }
+              if (id === 'conquistas') {
+                setEditando(undefined);
+                setCategoriaPadraoForm('conquista');
+                setShowForm(true);
+                return;
+              }
+              if (id === 'viagens') {
+                setEditando(undefined);
+                setCategoriaPadraoForm('viagem');
+                setShowForm(true);
+                return;
+              }
+              if (id === 'aniversario') {
+                setEditando(undefined);
+                setCategoriaPadraoForm('nascimento');
+                setShowForm(true);
+                return;
+              }
+              if (id === 'novo') {
+                setEditando(undefined);
+                setCategoriaPadraoForm('evento');
+                setShowForm(true);
+              }
+            }}
+          />
 
           {/* Galeria de fotos */}
           {mostrarGaleria && (
@@ -912,40 +884,42 @@ export default function VidaPage() {
             />
           )}
 
-          {/* Timeline — marcos (filtros por categoria removidos da UI) */}
-          <div id="timeline" className="mb-2">
-            {momentosOcultosPorPlano > 0 && (
-              <a
-                href="/planos"
-                className="mb-4 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-white shadow-lg shadow-purple-500/20 transition hover:shadow-xl"
-              >
-                <div className="flex items-center gap-3">
-                  <Image src="/icons/3d/premium.png" alt="" width={36} height={36} unoptimized className="icon-3d" />
-                  <div>
-                    <p className="text-sm font-bold">
-                      {momentosOcultosPorPlano} {momentosOcultosPorPlano === 1 ? 'momento mais antigo' : 'momentos mais antigos'} disponíve{momentosOcultosPorPlano === 1 ? 'l' : 'is'} só no Premium
-                    </p>
-                    <p className="text-xs text-purple-100">Grátis mostra os últimos {DIAS_HISTORICO_GRATIS} dias da linha do tempo</p>
-                  </div>
+          {/* Premium upsell */}
+          {momentosOcultosPorPlano > 0 && (
+            <a
+              href="/planos"
+              className="mb-6 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-white shadow-lg shadow-purple-500/20 transition hover:shadow-xl"
+            >
+              <div className="flex items-center gap-3">
+                <Image src="/icons/3d/premium.png" alt="" width={36} height={36} unoptimized className="icon-3d" />
+                <div>
+                  <p className="text-sm font-bold">
+                    {momentosOcultosPorPlano} {momentosOcultosPorPlano === 1 ? 'momento mais antigo' : 'momentos mais antigos'} disponíve{momentosOcultosPorPlano === 1 ? 'l' : 'is'} só no Premium
+                  </p>
+                  <p className="text-xs text-purple-100">Grátis mostra os últimos {DIAS_HISTORICO_GRATIS} dias da linha do tempo</p>
                 </div>
-                <span className="shrink-0 rounded-full bg-white/20 px-3 py-1.5 text-xs font-bold backdrop-blur-sm">Assinar →</span>
-              </a>
-            )}
-            <LinhaDoTempo
-              momentos={momentosVisiveis}
-              pet={{ nome: pet.nome, dataNascimento: pet.dataNascimento, fotoUrl: pet.fotoUrl }}
-              onEdit={handleEditar}
-              onDelete={handleExcluir}
-              onMarcarTomada={handleMarcarComoTomada}
-            />
-          </div>
+              </div>
+              <span className="shrink-0 rounded-full bg-white/20 px-3 py-1.5 text-xs font-bold backdrop-blur-sm">Assinar →</span>
+            </a>
+          )}
+
+          {/* Lista de memórias */}
+          <ListaMemorias
+            momentos={momentosVisiveis}
+            petNome={pet.nome}
+            totalMeses={totalMeses}
+            onEdit={handleEditar}
+            onDelete={handleExcluir}
+            onMarcarTomada={handleMarcarComoTomada}
+            onNovo={() => { setEditando(undefined); setCategoriaPadraoForm('evento'); setShowForm(true); }}
+          />
 
           {/* Primeira Foto */}
           {primeiraFoto && (
-            <div className="mt-12 rounded-3xl bg-gradient-to-br from-amber-50 to-rose-50 p-6 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
+            <div className="mt-4 rounded-3xl bg-gradient-to-br from-amber-50 to-rose-50 p-6 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
               <div className="flex items-center gap-3">
-                <div className="icon-3d-slot h-12 w-12 rounded-full bg-gradient-to-br from-amber-500 to-rose-500 shadow-lg shadow-rose-500/30">
-                  <CheckIcon3D size={36} />
+                <div className="icon-3d-slot flex h-14 w-14 items-center justify-center overflow-visible">
+                  <CameraIcon3D size={48} />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white">Primeira foto registrada</h3>
@@ -956,39 +930,14 @@ export default function VidaPage() {
               </div>
               {primeiraFoto.fotoUrl && (
                 <div className="mt-4 overflow-hidden rounded-2xl">
-                  <img 
-                    src={primeiraFoto.fotoUrl} 
-                    alt={primeiraFoto.titulo} 
-                    className="w-full object-cover shadow-md" 
+                  <img
+                    src={primeiraFoto.fotoUrl}
+                    alt={primeiraFoto.titulo}
+                    className="w-full object-cover shadow-md"
                     style={{ maxHeight: '300px' }}
                   />
                 </div>
               )}
-            </div>
-          )}
-
-          {/* Empty State */}
-          {momentos.length === 0 && (
-            <div className="mt-12 rounded-3xl bg-white dark:bg-slate-900 py-20 text-center shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
-              <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-rose-100">
-                <CalendarIcon3D size={72} />
-              </div>
-              <h2 className="mt-6 text-2xl font-bold text-slate-900 dark:text-white">
-                Comece a contar a história de {pet.nome}
-              </h2>
-              <p className="mt-2 max-w-sm mx-auto text-slate-500 dark:text-slate-400">
-                Adicione fotos, vacinas, conquistas e momentos especiais para criar uma linha do tempo única.
-              </p>
-              <button
-                onClick={() => setShowForm(true)}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"/>
-                  <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Adicionar primeiro momento
-              </button>
             </div>
           )}
         </div>
