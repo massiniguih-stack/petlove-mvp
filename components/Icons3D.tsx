@@ -53,8 +53,9 @@ function IconImage({
 
 // ─── Set principal ───────────────────────────────────────────────────────────
 
+/** Patinha branca Soft 3D — marca e módulos (funciona em fundo claro e laranja). */
 export function PawIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
-  return <IconImage src="/icons/3d/patinha.png" alt="Dashboard" size={size} className={className} scale={scale} />;
+  return <IconImage src="/icons/3d/patinha.png" alt="Patinha" size={size} className={className} scale={scale} />;
 }
 
 export function CalendarIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
@@ -95,7 +96,7 @@ export function MascotTileIcon3D({ size = 56, className = '', scale }: Icon3DPro
   return <IconImage src="/icons/3d/mascote-tile.png" alt="Patinha" size={size} className={className} scale={scale} />;
 }
 
-/** Patinha branca fofinha sem contorno laranja — ideal em cards laranja/âmbar. */
+/** Alias da patinha branca no Dashboard / cards laranja. */
 export function DashboardPawIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/dashboard-paw.png" alt="Dashboard" size={size} className={className} scale={scale} />;
 }

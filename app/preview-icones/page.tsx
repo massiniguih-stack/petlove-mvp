@@ -2,6 +2,7 @@
 
 import {
   PawIcon3D,
+  DashboardPawIcon3D,
   CalendarIcon3D,
   ActivityIcon3D,
   BowlIcon3D,
@@ -39,7 +40,7 @@ import {
 import Link from 'next/link';
 
 const main = [
-  { id: '01', name: 'Dashboard', file: 'patinha.png', gradient: 'from-amber-500 to-orange-500', Icon: PawIcon3D },
+  { id: '01', name: 'Dashboard', file: 'dashboard-paw.png', gradient: 'from-amber-500 to-orange-500', Icon: DashboardPawIcon3D },
   { id: '02', name: 'Linha do tempo', file: 'calendario.png', gradient: 'from-orange-400 to-amber-500', Icon: CalendarIcon3D },
   { id: '03', name: 'Atividades', file: 'atividades.png', gradient: 'from-blue-500 to-cyan-500', Icon: ActivityIcon3D },
   { id: '04', name: 'Ração', file: 'racao.png', gradient: 'from-emerald-500 to-teal-500', Icon: BowlIcon3D },
