@@ -4,14 +4,20 @@ import { usePetStore } from '@/lib/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
 import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D, PremiumIcon3D } from '@/components/Icons3D';
+import { BreedDogIcon } from '@/components/BreedDogIcon';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NotificationBanner from '@/components/NotificationBanner';
 import FeedbackWidget from '@/components/FeedbackWidget';
 
-function PetPhoto({ pet, onPhotoChange }: { pet: { nome: string; fotoUrl: string | null }; onPhotoChange: (url: string) => void }) {
+function PetPhoto({
+  pet,
+  onPhotoChange,
+}: {
+  pet: { nome: string; fotoUrl: string | null; raca?: string; peso?: number };
+  onPhotoChange: (url: string) => void;
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,14 +40,12 @@ function PetPhoto({ pet, onPhotoChange }: { pet: { nome: string; fotoUrl: string
         {pet.fotoUrl ? (
           <img src={pet.fotoUrl} alt={pet.nome} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-400 to-orange-500 p-4">
-            <Image
-              src="/icons/3d/dashboard-paw.png"
-              alt="Patinha"
-              width={96}
-              height={96}
-              unoptimized
-              className="h-full w-full object-contain"
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-400 to-orange-500 p-2">
+            <BreedDogIcon
+              size={96}
+              raca={pet.raca}
+              peso={pet.peso}
+              alt={pet.raca || pet.nome}
             />
           </div>
         )}

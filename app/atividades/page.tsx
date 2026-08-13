@@ -19,8 +19,8 @@ import {
   TrophyIcon3D,
   BowlIcon3D,
   HealthIcon3D,
-  PorteIcon3D,
 } from '@/components/Icons3D';
+import { BreedDogIcon } from '@/components/BreedDogIcon';
 import { diaISO } from '@/lib/checklist';
 
 type Icon3DComp = typeof DogIcon3D;
@@ -614,7 +614,7 @@ export default function AtividadesPage() {
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                      <DogIcon3D size={80} />
+                      <BreedDogIcon size={80} raca={pet.raca} peso={pet.peso} mode="breed" alt={pet.raca} />
                     </div>
                     <p className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400">Raça</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
@@ -635,7 +635,7 @@ export default function AtividadesPage() {
                   </div>
                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950 dark:ring-purple-900">
                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                      <PorteIcon3D size={80} />
+                      <BreedDogIcon size={80} peso={pet.peso} mode="porte" alt={`Porte ${porte}`} />
                     </div>
                     <p className="mt-2 text-xs font-medium text-purple-600 dark:text-purple-400">Porte</p>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">{porte}</p>

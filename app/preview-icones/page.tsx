@@ -38,6 +38,14 @@ import {
   PetdriverIcon3D,
 } from '@/components/Icons3D';
 import Link from 'next/link';
+import Image from 'next/image';
+import { TOP_BREED_ICON_KEYS, getBreedDogSrc, getPorteDogSrc } from '@/lib/breedDogIcon';
+
+const portePreview = [
+  { id: 'P', name: 'Porte pequeno', src: getPorteDogSrc(5) },
+  { id: 'M', name: 'Porte médio', src: getPorteDogSrc(15) },
+  { id: 'G', name: 'Porte grande', src: getPorteDogSrc(30) },
+] as const;
 
 const main = [
   { id: '01', name: 'Dashboard', file: 'dashboard-paw.png', gradient: 'from-amber-500 to-orange-500', Icon: DashboardPawIcon3D },
@@ -178,6 +186,43 @@ export default function PreviewIconesPage() {
                 <span className="text-center text-xs font-semibold">{name}</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="mb-4 text-lg font-black">Porte (fallback P / M / G)</h2>
+          <div className="grid grid-cols-3 gap-3 sm:max-w-lg">
+            {portePreview.map(({ id, name, src }) => (
+              <div
+                key={id}
+                className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+              >
+                <Image src={src} alt={name} width={72} height={72} unoptimized className="h-[72px] w-[72px] object-contain" />
+                <span className="text-[10px] font-bold text-slate-400">{id}</span>
+                <span className="text-center text-xs font-semibold">{name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="mb-4 text-lg font-black">Raças top BR (Soft 3D)</h2>
+          <p className="mb-4 text-sm text-slate-500">
+            Usadas no card Raça / avatar sem foto. Outras raças caem no cão do porte.
+          </p>
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+            {TOP_BREED_ICON_KEYS.map((name) => {
+              const src = getBreedDogSrc(name, 12);
+              return (
+                <div
+                  key={name}
+                  className="flex flex-col items-center gap-2 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+                >
+                  <Image src={src} alt={name} width={64} height={64} unoptimized className="h-16 w-16 object-contain" />
+                  <span className="text-center text-[11px] font-semibold leading-tight">{name}</span>
+                </div>
+              );
+            })}
           </div>
         </section>
 

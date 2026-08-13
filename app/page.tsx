@@ -18,6 +18,7 @@ import {
   GearIcon3D,
   ChartIcon3D,
 } from '@/components/Icons3D';
+import { BreedDogIcon } from '@/components/BreedDogIcon';
 import { trackMetaEvent } from '@/components/MetaPixel';
 
 const benefits = [
@@ -157,7 +158,7 @@ export default function HomePage() {
                       className="h-24 w-24 rounded-2xl object-cover md:h-28 md:w-28"
                     />
                   ) : (
-                    <DogIcon3D size={104} />
+                    <BreedDogIcon size={104} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
                   )}
                 </span>
               </h1>
