@@ -190,14 +190,28 @@ export default function PreviewIconesPage() {
         </section>
 
         <section className="mb-12">
-          <h2 className="mb-4 text-lg font-black">Porte (fallback P / M / G)</h2>
+          <h2 className="mb-4 text-lg font-black">Porte (fallback P / M / G) — fundo transparente</h2>
+          <p className="mb-4 text-sm text-slate-500">
+            Xadrez = área sem fundo (transparente). Se vir quadradinhos, o recorte está certo.
+          </p>
           <div className="grid grid-cols-3 gap-3 sm:max-w-lg">
             {portePreview.map(({ id, name, src }) => (
               <div
                 key={id}
                 className="flex flex-col items-center gap-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
               >
-                <Image src={src} alt={name} width={72} height={72} unoptimized className="h-[72px] w-[72px] object-contain" />
+                <div
+                  className="flex h-20 w-20 items-center justify-center rounded-xl ring-1 ring-slate-200 dark:ring-slate-700"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(45deg,#e2e8f0 25%,transparent 25%),linear-gradient(-45deg,#e2e8f0 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e2e8f0 75%),linear-gradient(-45deg,transparent 75%,#e2e8f0 75%)',
+                    backgroundSize: '12px 12px',
+                    backgroundPosition: '0 0,0 6px,6px -6px,-6px 0',
+                    backgroundColor: '#f8fafc',
+                  }}
+                >
+                  <Image src={src} alt={name} width={72} height={72} unoptimized className="h-[72px] w-[72px] object-contain" />
+                </div>
                 <span className="text-[10px] font-bold text-slate-400">{id}</span>
                 <span className="text-center text-xs font-semibold">{name}</span>
               </div>
@@ -206,9 +220,9 @@ export default function PreviewIconesPage() {
         </section>
 
         <section className="mb-12">
-          <h2 className="mb-4 text-lg font-black">Raças top BR (Soft 3D)</h2>
+          <h2 className="mb-4 text-lg font-black">Raças top BR (Soft 3D) — fundo transparente</h2>
           <p className="mb-4 text-sm text-slate-500">
-            Usadas no card Raça / avatar sem foto. Outras raças caem no cão do porte.
+            Usadas no card Raça / avatar sem foto. Outras raças caem no cão do porte. Xadrez = transparente.
           </p>
           <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
             {TOP_BREED_ICON_KEYS.map((name) => {
@@ -218,7 +232,18 @@ export default function PreviewIconesPage() {
                   key={name}
                   className="flex flex-col items-center gap-2 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
                 >
-                  <Image src={src} alt={name} width={64} height={64} unoptimized className="h-16 w-16 object-contain" />
+                  <div
+                    className="flex h-[76px] w-[76px] items-center justify-center rounded-xl ring-1 ring-slate-200 dark:ring-slate-700"
+                    style={{
+                      backgroundImage:
+                        'linear-gradient(45deg,#e2e8f0 25%,transparent 25%),linear-gradient(-45deg,#e2e8f0 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e2e8f0 75%),linear-gradient(-45deg,transparent 75%,#e2e8f0 75%)',
+                      backgroundSize: '12px 12px',
+                      backgroundPosition: '0 0,0 6px,6px -6px,-6px 0',
+                      backgroundColor: '#f8fafc',
+                    }}
+                  >
+                    <Image src={`${src}?v=nobg`} alt={name} width={68} height={68} unoptimized className="h-[68px] w-[68px] object-contain" />
+                  </div>
                   <span className="text-center text-[11px] font-semibold leading-tight">{name}</span>
                 </div>
               );
