@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { racasCachorros } from '@/data/racas';
 import { DogIcon3D } from '@/components/Icons3D';
+import { BreedDogIcon } from '@/components/BreedDogIcon';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -197,7 +198,16 @@ export default function OnboardingPage() {
 
           <div className="rounded-3xl bg-white p-8 shadow-xl ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
             <div className="mb-4 flex justify-center">
-              <DogIcon3D size={72} />
+              {form.raca.trim() ? (
+                <BreedDogIcon
+                  size={72}
+                  raca={form.raca}
+                  peso={form.peso ? Number(form.peso) : null}
+                  alt={form.raca}
+                />
+              ) : (
+                <DogIcon3D size={72} />
+              )}
             </div>
             <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
               {pet ? (

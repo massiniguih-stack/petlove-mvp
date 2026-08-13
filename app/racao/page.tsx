@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import Image from 'next/image';
 import { BackButton } from '@/components/BackButton';
 import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D, DogIcon3D, BowlIcon3D, CrownIcon3D, PremiumIcon3D, PawIcon3D, ShieldIcon3D } from '@/components/Icons3D';
+import { BreedDogIcon } from '@/components/BreedDogIcon';
 import { diaISO } from '@/lib/checklist';
 
 interface MarcaRacao {
@@ -466,7 +467,7 @@ export default function RacaoPage() {
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                    <div className="overflow-visible rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
                      <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                       <DogIcon3D size={80} />
+                       <BreedDogIcon size={80} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
                      </div>
                      <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>

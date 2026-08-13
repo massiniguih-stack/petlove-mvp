@@ -6,9 +6,12 @@ import Link from 'next/link'
 import { Suspense, useState, useEffect } from 'react'
 import { DarkModeToggle } from '@/components/DarkModeToggle'
 import { DogIcon3D } from '@/components/Icons3D'
+import { BreedDogIcon } from '@/components/BreedDogIcon'
+import { usePetStore } from '@/lib/store'
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false)
+  const pet = usePetStore((s) => s.pet)
 
   useEffect(() => {
     setMounted(true)
@@ -34,13 +37,17 @@ export default function LoginPage() {
 
       <main className="relative flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {/* Logo */}
+          {/* Logo — cão da raça se o pet já estiver no aparelho */}
           <div className="mb-8 text-center">
             <div className="flex justify-center">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 opacity-25 blur-2xl" />
                 <div className="relative flex items-center justify-center p-2">
-                  <DogIcon3D size={88} />
+                  {pet?.raca ? (
+                    <BreedDogIcon size={88} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
+                  ) : (
+                    <DogIcon3D size={88} />
+                  )}
                 </div>
               </div>
             </div>
