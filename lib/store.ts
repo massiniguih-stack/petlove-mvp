@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createClient } from './supabase/client';
 import { getUtmParams } from './utm';
+import { isOpenAccess } from './openAccess';
 
 export interface Tutor {
   nome: string;
@@ -186,10 +187,9 @@ export const usePetStore = create<PetState>((set, get) => {
       let isPremium = loadPremium();
       const planCache = loadPlanCache();
 
-      // Modo revisão: se não houver pet local, cria um demo para liberar as telas
-      const openAccess =
-        typeof process !== 'undefined' &&
-        process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true';
+      // Modo revisão: se não houver pet local, cria um demo para liberar as telas.
+      // Em Vercel production isOpenAccess() é sempre false (não cria Mel / Premium fake).
+      const openAccess = isOpenAccess();
       if (openAccess && pets.length === 0) {
         const demo: Pet = {
           id: 'demo-pet-preview',
