@@ -6,6 +6,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
 import { PawIcon3D } from '@/components/Icons3D';
+import { isOpenAccess } from '@/lib/openAccess';
 
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icone: '📊' },
@@ -65,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     setMobileOpen(false);
   }, [pathname]);
 
-  const openAccess = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true';
+  const openAccess = isOpenAccess();
 
   if (loading && !openAccess) {
     return (
