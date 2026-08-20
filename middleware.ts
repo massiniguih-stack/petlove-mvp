@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
+import { isOpenAccess } from '@/lib/openAccess'
 
 // Telas que exigem conta logada
 const protectedRoutes = [
@@ -33,11 +34,8 @@ export async function middleware(request: NextRequest) {
 
   // Modo revisão local: liberar todas as rotas (sem login).
   // Ativar com OPEN_ACCESS=true no .env.local (também vale com `next start`).
-  // NUNCA deixe isso ligado em deploy público.
-  const openAccess =
-    process.env.OPEN_ACCESS === 'true' || process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
-
-  if (openAccess) {
+  // Em Vercel production o atalho é ignorado — ver lib/openAccess.ts.
+  if (isOpenAccess()) {
     return response
   }
 
