@@ -65,6 +65,7 @@ Objetivo: uma pessoa real consegue **criar conta → cadastrar pet → usar o fr
 | Data | Ambiente | A free | B premium | C falhas | Notas |
 |------|----------|--------|-----------|----------|-------|
 | 2026-08-09 | local `next start` + **OPEN_ACCESS=true** | ⚠️ parcial (smoke HTTP/conteúdo) | ❌ não rodado (pagamento) | ⚠️ parcial | Ver “Smoke automático” abaixo |
+| 2026-08-20 | local `next start` + **OPEN_ACCESS=false** | ⚠️ cadeado L1–L4 PASS (redirect login). Roteiro A cadastro/pet ⏭ se não houver conta de teste | ❌ não rodado (pagamento fora desta fatia) | ⚠️ L1–L4 | Cadeado de Production no código (`isOpenAccess`) |
 
 ### Smoke automático (2026-08-09, free path sem login real)
 
