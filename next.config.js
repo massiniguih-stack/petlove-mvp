@@ -12,6 +12,9 @@ const nextConfig = {
       },
     ],
   },
+  env: {
+    NEXT_PUBLIC_VERCEL_ENV: process.env.VERCEL_ENV || '',
+  },
   headers: async () => [
     {
       source: '/(.*)',
