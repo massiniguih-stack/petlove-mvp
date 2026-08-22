@@ -2,10 +2,10 @@ import CadastroClient from './CadastroClient';
 
 export const metadata = {
   title: 'Cadastre seu Negócio Pet — Patinha Parceiros',
-  description: 'Leva poucos minutos: coloque seu pet shop, clínica veterinária ou hotel pet no mapa Patinha e comece a receber tutores da sua região.',
+  description: 'Cadastre clínica, pet shop ou hotel pet. Listagem gratuita após análise. Planos pagos: selo e WhatsApp; Pro e Empresarial também destaque.',
   openGraph: {
     title: 'Cadastre seu Negócio Pet — Patinha Parceiros',
-    description: 'Leva poucos minutos: coloque seu pet shop, clínica veterinária ou hotel pet no mapa Patinha e comece a receber tutores da sua região.',
+    description: 'Cadastre clínica, pet shop ou hotel pet. Listagem gratuita após análise. Planos pagos: selo e WhatsApp; Pro e Empresarial também destaque.',
   },
 };
 

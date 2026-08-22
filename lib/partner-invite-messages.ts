@@ -32,7 +32,7 @@ export function buildPartnerWhatsAppMessage(parceiro: PartnerInviteContext): str
     `• *Reconhecimento* — seu nome e serviços aparecem com clareza no mapa da região\n` +
     `• *Facilidade* — cadastro rápido, sem complicação; a gente te ajuda se precisar\n` +
     `\n` +
-    `📍 Dá pra *começar grátis* (listagem no mapa após uma análise simples). Se quiser ainda mais visibilidade, tem planos com selo e destaque — mas o primeiro passo é entrar.\n` +
+    `📍 Dá pra *começar grátis* (listagem no mapa após uma análise simples). Se quiser mais visibilidade, tem Básico (selo + WhatsApp) e Profissional (destaque no mapa) — mas o primeiro passo é entrar.\n` +
     `\n` +
     `👉 Cadastro em poucos minutos:\n` +
     `${SITE}/parceiros/cadastro\n` +
