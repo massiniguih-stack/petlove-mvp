@@ -55,27 +55,37 @@ export default function AdminFeedbackPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Feedback dos tutores</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">O que os tutores estão achando do app</p>
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Feedback</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {total} resposta{total === 1 ? '' : 's'} · {satisfacao}% ótimo
+        </p>
       </div>
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Total de respostas</p>
-          <p className="mt-1 text-3xl font-black text-slate-900 dark:text-white">{total}</p>
+      <div className="mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-slate-200 bg-slate-200 dark:border-slate-800 dark:bg-slate-800 sm:grid-cols-4">
+        <div className="bg-white px-4 py-3 dark:bg-slate-900">
+          <p className="text-[11px] text-slate-400">Total</p>
+          <p className="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-white">{total}</p>
         </div>
-        <div className="rounded-2xl border border-violet-200 bg-violet-50 p-4 shadow-sm dark:border-violet-900 dark:bg-violet-950">
-          <p className="text-sm font-semibold text-violet-600 dark:text-violet-400">% dizendo &quot;Ótimo&quot;</p>
-          <p className="mt-1 text-3xl font-black text-violet-700 dark:text-violet-300">{satisfacao}%</p>
+        <div className="bg-white px-4 py-3 dark:bg-slate-900">
+          <p className="text-[11px] text-slate-400">Ótimo</p>
+          <p className="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-white">{resumo.otimo}</p>
         </div>
-        <button onClick={() => setFiltroHumor(filtroHumor === 'ok' ? 'todos' : 'ok')} className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-left shadow-sm transition hover:shadow-md dark:border-amber-900 dark:bg-amber-950">
-          <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">😐 Ok</p>
-          <p className="mt-1 text-3xl font-black text-amber-700 dark:text-amber-300">{resumo.ok}</p>
+        <button
+          type="button"
+          onClick={() => setFiltroHumor(filtroHumor === 'ok' ? 'todos' : 'ok')}
+          className="bg-white px-4 py-3 text-left transition hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800"
+        >
+          <p className="text-[11px] text-slate-400">Ok</p>
+          <p className="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-white">{resumo.ok}</p>
         </button>
-        <button onClick={() => setFiltroHumor(filtroHumor === 'ruim' ? 'todos' : 'ruim')} className="rounded-2xl border border-red-200 bg-red-50 p-4 text-left shadow-sm transition hover:shadow-md dark:border-red-900 dark:bg-red-950">
-          <p className="text-sm font-semibold text-red-600 dark:text-red-400">😞 Ruim</p>
-          <p className="mt-1 text-3xl font-black text-red-700 dark:text-red-300">{resumo.ruim}</p>
+        <button
+          type="button"
+          onClick={() => setFiltroHumor(filtroHumor === 'ruim' ? 'todos' : 'ruim')}
+          className="bg-white px-4 py-3 text-left transition hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800"
+        >
+          <p className="text-[11px] text-slate-400">Ruim</p>
+          <p className="mt-0.5 text-xl font-semibold tabular-nums text-slate-900 dark:text-white">{resumo.ruim}</p>
         </button>
       </div>
 
@@ -86,7 +96,7 @@ export default function AdminFeedbackPage() {
             onClick={() => setFiltroHumor(h)}
             className={`rounded-full px-4 py-2 text-sm font-bold transition ${
               filtroHumor === h
-                ? 'bg-violet-600 text-white'
+                ? 'bg-amber-600 text-white'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400'
             }`}
           >
@@ -97,7 +107,7 @@ export default function AdminFeedbackPage() {
 
       {carregando ? (
         <div className="flex items-center justify-center py-16">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-violet-500 border-t-transparent" />
+          <div className="h-8 w-8 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
         </div>
       ) : erro ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center dark:border-red-900 dark:bg-red-950">

@@ -12,6 +12,7 @@ Durante o **teste público limitado** (web app em beta, sem cobrança ativa):
 * Atribuição visível no rodapé: “Ícones 3D: Thiings — usados neste web app em fase de teste”, com link para https://www.thiings.co
 * Texto “Patinha MVP — projeto em teste (beta)”
 * **Não fecha MAS-9.** A licença Free **não autoriza uso comercial**. “Estamos testando” não substitui Indie quando o app passar a cobrar ou for loja aberta.
+* Próximo passo de ícones: **criar desenhos próprios** (estilo Soft 3D). Não copiar nem fazer engenharia reversa dos arquivos Thiings.
 
 Fonte: https://www.thiings.co/terms — Free = personal and non-commercial use + attribution required; Indie = commercial use in apps/web.
 
