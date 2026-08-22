@@ -14,7 +14,7 @@ export default function PoliticaClient() {
           <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 dark:text-white">
             Política de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">Privacidade</span>
           </h1>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Última atualização: janeiro de 2026</p>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Última atualização: agosto de 2026</p>
 
           <div className="mt-8 space-y-6 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
             <section>
@@ -30,9 +30,12 @@ export default function PoliticaClient() {
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">2. Dados que coletamos</h2>
               <ul className="mt-2 list-inside list-disc space-y-1">
                 <li><strong>Dados de cadastro:</strong> nome, e-mail, telefone, endereço</li>
-                <li><strong>Dados do pet:</strong> nome, raça, data de nascimento, peso, sexo, objetivo</li>
-                <li><strong>Dados de localização:</strong> quando autorizado, sua localização para encontrar serviços próximos</li>
-                <li><strong>Dados de uso:</strong> interações no app, checklists preenchidos, histórico de atividades</li>
+                <li><strong>Dados do pet:</strong> nome, raça, data de nascimento, peso, sexo, objetivo, foto se você enviar</li>
+                <li><strong>Dados de localização:</strong> quando autorizado, para sugerir serviços no mapa; a cidade do mapa também pode ser escolhida à mão</li>
+                <li><strong>Dados de uso:</strong> interações no app, checklists, histórico de refeições e atividades, feedback</li>
+                <li><strong>Pagamentos:</strong> o checkout é feito na LastLink; recebemos e-mail e status da compra pelo webhook, não o número do cartão</li>
+                <li><strong>Notificações:</strong> se você permitir, um token de push (Firebase) para lembretes</li>
+                <li><strong>Atribuição de campanha:</strong> parâmetros UTM da URL de chegada, quando existirem</li>
               </ul>
             </section>
 
@@ -57,9 +60,9 @@ export default function PoliticaClient() {
                 Seus dados podem ser compartilhados apenas:
               </p>
               <ul className="mt-2 list-inside list-disc space-y-1">
-                <li>Com prestadores de serviços listados na plataforma (quando você agenda um serviço)</li>
+                <li>Com o mapa de parceiros (nome do negócio, endereço e contato que o parceiro cadastrou — não os seus dados de tutor, salvo se você clicar para falar com eles)</li>
                 <li>Por obrigação legal ou ordem judicial</li>
-                <li>Com provedores de infraestrutura que auxiliam na operação (ex: Supabase, Vercel)</li>
+                <li>Com provedores que operam o serviço: Supabase (conta e banco), Vercel (hospedagem), LastLink (pagamento), Resend (e-mail), Firebase (push, se ativo) e, se configurado, Meta Pixel (anúncios)</li>
               </ul>
             </section>
 
@@ -88,16 +91,19 @@ export default function PoliticaClient() {
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">7. Retenção de dados</h2>
               <p className="mt-2">
                 Seus dados são mantidos enquanto sua conta estiver ativa.
-                Após solicitação de exclusão, seus dados serão removidos em até 30 dias,
-                exceto quando houver obrigação legal de conservação.
+                Você pode apagar a conta em <strong>Minha assinatura</strong> no app, ou pedir pelo e-mail{' '}
+                <strong>contato@patinha.app.br</strong>. Após o pedido, os dados da conta (perfil, pets e
+                históricos ligados a ela) são removidos; o prazo interno é de até 30 dias, exceto quando
+                houver obrigação legal de conservação (por exemplo, registros de pagamento).
               </p>
             </section>
 
             <section>
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">8. Cookies e tecnologias</h2>
               <p className="mt-2">
-                Utilizamos cookies essenciais para o funcionamento da aplicação (autenticação).
-                Não utilizamos cookies de rastreamento ou publicitários.
+                Usamos cookies e armazenamento local essenciais para login e para lembrar o pet selecionado.
+                Se o Meta Pixel estiver configurado no ambiente, ele pode registrar visitas e eventos de cadastro/checkout
+                para medir anúncios. Parâmetros UTM da URL de chegada podem ser guardados para saber de onde veio o cadastro.
               </p>
             </section>
 
