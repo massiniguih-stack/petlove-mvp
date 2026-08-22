@@ -109,7 +109,7 @@ Objetivo: uma pessoa real consegue **criar conta → cadastrar pet → usar o fr
 - [ ] RLS revisada (tutor só vê os próprios pets)  
 - [ ] Termos e Política acessíveis no rodapé e coerentes com o produto  
 - [ ] Canal de suporte (e-mail ou WhatsApp) publicado  
-- [ ] Decisão **ícones Thiings**: licença Indie **ou** troca dos proibidos (ver `docs/auditoria-icones-3d.md`)
+- [ ] Decisão **ícones Thiings**: licença Indie **ou** troca dos proibidos (ver `docs/auditoria-icones-3d.md`). No beta: atribuição visível no rodapé; **não substitui** Indie na loja aberta.
 
 ### Importantes (amarelo) — beta ok, escala não
 

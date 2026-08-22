@@ -1,9 +1,19 @@
 # Auditoria de ícones 3D — licença vs app comercial
 
-**Data:** 2026-08-09  
-**Contexto:** o set Soft 3D veio em grande parte do [Thiings](https://www.thiings.co). No plano **Free**, uso é **só pessoal/não comercial** + atribuição. Em **web app comercial** (Patinha), esses arquivos entram como **proibidos / a substituir** até haver licença **Indie/Enterprise** ou ícone **próprio**.
+**Data:** 2026-08-09 (posição de beta: 2026-08-22)  
+**Contexto:** o set Soft 3D veio em grande parte do [Thiings](https://www.thiings.co). No plano **Free**, uso é **só pessoal/não comercial** + **atribuição visível**. Em **web app comercial** (Patinha), esses arquivos entram como **proibidos / a substituir** até haver licença **Indie** (~US$ 49) ou ícone **próprio**.
 
 > Isto **não é parecer jurídico**. Confirme sempre em https://www.thiings.co/terms.
+
+## Posição no beta (agosto 2026)
+
+Durante o **teste público limitado** (web app em beta, sem cobrança ativa):
+
+* Atribuição visível no rodapé: “Ícones 3D: Thiings — usados neste web app em fase de teste”, com link para https://www.thiings.co
+* Texto “Patinha MVP — projeto em teste (beta)”
+* **Não fecha MAS-9.** A licença Free **não autoriza uso comercial**. “Estamos testando” não substitui Indie quando o app passar a cobrar ou for loja aberta.
+
+Fonte: https://www.thiings.co/terms — Free = personal and non-commercial use + attribution required; Indie = commercial use in apps/web.
 
 ---
 
