@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { sendPushNotification } from '@/lib/push';
+import { getAppUrl } from '@/lib/appUrl';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -61,7 +62,7 @@ export async function GET(req: NextRequest) {
             <h1 style="color: #7c3aed;">Lembrete de Vacina 🐾</h1>
             <p>Oi${tutor.nome ? ` ${tutor.nome}` : ''}! A vacina <strong>${v.titulo}</strong> de <strong>${pet?.nome || 'seu pet'}</strong> está agendada para <strong>${dataFormatada}</strong>.</p>
             <p>Não esqueça de agendar a consulta com o veterinário!</p>
-            <a href="https://patinha-mvp.vercel.app/vida" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 16px;">
+            <a href="${getAppUrl()}/vida" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 16px;">
               Ver linha do tempo
             </a>
           </div>
@@ -82,7 +83,7 @@ export async function GET(req: NextRequest) {
           sub.token,
           `Vacina de ${pet?.nome || 'seu pet'} está chegando 🐾`,
           `${v.titulo} agendada para ${dataFormatada}`,
-          'https://patinha-mvp.vercel.app/vida'
+          `${getAppUrl()}/vida`
         );
         if (tokenInvalido) {
           await supabaseAdmin.from('push_subscriptions').delete().eq('user_id', tutor.id);

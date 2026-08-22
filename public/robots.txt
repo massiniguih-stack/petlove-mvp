@@ -16,4 +16,4 @@ Disallow: /vida
 Disallow: /desempenho
 Disallow: /parceiros/convites
 
-Sitemap: https://petlove-mvp.vercel.app/sitemap.xml
+Sitemap: https://patinha-mvp.vercel.app/sitemap.xml

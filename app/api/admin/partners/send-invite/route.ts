@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
+import { getAppUrl } from '@/lib/appUrl';
 
 function getResend() {
   const key = process.env.RESEND_API_KEY;
@@ -30,7 +31,7 @@ function buildInviteEmail(nome: string) {
       <p style="color: #64748b; font-size: 14px; margin: 0;">💬 Botão de WhatsApp direto no perfil</p>
     </div>
     <div style="text-align: center; margin: 32px 0;">
-      <a href="https://patinha-mvp.vercel.app/parceiros/cadastro" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #9333ea); color: #ffffff; padding: 16px 40px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px;">
+      <a href="${getAppUrl()}/parceiros/cadastro" style="display: inline-block; background: linear-gradient(135deg, #7c3aed, #9333ea); color: #ffffff; padding: 16px 40px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 16px;">
         Quero ser parceiro
       </a>
     </div>

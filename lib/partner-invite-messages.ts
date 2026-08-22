@@ -3,7 +3,9 @@
  * Usada em /admin/parceiros (fila) e /parceiros/convites.
  */
 
-export const SITE = 'https://patinha-mvp.vercel.app';
+import { getAppUrl } from '@/lib/appUrl';
+
+export const SITE = getAppUrl();
 
 export type PartnerInviteContext = {
   nome: string;
