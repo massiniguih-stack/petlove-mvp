@@ -77,20 +77,11 @@ export default function AdminUsuariosPage() {
 
   return (
     <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Usuarios</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Todos os usuarios cadastrados no app</p>
-      </div>
-
-      <div className="mb-6 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Total</p>
-          <p className="mt-1 text-3xl font-black text-slate-900 dark:text-white">{total}</p>
-        </div>
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm dark:border-emerald-900 dark:bg-emerald-950">
-          <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Com telefone</p>
-          <p className="mt-1 text-3xl font-black text-emerald-700 dark:text-emerald-300">{usuarios.filter((u) => u.telefone).length}</p>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Usuários</h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {total} cadastro{total === 1 ? '' : 's'} · {usuarios.filter((u) => u.telefone).length} com telefone
+        </p>
       </div>
 
       {erroExclusao && (
@@ -106,14 +97,14 @@ export default function AdminUsuariosPage() {
           value={filtro}
           onChange={(e) => setFiltro(e.target.value)}
           placeholder="Buscar por nome, email ou telefone..."
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:w-96 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-400"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 sm:w-96 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-amber-400"
         />
         <span className="text-sm text-slate-500 dark:text-slate-400">{filtrados.length} usuarios</span>
       </div>
 
       {carregando ? (
         <div className="flex items-center justify-center py-16">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+          <div className="h-8 w-8 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
         </div>
       ) : erro ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center dark:border-red-900 dark:bg-red-950">
@@ -137,7 +128,7 @@ export default function AdminUsuariosPage() {
                 <tr key={u.id} className="border-b border-slate-50 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-sm font-bold text-white">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-sm font-semibold text-amber-800 dark:bg-amber-950 dark:text-amber-200">
                         {u.nome?.charAt(0) || '?'}
                       </div>
                       <span className="text-sm font-bold text-slate-900 dark:text-white">{u.nome || 'Sem nome'}</span>
