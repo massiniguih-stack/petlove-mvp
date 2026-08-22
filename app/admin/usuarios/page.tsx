@@ -9,6 +9,7 @@ interface Tutor {
   telefone: string | null;
   endereco: string | null;
   created_at: string;
+  equipe?: boolean;
 }
 
 export default function AdminUsuariosPage() {
@@ -132,6 +133,11 @@ export default function AdminUsuariosPage() {
                         {u.nome?.charAt(0) || '?'}
                       </div>
                       <span className="text-sm font-bold text-slate-900 dark:text-white">{u.nome || 'Sem nome'}</span>
+                      {u.equipe && (
+                        <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                          Equipe
+                        </span>
+                      )}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{u.email}</td>
@@ -140,17 +146,21 @@ export default function AdminUsuariosPage() {
                     {new Date(u.created_at).toLocaleDateString('pt-BR')}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <button
-                      onClick={() => excluirUsuario(u.id)}
-                      disabled={excluindoId === u.id}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-bold transition disabled:opacity-50 ${
-                        confirmandoId === u.id
-                          ? 'bg-red-600 text-white hover:bg-red-700'
-                          : 'bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-red-950 dark:hover:text-red-400'
-                      }`}
-                    >
-                      {excluindoId === u.id ? '...' : confirmandoId === u.id ? 'Confirmar exclusão' : '🗑️ Excluir'}
-                    </button>
+                    {u.equipe ? (
+                      <span className="text-xs text-slate-400">Conta da equipe</span>
+                    ) : (
+                      <button
+                        onClick={() => excluirUsuario(u.id)}
+                        disabled={excluindoId === u.id}
+                        className={`rounded-lg px-3 py-1.5 text-xs font-bold transition disabled:opacity-50 ${
+                          confirmandoId === u.id
+                            ? 'bg-red-600 text-white hover:bg-red-700'
+                            : 'bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-red-950 dark:hover:text-red-400'
+                        }`}
+                      >
+                        {excluindoId === u.id ? '...' : confirmandoId === u.id ? 'Confirmar exclusão' : 'Excluir'}
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

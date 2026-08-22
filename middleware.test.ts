@@ -44,6 +44,11 @@ describe('middleware OPEN_ACCESS lock', () => {
     expect(res.headers.get('location')).toContain('/login');
   });
 
+  it('redirects /comparar to login when the bypass is off', async () => {
+    const res = await middleware(req('/comparar'));
+    expect(res.headers.get('location')).toContain('/login');
+  });
+
   it('does not redirect /dashboard when OPEN_ACCESS=true locally', async () => {
     process.env.OPEN_ACCESS = 'true';
     const res = await middleware(req('/dashboard'));

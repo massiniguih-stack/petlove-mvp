@@ -49,6 +49,7 @@ export async function GET() {
     tutorNovos7Res,
     tutorNovos30Res,
     petTotalRes,
+    petEquipeRes,
     subscriptionsRes,
     eventosRes,
     eventos7Res,
@@ -78,6 +79,10 @@ export async function GET() {
       .from('pet')
       .select('*', { count: 'exact', head: true })
       .not('tutor_id', 'in', idsAdminLista),
+    supabaseAdmin
+      .from('pet')
+      .select('*', { count: 'exact', head: true })
+      .in('tutor_id', idsAdmin.length > 0 ? idsAdmin : ['00000000-0000-0000-0000-000000000000']),
     supabaseAdmin
       .from('subscriptions')
       .select('status, plan_type, plan_category, user_id')
@@ -194,6 +199,10 @@ export async function GET() {
     },
     pets: {
       total: petTotalRes.count || 0,
+    },
+    equipe: {
+      tutores: idsAdmin.length,
+      pets: petEquipeRes.count || 0,
     },
     assinaturas: {
       ativas: ativas.length,

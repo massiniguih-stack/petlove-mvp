@@ -13,6 +13,7 @@ const protectedRoutes = [
   '/desempenho',
   '/conta',
   '/parceiro',
+  '/comparar',
 ]
 const adminRoutes = ['/admin']
 /** Páginas só de QA/design — não fazem sentido em produção pública. */

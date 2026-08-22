@@ -17,7 +17,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata = {
   title: 'Patinha - Cuidados para seu pet',
-  description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário, hotel e mais.',
+  description: 'App para cuidar do pet no dia a dia: ração, atividades, linha do tempo e mapa de serviços perto de você.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32' },
@@ -29,7 +29,7 @@ export const metadata = {
   },
   openGraph: {
     title: 'Patinha - Cuidados para seu pet',
-    description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário, hotel e mais.',
+    description: 'App para cuidar do pet no dia a dia: ração, atividades, linha do tempo e mapa de serviços perto de você.',
     url: appUrl,
     siteName: 'Patinha',
     locale: 'pt_BR',
@@ -39,7 +39,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Patinha - Cuidados para seu pet',
-    description: 'Encontre os melhores serviços para seu animal de estimação.',
+    description: 'App para cuidar do pet no dia a dia: ração, atividades, linha do tempo e mapa.',
     images: ['/og-image.png'],
   },
   metadataBase: new URL(appUrl),
