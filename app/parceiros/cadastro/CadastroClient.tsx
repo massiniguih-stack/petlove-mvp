@@ -238,7 +238,7 @@ export default function CadastroClient() {
                 </h1>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no Patinha</p>
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                  Listagem grátis após análise · destaque pago opcional a partir de R$ 39,80/mês ·{' '}
+                  Listagem grátis após análise · selo Premium a partir de R$ 39,80/mês · destaque no Profissional ·{' '}
                   <a href="/parceiros/premium" className="font-semibold text-blue-600 underline-offset-2 hover:underline dark:text-blue-400">
                     ver planos
                   </a>

@@ -80,7 +80,7 @@ const planos: {
       'Tudo do Profissional',
       'Mesmos benefícios de destaque no mapa',
       'Plano para quem investe mais em visibilidade',
-      'Canal preferencial com o time Patinha',
+      'Suporte pelo e-mail contato@patinha.app.br',
       'Ativação após pagamento confirmado',
     ],
   },
@@ -295,7 +295,7 @@ export default function PremiumClient() {
               <span>·</span>
               <span>Cancele quando quiser na área de membros</span>
               <span>·</span>
-              <span>Planos pagos ativam selo e destaque no mapa</span>
+              <span>Básico: selo e WhatsApp · Pro e Empresarial: também destaque no mapa</span>
             </div>
           </div>
         </section>
