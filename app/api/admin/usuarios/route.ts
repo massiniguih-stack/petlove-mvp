@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json({
-    data: tutors || [],
+    data: (tutors || []).map((t) => ({ ...t, equipe: isAdmin(t.email) })),
     total: count || 0,
     page,
     limit,
@@ -57,15 +57,18 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: 'id é obrigatório' }, { status: 400 });
   }
 
-  // A lista de usuários mostra todo mundo que já se cadastrou como tutor,
-  // incluindo o próprio admin se ele também tiver uma conta de tutor —
-  // sem essa checagem, dava pra apagar a própria conta por engano (já
-  // aconteceu) e ficar sem acesso ao painel.
-  if (id === user.id) {
-    return NextResponse.json({ error: 'Você não pode excluir a própria conta por aqui.' }, { status: 400 });
+  const supabaseAdmin = getSupabaseAdmin();
+  const { data: alvo } = await supabaseAdmin.from('tutor').select('email').eq('id', id).maybeSingle();
+
+  // A lista mostra o admin se ele também for tutor. Sem isso dava para
+  // apagar a própria conta (já aconteceu) e ficar sem o painel.
+  if (id === user.id || isAdmin(alvo?.email)) {
+    return NextResponse.json(
+      { error: 'Não é possível excluir uma conta da equipe por aqui.' },
+      { status: 400 }
+    );
   }
 
-  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
 
   if (error) {

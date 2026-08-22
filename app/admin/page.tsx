@@ -32,6 +32,7 @@ interface DashboardStats {
     premium: number;
   };
   pets: { total: number };
+  equipe: { tutores: number; pets: number };
   assinaturas: {
     ativas: number;
     porPlano: Record<string, number>;
@@ -154,6 +155,9 @@ export default function AdminDashboardPage() {
         <h1 className="text-xl font-semibold text-slate-900 dark:text-white">Visão geral</h1>
         <p className="mt-1 text-sm text-slate-500">
           Cidade piloto Maringá. Clique num número para abrir a lista.
+          {(stats.equipe?.tutores ?? 0) > 0
+            ? ` Conta da equipe (${stats.equipe.tutores}) não entra em Tutores/Pets.`
+            : ''}
         </p>
       </div>
 
@@ -162,7 +166,11 @@ export default function AdminDashboardPage() {
           href="/admin/usuarios"
           label="Tutores"
           value={stats.tutores.total}
-          hint={`${stats.tutores.free} free · ${stats.tutores.premium} premium · +${stats.tutores.novos7dias} em 7d`}
+          hint={
+            stats.tutores.total === 0 && (stats.equipe?.tutores ?? 0) > 0
+              ? 'Nenhum tutor cliente ainda (equipe fora da conta)'
+              : `${stats.tutores.free} free · ${stats.tutores.premium} premium · +${stats.tutores.novos7dias} em 7d`
+          }
         />
         <Kpi
           href="/admin/parceiros"

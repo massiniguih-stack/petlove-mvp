@@ -48,7 +48,7 @@ export default function Navbar() {
               <span className="text-xl font-black tracking-tight">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-600">Patinha</span>
               </span>
-              <span className="text-[10px] font-medium tracking-widest text-slate-400 uppercase">Cuidados premium</span>
+              <span className="text-[10px] font-medium tracking-widest text-slate-400 uppercase">Cuidados para o pet</span>
             </div>
           </Link>
 
