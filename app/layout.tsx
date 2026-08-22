@@ -4,7 +4,10 @@ import { SubscriptionLoader } from '@/components/SubscriptionLoader'
 import { UtmCapture } from '@/components/UtmCapture'
 import { MetaPixel } from '@/components/MetaPixel'
 import { Plus_Jakarta_Sans } from 'next/font/google'
+import { getAppUrl } from '@/lib/appUrl'
 import '../styles/globals.css'
+
+const appUrl = getAppUrl()
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -27,7 +30,7 @@ export const metadata = {
   openGraph: {
     title: 'Patinha - Cuidados para seu pet',
     description: 'Encontre os melhores serviços para seu animal de estimação. Passeios, banho, veterinário, hotel e mais.',
-    url: 'https://patinha-mvp.vercel.app',
+    url: appUrl,
     siteName: 'Patinha',
     locale: 'pt_BR',
     type: 'website',
@@ -39,7 +42,7 @@ export const metadata = {
     description: 'Encontre os melhores serviços para seu animal de estimação.',
     images: ['/og-image.png'],
   },
-  metadataBase: new URL('https://patinha-mvp.vercel.app'),
+  metadataBase: new URL(appUrl),
 }
 
 export default function RootLayout({
