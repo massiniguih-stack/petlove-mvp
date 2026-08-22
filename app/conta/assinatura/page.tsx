@@ -1,14 +1,21 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { FileTextIcon3D } from '@/components/Icons3D';
 import { usePetStore } from '@/lib/store';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function AssinaturaPage() {
-  const { isPremium, plan, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd, fetchSubscription } = usePetStore();
+  const { isPremium, plan, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd, fetchSubscription, clearAll } = usePetStore();
+  const { signOut } = useAuth();
+  const router = useRouter();
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+  const [erroExclusao, setErroExclusao] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSubscription();
@@ -102,6 +109,51 @@ export default function AssinaturaPage() {
                 </a>
               </div>
             )}
+          </div>
+
+          <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+            <h2 className="text-lg font-black text-slate-900 dark:text-white">Excluir conta</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              Apaga o login, o perfil e os pets desta conta. Pagamentos na LastLink, se existirem, você gerencia à parte.
+              Também pode pedir pelo e-mail contato@patinha.app.br.
+            </p>
+            {erroExclusao && (
+              <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">{erroExclusao}</p>
+            )}
+            <button
+              type="button"
+              disabled={excluindo}
+              onClick={async () => {
+                if (!confirmandoExclusao) {
+                  setConfirmandoExclusao(true);
+                  setErroExclusao(null);
+                  return;
+                }
+                setExcluindo(true);
+                setErroExclusao(null);
+                try {
+                  const res = await fetch('/api/tutor/conta', { method: 'DELETE' });
+                  if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    throw new Error(data.error || 'Não foi possível excluir a conta');
+                  }
+                  clearAll();
+                  await signOut();
+                  router.replace('/');
+                } catch (err) {
+                  setErroExclusao(err instanceof Error ? err.message : 'Erro ao excluir');
+                  setExcluindo(false);
+                  setConfirmandoExclusao(false);
+                }
+              }}
+              className="mt-4 w-full rounded-2xl border border-red-200 py-3 text-sm font-bold text-red-700 transition hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+            >
+              {excluindo
+                ? 'Excluindo…'
+                : confirmandoExclusao
+                  ? 'Clique de novo para confirmar a exclusão'
+                  : 'Excluir minha conta'}
+            </button>
           </div>
         </div>
       </main>

@@ -222,6 +222,11 @@ export default function DashboardPage() {
                 Ver Planos →
               </a>
             </div>
+            <p className="mt-3 text-center text-xs text-violet-100/90">
+              <a href="/conta/assinatura" className="underline hover:text-white">
+                Minha assinatura e exclusão de conta
+              </a>
+            </p>
           </div>
         </div>
       </main>

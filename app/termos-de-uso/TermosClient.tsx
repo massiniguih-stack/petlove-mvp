@@ -14,7 +14,7 @@ export default function TermosClient() {
           <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 dark:text-white">
             Termos de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">Uso</span>
           </h1>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Última atualização: julho de 2026</p>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Última atualização: agosto de 2026</p>
 
           <div className="mt-8 space-y-6 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
             <section>
@@ -43,6 +43,7 @@ export default function TermosClient() {
                 <li>Você é responsável por manter a confidencialidade da sua senha e por toda atividade realizada na sua conta.</li>
                 <li>Uma mesma conta pode ser usada tanto como tutor quanto como parceiro, cada uma com seu próprio cadastro.</li>
                 <li>Podemos suspender ou encerrar contas que violem estes termos ou usem a plataforma de forma indevida.</li>
+                <li>Você pode encerrar a própria conta em Minha assinatura no app, ou pedindo pelo e-mail contato@patinha.app.br.</li>
               </ul>
             </section>
 
@@ -61,8 +62,9 @@ export default function TermosClient() {
               <p className="mt-2">
                 Alguns recursos (como múltiplos pets, histórico completo, comparação entre pets ou destaque no mapa para
                 parceiros) exigem uma assinatura paga. Os valores e a forma de cobrança são exibidos antes da confirmação
-                do pagamento. Assinaturas são processadas por um provedor de pagamento terceiro e podem ser canceladas a
-                qualquer momento, valendo até o fim do período já pago.
+                do pagamento. Assinaturas de tutor e de parceiro são processadas pela LastLink; o cancelamento segue as
+                regras da LastLink e vale até o fim do período já pago. Enquanto o pagamento não estiver validado no
+                ambiente, o plano gratuito continua limitado a 1 pet.
               </p>
             </section>
 
