@@ -98,6 +98,19 @@ describe('POST /api/lastlink/webhook', () => {
     expect(fromMock).not.toHaveBeenCalled();
   });
 
+  it('accepts a token listed in LASTLINK_WEBHOOK_TOKENS', async () => {
+    const previous = process.env.LASTLINK_WEBHOOK_TOKENS;
+    process.env.LASTLINK_WEBHOOK_TOKENS = 'partner-token';
+    setupSupabaseMock();
+    try {
+      const res = await POST(buildRequest(baseEvent({ IsTest: true }), { 'x-webhook-token': 'partner-token' }));
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({ received: true, test: true });
+    } finally {
+      process.env.LASTLINK_WEBHOOK_TOKENS = previous;
+    }
+  });
+
   it('acknowledges test events without touching the database', async () => {
     setupSupabaseMock();
     const res = await POST(buildRequest(baseEvent({ IsTest: true })));

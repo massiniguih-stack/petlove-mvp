@@ -76,9 +76,17 @@ async function getUserByEmail(
   return users.find((u: { email?: string }) => u.email === email) || null;
 }
 
+function allowedWebhookTokens(): string[] {
+  const primary = process.env.LASTLINK_WEBHOOK_TOKEN || '';
+  const extra = process.env.LASTLINK_WEBHOOK_TOKENS || '';
+  return [...primary.split(','), ...extra.split(',')]
+    .map((token) => token.trim())
+    .filter(Boolean);
+}
+
 export async function POST(request: NextRequest) {
   const webhookToken = request.headers.get('x-webhook-token');
-  if (webhookToken !== process.env.LASTLINK_WEBHOOK_TOKEN) {
+  if (!webhookToken || !allowedWebhookTokens().includes(webhookToken)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
