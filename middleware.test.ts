@@ -49,6 +49,26 @@ describe('middleware OPEN_ACCESS lock', () => {
     expect(res.headers.get('location')).toContain('/login');
   });
 
+  it('redirects /parceiros/convites to login when logged out', async () => {
+    const res = await middleware(req('/parceiros/convites'));
+    expect(res.headers.get('location')).toContain('/login');
+  });
+
+  it('sends a logged-in non-admin away from /parceiros/convites', async () => {
+    vi.mocked(updateSession).mockResolvedValue({
+      response: NextResponse.next(),
+      isLoggedIn: true,
+      email: 'tutor@example.com',
+    });
+    const res = await middleware(req('/parceiros/convites'));
+    expect(res.headers.get('location')).toContain('/dashboard');
+  });
+
+  it('redirects /checkout/sucesso to login when logged out', async () => {
+    const res = await middleware(req('/checkout/sucesso'));
+    expect(res.headers.get('location')).toContain('/login');
+  });
+
   it('does not redirect /dashboard when OPEN_ACCESS=true locally', async () => {
     process.env.OPEN_ACCESS = 'true';
     const res = await middleware(req('/dashboard'));

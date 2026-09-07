@@ -1,9 +1,11 @@
 User-agent: *
+Allow: /
 Allow: /login
 Allow: /cadastro
 Allow: /planos
 Allow: /recuperar-senha
 Allow: /politica-de-privacidade
+Allow: /termos-de-uso
 Allow: /parceiros/premium
 Allow: /parceiros/cadastro
 Disallow: /dashboard
@@ -14,6 +16,11 @@ Disallow: /racao
 Disallow: /atividades
 Disallow: /vida
 Disallow: /desempenho
+Disallow: /comparar
+Disallow: /conta
+Disallow: /checkout
+Disallow: /conferir
+Disallow: /preview-icones
 Disallow: /parceiros/convites
 
 Sitemap: https://patinha-mvp.vercel.app/sitemap.xml

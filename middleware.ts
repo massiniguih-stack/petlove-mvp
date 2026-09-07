@@ -14,10 +14,11 @@ const protectedRoutes = [
   '/conta',
   '/parceiro',
   '/comparar',
+  '/checkout',
 ]
 const adminRoutes = ['/admin']
-/** Páginas só de QA/design — não fazem sentido em produção pública. */
-const internalOnlyRoutes = ['/conferir', '/preview-icones']
+/** Páginas só de QA/design ou ferramenta de staff — não fazem sentido em produção pública. */
+const internalOnlyRoutes = ['/conferir', '/preview-icones', '/parceiros/convites']
 const adminEmails = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com')
   .split(',')
   .map((e) => e.trim())
