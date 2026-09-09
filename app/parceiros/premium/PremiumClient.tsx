@@ -246,16 +246,15 @@ export default function PremiumClient() {
                         </div>
                       ) : (
                         <div className="flex items-baseline gap-1">
-                          <span className="text-sm font-bold text-slate-400">R$</span>
+                          <span className="text-sm font-bold text-slate-400">12x de R$</span>
                           <span className="text-4xl font-black text-slate-900 dark:text-white">
-                            {formatBRL(plano.anual)}
+                            {formatBRL(plano.parcela ?? plano.anual)}
                           </span>
-                          <span className="text-sm text-slate-500">à vista/ano</span>
                         </div>
                       )}
                       <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                        {isPaid && plano.parcela != null
-                          ? `ou 12x de R$ ${formatBRL(plano.parcela)} com juros · LastLink`
+                        {isPaid && plano.anual != null
+                          ? `com juros · ou R$ ${formatBRL(plano.anual)} à vista/ano · LastLink`
                           : 'Sem cartão · análise em até 48h'}
                       </p>
                     </div>
@@ -306,7 +305,7 @@ export default function PremiumClient() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500">
               <span>Pagamento seguro via LastLink</span>
               <span>·</span>
-              <span>Planos anuais: à vista ou em até 12x com juros</span>
+              <span>Planos anuais em até 12x no cartão, ou à vista com desconto</span>
               <span>·</span>
               <span>Básico: selo e WhatsApp · Pro e Empresarial: também destaque no mapa</span>
             </div>
