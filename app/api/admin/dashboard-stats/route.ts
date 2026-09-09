@@ -7,10 +7,12 @@ import { isOpenAccess } from '@/lib/openAccess';
 const PRECO_MENSAL: Record<string, number> = {
   tutor_monthly: 29.49,
   tutor_annual: 238.8 / 12,
-  partner_basic: 39.8,
+  // Parceiro virou 100% anual em 12x (sem juros) a partir de 2026-09 — o
+  // valor aqui é a parcela mensal, igual ao exibido em /parceiros/premium.
+  partner_basic: 19.98,
   partner_annual: 238.8 / 12,
-  partner_pro: 69.8,
-  partner_enterprise: 129.8,
+  partner_pro: 49.69,
+  partner_enterprise: 68.9,
 };
 
 function diasAtras(dias: number) {

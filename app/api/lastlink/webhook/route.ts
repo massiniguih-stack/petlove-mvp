@@ -159,6 +159,16 @@ export async function POST(request: NextRequest) {
 
     // Upsert subscription
     const resolvedPlanType = planType || 'unknown';
+    // partner_basic/pro/enterprise viraram planos anuais em 2026-09 (cobrados
+    // em 12x); tutor_annual e partner_annual já eram anuais. Todo o resto
+    // (tutor_monthly) segue mensal.
+    const isAnnualPlan =
+      resolvedPlanType === 'tutor_annual' ||
+      resolvedPlanType === 'partner_annual' ||
+      resolvedPlanType === 'partner_basic' ||
+      resolvedPlanType === 'partner_pro' ||
+      resolvedPlanType === 'partner_enterprise';
+    const periodDays = isAnnualPlan ? 365 : 30;
     const subscriptionData = {
       user_id: user.id,
       provider_subscription_id: lastlinkSubscriptionId || `lastlink_${event.Id}`,
@@ -168,7 +178,7 @@ export async function POST(request: NextRequest) {
       plan_category: planCategory(resolvedPlanType),
       cancel_at_period_end: cancelAtPeriodEnd,
       current_period_end: event.Data.Purchase?.PaymentDate
-        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Estimate 30 days
+        ? new Date(Date.now() + periodDays * 24 * 60 * 60 * 1000).toISOString() // Estimate
         : null,
       updated_at: new Date().toISOString(),
     };
