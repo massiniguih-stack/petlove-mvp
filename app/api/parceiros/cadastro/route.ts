@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
           <h1 style="color: #7c3aed;">Recebemos seu cadastro! 🎉</h1>
           <p style="color: #334155; font-size: 16px; line-height: 1.7;">Olá, <strong>${escapeHtml(nome)}</strong>!</p>
           <p style="color: #334155; font-size: 16px; line-height: 1.7;">
-            Nossa equipe vai analisar suas informações e entrar em contato em até 48 horas.
+            Seu negócio já está listado no mapa do Patinha. Se precisarmos de mais alguma informação, entramos em contato por aqui.
           </p>
           <p style="color: #64748b; font-size: 14px;">Qualquer dúvida, responda este email.</p>
         </div>

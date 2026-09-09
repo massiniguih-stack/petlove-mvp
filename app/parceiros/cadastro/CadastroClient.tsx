@@ -184,17 +184,17 @@ export default function CadastroClient() {
             </div>
             <h1 className="mt-8 text-3xl font-black text-slate-900 dark:text-white">Cadastro Enviado!</h1>
             <p className="mt-3 text-slate-600 dark:text-slate-400">
-              Recebemos as informações de <strong>{form.nome}</strong>. Nossa equipe irá analisar e entrar em contato em até <strong>48 horas</strong>.
+              Recebemos as informações de <strong>{form.nome}</strong>. Seu negócio já está listado no mapa — se precisarmos de mais alguma informação, nossa equipe entra em contato.
             </p>
             <div className="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950 p-4 ring-1 ring-emerald-200 dark:ring-emerald-800">
               <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-                📧 Você deve receber um e-mail de confirmação em <strong>{form.email}</strong> (verifique o spam). Analisamos em até 48 horas.
+                📧 Você deve receber um e-mail de confirmação em <strong>{form.email}</strong> (verifique o spam).
               </p>
             </div>
 
             <div className="mt-8 rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-left text-white shadow-xl shadow-amber-500/30">
               <p className="text-sm font-bold uppercase tracking-wide text-amber-100">Quer mais visibilidade?</p>
-              <h2 className="mt-1 text-xl font-black">Planos pagos a partir de R$ 39,80/mês</h2>
+              <h2 className="mt-1 text-xl font-black">Planos pagos a partir de R$ 239,80/ano</h2>
               <p className="mt-2 text-sm text-amber-50">
                 Básico (selo + WhatsApp), Profissional e Empresarial (badge Destaque no mapa). Ativação após confirmação do pagamento — use o mesmo e-mail deste cadastro.
               </p>
@@ -238,7 +238,7 @@ export default function CadastroClient() {
                 </h1>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no Patinha</p>
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                  Listagem grátis após análise · selo Premium a partir de R$ 39,80/mês · destaque no Profissional ·{' '}
+                  Listagem grátis no mapa na hora · selo Premium a partir de R$ 239,80/ano · destaque no Profissional ·{' '}
                   <a href="/parceiros/premium" className="font-semibold text-blue-600 underline-offset-2 hover:underline dark:text-blue-400">
                     ver planos
                   </a>

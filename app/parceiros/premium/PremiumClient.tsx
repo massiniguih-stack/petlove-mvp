@@ -41,7 +41,7 @@ const planos: {
     cta: 'Cadastrar grátis',
     features: [
       'Cadastro do negócio no app',
-      'Listagem no mapa (após análise)',
+      'Listagem no mapa na hora',
       'Perfil com contato e serviços',
       'Sem selo Premium, destaque nem WhatsApp no app',
     ],
@@ -255,7 +255,7 @@ export default function PremiumClient() {
                       <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                         {isPaid && plano.anual != null
                           ? `com juros · ou R$ ${formatBRL(plano.anual)} à vista/ano · LastLink`
-                          : 'Sem cartão · análise em até 48h'}
+                          : 'Sem cartão · aparece no mapa na hora'}
                       </p>
                     </div>
 
