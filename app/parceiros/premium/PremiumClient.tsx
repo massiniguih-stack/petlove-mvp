@@ -13,6 +13,8 @@ import type { ComponentType } from 'react';
 type PaidPlanType = 'partner_basic' | 'partner_pro' | 'partner_enterprise';
 
 // Preços alinhados a app/api/admin/dashboard-stats (MRR). Ajuste se LastLink divergir.
+// Parceiro virou 100% anual em 12x sem juros a partir de 2026-09 — `mensal`
+// aqui é o valor da parcela, não uma cobrança mensal recorrente separada.
 const planos: {
   id: 'free' | PaidPlanType;
   nome: string;
@@ -42,7 +44,7 @@ const planos: {
     id: 'partner_basic',
     nome: 'Básico',
     descricao: 'Selo e WhatsApp na sua cidade',
-    mensal: 39.8,
+    mensal: 19.98,
     planType: 'partner_basic',
     cta: 'Assinar Básico',
     features: [
@@ -57,7 +59,7 @@ const planos: {
     id: 'partner_pro',
     nome: 'Profissional',
     descricao: 'Destaque no topo + painel',
-    mensal: 69.8,
+    mensal: 49.69,
     planType: 'partner_pro',
     cta: 'Assinar Profissional',
     destaque: true,
@@ -73,7 +75,7 @@ const planos: {
     id: 'partner_enterprise',
     nome: 'Empresarial',
     descricao: 'Máxima prioridade e canal com o time',
-    mensal: 129.8,
+    mensal: 68.9,
     planType: 'partner_enterprise',
     cta: 'Assinar Empresarial',
     features: [
@@ -235,15 +237,14 @@ export default function PremiumClient() {
                         </div>
                       ) : (
                         <div className="flex items-baseline gap-1">
-                          <span className="text-sm font-bold text-slate-400">R$</span>
+                          <span className="text-sm font-bold text-slate-400">12x de R$</span>
                           <span className="text-4xl font-black text-slate-900 dark:text-white">
                             {formatBRL(plano.mensal)}
                           </span>
-                          <span className="text-sm text-slate-500">/mês</span>
                         </div>
                       )}
                       <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                        {isPaid ? 'Cobrado mensalmente · LastLink' : 'Sem cartão · análise em até 48h'}
+                        {isPaid ? 'Plano anual · sem juros · LastLink' : 'Sem cartão · análise em até 48h'}
                       </p>
                     </div>
 
@@ -293,7 +294,7 @@ export default function PremiumClient() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500">
               <span>Pagamento seguro via LastLink</span>
               <span>·</span>
-              <span>Cancele quando quiser na área de membros</span>
+              <span>Planos anuais parcelados em 12x sem juros</span>
               <span>·</span>
               <span>Básico: selo e WhatsApp · Pro e Empresarial: também destaque no mapa</span>
             </div>
