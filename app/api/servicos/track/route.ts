@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
+export const preferredRegion = 'gru1';
+
 // Público (igual /api/servicos) — registra visualização/clique de WhatsApp
 // no perfil de um parceiro no /mapa, pra alimentar as métricas dele em
 // /parceiro/dashboard.

@@ -266,7 +266,12 @@ export default function MapaPage() {
       .then(async (res) => {
         const data = await res.json();
         if (!res.ok) {
-          throw new Error(data.error || data.hint || `Erro ${res.status}`);
+          const raw = typeof data.error === 'string' ? data.error : '';
+          const human =
+            raw && !raw.includes('<') && raw.length < 180
+              ? raw
+              : 'O mapa está temporariamente indisponível. Tente de novo em alguns minutos.';
+          throw new Error(human);
         }
         return data;
       })
