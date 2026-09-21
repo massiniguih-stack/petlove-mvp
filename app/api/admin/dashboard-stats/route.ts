@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getSupabaseAdmin, isAdmin, ADMIN_EMAILS } from '@/lib/supabase/admin';
-import { isOpenAccess } from '@/lib/openAccess';
+import { getSupabaseAdmin, ADMIN_EMAILS } from '@/lib/supabase/admin';
+import { requireAdmin } from '@/lib/authz';
 
 // Preços mensais (BRL) para estimar MRR — só planos com valor estável.
 const PRECO_MENSAL: Record<string, number> = {
@@ -23,14 +22,8 @@ function diasAtras(dias: number) {
 }
 
 export async function GET() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if ((!user || !isAdmin(user.email)) && !isOpenAccess()) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdmin();
+  if (!gate.ok) return gate.response;
 
   const supabaseAdmin = getSupabaseAdmin();
 

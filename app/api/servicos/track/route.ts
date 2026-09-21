@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { clientIp, rateLimit } from '@/lib/authz';
 
 export const preferredRegion = 'gru1';
 
@@ -7,6 +8,9 @@ export const preferredRegion = 'gru1';
 // no perfil de um parceiro no /mapa, pra alimentar as métricas dele em
 // /parceiro/dashboard.
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(`track:${clientIp(req)}`, { limit: 40, windowMs: 60_000 });
+  if (limited) return limited;
+
   const body = await req.json().catch(() => null);
   const partnerId = body?.partnerId;
   const eventType = body?.eventType;

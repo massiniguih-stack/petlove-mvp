@@ -18,7 +18,7 @@ function fail(raw: unknown) {
   );
 }
 
-function listPartners(cidade: string) {
+async function listPartners(cidade: string) {
   return getSupabaseAdmin()
     .from('partners')
     .select(PARTNER_COLUMNS)
@@ -51,8 +51,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { data: partners, error } = await withOneRetry(listPartners.bind(null, cidade), (result) =>
-      Boolean(result.error)
+    const { data: partners, error } = await withOneRetry(
+      () => listPartners(cidade),
+      (result) => Boolean(result.error)
     );
 
     if (error) {

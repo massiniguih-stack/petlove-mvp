@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
+import { clientIp, rateLimit } from '@/lib/authz';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
@@ -34,6 +35,9 @@ function escapeHtml(s: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(`cadastro:${clientIp(req)}`, { limit: 5, windowMs: 10 * 60_000 });
+  if (limited) return limited;
+
   const parsed = cadastroSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Dados inválidos' }, { status: 400 });
