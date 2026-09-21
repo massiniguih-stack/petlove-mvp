@@ -54,6 +54,48 @@ export function allowedTestEmail(to: string, staff: string[]): boolean {
   return staff.some((email) => email.trim().toLowerCase() === target);
 }
 
+const MIN_FORM_MS = 2_000;
+const MAX_FORM_MS = 24 * 60 * 60 * 1000;
+
+export function inspectHumanForm(input: {
+  companyFax?: string | null;
+  formStartedAt?: number | null;
+  now?: number;
+}): 'ok' | 'bot' | 'too_fast' {
+  if (typeof input.companyFax === 'string' && input.companyFax.trim() !== '') {
+    return 'bot';
+  }
+  const now = input.now ?? Date.now();
+  const started = input.formStartedAt;
+  if (typeof started !== 'number' || !Number.isFinite(started)) return 'too_fast';
+  const elapsed = now - started;
+  if (elapsed < MIN_FORM_MS || elapsed > MAX_FORM_MS) return 'too_fast';
+  return 'ok';
+}
+
+export function cronAuthorized(req: NextRequest, secret = process.env.CRON_SECRET || ''): boolean {
+  const header = req.headers.get('authorization') || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : '';
+  return tokenMatches(token, secret ? [secret] : []);
+}
+
+export async function verifyTurnstile(token: string | undefined, ip: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return true;
+  if (!token) return false;
+  try {
+    const body = new URLSearchParams({ secret, response: token, remoteip: ip });
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body,
+    });
+    const data = (await res.json()) as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
+}
+
 export async function requireUser(): Promise<GateOk | GateNo> {
   const supabase = createClient();
   const {

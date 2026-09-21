@@ -3,6 +3,8 @@ import { NextRequest } from 'next/server';
 import {
   allowedTestEmail,
   clientIp,
+  cronAuthorized,
+  inspectHumanForm,
   rateLimit,
   resetRateLimitForTests,
   tokenMatches,
@@ -58,5 +60,38 @@ describe('allowedTestEmail', () => {
   it('only allows addresses in the staff list', () => {
     expect(allowedTestEmail('massini.guih@gmail.com', ['massini.guih@gmail.com'])).toBe(true);
     expect(allowedTestEmail('stranger@example.com', ['massini.guih@gmail.com'])).toBe(false);
+  });
+});
+
+describe('inspectHumanForm', () => {
+  const now = 1_000_000;
+
+  it('rejects a filled honeypot as a bot', () => {
+    expect(inspectHumanForm({ companyFax: 'http://spam', formStartedAt: now - 5000, now })).toBe('bot');
+  });
+
+  it('rejects a form submitted in under two seconds', () => {
+    expect(inspectHumanForm({ companyFax: '', formStartedAt: now - 200, now })).toBe('too_fast');
+  });
+
+  it('accepts a slow empty-honeypot submit', () => {
+    expect(inspectHumanForm({ companyFax: '', formStartedAt: now - 5000, now })).toBe('ok');
+  });
+});
+
+describe('cronAuthorized', () => {
+  it('rejects when the secret is missing or the bearer does not match', () => {
+    const req = new NextRequest('http://localhost/api/cron/vaccine-reminders', {
+      headers: { authorization: 'Bearer nope' },
+    });
+    expect(cronAuthorized(req, '')).toBe(false);
+    expect(cronAuthorized(req, 'good-secret')).toBe(false);
+  });
+
+  it('accepts the matching bearer token', () => {
+    const req = new NextRequest('http://localhost/api/cron/vaccine-reminders', {
+      headers: { authorization: 'Bearer good-secret' },
+    });
+    expect(cronAuthorized(req, 'good-secret')).toBe(true);
   });
 });

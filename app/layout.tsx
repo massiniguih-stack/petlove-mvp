@@ -4,6 +4,7 @@ import { SubscriptionLoader } from '@/components/SubscriptionLoader'
 import { UtmCapture } from '@/components/UtmCapture'
 import { MetaPixel } from '@/components/MetaPixel'
 import { Plus_Jakarta_Sans } from 'next/font/google'
+import { headers } from 'next/headers'
 import { getAppUrl } from '@/lib/appUrl'
 import '../styles/globals.css'
 
@@ -50,10 +51,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const nonce = headers().get('x-nonce') ?? undefined
   return (
     <html lang="pt-BR" className={jakarta.variable} suppressHydrationWarning>
       <body className={`${jakarta.className} antialiased`}>
-        <MetaPixel />
+        <MetaPixel nonce={nonce} />
         <UtmCapture />
         <DarkModeProvider>
           <AuthProvider>
