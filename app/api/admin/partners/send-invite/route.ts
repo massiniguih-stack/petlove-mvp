@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
 import { getAppUrl } from '@/lib/appUrl';
+import { requireAdmin } from '@/lib/authz';
 
 function getResend() {
   const key = process.env.RESEND_API_KEY;
@@ -43,12 +43,8 @@ function buildInviteEmail(nome: string) {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !isAdmin(user.email)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdmin();
+  if (!gate.ok) return gate.response;
 
   const { ids } = await req.json();
   if (!Array.isArray(ids) || ids.length === 0) {

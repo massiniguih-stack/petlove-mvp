@@ -1,22 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { isAdmin } from '@/lib/supabase/admin';
+import { ADMIN_EMAILS } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
+import { allowedTestEmail, requireAdmin } from '@/lib/authz';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(req: NextRequest) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !isAdmin(user.email)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdmin();
+  if (!gate.ok) return gate.response;
 
   const to = req.nextUrl.searchParams.get('to');
 
-  if (!to) {
-    return NextResponse.json({ error: 'Missing ?to= param' }, { status: 400 });
+  if (!to || !allowedTestEmail(to, ADMIN_EMAILS)) {
+    return NextResponse.json({ error: 'Destino de teste inválido' }, { status: 400 });
   }
 
   try {
@@ -38,7 +34,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, id: data?.id });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Failed to send' }, { status: 500 });
   }
 }

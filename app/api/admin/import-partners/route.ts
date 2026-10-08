@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getEstadoByCidade } from '@/lib/cidadeEstado';
 import { servicosMock } from '@/data/servicos';
+import { requireAdmin } from '@/lib/authz';
 
 async function checkAdmin() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || !isAdmin(user.email)) {
-    return null;
-  }
-  return user;
+  const gate = await requireAdmin();
+  if (!gate.ok) return null;
+  return gate.user;
 }
 
 // POST: Import all services from servicosMock into partners table
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   const user = await checkAdmin();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

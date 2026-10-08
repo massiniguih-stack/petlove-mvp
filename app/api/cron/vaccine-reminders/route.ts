@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { sendPushNotification } from '@/lib/push';
 import { getAppUrl } from '@/lib/appUrl';
 import { Resend } from 'resend';
+import { cronAuthorized } from '@/lib/authz';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -11,9 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // venceram ontem), uma única vez por vacina — controlado por
 // momento.lembrete_enviado_em.
 export async function GET(req: NextRequest) {
-  const cronSecret = process.env.CRON_SECRET;
-  const authHeader = req.headers.get('authorization');
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronAuthorized(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

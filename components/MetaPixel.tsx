@@ -6,13 +6,13 @@ import Script from 'next/script';
  * Meta (Facebook/Instagram) Pixel — só carrega se NEXT_PUBLIC_META_PIXEL_ID existir.
  * No Vercel: Settings → Environment Variables → NEXT_PUBLIC_META_PIXEL_ID
  */
-export function MetaPixel() {
+export function MetaPixel({ nonce }: { nonce?: string }) {
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   if (!pixelId) return null;
 
   return (
     <>
-      <Script id="meta-pixel" strategy="afterInteractive">
+      <Script id="meta-pixel" strategy="afterInteractive" nonce={nonce}>
         {`
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

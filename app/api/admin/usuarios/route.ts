@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
+import { requireAdmin } from '@/lib/authz';
 
 export async function GET(request: NextRequest) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !isAdmin(user.email)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdmin();
+  if (!gate.ok) return gate.response;
 
   const supabaseAdmin = getSupabaseAdmin();
 
@@ -45,12 +41,9 @@ export async function GET(request: NextRequest) {
 // além de subscriptions/push_subscriptions/partner_sends que referenciam
 // auth.users diretamente.
 export async function DELETE(request: NextRequest) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || !isAdmin(user.email)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const gate = await requireAdmin();
+  if (!gate.ok) return gate.response;
+  const user = gate.user;
 
   const id = request.nextUrl.searchParams.get('id');
   if (!id) {

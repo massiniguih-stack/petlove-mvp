@@ -1,14 +1,18 @@
 # Capas LastLink — fundo preto Soft 3D
 
-Estilo da captura 2026-07-14 22.48.12: **preto puro + ícone 3D central**, sem texto.
+Estilo: **fundo escuro + ícone 3D central**, sem texto.
 
-| Arquivo | Produto | Ícone | Status |
-|---------|---------|--------|--------|
-| `01-parceiro-gratis` | Grátis | Cachorro | mantida |
-| `02-parceiro-basico` | Básico | Pin | refeita |
-| `03-parceiro-profissional` | Profissional | Estrela Premium | refeita |
-| `04-parceiro-empresarial` | Empresarial | Maleta | refeita |
-| `05-tutor-mensal` | Tutor mensal | Patinha | refeita |
-| `06-tutor-anual` | Tutor anual | Medalha | refeita |
+Tamanho da LastLink para capa de plano: **440×248** (cartão deitado).
+Os arquivos `*-3x` são a mesma proporção em 1320×744 (mais nítido na hora de enviar).
+Originais quadrados 1200×1200 ficam em `source-1200/`.
 
-1200×1200 · PNG + JPG
+| Arquivo | Produto | Ícone |
+|---------|---------|--------|
+| `01-parceiro-gratis` | Grátis | Cachorro |
+| `02-parceiro-basico` | Básico | Pin |
+| `03-parceiro-profissional` | Profissional | Estrela Premium |
+| `04-parceiro-empresarial` | Empresarial | Maleta |
+| `05-tutor-mensal` | Tutor mensal | Patinha âmbar |
+| `06-tutor-anual` | Tutor anual | Patinha + coroa |
+
+440×248 e 1320×744 · PNG + JPG

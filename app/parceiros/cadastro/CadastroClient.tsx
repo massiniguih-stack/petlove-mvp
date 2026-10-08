@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import Image from 'next/image';
 import { CheckIcon3D, BriefcaseIcon3D } from '@/components/Icons3D';
 import { trackMetaEvent } from '@/components/MetaPixel';
+import { Turnstile } from '@/components/Turnstile';
 import { icon3dServico } from '@/lib/tiposServico';
 
 const tiposServico = [
@@ -145,6 +146,9 @@ export default function CadastroClient() {
 
   const [enviando, setEnviando] = useState(false);
   const [erroEnvio, setErroEnvio] = useState<string | null>(null);
+  const [companyFax, setCompanyFax] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const formStartedAt = useRef(Date.now());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,7 +159,12 @@ export default function CadastroClient() {
       const res = await fetch('/api/parceiros/cadastro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          company_fax: companyFax,
+          formStartedAt: formStartedAt.current,
+          turnstileToken,
+        }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -275,6 +284,19 @@ export default function CadastroClient() {
           </div>
 
           <form onSubmit={handleSubmit}>
+            <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+              <label>
+                Fax da empresa
+                <input
+                  type="text"
+                  name="company_fax"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={companyFax}
+                  onChange={(e) => setCompanyFax(e.target.value)}
+                />
+              </label>
+            </div>
             {/* Step 1: Informações do Negócio */}
             {step === 1 && (
               <div className="rounded-3xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 ring-1 ring-slate-100 dark:ring-slate-800">
@@ -648,6 +670,7 @@ export default function CadastroClient() {
                     </span>
                   </label>
                 </div>
+                <Turnstile onToken={setTurnstileToken} />
 
                 {/* Resumo */}
                 <div className="mt-6 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-800 dark:to-blue-950/30 p-5 ring-1 ring-slate-100 dark:ring-slate-700">

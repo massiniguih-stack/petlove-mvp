@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
+import { buildCspHeader } from '@/lib/csp'
 
 function createSupabaseClient(request: NextRequest, response: NextResponse) {
   return createServerClient(
@@ -24,9 +25,14 @@ function createSupabaseClient(request: NextRequest, response: NextResponse) {
 }
 
 export async function updateSession(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-nonce', nonce)
+
   const response = NextResponse.next({
-    request: { headers: request.headers },
+    request: { headers: requestHeaders },
   })
+  response.headers.set('Content-Security-Policy', buildCspHeader(nonce))
 
   const supabase = createSupabaseClient(request, response)
 

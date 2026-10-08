@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { planCategory } from '@/lib/lastlink';
 import { getAppUrl } from '@/lib/appUrl';
+import { tokenMatches } from '@/lib/authz';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -86,7 +87,7 @@ function allowedWebhookTokens(): string[] {
 
 export async function POST(request: NextRequest) {
   const webhookToken = request.headers.get('x-webhook-token');
-  if (!webhookToken || !allowedWebhookTokens().includes(webhookToken)) {
+  if (!tokenMatches(webhookToken, allowedWebhookTokens())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

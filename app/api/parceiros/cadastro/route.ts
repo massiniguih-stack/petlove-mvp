@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
+import { clientIp, inspectHumanForm, rateLimit, verifyTurnstile } from '@/lib/authz';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
@@ -27,6 +28,9 @@ const cadastroSchema = z.object({
   servicos: z.array(z.string().trim().max(50)).max(20).optional(),
   plantao24h: z.boolean().optional(),
   aceiteTermos: z.literal(true, { message: 'É preciso aceitar os termos' }),
+  company_fax: z.string().max(200).optional(),
+  formStartedAt: z.number().optional(),
+  turnstileToken: z.string().max(4000).optional(),
 });
 
 function escapeHtml(s: string) {
@@ -34,9 +38,25 @@ function escapeHtml(s: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(`cadastro:${clientIp(req)}`, { limit: 5, windowMs: 10 * 60_000 });
+  if (limited) return limited;
+
   const parsed = cadastroSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Dados inválidos' }, { status: 400 });
+  }
+  const human = inspectHumanForm({
+    companyFax: parsed.data.company_fax,
+    formStartedAt: parsed.data.formStartedAt,
+  });
+  if (human === 'bot') {
+    return NextResponse.json({ success: true });
+  }
+  if (human === 'too_fast') {
+    return NextResponse.json({ error: 'Espere um instante e envie de novo.' }, { status: 400 });
+  }
+  if (!(await verifyTurnstile(parsed.data.turnstileToken, clientIp(req)))) {
+    return NextResponse.json({ error: 'Confirme que você não é um robô.' }, { status: 400 });
   }
   const {
     nome, tipo, descricao, endereco, numero, complemento, bairro, cidade, uf,
