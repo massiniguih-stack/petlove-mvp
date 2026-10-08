@@ -83,14 +83,22 @@ export default function LoginPage() {
             <GoogleButton />
 
             <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-              Não tem conta?{' '}
+              Não tem conta?
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-3">
               <Link
                 href="/cadastro"
-                className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500 transition hover:from-amber-600 hover:to-orange-600"
+                className="rounded-xl border-2 border-slate-200 px-4 py-3 text-center text-sm font-bold text-slate-700 transition hover:border-amber-400 hover:bg-amber-50 dark:border-slate-700 dark:text-slate-200 dark:hover:border-amber-500 dark:hover:bg-amber-950"
               >
-                Criar agora
+                🐾 Sou tutor de pet
               </Link>
-            </p>
+              <Link
+                href="/parceiros/cadastro"
+                className="rounded-xl border-2 border-slate-200 px-4 py-3 text-center text-sm font-bold text-slate-700 transition hover:border-amber-400 hover:bg-amber-50 dark:border-slate-700 dark:text-slate-200 dark:hover:border-amber-500 dark:hover:bg-amber-950"
+              >
+                🏪 Tenho uma loja/clínica
+              </Link>
+            </div>
           </div>
 
           {/* Back to home */}

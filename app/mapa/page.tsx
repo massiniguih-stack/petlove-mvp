@@ -184,51 +184,55 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
             </div>
           )}
 
-          <div className="mt-3 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => onSelect?.(servico)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:shadow-md"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-              </svg>
-              Criar rota
-            </button>
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(servico.nome + ' ' + servico.endereco + ' ' + servico.cidade)}`}
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full bg-blue-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-blue-600 hover:shadow-md"
-            >
-              📍 Maps
-            </a>
-            {servico.telefone && servico.premium && (
-              <a
-                href={`https://wa.me/${(() => {
-                  const digitos = servico.telefone!.replace(/\D/g, '');
-                  return digitos.startsWith('55') ? digitos : `55${digitos}`;
-                })()}`}
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => registrarEvento(servico.id, 'whatsapp_click')}
-                className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600 hover:shadow-md"
-              >
-                💬 WhatsApp
-              </a>
-            )}
-            {servico.instagram && (
-              <a href={`https://instagram.com/${servico.instagram}`} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:shadow-md">
-                📸 Instagram
-              </a>
-            )}
-            <button
-              onClick={() => setRegistrandoAtendimento((v) => !v)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-slate-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-slate-800"
-            >
-              ✅ Registrar atendimento
-            </button>
-          </div>
-          {registrandoAtendimento && (
-            <RegistrarAtendimentoForm servico={servico} onFechar={() => setRegistrandoAtendimento(false)} />
+          {servico.tipo !== 'parque' && (
+            <>
+              <div className="mt-3 flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() => onSelect?.(servico)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:shadow-md"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  Criar rota
+                </button>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(servico.nome + ' ' + servico.endereco + ' ' + servico.cidade)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-blue-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-blue-600 hover:shadow-md"
+                >
+                  📍 Maps
+                </a>
+                {servico.telefone && servico.premium && (
+                  <a
+                    href={`https://wa.me/${(() => {
+                      const digitos = servico.telefone!.replace(/\D/g, '');
+                      return digitos.startsWith('55') ? digitos : `55${digitos}`;
+                    })()}`}
+                    target="_blank" rel="noopener noreferrer"
+                    onClick={() => registrarEvento(servico.id, 'whatsapp_click')}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-600 hover:shadow-md"
+                  >
+                    💬 WhatsApp
+                  </a>
+                )}
+                {servico.instagram && (
+                  <a href={`https://instagram.com/${servico.instagram}`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:shadow-md">
+                    📸 Instagram
+                  </a>
+                )}
+                <button
+                  onClick={() => setRegistrandoAtendimento((v) => !v)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-slate-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-slate-800"
+                >
+                  ✅ Registrar atendimento
+                </button>
+              </div>
+              {registrandoAtendimento && (
+                <RegistrarAtendimentoForm servico={servico} onFechar={() => setRegistrandoAtendimento(false)} />
+              )}
+            </>
           )}
           <p className="mt-2 text-[10px] font-medium text-slate-400 dark:text-slate-500 text-center">Clique no card para ver no mapa</p>
         </div>
