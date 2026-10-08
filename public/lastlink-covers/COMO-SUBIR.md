@@ -1,6 +1,9 @@
 # Como subir as capas na LastLink
 
-Arquivos em esta pasta: **1200×1200**, fundo preto, só ícone Soft 3D, sem sombra extra.
+Arquivos nesta pasta: **440×248** (tamanho recomendado pela LastLink para capa de plano)
+e **1320×744** (`*-3x`, mesma proporção, mais nítido). Fundo escuro, só ícone 3D, sem texto.
+
+Prefira enviar o `*-3x.jpg`. Se a LastLink recusar o tamanho, use o `.jpg` de 440×248.
 
 ## Checklist por produto
 

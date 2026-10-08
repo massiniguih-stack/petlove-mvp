@@ -243,14 +243,6 @@ export default function MapaPage() {
   const [busca, setBusca] = useState('');
   const [servicoSelecionado, setServicoSelecionado] = useState<Servico | null>(null);
   const [coordenadasUsuario, setCoordenadasUsuario] = useState<{ lat: number; lng: number } | null>(null);
-  const [souParceiro, setSouParceiro] = useState(false);
-
-  useEffect(() => {
-    fetch('/api/parceiro/profile')
-      .then((res) => res.json())
-      .then((data) => setSouParceiro(!!data.partner))
-      .catch(() => {});
-  }, []);
   const [ordenarPor, setOrdenarPor] = useState<'avaliacao' | 'distancia'>('avaliacao');
   const [servicosDaCidade, setServicosDaCidade] = useState<Servico[]>([]);
   const [carregandoServicos, setCarregandoServicos] = useState(true);
@@ -521,39 +513,6 @@ export default function MapaPage() {
               </button>
             </div>
           )}
-
-          {/* CTA */}
-          <div className="mt-12 overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 shadow-2xl shadow-amber-500/30">
-            <div className="relative flex flex-col items-center gap-6 p-10 text-center lg:flex-row lg:text-left">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white dark:bg-slate-900" />
-                <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white dark:bg-slate-900" />
-              </div>
-              <div className="relative flex-1">
-                <h2 className="text-2xl font-black text-white">
-                  {souParceiro ? 'Seu negócio está no mapa' : 'Você é dono de uma loja ou clínica pet?'}
-                </h2>
-                <p className="mt-2 text-orange-100">
-                  {souParceiro ? 'Acompanhe visualizações, cliques e sua assinatura no seu painel.' : 'Torne-se parceiro Premium e apareça no topo do mapa!'}
-                </p>
-              </div>
-              <a
-                href={souParceiro ? '/parceiro/dashboard' : '/parceiros/premium'}
-                className="relative rounded-2xl bg-white dark:bg-slate-900 px-8 py-4 text-lg font-black text-orange-600 shadow-xl transition hover:bg-orange-50 hover:shadow-2xl hover:scale-105 active:scale-95"
-              >
-                <span className="inline-flex items-center gap-2">
-                  {souParceiro ? (
-                    <>Meu painel</>
-                  ) : (
-                    <>
-                      <Image src="/icons/3d/premium.png" alt="" width={28} height={28} unoptimized className="icon-3d" />
-                      Ser Premium
-                    </>
-                  )}
-                </span>
-              </a>
-            </div>
-          </div>
 
         </div>
       </main>
