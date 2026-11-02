@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin, ADMIN_EMAILS } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/authz';
+import { contarWhatsappPendentes } from '@/lib/admin/filaHoje';
 
 // Preços mensais (BRL) para estimar MRR — só planos com valor estável.
 const PRECO_MENSAL: Record<string, number> = {
@@ -56,7 +57,7 @@ export async function GET() {
   ] = await Promise.all([
     supabaseAdmin
       .from('partners')
-      .select('tipo, status, email, user_id, premium, destaque'),
+      .select('tipo, status, email, user_id, premium, destaque, telefone, whatsapp_contatado_em'),
     supabaseAdmin
       .from('tutor')
       .select('*', { count: 'exact', head: true })
@@ -115,6 +116,7 @@ export async function GET() {
   let pagos = 0;
   let gratuitos = 0;
   let comDestaque = 0;
+  const whatsappPendentes = contarWhatsappPendentes(partners);
   for (const p of partners) {
     porTipo[p.tipo] = (porTipo[p.tipo] || 0) + 1;
     if (p.status === 'sent') convitesEnviados++;
@@ -182,6 +184,7 @@ export async function GET() {
       pendentesComEmail,
       painelAtivado,
       premiumSemPainel,
+      whatsappPendentes,
       gratuitos,
       pagos,
       comDestaque,

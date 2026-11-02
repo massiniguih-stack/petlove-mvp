@@ -4,12 +4,19 @@ import { usePetStore } from '@/lib/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
-import { ScaleIcon3D, TargetIcon3D, PinIcon3D, CalendarIcon3D, PremiumIcon3D } from '@/components/Icons3D';
+import { format } from 'date-fns';
 import { BreedDogIcon } from '@/components/BreedDogIcon';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NotificationBanner from '@/components/NotificationBanner';
 import FeedbackWidget from '@/components/FeedbackWidget';
+import { createClient } from '@/lib/supabase/client';
+import {
+  idadeDoPet,
+  recadoVacina,
+  recadoVacinaIndisponivel,
+  rotuloObjetivo,
+} from '@/lib/tutor/recadoHoje';
 
 function PetPhoto({
   pet,
@@ -40,7 +47,7 @@ function PetPhoto({
         {pet.fotoUrl ? (
           <img src={pet.fotoUrl} alt={pet.nome} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-400 to-orange-500 p-2">
+          <div className="flex h-full w-full items-center justify-center bg-amber-100 p-2 dark:bg-amber-950">
             <BreedDogIcon
               size={96}
               raca={pet.raca}
@@ -65,10 +72,18 @@ function PetPhoto({
   );
 }
 
+const atalhos = [
+  { href: '/racao', label: 'Ração' },
+  { href: '/atividades', label: 'Atividades' },
+  { href: '/mapa', label: 'Mapa' },
+];
+
 export default function DashboardPage() {
-  const { pet, updatePet, petsCarregados } = usePetStore();
+  const { pet, updatePet, petsCarregados, isPremium } = usePetStore();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [vacinaEstado, setVacinaEstado] = useState<'carregando' | 'pronta' | 'erro'>('carregando');
+  const [proximaVacina, setProximaVacina] = useState<{ titulo: string; data: Date } | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -81,153 +96,137 @@ export default function DashboardPage() {
     if (petsCarregados && !pet) router.push('/onboarding');
   }, [petsCarregados, pet, router]);
 
-  if (!pet) return null;
+  useEffect(() => {
+    if (!pet?.id) return;
+    if (pet.id === 'demo-pet-preview') {
+      setProximaVacina(null);
+      setVacinaEstado('pronta');
+      return;
+    }
+    let ativo = true;
+    setVacinaEstado('carregando');
+    const supabase = createClient();
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('momento')
+          .select('titulo, data_agendada')
+          .eq('pet_id', pet.id)
+          .eq('categoria', 'vacina')
+          .eq('status_vacina', 'pendente')
+          .not('data_agendada', 'is', null)
+          .order('data_agendada', { ascending: true })
+          .limit(1);
+        if (!ativo) return;
+        if (error) {
+          setProximaVacina(null);
+          setVacinaEstado('erro');
+          return;
+        }
+        if (data && data.length > 0) {
+          setProximaVacina({
+            titulo: data[0].titulo as string,
+            data: new Date(data[0].data_agendada as string),
+          });
+        } else {
+          setProximaVacina(null);
+        }
+        setVacinaEstado('pronta');
+      } catch {
+        if (!ativo) return;
+        setProximaVacina(null);
+        setVacinaEstado('erro');
+      }
+    })();
+    return () => {
+      ativo = false;
+    };
+  }, [pet?.id]);
 
-  if (!mounted) return null;
+  if (!pet || !mounted) return null;
 
   const handlePhotoChange = (url: string) => {
     updatePet(pet.id, { fotoUrl: url });
   };
 
-  const idadeEmMeses = (() => {
-    const diff = new Date().getTime() - new Date(pet.dataNascimento).getTime();
-    return Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
-  })();
+  const recado =
+    vacinaEstado === 'erro'
+      ? recadoVacinaIndisponivel()
+      : recadoVacina(proximaVacina, (data) => format(data, 'dd/MM'));
+
+  const fatos = [
+    pet.raca,
+    idadeDoPet(pet.dataNascimento),
+    pet.sexo === 'macho' ? 'Macho' : 'Fêmea',
+    `${pet.peso.toLocaleString('pt-BR')} kg`,
+    rotuloObjetivo(pet.objetivo),
+  ].filter(Boolean);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 py-10">
+        <div className="mx-auto max-w-3xl px-4 py-10">
           <NotificationBanner />
           <FeedbackWidget />
-          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
             <PetPhoto pet={pet} onPhotoChange={handlePhotoChange} />
-            <div className="flex-1 text-center sm:text-left">
-              <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1 text-xs font-semibold text-white shadow-sm">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                </svg>
-                PET VIP
-              </div>
-              <h1 className="mt-3 text-5xl font-black tracking-tight md:text-6xl">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300">{pet.nome}</span>
+            <div className="min-w-0 flex-1 text-center sm:text-left">
+              <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+                {pet.nome}
               </h1>
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 sm:justify-start">
-                <Link href="/atividades" className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 transition hover:bg-amber-100 hover:text-amber-700 dark:bg-slate-800 dark:hover:bg-amber-900 dark:hover:text-amber-300">
-                  <span>🐕</span> {pet.raca}
-                </Link>
-                <Link href="/vida" className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 transition hover:bg-blue-100 hover:text-blue-700 dark:bg-slate-800 dark:hover:bg-blue-900 dark:hover:text-blue-300">
-                  <span>📅</span> {idadeEmMeses < 12 ? `${idadeEmMeses}m` : `${Math.floor(idadeEmMeses / 12)}a ${idadeEmMeses % 12}m`}
-                </Link>
-                <Link href="/atividades" className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 transition hover:bg-pink-100 hover:text-pink-700 dark:bg-slate-800 dark:hover:bg-pink-900 dark:hover:text-pink-300">
-                  <span>{pet.sexo === 'macho' ? '♂️' : '♀️'}</span> {pet.sexo === 'macho' ? 'Macho' : 'Fêmea'}
-                </Link>
-              </div>
-              <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
-                <Link href="/atividades" className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 dark:hover:bg-emerald-900">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                  </svg>
-                  Atividades
-                </Link>
-                <Link href="/racao" className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700 transition hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-300 dark:hover:bg-amber-900">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 12h8"/>
-                    <path d="M12 8v8"/>
-                  </svg>
-                  Ração
-                </Link>
-                <Link href="/vida" className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-100 dark:bg-rose-950 dark:text-rose-300 dark:hover:bg-rose-900">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
-                  Timeline
-                </Link>
-              </div>
+              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                {fatos.join(' · ')}
+              </p>
             </div>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Ícones dos cards resumo: todos iguais e maiores */}
-            <Link href="/desempenho" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-5 text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl hover:shadow-amber-500/40">
-              <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
-              <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
-              <div className="relative">
-                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
-                  <ScaleIcon3D size={88} />
-                </div>
-                <p className="mt-3 text-sm font-medium text-white/80">Peso atual</p>
-                <p className="text-2xl font-bold">{pet.peso.toLocaleString('pt-BR')} kg</p>
-              </div>
-            </Link>
-
-            <Link href="/racao" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 p-5 text-white shadow-lg shadow-emerald-500/30 transition hover:shadow-xl hover:shadow-emerald-500/40">
-              <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
-              <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
-              <div className="relative">
-                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
-                  <TargetIcon3D size={88} />
-                </div>
-                <p className="mt-3 text-sm font-medium text-white/80">Objetivo</p>
-                <p className="text-2xl font-bold">{pet.objetivo === 'manutencao' ? 'Manutenção' : pet.objetivo === 'pelagem' ? 'Pelagem' : pet.objetivo === 'emagrecimento' ? 'Emagrecimento' : 'Desempenho'}</p>
-              </div>
-            </Link>
-
-            <Link href="/mapa" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
-              <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
-              <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
-              <div className="relative">
-                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
-                  <PinIcon3D size={88} />
-                </div>
-                <p className="mt-3 text-sm font-medium text-white/80">Serviços</p>
-                <p className="text-2xl font-bold">Vets e parques</p>
-              </div>
-            </Link>
-
-            <Link href="/vida" className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-5 text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
-              <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10" />
-              <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-white/5" />
-              <div className="relative">
-                <div className="icon-3d-slot flex h-24 w-24 items-center justify-center overflow-visible">
-                  <CalendarIcon3D size={88} />
-                </div>
-                <p className="mt-3 text-sm font-medium text-white/80">Linha do tempo</p>
-                <p className="text-2xl font-bold">
-                  {idadeEmMeses < 12 ? `${idadeEmMeses}m` : `${Math.floor(idadeEmMeses / 12)}a ${idadeEmMeses % 12}m`}
-                </p>
-              </div>
-            </Link>
-          </div>
-
-          {/* CTA Premium */}
-          <div className="mt-8 rounded-3xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 p-6 text-white shadow-xl shadow-violet-500/20">
-            <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-              <div className="icon-3d-slot h-24 w-24 shrink-0 sm:h-28 sm:w-28">
-                <PremiumIcon3D size={96} />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-black">Desbloqueie o Patinha Premium</h3>
-                <p className="mt-1 text-sm text-violet-100">Pets ilimitados, histórico completo e comparação entre pets a partir de <strong>R$ 29,49/mês</strong>.</p>
-              </div>
-              <a
-                href="/planos"
-                className="shrink-0 rounded-2xl bg-white px-6 py-3 text-sm font-black text-violet-600 shadow-lg transition hover:bg-violet-50 hover:shadow-xl"
+          <section className="mt-8">
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Hoje</h2>
+            {vacinaEstado === 'carregando' ? (
+              <div className="mt-3 h-16 animate-pulse rounded-xl bg-slate-200/70 dark:bg-slate-800" />
+            ) : (
+              <Link
+                href={recado.href}
+                className="mt-3 block rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-amber-900 dark:bg-amber-950/40"
               >
-                Ver Planos →
-              </a>
-            </div>
-            <p className="mt-3 text-center text-xs text-violet-100/90">
-              <a href="/conta/assinatura" className="underline hover:text-white">
-                Minha assinatura e exclusão de conta
-              </a>
+                <span className="block text-sm font-semibold text-slate-900 dark:text-white">
+                  {recado.titulo}
+                </span>
+                <span className="mt-0.5 block text-xs text-slate-600 dark:text-slate-300">
+                  {recado.detalhe}
+                </span>
+              </Link>
+            )}
+          </section>
+
+          <nav className="mt-6 flex flex-wrap gap-2" aria-label="Atalhos do pet">
+            {atalhos.map((atalho) => (
+              <Link
+                key={atalho.href}
+                href={atalho.href}
+                className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-amber-700"
+              >
+                {atalho.label}
+              </Link>
+            ))}
+          </nav>
+
+          {!isPremium && (
+            <p className="mt-8 text-sm text-slate-600 dark:text-slate-300">
+              <Link href="/planos" className="font-semibold text-slate-900 underline decoration-amber-400 underline-offset-4 hover:text-amber-800 dark:text-white">
+                Premium a partir de R$ 29,49/mês
+              </Link>
             </p>
-          </div>
+          )}
+          <p className={isPremium ? 'mt-8 text-sm' : 'mt-3 text-sm'}>
+            <Link
+              href="/conta/assinatura"
+              className="text-slate-600 underline-offset-4 hover:underline dark:text-slate-300"
+            >
+              Minha conta
+            </Link>
+          </p>
         </div>
       </main>
       <Footer />

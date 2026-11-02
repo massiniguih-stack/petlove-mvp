@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { montarFilaHoje } from '@/lib/admin/filaHoje';
 
 interface DashboardStats {
   parceiros: {
@@ -20,6 +21,7 @@ interface DashboardStats {
     pendentesComEmail: number;
     painelAtivado: number;
     premiumSemPainel: number;
+    whatsappPendentes: number;
     gratuitos: number;
     pagos: number;
     comDestaque: number;
@@ -141,13 +143,12 @@ export default function AdminDashboardPage() {
     .map(([tipo, count]) => ({ nome: tipoLabels[tipo] || tipo, count }))
     .sort((a, b) => b.count - a.count);
 
-  const funil = [
-    { label: 'Tutores', value: stats.tutores.total, href: '/admin/usuarios' },
-    { label: 'Pets', value: stats.pets.total },
-    { label: 'Views no mapa (30d)', value: stats.acesso.mapaViews30dias, href: '/mapa' },
-    { label: 'Feedback', value: stats.feedback.total, href: '/admin/feedback' },
-  ];
-  const funilMax = Math.max(...funil.map((f) => f.value), 1);
+  const fila = montarFilaHoje({
+    premiumSemPainel: stats.parceiros.premiumSemPainel,
+    pendentesComEmail: stats.parceiros.pendentesComEmail,
+    whatsappPendentes: stats.parceiros.whatsappPendentes,
+    feedbackRuim: stats.feedback.resumo.ruim,
+  });
 
   return (
     <div className="p-6 sm:p-8">
@@ -230,36 +231,33 @@ export default function AdminDashboardPage() {
         </section>
 
         <section>
-          <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Funil do app</h2>
-          <p className="mt-0.5 text-xs text-slate-400">Quem chegou em cada etapa</p>
-          <div className="mt-4 space-y-2">
-            {funil.map((step) => {
-              const widthPct = Math.max(18, Math.round((step.value / funilMax) * 100));
-              const bar = (
-                <div className="flex items-center gap-3">
-                  <div className="w-36 shrink-0 text-xs text-slate-500">{step.label}</div>
-                  <div className="min-w-0 flex-1">
-                    <div
-                      className="flex h-9 items-center rounded-md bg-amber-500 px-3 text-sm font-semibold tabular-nums text-white"
-                      style={{ width: `${widthPct}%` }}
-                    >
-                      {step.value}
-                    </div>
-                  </div>
-                </div>
-              );
-              if (!step.href) return <div key={step.label}>{bar}</div>;
-              return (
-                <Link
-                  key={step.label}
-                  href={step.href}
-                  className="block rounded-md transition hover:opacity-90"
-                >
-                  {bar}
-                </Link>
-              );
-            })}
-          </div>
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Fila de hoje</h2>
+          <p className="mt-0.5 text-xs text-slate-400">O que fazer agora. Some quando chega a zero.</p>
+          {fila.length === 0 ? (
+            <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">Nada para fazer agora.</p>
+          ) : (
+            <ul className="mt-4 space-y-2">
+              {fila.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    href={item.href}
+                    className={`block rounded-xl border px-4 py-3 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 ${
+                      item.atencao
+                        ? 'border-amber-200 bg-amber-50 hover:border-amber-300 dark:border-amber-900 dark:bg-amber-950/40'
+                        : 'border-slate-200 bg-white hover:border-amber-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-amber-700'
+                    }`}
+                  >
+                    <span className="block text-sm font-semibold text-slate-900 dark:text-white">
+                      {item.titulo}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
+                      {item.detalhe}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       </div>
 
