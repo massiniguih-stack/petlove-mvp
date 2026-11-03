@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import Image from 'next/image';
+import { idadeEmMeses as calcularIdadeEmMeses } from '@/lib/pet';
 import {
   ScaleIcon3D,
   SearchIcon3D,
@@ -518,7 +519,7 @@ export default function AtividadesPage() {
     );
   }
 
-  const idadeEmMeses = Math.floor((new Date().getTime() - new Date(pet.dataNascimento).getTime()) / (1000 * 60 * 60 * 24 * 30));
+  const idadeEmMeses = calcularIdadeEmMeses(pet.dataNascimento);
   const fase = idadeEmMeses < 6 ? 'Filhote' : idadeEmMeses < 12 ? 'Adolescente' : idadeEmMeses < 84 ? 'Adulto' : 'Sênior';
   const porte = pet.peso < 10 ? 'Pequeno' : pet.peso < 25 ? 'Médio' : 'Grande';
 

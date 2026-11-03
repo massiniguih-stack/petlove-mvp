@@ -10,6 +10,7 @@ import { BackButton } from '@/components/BackButton';
 import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D, DogIcon3D, BowlIcon3D, CrownIcon3D, PremiumIcon3D, PawIcon3D, ShieldIcon3D } from '@/components/Icons3D';
 import { BreedDogIcon } from '@/components/BreedDogIcon';
 import { diaISO } from '@/lib/checklist';
+import { formatarIdade, idadeEmMeses as calcularIdadeEmMeses } from '@/lib/pet';
 
 interface MarcaRacao {
   nome: string;
@@ -434,7 +435,7 @@ export default function RacaoPage() {
     );
   }
 
-  const idadeEmMeses = Math.floor((new Date().getTime() - new Date(pet.dataNascimento).getTime()) / (1000 * 60 * 60 * 24 * 30));
+  const idadeEmMeses = calcularIdadeEmMeses(pet.dataNascimento);
   const recomendacao = getRecomendacao(objetivo, pet.peso, pet.raca);
   const suplementos = getSuplementos(objetivo);
   const dicas = getDicasDesenvolvimento(idadeEmMeses, objetivo);
@@ -485,7 +486,7 @@ export default function RacaoPage() {
                      </div>
                      <p className="mt-2 text-xs font-medium text-emerald-600">Idade</p>
                      <p className="text-sm font-bold text-slate-900 dark:text-white">
-                      {idadeEmMeses < 12 ? `${idadeEmMeses} meses` : `${Math.floor(idadeEmMeses / 12)} anos`}
+                      {formatarIdade(idadeEmMeses)}
                     </p>
                   </div>
                    <div className="overflow-visible rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">

@@ -1,4 +1,4 @@
-import { differenceInMonths } from 'date-fns';
+import { formatarIdade, idadeEmMeses } from '@/lib/pet';
 
 export type RecadoVacina = {
   titulo: string;
@@ -34,13 +34,7 @@ export function recadoVacinaIndisponivel(): RecadoVacina {
 }
 
 export function idadeDoPet(dataNascimento: string, hoje = new Date()) {
-  const meses = Math.max(0, differenceInMonths(hoje, new Date(dataNascimento)));
-  if (meses < 12) return meses === 1 ? '1 mês' : `${meses} meses`;
-  const anos = Math.floor(meses / 12);
-  const resto = meses % 12;
-  const anosTxt = anos === 1 ? '1 ano' : `${anos} anos`;
-  if (resto === 0) return anosTxt;
-  return `${anosTxt} e ${resto === 1 ? '1 mês' : `${resto} meses`}`;
+  return formatarIdade(idadeEmMeses(dataNascimento, hoje));
 }
 
 export function rotuloObjetivo(objetivo: string) {
