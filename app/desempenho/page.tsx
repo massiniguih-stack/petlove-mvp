@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { calcularMeta } from '@/lib/metaDiaria';
+import { idadeEmMeses as calcularIdadeEmMeses } from '@/lib/pet';
 
 export default function DesempenhoPage() {
   const { pet, petsCarregados } = usePetStore();
@@ -19,10 +20,7 @@ export default function DesempenhoPage() {
 
   if (!pet) return null;
 
-  const idadeEmMeses = (() => {
-    const diff = new Date().getTime() - new Date(pet.dataNascimento).getTime();
-    return Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
-  })();
+  const idadeEmMeses = calcularIdadeEmMeses(pet.dataNascimento);
 
   const ultimoPeso = pet.peso;
   const meta = calcularMeta(idadeEmMeses, ultimoPeso, pet.objetivo);

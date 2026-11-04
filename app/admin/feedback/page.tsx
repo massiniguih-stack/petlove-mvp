@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 interface Feedback {
   id: string;
@@ -20,11 +21,19 @@ function tutorDe(f: Feedback) {
   return Array.isArray(f.tutor) ? f.tutor[0] : f.tutor;
 }
 
+function humorDaUrl(valor: string | null): 'todos' | Feedback['humor'] {
+  if (valor === 'otimo' || valor === 'ok' || valor === 'ruim') return valor;
+  return 'todos';
+}
+
 export default function AdminFeedbackPage() {
+  const searchParams = useSearchParams();
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
-  const [filtroHumor, setFiltroHumor] = useState<'todos' | Feedback['humor']>('todos');
+  const [filtroHumor, setFiltroHumor] = useState<'todos' | Feedback['humor']>(
+    humorDaUrl(searchParams.get('humor')),
+  );
   const [resumo, setResumo] = useState({ otimo: 0, ok: 0, ruim: 0 });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -145,8 +154,14 @@ export default function AdminFeedbackPage() {
       {!carregando && !erro && filtrados.length === 0 && (
         <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center dark:border-slate-800 dark:bg-slate-900">
           <p className="text-4xl">💬</p>
-          <p className="mt-4 text-lg font-bold text-slate-900 dark:text-white">Nenhum feedback ainda</p>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Assim que tutores responderem no dashboard, aparece aqui.</p>
+          <p className="mt-4 text-lg font-bold text-slate-900 dark:text-white">
+            {filtroHumor === 'todos' ? 'Nenhum feedback ainda' : 'Nenhuma resposta com esse filtro'}
+          </p>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            {filtroHumor === 'todos'
+              ? 'Assim que tutores responderem no dashboard, aparece aqui.'
+              : 'Troque o filtro para ver as outras respostas.'}
+          </p>
         </div>
       )}
 

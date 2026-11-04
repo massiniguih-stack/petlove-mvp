@@ -335,26 +335,19 @@ export default function MapaPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-blue-950/30">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
 
-        {/* Hero Header */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-rose-600 to-pink-600 px-4 py-12 text-white">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute -right-20 -top-20 h-96 w-96 rounded-full bg-white dark:bg-slate-900" />
-            <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-white dark:bg-slate-900" />
-          </div>
-          <div className="relative mx-auto max-w-7xl">
+        {/* Header */}
+        <section className="border-b border-slate-200 bg-white px-4 py-10 dark:border-slate-800 dark:bg-slate-900">
+          <div className="mx-auto max-w-7xl">
             <BackButton href="/dashboard" />
             <div className="mt-4">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm dark:bg-white/10">
-                <span>📍</span> Mapa de Serviços
-              </div>
-              <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
-                Encontre o melhor <span className="text-yellow-200">para seu pet</span>
+              <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+                Encontre o melhor para seu pet
               </h1>
-              <p className="mt-3 max-w-lg text-lg text-rose-100">
+              <p className="mt-2 max-w-lg text-sm leading-6 text-slate-600 dark:text-slate-300">
                 Clínicas, pet shops, creches, hotéis e parques pet friendly na sua região.
               </p>
             </div>

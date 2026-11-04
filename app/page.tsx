@@ -28,7 +28,7 @@ const benefits = [
 ];
 
 export default function HomePage() {
-  const { pet, isPremium } = usePetStore();
+  const { pet } = usePetStore();
   const { user, loading: authLoading } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [proximaVacina, setProximaVacina] = useState<{ titulo: string; data: Date } | null>(null);
@@ -80,7 +80,7 @@ export default function HomePage() {
             <div className="icon-3d-slot mx-auto">
               <DogIcon3D size={72} />
             </div>
-            <h1 className="mt-8 text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
+            <h1 className="mt-8 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-4xl">
               Falta só cadastrar seu pet
             </h1>
             <p className="mt-3 text-slate-500 dark:text-slate-400">
@@ -110,14 +110,14 @@ export default function HomePage() {
 
             <Link
               href="/onboarding"
-              className="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
+              className="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-slate-900 px-8 py-4 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
             >
               Cadastrar meu pet agora
             </Link>
 
             <Link
               href="/parceiros/cadastro"
-              className="mt-3 inline-flex w-full items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-8 py-3.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+              className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-8 py-3.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
             >
               Sou parceiro pet (vet / petshop)
             </Link>
@@ -136,14 +136,7 @@ export default function HomePage() {
         <main className="flex-1">
           <div className="mx-auto max-w-5xl px-4 py-12">
             <div className="mb-10 text-center">
-              <h1 className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-5xl font-black tracking-tight text-slate-900 dark:text-white md:gap-x-4 md:text-6xl">
-                <span>
-                  Olá,{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
-                    {pet.nome}
-                  </span>
-                  !
-                </span>
+              <h1 className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-5xl">
                 <span
                   className="icon-3d-slot inline-flex shrink-0 items-center justify-center overflow-visible"
                   title={pet.raca}
@@ -155,26 +148,17 @@ export default function HomePage() {
                     <img
                       src={pet.fotoUrl}
                       alt={pet.raca}
-                      className="h-24 w-24 rounded-2xl object-cover md:h-28 md:w-28"
+                      className="h-16 w-16 rounded-2xl object-cover md:h-20 md:w-20"
                     />
                   ) : (
-                    <BreedDogIcon size={104} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
+                    <BreedDogIcon size={72} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
                   )}
                 </span>
+                <span>Olá, {pet.nome}!</span>
               </h1>
               <p className="mt-3 text-slate-500 dark:text-slate-400">
                 O que você quer fazer agora?
               </p>
-              {/* EXP-05: upsell só com benefícios já gateados */}
-              {!isPremium && (
-                <Link
-                  href="/planos"
-                  onClick={() => trackMetaEvent('ViewContent', { content_name: 'upsell_hub_click' })}
-                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700 ring-1 ring-violet-200 transition hover:bg-violet-100 dark:bg-violet-950 dark:text-violet-300 dark:ring-violet-800"
-                >
-                  Premium a partir de R$ 29,49/mês · comparar · histórico · pets ilimitados →
-                </Link>
-              )}
               <div className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-800">
                 <span>🐾 {(() => {
                   const meses = differenceInMonths(new Date(), new Date(pet.dataNascimento));
@@ -193,104 +177,28 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Ícones do hub: todos iguais (slot 112px / desenho 100px) */}
-              <Link
-                href="/dashboard"
-                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white shadow-lg shadow-amber-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/35"
-              >
-                <div className="relative">
-                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
-                    <DashboardPawIcon3D size={100} />
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { href: '/dashboard', Icon: DashboardPawIcon3D, titulo: 'Dashboard', desc: `Peso, vacinas e tudo sobre ${pet.nome}.` },
+                { href: '/vida', Icon: CalendarIcon3D, titulo: 'Linha do tempo', desc: 'Marcos, vacinas e conquistas.' },
+                { href: '/atividades', Icon: ActivityIcon3D, titulo: 'Atividades', desc: `Exercícios e dicas para ${pet.nome}.` },
+                { href: '/racao', Icon: BowlIcon3D, titulo: 'Ração', desc: 'Porções e nutrição ideal.' },
+                { href: '/mapa', Icon: PinIcon3D, titulo: 'Serviços', desc: 'Veterinários, parques e hotéis.' },
+                { href: '/onboarding', Icon: GearIcon3D, titulo: 'Editar perfil', desc: `Atualize dados de ${pet.nome}.` },
+                { href: '/comparar', Icon: ChartIcon3D, titulo: 'Comparar pets', desc: 'Compare seus pets lado a lado.' },
+              ].map(({ href, Icon, titulo, desc }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-amber-700"
+                >
+                  <div className="icon-3d-slot flex h-12 w-12 items-center justify-center overflow-visible">
+                    <Icon size={44} />
                   </div>
-                  <h3 className="mt-3 text-xl font-black">Dashboard</h3>
-                  <p className="mt-1.5 text-sm text-amber-100">
-                    Peso, vacinas e tudo sobre {pet.nome}.
-                  </p>
-                </div>
-              </Link>
-
-              <Link
-                href="/vida"
-                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-amber-500 to-rose-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative">
-                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
-                    <CalendarIcon3D size={100} />
-                  </div>
-                  <h3 className="mt-3 text-xl font-black">Linha do tempo</h3>
-                  <p className="mt-1.5 text-sm text-rose-100">Marcos, vacinas e conquistas.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/atividades"
-                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-500 p-6 text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative">
-                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
-                    <ActivityIcon3D size={100} />
-                  </div>
-                  <h3 className="mt-3 text-xl font-black">Atividades</h3>
-                  <p className="mt-1.5 text-sm text-blue-100">Exercícios e dicas para {pet.nome}.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/racao"
-                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 p-6 text-white shadow-lg shadow-emerald-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative">
-                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
-                    <BowlIcon3D size={100} />
-                  </div>
-                  <h3 className="mt-3 text-xl font-black">Ração</h3>
-                  <p className="mt-1.5 text-sm text-emerald-100">Porções e nutrição ideal.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/mapa"
-                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-rose-500 to-pink-500 p-6 text-white shadow-lg shadow-rose-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative">
-                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
-                    <PinIcon3D size={100} />
-                  </div>
-                  <h3 className="mt-3 text-xl font-black">Serviços</h3>
-                  <p className="mt-1.5 text-sm text-rose-100">Veterinários, parques e hotéis.</p>
-                </div>
-              </Link>
-
-              <Link
-                href="/onboarding"
-                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-slate-600 to-slate-800 p-6 text-white shadow-lg shadow-slate-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative">
-                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
-                    <GearIcon3D size={100} />
-                  </div>
-                  <h3 className="mt-3 text-xl font-black">
-                    Editar perfil
-                  </h3>
-                  <p className="mt-1.5 text-sm text-slate-300">
-                    Atualize dados de {pet.nome}.
-                  </p>
-                </div>
-              </Link>
-
-              <Link
-                href="/comparar"
-                className="group relative overflow-visible rounded-3xl bg-gradient-to-br from-violet-500 to-purple-500 p-6 text-white shadow-lg shadow-violet-500/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
-                <div className="relative">
-                  <div className="icon-3d-slot flex h-28 w-28 items-center justify-center overflow-visible">
-                    <ChartIcon3D size={100} />
-                  </div>
-                  <h3 className="mt-3 text-xl font-black">Comparar pets</h3>
-                  <p className="mt-1.5 text-sm text-violet-100">Compare seus pets lado a lado.</p>
-                </div>
-              </Link>
+                  <h3 className="mt-3 text-base font-semibold text-slate-900 dark:text-white">{titulo}</h3>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{desc}</p>
+                </Link>
+              ))}
             </div>
           </div>
         </main>
@@ -338,7 +246,7 @@ export default function HomePage() {
                 key={step.n}
                 className="rounded-2xl bg-white p-4 text-center ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
               >
-                <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-500 text-sm font-black text-white">
+                <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white dark:bg-white dark:text-slate-900">
                   {step.n}
                 </div>
                 <p className="mt-2 text-sm font-bold text-slate-800 dark:text-slate-100">{step.t}</p>
@@ -352,13 +260,13 @@ export default function HomePage() {
             <Link
               href="/cadastro"
               onClick={() => trackMetaEvent('ViewContent', { content_name: 'cta_home_tutor' })}
-              className="inline-flex flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-amber-500/30 transition hover:shadow-xl"
+              className="inline-flex flex-1 items-center justify-center rounded-xl bg-slate-900 px-6 py-4 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
             >
               Começar grátis
             </Link>
             <Link
               href="/login"
-              className="inline-flex flex-1 items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-6 py-4 text-sm font-bold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               Já tenho conta
             </Link>
@@ -368,7 +276,7 @@ export default function HomePage() {
             <Link
               href="/parceiros/cadastro"
               onClick={() => trackMetaEvent('ViewContent', { content_name: 'cta_home_parceiro' })}
-              className="inline-flex w-full items-center justify-center rounded-xl border-2 border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
             >
               Sou parceiro pet (vet / petshop)
             </Link>

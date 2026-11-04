@@ -1,15 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { usePetStore } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Image from 'next/image';
 import { BackButton } from '@/components/BackButton';
-import { ScaleIcon3D, CalendarIcon3D, TargetIcon3D, FireIcon3D, DogIcon3D, BowlIcon3D, CrownIcon3D, PremiumIcon3D, PawIcon3D, ShieldIcon3D } from '@/components/Icons3D';
-import { BreedDogIcon } from '@/components/BreedDogIcon';
+import { FireIcon3D, DogIcon3D, BowlIcon3D, CrownIcon3D, PremiumIcon3D, PawIcon3D, ShieldIcon3D } from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';
+import { formatarIdade, idadeEmMeses as calcularIdadeEmMeses } from '@/lib/pet';
 
 interface MarcaRacao {
   nome: string;
@@ -434,7 +435,7 @@ export default function RacaoPage() {
     );
   }
 
-  const idadeEmMeses = Math.floor((new Date().getTime() - new Date(pet.dataNascimento).getTime()) / (1000 * 60 * 60 * 24 * 30));
+  const idadeEmMeses = calcularIdadeEmMeses(pet.dataNascimento);
   const recomendacao = getRecomendacao(objetivo, pet.peso, pet.raca);
   const suplementos = getSuplementos(objetivo);
   const dicas = getDicasDesenvolvimento(idadeEmMeses, objetivo);
@@ -448,14 +449,10 @@ export default function RacaoPage() {
         <div className="mx-auto max-w-6xl px-4 py-10">
           <header className="mb-8">
             <BackButton href="/dashboard" />
-            <div className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700 dark:bg-amber-950">
-              <span className="text-lg">🥣</span>
-              Análise personalizada
-            </div>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-              Recomendação de <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">ração</span>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+              Recomendação de ração
             </h1>
-            <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
               Para {pet.nome} ({pet.raca}, {pet.peso} kg)
             </p>
           </header>
@@ -465,35 +462,23 @@ export default function RacaoPage() {
               <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950">
-                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                       <BreedDogIcon size={80} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
-                     </div>
-                     <p className="mt-2 text-xs font-medium text-amber-600">Raça</p>
-                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
-                  </div>
-                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-5 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950">
-                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                       <ScaleIcon3D size={80} />
-                     </div>
-                     <p className="mt-2 text-xs font-medium text-blue-600">Peso</p>
-                     <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
-                  </div>
-                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950">
-                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                       <CalendarIcon3D size={80} />
-                     </div>
-                     <p className="mt-2 text-xs font-medium text-emerald-600">Idade</p>
-                     <p className="text-sm font-bold text-slate-900 dark:text-white">
-                      {idadeEmMeses < 12 ? `${idadeEmMeses} meses` : `${Math.floor(idadeEmMeses / 12)} anos`}
+                  <Link href="/atividades" className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 dark:border-slate-800 dark:hover:border-amber-700">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Raça</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.raca}</p>
+                  </Link>
+                  <Link href="/desempenho" className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 dark:border-slate-800 dark:hover:border-amber-700">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Peso</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.peso} kg</p>
+                  </Link>
+                  <Link href="/vida" className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 dark:border-slate-800 dark:hover:border-amber-700">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Idade</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">
+                      {formatarIdade(idadeEmMeses)}
                     </p>
-                  </div>
-                   <div className="overflow-visible rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950">
-                     <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                       <TargetIcon3D size={80} />
-                     </div>
-                     <p className="mt-2 text-xs font-medium text-purple-600">Objetivo</p>
-                     <p className="text-sm font-bold text-slate-900 dark:text-white">
+                  </Link>
+                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Objetivo</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">
                       {objetivo === 'manutencao' ? 'Manutenção' : objetivo === 'pelagem' ? 'Pelagem' : objetivo === 'emagrecimento' ? 'Emagrecimento' : 'Desempenho'}
                     </p>
                   </div>
@@ -772,10 +757,10 @@ export default function RacaoPage() {
 
             <div className="space-y-6">
               {/* Checklist de Refeições */}
-              <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-5 text-white shadow-lg shadow-amber-500/30">
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-900 dark:bg-amber-950/40">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold">{ehHoje ? 'Refeições de Hoje' : diaVisualizado.toLocaleDateString('pt-BR')}</h3>
-                  <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">{ehHoje ? 'Refeições de Hoje' : diaVisualizado.toLocaleDateString('pt-BR')}</h3>
+                  <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:bg-amber-900 dark:text-amber-300">
                     {concluidas.length}/{refeicoes.length}
                   </span>
                 </div>
@@ -786,20 +771,20 @@ export default function RacaoPage() {
                       if (!isPremium && diaOffset === 0) return;
                       setDiaOffset((d) => d + 1);
                     }}
-                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-600 transition hover:bg-amber-100 hover:text-slate-900 disabled:opacity-40 dark:text-slate-300 dark:hover:bg-amber-900"
                   >
-                    ← Dia anterior {!isPremium && diaOffset === 0 && <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[9px] font-bold">PRO</span>}
+                    ← Dia anterior {!isPremium && diaOffset === 0 && <span className="rounded-full bg-amber-200 px-1.5 py-0.5 text-[9px] font-bold text-amber-800 dark:bg-amber-800 dark:text-amber-200">PRO</span>}
                   </button>
                   <button
                     onClick={() => setDiaOffset((d) => Math.max(0, d - 1))}
                     disabled={ehHoje}
-                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-white/80 transition hover:bg-white/10 hover:text-white disabled:opacity-40"
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-600 transition hover:bg-amber-100 hover:text-slate-900 disabled:opacity-40 dark:text-slate-300 dark:hover:bg-amber-900"
                   >
                     Próximo dia →
                   </button>
                 </div>
                 {!isPremium && diaOffset === 0 && (
-                  <a href="/planos" className="mt-1 block text-center text-[10px] text-white/70 hover:text-white hover:underline">
+                  <a href="/planos" className="mt-1 block text-center text-[10px] text-amber-700 hover:text-amber-900 hover:underline dark:text-amber-300">
                     Assine Premium para ver dias anteriores
                   </a>
                 )}
@@ -808,24 +793,24 @@ export default function RacaoPage() {
                   {pendentes.map((r) => (
                     <div
                       key={r.id}
-                      className="flex items-center gap-3 rounded-xl bg-white/15 p-3 backdrop-blur-sm transition-all hover:bg-white/25"
+                      className="flex items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-amber-100 transition-all hover:ring-amber-200 dark:bg-slate-900 dark:ring-amber-900"
                     >
                       <button
                         onClick={() => concluirRefeicao(r.id)}
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-white/40 transition hover:border-white hover:bg-white/20"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-amber-300 text-amber-600 transition hover:border-amber-500 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-400 dark:hover:bg-amber-950"
                       >
                         <span className="text-xs">✓</span>
                       </button>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-white/80">{r.hora}</span>
-                          <span className="text-sm font-bold">{r.tipo}</span>
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{r.hora}</span>
+                          <span className="text-sm font-bold text-slate-900 dark:text-white">{r.tipo}</span>
                         </div>
-                        <p className="text-xs text-white/70">{r.quantidade}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{r.quantidade}</p>
                       </div>
                       <button
                         onClick={() => removerRefeicao(r.id)}
-                        className="text-white/50 hover:text-white/80 transition"
+                        className="text-slate-400 transition hover:text-slate-600 dark:hover:text-slate-200"
                       >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <line x1="18" y1="6" x2="6" y2="18"/>
@@ -836,23 +821,23 @@ export default function RacaoPage() {
                   ))}
 
                   {concluidas.length > 0 && (
-                    <div className="border-t border-white/20 pt-2">
-                      <p className="text-xs font-bold text-white/60 mb-2">✓ Concluídas</p>
+                    <div className="border-t border-amber-200 pt-2 dark:border-amber-900">
+                      <p className="text-xs font-bold text-slate-500 mb-2 dark:text-slate-400">✓ Concluídas</p>
                       {concluidas.map((r) => (
                         <div
                           key={r.id}
-                          className="flex items-center gap-3 rounded-xl bg-white/10 p-2.5 opacity-60 transition-all"
+                          className="flex items-center gap-3 rounded-xl bg-white/60 p-2.5 opacity-70 transition-all dark:bg-slate-900/60"
                         >
                           <button
                             onClick={() => desfazerRefeicao(r.id)}
-                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/30 transition hover:bg-white/40"
+                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-700 transition hover:bg-amber-200 dark:bg-amber-900 dark:text-amber-300"
                           >
                             <span className="text-[10px]">↩</span>
                           </button>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-white/60 line-through">{r.hora}</span>
-                              <span className="text-xs font-bold text-white/60 line-through">{r.tipo}</span>
+                              <span className="text-xs text-slate-400 line-through dark:text-slate-500">{r.hora}</span>
+                              <span className="text-xs font-bold text-slate-400 line-through dark:text-slate-500">{r.tipo}</span>
                             </div>
                           </div>
                         </div>
@@ -864,7 +849,7 @@ export default function RacaoPage() {
                 {ehHoje && (
                   <button
                     onClick={() => setNovaRefeicao(true)}
-                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-amber-300 py-2.5 text-sm font-bold text-amber-700 transition hover:border-amber-400 hover:bg-amber-100 dark:border-amber-800 dark:text-amber-300 dark:hover:bg-amber-900"
                   >
                     <span>+</span> Adicionar refeição
                   </button>

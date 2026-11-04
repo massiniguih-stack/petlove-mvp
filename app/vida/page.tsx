@@ -17,7 +17,6 @@ import {
   TrophyIcon3D,
   ShieldIcon3D,
   CheckIcon3D,
-  HealthIcon3D,
   CameraIcon3D,
   VaccineIcon3D,
   TravelIcon3D,
@@ -348,21 +347,18 @@ function AtalhosSaude({
     titulo: string;
     sub: string;
     Icon: typeof CameraIcon3D;
-    grad: string;
   }[] = [
     {
       id: 'galeria',
       titulo: 'Galeria',
       sub: contagens.fotos === 0 ? 'Nenhuma foto' : `${contagens.fotos} foto${contagens.fotos === 1 ? '' : 's'}`,
       Icon: CameraIcon3D,
-      grad: 'from-emerald-50 to-teal-50 ring-emerald-100 dark:from-emerald-950/50 dark:to-teal-950/50 dark:ring-emerald-900',
     },
     {
       id: 'memorias',
       titulo: 'Memórias',
       sub: contagens.memorias === 0 ? 'Linha do tempo' : `${contagens.memorias} momento${contagens.memorias === 1 ? '' : 's'}`,
       Icon: CalendarIcon3D,
-      grad: 'from-amber-50 to-orange-50 ring-amber-100 dark:from-amber-950/50 dark:to-orange-950/50 dark:ring-amber-900',
     },
     {
       id: 'vacinas',
@@ -373,63 +369,57 @@ function AtalhosSaude({
           ? 'Registrar vacina'
           : `${contagens.vacinas} registrada${contagens.vacinas === 1 ? '' : 's'}`,
       Icon: VaccineIcon3D,
-      grad: 'from-sky-50 to-blue-50 ring-sky-100 dark:from-sky-950/50 dark:to-blue-950/50 dark:ring-sky-900',
     },
     {
       id: 'saude',
       titulo: 'Cuidados',
       sub: 'Doença e saúde',
       Icon: ShieldIcon3D,
-      grad: 'from-rose-50 to-red-50 ring-rose-100 dark:from-rose-950/50 dark:to-red-950/50 dark:ring-rose-900',
     },
     {
       id: 'conquistas',
       titulo: 'Conquistas',
       sub: 'Vitórias do pet',
       Icon: TrophyIcon3D,
-      grad: 'from-yellow-50 to-amber-50 ring-yellow-100 dark:from-yellow-950/50 dark:to-amber-950/50 dark:ring-yellow-900',
     },
     {
       id: 'viagens',
       titulo: 'Viagens',
       sub: 'Passeios e trips',
       Icon: TravelIcon3D,
-      grad: 'from-cyan-50 to-blue-50 ring-cyan-100 dark:from-cyan-950/50 dark:to-blue-950/50 dark:ring-cyan-900',
     },
     {
       id: 'aniversario',
       titulo: 'Aniversário',
       sub: 'Datas especiais',
       Icon: CakeIcon3D,
-      grad: 'from-pink-50 to-rose-50 ring-pink-100 dark:from-pink-950/50 dark:to-rose-950/50 dark:ring-pink-900',
     },
     {
       id: 'novo',
       titulo: 'Novo momento',
       sub: 'Registrar agora',
       Icon: PartyIcon3D,
-      grad: 'from-violet-50 to-purple-50 ring-violet-100 dark:from-violet-950/50 dark:to-purple-950/50 dark:ring-violet-900',
     },
   ];
 
   return (
     <section className="mb-8">
-      <h2 className="mb-4 text-lg font-black tracking-tight text-slate-900 dark:text-white">
+      <h2 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
         O que você quer fazer?
       </h2>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {atalhos.map(({ id, titulo, sub, Icon, grad }) => (
+        {atalhos.map(({ id, titulo, sub, Icon }) => (
           <button
             key={id}
             type="button"
             onClick={() => onAtalho(id)}
-            className={`group flex flex-col items-center rounded-3xl bg-gradient-to-br p-5 text-center ring-1 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${grad}`}
+            className="flex flex-col items-center gap-1 rounded-2xl border border-slate-200 bg-white p-4 text-center transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-amber-700"
           >
-            <span className="icon-3d-slot flex h-20 w-20 items-center justify-center overflow-visible transition group-hover:scale-110 sm:h-24 sm:w-24">
-              <Icon size={80} />
+            <span className="icon-3d-slot flex h-10 w-10 items-center justify-center overflow-visible">
+              <Icon size={36} />
             </span>
-            <span className="mt-3 text-sm font-black text-slate-900 dark:text-white">{titulo}</span>
-            <span className="mt-0.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">{sub}</span>
+            <span className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{titulo}</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">{sub}</span>
           </button>
         ))}
       </div>
@@ -749,47 +739,30 @@ export default function VidaPage() {
     supabase.from('momento').update({ status_vacina: 'tomada', data: agora.toISOString() }).eq('id', id).then();
   };
 
-  const primeiraData = momentos.length > 0 ? new Date(Math.min(...momentos.map((m) => m.data.getTime()))) : null;
-  const diasVida = primeiraData ? Math.floor((hoje.getTime() - primeiraData.getTime()) / (1000 * 60 * 60 * 24)) : 0;
-
   const primeiraFoto = momentos.find((m) => m.fotoUrl);
   const fotosCronologicas = [...momentos].filter((m) => m.fotoUrl).sort((a, b) => a.data.getTime() - b.data.getTime());
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 py-10">
           {/* Header */}
           <div className="mb-8">
             <BackButton href="/dashboard" />
-            <div className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-700 dark:bg-rose-950 dark:text-rose-300">
-              <span className="icon-3d-slot">
-                <CalendarIcon3D size={18} />
-              </span>
-              {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'} de história
-              {diasVida > 0 && ` · ${diasVida} dias`}
-            </div>
             <div className="mt-3 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
               <div>
-                <h1 className="flex flex-wrap items-center gap-2 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                  <span className="icon-3d-slot shrink-0">
-                    <HealthIcon3D size={40} />
-                  </span>
-                  <span>
-                    Saúde de{' '}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-rose-500">
-                      {pet.nome}
-                    </span>
-                  </span>
+                <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+                  Saúde de {pet.nome}
                 </h1>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  Linha do tempo · vacinas · momentos e fotos
+                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                  {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'} de história · {totalDias} dias · {fotosCronologicas.length} foto{fotosCronologicas.length === 1 ? '' : 's'}
+                  {totalAnos > 0 ? ` · ${totalAnos} ${totalAnos === 1 ? 'ano' : 'anos'}${mesesRestantes > 0 ? ` e ${mesesRestantes}m` : ''}` : ''}
                 </p>
               </div>
               <button
                 onClick={() => { setEditando(undefined); setCategoriaPadraoForm('evento'); setShowForm(true); }}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40"
+                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19"/>
@@ -798,25 +771,6 @@ export default function VidaPage() {
                 Novo momento
               </button>
             </div>
-          </div>
-
-          {/* Resumo rápido de idade */}
-          <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-            <span className="rounded-full bg-rose-50 px-3 py-1 font-semibold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
-              {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'}
-            </span>
-            <span className="rounded-full bg-amber-50 px-3 py-1 font-semibold text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-              {totalDias} dias
-            </span>
-            <span className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-              {fotosCronologicas.length} foto{fotosCronologicas.length === 1 ? '' : 's'}
-            </span>
-            {totalAnos > 0 && (
-              <span className="rounded-full bg-orange-50 px-3 py-1 font-semibold text-orange-700 dark:bg-orange-950 dark:text-orange-300">
-                {totalAnos} {totalAnos === 1 ? 'ano' : 'anos'}
-                {mesesRestantes > 0 ? ` e ${mesesRestantes}m` : ''}
-              </span>
-            )}
           </div>
 
           {/* Atalhos grandes — cada ícone = uma situação */}
