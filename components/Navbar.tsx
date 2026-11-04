@@ -16,6 +16,7 @@ export default function Navbar() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [ehParceiro, setEhParceiro] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -23,6 +24,25 @@ export default function Navbar() {
 
   const petData = mounted ? pet : null;
   const isLoggedIn = mounted && Boolean(user);
+
+  // Conta logada sem pet pode ser um tutor no meio do cadastro ou um
+  // parceiro (vet/petshop) — não dá pra saber pelo usePetStore sozinho.
+  useEffect(() => {
+    if (!isLoggedIn || petData) {
+      setEhParceiro(false);
+      return;
+    }
+    let ativo = true;
+    fetch('/api/parceiro/profile')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (ativo) setEhParceiro(Boolean(data?.partner));
+      })
+      .catch(() => {});
+    return () => {
+      ativo = false;
+    };
+  }, [isLoggedIn, petData]);
 
   const handleSignOut = async () => {
     setMenuOpen(false);
@@ -57,17 +77,17 @@ export default function Navbar() {
               <Link href="/dashboard" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
                 Dashboard
               </Link>
-              <Link href="/atividades" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
-                Atividades
-              </Link>
-              <Link href="/mapa" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
-                Mapa
-              </Link>
               <Link href="/racao" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
                 Ração
               </Link>
+              <Link href="/atividades" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
+                Atividades
+              </Link>
               <Link href="/vida" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
                 Saúde
+              </Link>
+              <Link href="/mapa" className="rounded-lg px-3 py-2 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-100">
+                Mapa
               </Link>
               <div className="ml-2 h-6 w-px bg-slate-200 dark:bg-slate-700" />
               <DarkModeToggle />
@@ -93,10 +113,10 @@ export default function Navbar() {
               {isLoggedIn ? (
                 <>
                   <Link
-                    href="/onboarding"
-                    className="rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 font-bold text-white shadow-sm hover:shadow-md"
+                    href={ehParceiro ? '/parceiro/dashboard' : '/onboarding'}
+                    className="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
                   >
-                    Cadastrar meu pet
+                    {ehParceiro ? 'Meu painel de parceiro' : 'Cadastrar meu pet'}
                   </Link>
                   <button
                     onClick={handleSignOut}
@@ -115,7 +135,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/cadastro"
-                    className="rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 font-bold text-white shadow-sm hover:shadow-md"
+                    className="rounded-lg bg-slate-900 px-4 py-2 font-semibold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
                   >
                     Começar grátis
                   </Link>
@@ -167,16 +187,15 @@ export default function Navbar() {
                   <span className="text-sm font-medium">Dashboard</span>
                 </Link>
 
-                <Link href="/vida" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 hover:bg-purple-50 dark:text-slate-300 dark:hover:bg-purple-950">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-400">
+                <Link href="/racao" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 hover:bg-amber-50 dark:text-slate-300 dark:hover:bg-amber-950">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-400">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                      <line x1="16" y1="2" x2="16" y2="6"/>
-                      <line x1="8" y1="2" x2="8" y2="6"/>
-                      <line x1="3" y1="10" x2="21" y2="10"/>
+                      <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
                     </svg>
                   </div>
-                  <span className="text-sm font-medium">Linha do tempo</span>
+                  <span className="text-sm font-medium">Ração</span>
                 </Link>
 
                 <Link href="/atividades" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 hover:bg-blue-50 dark:text-slate-300 dark:hover:bg-blue-950">
@@ -188,15 +207,16 @@ export default function Navbar() {
                   <span className="text-sm font-medium">Atividades</span>
                 </Link>
 
-                <Link href="/racao" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 hover:bg-amber-50 dark:text-slate-300 dark:hover:bg-amber-950">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-400">
+                <Link href="/vida" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 hover:bg-purple-50 dark:text-slate-300 dark:hover:bg-purple-950">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-400">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <ellipse cx="12" cy="5" rx="9" ry="3"/>
-                      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
-                      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/>
+                      <line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
                   </div>
-                  <span className="text-sm font-medium">Ração</span>
+                  <span className="text-sm font-medium">Linha do tempo</span>
                 </Link>
 
                 <Link href="/mapa" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 hover:bg-rose-50 dark:text-slate-300 dark:hover:bg-rose-950">
@@ -236,11 +256,11 @@ export default function Navbar() {
                 {isLoggedIn ? (
                   <>
                     <Link
-                      href="/onboarding"
+                      href={ehParceiro ? '/parceiro/dashboard' : '/onboarding'}
                       onClick={() => setMenuOpen(false)}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/30"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white dark:bg-white dark:text-slate-900"
                     >
-                      Cadastrar meu pet
+                      {ehParceiro ? 'Meu painel de parceiro' : 'Cadastrar meu pet'}
                     </Link>
                     <button
                       onClick={handleSignOut}

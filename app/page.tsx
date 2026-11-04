@@ -180,9 +180,9 @@ export default function HomePage() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 { href: '/dashboard', Icon: DashboardPawIcon3D, titulo: 'Dashboard', desc: `Peso, vacinas e tudo sobre ${pet.nome}.` },
-                { href: '/vida', Icon: CalendarIcon3D, titulo: 'Linha do tempo', desc: 'Marcos, vacinas e conquistas.' },
-                { href: '/atividades', Icon: ActivityIcon3D, titulo: 'Atividades', desc: `Exercícios e dicas para ${pet.nome}.` },
                 { href: '/racao', Icon: BowlIcon3D, titulo: 'Ração', desc: 'Porções e nutrição ideal.' },
+                { href: '/atividades', Icon: ActivityIcon3D, titulo: 'Atividades', desc: `Exercícios e dicas para ${pet.nome}.` },
+                { href: '/vida', Icon: CalendarIcon3D, titulo: 'Linha do tempo', desc: 'Marcos, vacinas e conquistas.' },
                 { href: '/mapa', Icon: PinIcon3D, titulo: 'Serviços', desc: 'Veterinários, parques e hotéis.' },
                 { href: '/onboarding', Icon: GearIcon3D, titulo: 'Editar perfil', desc: `Atualize dados de ${pet.nome}.` },
                 { href: '/comparar', Icon: ChartIcon3D, titulo: 'Comparar pets', desc: 'Compare seus pets lado a lado.' },
