@@ -154,13 +154,13 @@ export default function DashboardPage() {
       ? recadoVacinaIndisponivel()
       : recadoVacina(proximaVacina, (data) => format(data, 'dd/MM'));
 
-  const fatos = [
-    pet.raca,
-    idadeDoPet(pet.dataNascimento),
-    pet.sexo === 'macho' ? 'Macho' : 'Fêmea',
-    `${pet.peso.toLocaleString('pt-BR')} kg`,
-    rotuloObjetivo(pet.objetivo),
-  ].filter(Boolean);
+  const fatos: { label: string; href?: string }[] = [
+    { label: pet.raca, href: '/atividades' },
+    { label: idadeDoPet(pet.dataNascimento), href: '/vida' },
+    { label: pet.sexo === 'macho' ? 'Macho' : 'Fêmea' },
+    { label: `${pet.peso.toLocaleString('pt-BR')} kg`, href: '/racao' },
+    { label: rotuloObjetivo(pet.objetivo), href: '/desempenho' },
+  ].filter((fato) => fato.label);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
@@ -175,8 +175,19 @@ export default function DashboardPage() {
               <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
                 {pet.nome}
               </h1>
-              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
-                {fatos.join(' · ')}
+              <p className="mt-2 flex flex-wrap items-center justify-center gap-x-1.5 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:justify-start">
+                {fatos.map((fato, i) => (
+                  <span key={`${fato.label}-${i}`} className="inline-flex items-center gap-1.5">
+                    {fato.href ? (
+                      <Link href={fato.href} className="underline-offset-4 hover:text-slate-900 hover:underline dark:hover:text-white">
+                        {fato.label}
+                      </Link>
+                    ) : (
+                      <span>{fato.label}</span>
+                    )}
+                    {i < fatos.length - 1 && <span className="text-slate-400">·</span>}
+                  </span>
+                ))}
               </p>
             </div>
           </div>
@@ -213,11 +224,13 @@ export default function DashboardPage() {
           </nav>
 
           {!isPremium && (
-            <p className="mt-8 text-sm text-slate-600 dark:text-slate-300">
-              <Link href="/planos" className="font-semibold text-slate-900 underline decoration-amber-400 underline-offset-4 hover:text-amber-800 dark:text-white">
-                Premium a partir de R$ 29,49/mês
-              </Link>
-            </p>
+            <Link
+              href="/planos"
+              className="mt-8 flex items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm transition hover:border-violet-300 dark:border-violet-900 dark:bg-violet-950/40"
+            >
+              <span className="font-semibold text-slate-900 dark:text-white">Premium a partir de R$ 29,49/mês</span>
+              <span className="shrink-0 font-semibold text-violet-700 dark:text-violet-300">Ver planos →</span>
+            </Link>
           )}
           <p className={isPremium ? 'mt-8 text-sm' : 'mt-3 text-sm'}>
             <Link

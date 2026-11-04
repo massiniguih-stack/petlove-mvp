@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { usePetStore } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import Navbar from '@/components/Navbar';
@@ -461,20 +462,20 @@ export default function RacaoPage() {
               <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                  <Link href="/atividades" className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 dark:border-slate-800 dark:hover:border-amber-700">
                     <p className="text-xs text-slate-500 dark:text-slate-400">Raça</p>
                     <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.raca}</p>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                  </Link>
+                  <Link href="/desempenho" className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 dark:border-slate-800 dark:hover:border-amber-700">
                     <p className="text-xs text-slate-500 dark:text-slate-400">Peso</p>
                     <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.peso} kg</p>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                  </Link>
+                  <Link href="/vida" className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 dark:border-slate-800 dark:hover:border-amber-700">
                     <p className="text-xs text-slate-500 dark:text-slate-400">Idade</p>
                     <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">
                       {formatarIdade(idadeEmMeses)}
                     </p>
-                  </div>
+                  </Link>
                   <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
                     <p className="text-xs text-slate-500 dark:text-slate-400">Objetivo</p>
                     <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">

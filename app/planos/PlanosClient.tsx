@@ -76,7 +76,7 @@ export default function PlanosClient() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-violet-950/30">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-4xl px-4 py-10">
@@ -88,13 +88,13 @@ export default function PlanosClient() {
               label={user ? 'Voltar ao dashboard' : 'Voltar ao início'}
             />
             <div className="mt-4 text-center">
-              <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
-                <span className="icon-3d-slot"><PremiumIcon3D size={28} /></span> Patinha Premium
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-950 dark:text-violet-300">
+                Patinha Premium
               </div>
-              <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-                Cuide do seu pet com <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-purple-500">tudo que ele merece</span>
+              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+                Cuide do seu pet com tudo que ele merece
               </h1>
-              <p className="mt-3 text-lg text-slate-500 dark:text-slate-400">Escolha o plano ideal para você e seu pet</p>
+              <p className="mt-3 text-base text-slate-500 dark:text-slate-400">Escolha o plano ideal para você e seu pet</p>
             </div>
 
             <div className="mt-6 flex justify-center">
@@ -121,20 +121,20 @@ export default function PlanosClient() {
           {/* Planos */}
           <div className="grid gap-8 md:grid-cols-2 md:items-start">
             {/* Plano Gratuito */}
-            <div className="rounded-3xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 shadow-sm">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8">
               <div className="flex items-center gap-4">
                 <div className="icon-3d-slot h-14 w-14">
-                  <PawIcon3D size={52} />
+                  <PawIcon3D size={44} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-slate-900 dark:text-white">Gratuito</h3>
-                  <p className="text-sm font-bold text-slate-500 dark:text-slate-400">Para sempre</p>
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Gratuito</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Para sempre</p>
                 </div>
               </div>
 
               <div className="mt-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-black text-slate-900 dark:text-white">R$ 0</span>
+                  <span className="text-4xl font-semibold text-slate-900 dark:text-white">R$ 0</span>
                   <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
                 </div>
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Sempre gratuito</p>
@@ -155,25 +155,25 @@ export default function PlanosClient() {
             </div>
 
             {/* Plano Premium */}
-            <div className="relative rounded-3xl border-2 border-violet-400 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/50 dark:to-purple-950/50 p-8 shadow-lg shadow-violet-500/10 md:-translate-y-2">
-              <div className="absolute -top-3 right-6 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 px-4 py-1 text-xs font-black text-white shadow-md">
+            <div className="relative rounded-2xl border border-violet-300 bg-violet-50 dark:border-violet-800 dark:bg-violet-950/30 p-8">
+              <div className="absolute -top-3 right-6 rounded-full bg-violet-600 px-4 py-1 text-xs font-semibold text-white">
                 RECOMENDADO
               </div>
 
               <div className="flex items-center gap-4">
                 <div className="icon-3d-slot h-14 w-14">
-                  <PremiumIcon3D size={52} />
+                  <PremiumIcon3D size={44} />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-slate-900 dark:text-white">Premium</h3>
-                  <p className="text-sm font-bold text-violet-600 dark:text-violet-400">Acesso total</p>
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Premium</h3>
+                  <p className="text-sm text-violet-700 dark:text-violet-400">Acesso total</p>
                 </div>
               </div>
 
               <div className="mt-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-sm font-bold text-slate-400 dark:text-slate-500">R$</span>
-                  <span className="text-5xl font-black text-slate-900 dark:text-white">
+                  <span className="text-sm font-semibold text-slate-400 dark:text-slate-500">R$</span>
+                  <span className="text-4xl font-semibold text-slate-900 dark:text-white">
                     {periodo === 'mensal' ? PRECO_MENSAL.toFixed(2).replace('.', ',') : (PRECO_ANUAL / 12).toFixed(2).replace('.', ',')}
                   </span>
                   <span className="text-sm text-slate-500 dark:text-slate-400">/mês</span>
@@ -213,7 +213,7 @@ export default function PlanosClient() {
               <button
                 onClick={handleCheckout}
                 disabled={loading}
-                className="mt-8 w-full rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-center text-sm font-bold text-white shadow-lg transition hover:shadow-xl disabled:opacity-50"
+                className="mt-8 w-full rounded-xl bg-violet-600 p-4 text-center text-sm font-semibold text-white transition hover:bg-violet-700 disabled:opacity-50"
               >
                 {loading
                   ? 'Carregando...'
@@ -230,8 +230,8 @@ export default function PlanosClient() {
 
           {/* Comparativo */}
           <section className="mt-16">
-            <h2 className="text-center text-2xl font-black text-slate-900 dark:text-white">Comparação completa</h2>
-            <div className="mt-8 overflow-x-auto rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+            <h2 className="text-center text-2xl font-semibold text-slate-900 dark:text-white">Comparação completa</h2>
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
@@ -265,7 +265,7 @@ export default function PlanosClient() {
 
           {/* FAQ — EXP-07/08 */}
           <section className="mt-16">
-            <h2 className="text-center text-2xl font-black text-slate-900 dark:text-white">Perguntas Frequentes</h2>
+            <h2 className="text-center text-2xl font-semibold text-slate-900 dark:text-white">Perguntas Frequentes</h2>
             <div className="mx-auto mt-8 max-w-3xl space-y-4">
               {[
                 {
@@ -281,8 +281,8 @@ export default function PlanosClient() {
                   resposta: 'Sim! Sua conta é sincronizada na nuvem. Use no celular, tablet ou computador.',
                 },
               ].map((faq) => (
-                <details key={faq.pergunta} className="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-                  <summary className="flex cursor-pointer items-center justify-between p-5 font-bold text-slate-900 dark:text-white">
+                <details key={faq.pergunta} className="group rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                  <summary className="flex cursor-pointer items-center justify-between p-5 font-semibold text-slate-900 dark:text-white">
                     {faq.pergunta}
                     <span className="ml-2 text-slate-400 dark:text-slate-500 transition group-open:rotate-180">▼</span>
                   </summary>

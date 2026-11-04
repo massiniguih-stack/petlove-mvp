@@ -8,7 +8,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { calcularMeta } from '@/lib/metaDiaria';
-import { PremiumIcon3D, PawIcon3D } from '@/components/Icons3D';
+import { PawIcon3D } from '@/components/Icons3D';
 import { trackMetaEvent } from '@/components/MetaPixel';
 
 function GraficoComparativo({ titulo, icone, sufixo, dados, cor, unidade }: {
@@ -72,39 +72,37 @@ export default function CompararPage() {
   const maisJovem = pets.reduce((a, b) => (idadeEmMesesDe(b) < idadeEmMesesDe(a) ? b : a), pets[0]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-violet-950/30">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 py-10">
           <div className="mb-8">
             <BackButton href="/dashboard" label="Voltar ao dashboard" />
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 dark:text-white">
-              Comparar <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-purple-500">pets</span>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
+              Comparar pets
             </h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Veja lado a lado os dados e as recomendações de cada um</p>
           </div>
 
           {!isPremium ? (
-            <div className="rounded-3xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 p-8 text-center text-white shadow-xl shadow-violet-500/20">
-              <div className="mx-auto flex justify-center"><PremiumIcon3D size={72} /></div>
-              <h2 className="mt-3 text-xl font-black">Comparação entre pets é um recurso Premium</h2>
-              <p className="mx-auto mt-2 max-w-md text-sm text-violet-100">
-                A partir de R$ 29,49/mês (ou R$ 19,90/mês no anual): comparar pets, pets ilimitados e histórico completo (além de 7 dias).
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center dark:border-slate-800 dark:bg-slate-900">
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Comparação entre pets é um recurso Premium</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">
+                A partir de R$ 29,49/mês: comparar pets, pets ilimitados e histórico completo.
               </p>
               <a
                 href="/planos"
                 onClick={() => trackMetaEvent('ViewContent', { content_name: 'paywall_comparar_cta' })}
-                className="mt-5 inline-block rounded-2xl bg-white px-6 py-3 text-sm font-black text-violet-600 shadow-lg transition hover:bg-violet-50 hover:shadow-xl"
+                className="mt-4 inline-block rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
               >
-                Ver planos e assinar →
+                Ver planos →
               </a>
             </div>
           ) : pets.length < 2 ? (
-            <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div className="mx-auto flex justify-center"><PawIcon3D size={72} /></div>
-              <h2 className="mt-3 text-lg font-black text-slate-900 dark:text-white">Cadastre mais um pet para comparar</h2>
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center dark:border-slate-800 dark:bg-slate-900">
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Cadastre mais um pet para comparar</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">Você só tem 1 pet cadastrado. Adicione outro para ver a comparação lado a lado.</p>
-              <a href="/onboarding" className="mt-5 inline-block rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:shadow-xl">
+              <a href="/onboarding" className="mt-4 inline-block rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
                 + Adicionar pet
               </a>
             </div>
