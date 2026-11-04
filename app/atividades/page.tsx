@@ -12,7 +12,6 @@ import {
   ScaleIcon3D,
   SearchIcon3D,
   DogIcon3D,
-  ChartIcon3D,
   CalendarIcon3D,
   BoneIcon3D,
   ShieldIcon3D,
@@ -21,7 +20,6 @@ import {
   BowlIcon3D,
   HealthIcon3D,
 } from '@/components/Icons3D';
-import { BreedDogIcon } from '@/components/BreedDogIcon';
 import { diaISO } from '@/lib/checklist';
 
 type Icon3DComp = typeof DogIcon3D;
@@ -371,10 +369,10 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
   const concluidas = checklist.filter((c) => c.concluida);
 
   return (
-    <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-cyan-600 p-5 text-white shadow-xl shadow-blue-500/30">
+    <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5 dark:border-blue-900 dark:bg-blue-950/40">
       <div className="flex items-center justify-between">
-        <h3 className="flex items-center gap-1.5 text-sm font-bold">🐾 {pet.nome}</h3>
-        <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold backdrop-blur-sm">
+        <h3 className="flex items-center gap-1.5 text-sm font-bold text-slate-900 dark:text-white">🐾 {pet.nome}</h3>
+        <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
           {concluidas.length}/{checklist.length}
         </span>
       </div>
@@ -383,12 +381,12 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
         {pendentes.map((item) => (
           <div
             key={item.id}
-            className="flex items-center gap-3 rounded-xl bg-white/15 p-3 backdrop-blur-sm transition-all hover:bg-white/25"
+            className="flex items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-blue-100 transition-all hover:ring-blue-200 dark:bg-slate-900 dark:ring-blue-900"
           >
             <button
               onClick={() => concluirAtividade(item.id)}
               title="Marcar como concluída"
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-white/40 transition hover:border-white hover:bg-white/20"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-blue-300 transition hover:border-blue-500 hover:bg-blue-50 dark:border-blue-700 dark:hover:bg-blue-950"
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
@@ -399,25 +397,25 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
                     value={item.hora}
                     onChange={(e) => alterarHora(item.id, e.target.value)}
                     onBlur={() => setEditandoHoraId(null)}
-                    className="rounded bg-white/20 px-1 py-0.5 text-xs font-bold text-white [color-scheme:dark]"
+                    className="rounded bg-blue-100 px-1 py-0.5 text-xs font-bold text-slate-900 dark:bg-blue-900 dark:text-white"
                   />
                 ) : (
                   <button
                     onClick={() => setEditandoHoraId(item.id)}
                     title="Editar horário"
-                    className="inline-flex items-center gap-1 text-xs font-bold text-white/80 hover:text-white hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-slate-900 hover:underline dark:text-slate-400 dark:hover:text-white"
                   >
                     {item.hora} ✏️
                   </button>
                 )}
-                <span className="text-sm font-bold">{item.atividade}</span>
+                <span className="text-sm font-bold text-slate-900 dark:text-white">{item.atividade}</span>
               </div>
             </div>
             <Image src="/icons/3d/patinha.png" alt="" width={28} height={28} unoptimized className="icon-3d" />
             <button
               onClick={() => removerAtividade(item.id)}
               title="Remover atividade"
-              className="text-white/50 hover:text-white/80 transition"
+              className="text-slate-400 transition hover:text-slate-600 dark:hover:text-slate-200"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="3 6 5 6 21 6"/>
@@ -431,23 +429,23 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
         ))}
 
         {concluidas.length > 0 && (
-          <div className="border-t border-white/20 pt-2">
-            <p className="text-xs font-bold text-white/60 mb-2">✓ Concluídas</p>
+          <div className="border-t border-blue-200 pt-2 dark:border-blue-900">
+            <p className="text-xs font-bold text-slate-500 mb-2 dark:text-slate-400">✓ Concluídas</p>
             {concluidas.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 rounded-xl bg-white/10 p-2.5 opacity-60 transition-all"
+                className="flex items-center gap-3 rounded-xl bg-white/60 p-2.5 opacity-70 transition-all dark:bg-slate-900/60"
               >
                 <button
                   onClick={() => desfazerAtividade(item.id)}
-                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/30 transition hover:bg-white/40"
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-700 transition hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300"
                 >
                   <span className="text-[10px]">↩</span>
                 </button>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-white/60 line-through">{item.hora}</span>
-                    <span className="text-xs font-bold text-white/60 line-through">{item.atividade}</span>
+                    <span className="text-xs text-slate-400 line-through dark:text-slate-500">{item.hora}</span>
+                    <span className="text-xs font-bold text-slate-400 line-through dark:text-slate-500">{item.atividade}</span>
                   </div>
                 </div>
                 <Image src="/icons/3d/patinha.png" alt="" width={22} height={22} unoptimized className="icon-3d opacity-60" />
@@ -460,25 +458,25 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
       {ehHoje && (
         <button
           onClick={() => setNovaAtividade(true)}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/30 py-2.5 text-sm font-bold text-white/80 transition hover:border-white/50 hover:bg-white/10"
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-blue-300 py-2.5 text-sm font-bold text-blue-700 transition hover:border-blue-400 hover:bg-blue-100 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900"
         >
           <span>+</span> Adicionar atividade
         </button>
       )}
 
       {novaAtividade && ehHoje && (
-        <div className="mt-3 rounded-2xl bg-white/10 p-4 backdrop-blur-sm">
-          <h4 className="text-xs font-bold text-white">Nova atividade pra {pet.nome}</h4>
+        <div className="mt-3 rounded-2xl bg-white p-4 ring-1 ring-blue-100 dark:bg-slate-900 dark:ring-blue-900">
+          <h4 className="text-xs font-bold text-slate-900 dark:text-white">Nova atividade pra {pet.nome}</h4>
           <div className="mt-3 space-y-2">
             <button
               onClick={adicionarAtividade}
-              className="w-full rounded-xl bg-white py-2.5 text-xs font-bold text-blue-600 transition hover:shadow-lg"
+              className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-bold text-white transition hover:bg-blue-700"
             >
               🐾 Adicionar agora
             </button>
             <button
               onClick={() => setNovaAtividade(false)}
-              className="w-full rounded-xl border border-white/30 py-2 text-xs font-bold text-white/80 transition hover:bg-white/10"
+              className="w-full rounded-xl border border-slate-200 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
             >
               Cancelar
             </button>
@@ -596,15 +594,11 @@ export default function AtividadesPage() {
         <div className="mx-auto max-w-6xl px-4 py-10">
           <header className="mb-8">
             <BackButton href="/dashboard" />
-            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-              <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-              {atividadesFiltradas.length} {atividadesFiltradas.length === 1 ? 'atividade disponível' : 'atividades disponíveis'}
-            </div>
-            <h1 className="mt-3 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-              Atividades para <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">{pet.nome}</span>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+              Atividades para {pet.nome}
             </h1>
-            <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">
-              Exercícios e dicas personalizadas para manter seu pet saudável e ativo
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              {atividadesFiltradas.length} {atividadesFiltradas.length === 1 ? 'atividade disponível' : 'atividades disponíveis'} · exercícios e dicas pra manter {pet.nome} saudável e ativo
             </p>
           </header>
 
@@ -613,33 +607,21 @@ export default function AtividadesPage() {
               <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                      <BreedDogIcon size={80} raca={pet.raca} peso={pet.peso} mode="breed" alt={pet.raca} />
-                    </div>
-                    <p className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400">Raça</p>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.raca}</p>
+                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Raça</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.raca}</p>
                   </div>
-                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 p-5 text-center ring-1 ring-blue-100 dark:from-blue-950 dark:to-cyan-950 dark:ring-blue-900">
-                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                      <ScaleIcon3D size={80} />
-                    </div>
-                    <p className="mt-2 text-xs font-medium text-blue-600 dark:text-blue-400">Peso</p>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">{pet.peso} kg</p>
+                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Peso</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.peso} kg</p>
                   </div>
-                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 p-5 text-center ring-1 ring-emerald-100 dark:from-emerald-950 dark:to-teal-950 dark:ring-emerald-900">
-                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                      <ChartIcon3D size={80} />
-                    </div>
-                    <p className="mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">Fase</p>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">{fase}</p>
+                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Fase</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{fase}</p>
                   </div>
-                  <div className="overflow-visible rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 p-5 text-center ring-1 ring-purple-100 dark:from-purple-950 dark:to-pink-950 dark:ring-purple-900">
-                    <div className="icon-3d-slot mx-auto flex h-24 w-24 items-center justify-center overflow-visible">
-                      <BreedDogIcon size={80} peso={pet.peso} mode="porte" alt={`Porte ${porte}`} />
-                    </div>
-                    <p className="mt-2 text-xs font-medium text-purple-600 dark:text-purple-400">Porte</p>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white">{porte}</p>
+                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Porte</p>
+                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{porte}</p>
                   </div>
                 </div>
               </section>
