@@ -193,7 +193,7 @@ export default function CadastroClient() {
             </div>
             <h1 className="mt-8 text-3xl font-black text-slate-900 dark:text-white">Cadastro Enviado!</h1>
             <p className="mt-3 text-slate-600 dark:text-slate-400">
-              Recebemos as informações de <strong>{form.nome}</strong>. Seu negócio já está listado no mapa — se precisarmos de mais alguma informação, nossa equipe entra em contato.
+              Recebemos as informações de <strong>{form.nome}</strong>. Nossa equipe vai revisar e, assim que aprovarmos, seu negócio aparece no mapa. Se precisarmos de mais alguma informação, entramos em contato.
             </p>
             <div className="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950 p-4 ring-1 ring-emerald-200 dark:ring-emerald-800">
               <p className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
@@ -247,7 +247,7 @@ export default function CadastroClient() {
                 </h1>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no Patinha</p>
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                  Listagem grátis no mapa na hora · selo Premium a partir de R$ 239,80/ano · destaque no Profissional ·{' '}
+                  Listagem grátis no mapa após aprovação · selo Premium a partir de R$ 239,80/ano · destaque no Profissional ·{' '}
                   <a href="/parceiros/premium" className="font-semibold text-blue-600 underline-offset-2 hover:underline dark:text-blue-400">
                     ver planos
                   </a>

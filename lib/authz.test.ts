@@ -1,4 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+const rpcMock = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/supabase/admin', () => ({
+  getSupabaseAdmin: () => ({ rpc: rpcMock }),
+  isAdmin: () => false,
+}));
 import { NextRequest } from 'next/server';
 import {
   allowedTestEmail,
@@ -6,6 +12,7 @@ import {
   cronAuthorized,
   inspectHumanForm,
   rateLimit,
+  rateLimitShared,
   resetRateLimitForTests,
   tokenMatches,
 } from './authz';
@@ -93,5 +100,34 @@ describe('cronAuthorized', () => {
       headers: { authorization: 'Bearer good-secret' },
     });
     expect(cronAuthorized(req, 'good-secret')).toBe(true);
+  });
+});
+
+describe('rateLimitShared', () => {
+  afterEach(() => {
+    rpcMock.mockReset();
+    resetRateLimitForTests();
+  });
+
+  const opts = { limit: 2, windowMs: 60_000 };
+
+  it('lets the request through when the shared counter says 0', async () => {
+    rpcMock.mockResolvedValue({ data: 0, error: null });
+    expect(await rateLimitShared('k', opts)).toBeNull();
+    expect(rpcMock).toHaveBeenCalledWith('rate_limit_hit', { p_key: 'k', p_limit: 2, p_window_seconds: 60 });
+  });
+
+  it('blocks with 429 and Retry-After when the shared counter is over the limit', async () => {
+    rpcMock.mockResolvedValue({ data: 42, error: null });
+    const res = await rateLimitShared('k', opts);
+    expect(res?.status).toBe(429);
+    expect(res?.headers.get('Retry-After')).toBe('42');
+  });
+
+  it('falls back to the in-memory limit when the database call fails', async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: 'function rate_limit_hit does not exist' } });
+    expect(await rateLimitShared('fb', opts)).toBeNull();
+    expect(await rateLimitShared('fb', opts)).toBeNull();
+    expect((await rateLimitShared('fb', opts))?.status).toBe(429);
   });
 });

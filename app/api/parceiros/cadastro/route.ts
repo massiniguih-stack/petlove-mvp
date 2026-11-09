@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
-import { clientIp, inspectHumanForm, rateLimit, verifyTurnstile } from '@/lib/authz';
+import { clientIp, inspectHumanForm, rateLimitShared, verifyTurnstile } from '@/lib/authz';
+import { AWAITING_REVIEW_STATUS } from '@/lib/partnerReview';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
@@ -38,7 +39,7 @@ function escapeHtml(s: string) {
 }
 
 export async function POST(req: NextRequest) {
-  const limited = rateLimit(`cadastro:${clientIp(req)}`, { limit: 5, windowMs: 10 * 60_000 });
+  const limited = await rateLimitShared(`cadastro:${clientIp(req)}`, { limit: 5, windowMs: 10 * 60_000 });
   if (limited) return limited;
 
   const parsed = cadastroSchema.safeParse(await req.json().catch(() => null));
@@ -85,7 +86,7 @@ export async function POST(req: NextRequest) {
     horario,
     servicos: Array.isArray(servicos) && servicos.length > 0 ? servicos : null,
     plantao24h: !!plantao24h,
-    status: 'new_signup',
+    status: AWAITING_REVIEW_STATUS,
   });
 
   if (error) {
@@ -103,7 +104,7 @@ export async function POST(req: NextRequest) {
           <h1 style="color: #7c3aed;">Recebemos seu cadastro! 🎉</h1>
           <p style="color: #334155; font-size: 16px; line-height: 1.7;">Olá, <strong>${escapeHtml(nome)}</strong>!</p>
           <p style="color: #334155; font-size: 16px; line-height: 1.7;">
-            Seu negócio já está listado no mapa do Patinha. Se precisarmos de mais alguma informação, entramos em contato por aqui.
+            Nossa equipe vai revisar as informações e, assim que aprovarmos, seu negócio aparece no mapa do Patinha. Se precisarmos de mais alguma informação, entramos em contato por aqui.
           </p>
           <p style="color: #64748b; font-size: 14px;">Qualquer dúvida, responda este email.</p>
         </div>
@@ -118,7 +119,7 @@ export async function POST(req: NextRequest) {
       from: 'Patinha <onboarding@resend.dev>',
       to: ADMIN_EMAILS,
       subject: `Novo cadastro de parceiro: ${nome}`,
-      html: `<p>${escapeHtml(nome)} (${tipo.join(', ')}) se cadastrou em ${escapeHtml(cidade || '—')}/${escapeHtml(uf || '—')}. Email: ${escapeHtml(email)}. Telefone: ${escapeHtml(whatsapp || telefone || '—')}.</p>`,
+      html: `<p>${escapeHtml(nome)} (${tipo.join(', ')}) se cadastrou em ${escapeHtml(cidade || '—')}/${escapeHtml(uf || '—')} e está <strong>aguardando aprovação</strong> em /admin/parceiros (fora do mapa até lá). Email: ${escapeHtml(email)}. Telefone: ${escapeHtml(whatsapp || telefone || '—')}.</p>`,
     });
   } catch (emailErr) {
     console.error('Falha ao notificar admin sobre novo cadastro:', emailErr);
