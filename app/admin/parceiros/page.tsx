@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { emojiServico } from '@/lib/tiposServico';
 import { buildPartnerWhatsAppUrl } from '@/lib/partner-invite-messages';
+import { APPROVED_STATUS, isAwaitingReview } from '@/lib/partnerReview';
 
 interface Partner {
   id: string;
@@ -172,7 +173,8 @@ export default function AdminParceirosPage() {
         filtroStatus === 'todos' ||
         (filtroStatus === 'pendente' && p.status !== 'sent') ||
         (filtroStatus === 'enviado' && p.status === 'sent') ||
-        (filtroStatus === 'sem_email' && !p.email);
+        (filtroStatus === 'sem_email' && !p.email) ||
+        (filtroStatus === 'aprovacao' && isAwaitingReview(p.status));
       const matchWhatsapp =
         filtroWhatsapp === 'todos' ||
         (filtroWhatsapp === 'contatado' && !!p.whatsapp_contatado_em) ||
@@ -202,6 +204,33 @@ export default function AdminParceirosPage() {
   const iniciarFila = () => {
     setPuladosNaFila(new Set());
     setFilaAtiva(true);
+  };
+
+  const [aprovandoId, setAprovandoId] = useState<string | null>(null);
+
+  // Auto-cadastro só aparece no /mapa depois de aprovado aqui.
+  const aprovarParceiro = async (parceiro: Partner) => {
+    if (!confirm(`Aprovar “${parceiro.nome}”? Ele passa a aparecer no mapa para os tutores.`)) return;
+    setAprovandoId(parceiro.id);
+    setMensagem(null);
+    try {
+      const res = await fetch('/api/admin/import-partners', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parceiro.id, aprovar: true }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setPartners((prev) => prev.map((p) => (p.id === parceiro.id ? { ...p, status: APPROVED_STATUS } : p)));
+        setMensagem(`✓ ${parceiro.nome} aprovado — já aparece no mapa`);
+      } else {
+        setMensagem(data.error || 'Erro ao aprovar parceiro');
+      }
+    } catch {
+      setMensagem('Erro ao aprovar parceiro');
+    } finally {
+      setAprovandoId(null);
+    }
   };
 
   const limparMarcasWhatsapp = async () => {
@@ -339,6 +368,7 @@ export default function AdminParceirosPage() {
           <option value="pendente">Pendente</option>
           <option value="enviado">Enviado</option>
           <option value="sem_email">Sem e-mail</option>
+          <option value="aprovacao">Aguardando aprovação</option>
         </select>
         <select value={filtroWhatsapp} onChange={(e) => setFiltroWhatsapp(e.target.value)} className={inputClass}>
           <option value="todos">WhatsApp</option>
@@ -401,12 +431,27 @@ export default function AdminParceirosPage() {
                     {parceiro.whatsapp_contatado_em && (
                       <span className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">WhatsApp ok</span>
                     )}
+                    {isAwaitingReview(parceiro.status) && (
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                        Aguardando aprovação · fora do mapa
+                      </span>
+                    )}
                   </div>
                   <p className="truncate text-xs text-slate-500 dark:text-slate-400">
                     {[parceiro.cidade, parceiro.email || null].filter(Boolean).join(' · ')}
                   </p>
                 </button>
                 <div className="flex shrink-0 items-center gap-1.5">
+                  {isAwaitingReview(parceiro.status) && (
+                    <button
+                      type="button"
+                      onClick={() => aprovarParceiro(parceiro)}
+                      disabled={aprovandoId === parceiro.id}
+                      className="rounded-lg bg-violet-600 px-2.5 py-1.5 text-xs font-bold text-white transition hover:bg-violet-500 disabled:opacity-60"
+                    >
+                      {aprovandoId === parceiro.id ? 'Aprovando…' : 'Aprovar'}
+                    </button>
+                  )}
                   {parceiro.telefone && (
                     <button
                       type="button"

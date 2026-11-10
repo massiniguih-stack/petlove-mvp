@@ -45,7 +45,7 @@ function setupSupabaseMock({
   listUsersMock.mockResolvedValue({ data: { users } });
   upsertMock.mockResolvedValue({ error: upsertError });
   partnersEqMock.mockResolvedValue({ error: partnerError, count: partnerCount });
-  partnersUpdateMock.mockImplementation(() => ({ eq: partnersEqMock }));
+  partnersUpdateMock.mockImplementation(() => ({ ilike: partnersEqMock }));
 
   fromMock.mockImplementation((table: string) => {
     if (table === 'lastlink_products') {
@@ -245,6 +245,37 @@ describe('POST /api/lastlink/webhook', () => {
 
     const res = await POST(buildRequest(baseEvent()));
     expect(res.status).toBe(500);
+  });
+
+  it('finds the buyer on a later page of users (more than one page of accounts)', async () => {
+    setupSupabaseMock({ products: [{ plan_type: 'tutor_monthly', price: 29.9 }] });
+    const fullPage = Array.from({ length: 1000 }, (_, i) => ({ id: `u-${i}`, email: `outro${i}@example.com` }));
+    listUsersMock
+      .mockResolvedValueOnce({ data: { users: fullPage } })
+      .mockResolvedValueOnce({ data: { users: [{ id: 'user-late', email: 'tutor@example.com' }] } });
+
+    const res = await POST(buildRequest(baseEvent()));
+    expect(res.status).toBe(200);
+    expect(listUsersMock).toHaveBeenCalledTimes(2);
+    expect(upsertMock).toHaveBeenCalledWith(
+      expect.objectContaining({ user_id: 'user-late', status: 'active' }),
+      expect.anything()
+    );
+  });
+
+  it('matches the buyer e-mail ignoring upper/lower case', async () => {
+    setupSupabaseMock({
+      users: [{ id: 'user-1', email: 'tutor@example.com' }],
+      products: [{ plan_type: 'tutor_monthly', price: 29.9 }],
+    });
+    const res = await POST(buildRequest(baseEvent({
+      Data: { Buyer: { Email: 'Tutor@Example.COM', Name: 'Tutor' } },
+    })));
+    expect(res.status).toBe(200);
+    expect(upsertMock).toHaveBeenCalledWith(
+      expect.objectContaining({ user_id: 'user-1' }),
+      expect.anything()
+    );
   });
 
   it('acknowledges unknown event types without upserting', async () => {

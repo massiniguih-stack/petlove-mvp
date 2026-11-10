@@ -2,7 +2,7 @@ import { timingSafeEqual } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import type { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/server';
-import { isAdmin } from '@/lib/supabase/admin';
+import { getSupabaseAdmin, isAdmin } from '@/lib/supabase/admin';
 
 type GateOk = { ok: true; user: User };
 type GateNo = { ok: false; response: NextResponse };
@@ -43,6 +43,37 @@ export function rateLimit(
     );
   }
   return null;
+}
+
+function tooManyRequests(retryAfterSeconds: number): NextResponse {
+  return NextResponse.json(
+    { error: 'Muitas tentativas. Espere um pouco e tente de novo.' },
+    { status: 429, headers: { 'Retry-After': String(Math.max(1, retryAfterSeconds)) } }
+  );
+}
+
+/**
+ * Limite de tentativas que vale para TODAS as instâncias da Vercel (a conta
+ * fica no Postgres, via função `rate_limit_hit` — ver
+ * supabase/migrations/20261109_shared_rate_limit.sql). Se o banco não
+ * responder ou a migração ainda não tiver sido aplicada, cai de volta para
+ * a contagem em memória de `rateLimit` — nunca derruba a requisição.
+ */
+export async function rateLimitShared(
+  key: string,
+  opts: { limit: number; windowMs: number }
+): Promise<NextResponse | null> {
+  try {
+    const { data, error } = await getSupabaseAdmin().rpc('rate_limit_hit', {
+      p_key: key,
+      p_limit: opts.limit,
+      p_window_seconds: Math.ceil(opts.windowMs / 1000),
+    });
+    if (error || typeof data !== 'number') throw error || new Error('unexpected rate_limit_hit result');
+    return data > 0 ? tooManyRequests(data) : null;
+  } catch {
+    return rateLimit(key, opts);
+  }
 }
 
 export function resetRateLimitForTests() {

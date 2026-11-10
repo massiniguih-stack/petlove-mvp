@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
 import { getAppUrl } from '@/lib/appUrl';
 import { requireAdmin } from '@/lib/authz';
+import { isAwaitingReview } from '@/lib/partnerReview';
 
 function getResend() {
   const key = process.env.RESEND_API_KEY;
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
 
   const { data: partners, error } = await supabaseAdmin
     .from('partners')
-    .select('id, nome, email')
+    .select('id, nome, email, status')
     .in('id', ids.slice(0, 200));
 
   if (error) {
@@ -82,7 +83,13 @@ export async function POST(req: NextRequest) {
 
       await supabaseAdmin
         .from('partners')
-        .update({ status: 'sent', sent_at: new Date().toISOString() })
+        // Convite não é aprovação: auto-cadastro continua fora do /mapa até
+        // alguém clicar em "Aprovar" (ver lib/partnerReview.ts).
+        .update(
+          isAwaitingReview(partner.status)
+            ? { sent_at: new Date().toISOString() }
+            : { status: 'sent', sent_at: new Date().toISOString() }
+        )
         .eq('id', partner.id);
 
       sent++;

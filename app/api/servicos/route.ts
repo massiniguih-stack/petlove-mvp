@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { publicSupabaseFailure, withOneRetry } from '@/lib/supabase/errors';
+import { AWAITING_REVIEW_STATUS } from '@/lib/partnerReview';
 
 // Roda em São Paulo. A função em Ashburn (iad1) estava recebendo
 // Cloudflare 521 ao falar com o Supabase e o mapa ficava vazio.
@@ -22,6 +23,7 @@ async function listPartners(cidade: string) {
   return getSupabaseAdmin()
     .from('partners')
     .select(PARTNER_COLUMNS)
+    .neq('status', AWAITING_REVIEW_STATUS)
     .eq('cidade', cidade);
 }
 

@@ -5,6 +5,7 @@ process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://npqrhqivzaeprkpdhglu.supabase.co
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-role-key';
 
 const eqMock = vi.fn();
+const neqMock = vi.fn();
 const selectMock = vi.fn();
 const fromMock = vi.fn();
 
@@ -26,10 +27,12 @@ function request(cidade?: string) {
 describe('GET /api/servicos', () => {
   beforeEach(() => {
     eqMock.mockReset();
+    neqMock.mockReset();
     selectMock.mockReset();
     fromMock.mockReset();
     fromMock.mockReturnValue({ select: selectMock });
-    selectMock.mockReturnValue({ eq: eqMock });
+    selectMock.mockReturnValue({ neq: neqMock });
+    neqMock.mockReturnValue({ eq: eqMock });
   });
 
   it('returns 503 with a human message when Supabase answers with Cloudflare HTML', async () => {
@@ -83,5 +86,14 @@ describe('GET /api/servicos', () => {
     expect(res.status).toBe(200);
     expect(body.servicos).toHaveLength(1);
     expect(body.servicos[0].nome).toBe('Amor Por Patas');
+  });
+
+  it('hides self-registered partners that are still awaiting review', async () => {
+    eqMock.mockResolvedValue({ data: [], error: null });
+
+    await GET(request('Manaus'));
+
+    expect(neqMock).toHaveBeenCalledWith('status', 'new_signup');
+    expect(eqMock).toHaveBeenCalledWith('cidade', 'Manaus');
   });
 });

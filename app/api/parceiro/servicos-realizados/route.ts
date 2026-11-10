@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getOwnPartner } from '@/lib/partner';
+import { partnerServiceLogSchema } from '@/lib/serviceLog';
 
 function mesParaIntervalo(mes: string | null): { inicio: string; fim: string } {
   const hoje = new Date();
@@ -50,12 +51,11 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   if (!partner) return NextResponse.json({ error: 'Nenhum parceiro vinculado a esta conta' }, { status: 404 });
 
-  const body = await req.json().catch(() => ({}));
-  const { tipoServico, data, clienteNome, observacao } = body;
-
-  if (!tipoServico || !data) {
-    return NextResponse.json({ error: 'Informe o tipo de serviço e a data' }, { status: 400 });
+  const parsed = partnerServiceLogSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Informe o tipo de serviço e uma data do último ano' }, { status: 400 });
   }
+  const { tipoServico, data, clienteNome, observacao } = parsed.data;
 
   const supabaseAdmin = getSupabaseAdmin();
   const { data: registro, error } = await supabaseAdmin

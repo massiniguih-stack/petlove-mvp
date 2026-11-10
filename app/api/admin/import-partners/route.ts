@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getEstadoByCidade } from '@/lib/cidadeEstado';
 import { servicosMock } from '@/data/servicos';
 import { requireAdmin } from '@/lib/authz';
+import { APPROVED_STATUS, AWAITING_REVIEW_STATUS } from '@/lib/partnerReview';
 
 async function checkAdmin() {
   const gate = await requireAdmin();
@@ -115,7 +116,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id, email, marcarWhatsapp, limparWhatsappTodos } = await req.json();
+  const { id, email, marcarWhatsapp, limparWhatsappTodos, aprovar } = await req.json();
   const supabaseAdmin = getSupabaseAdmin();
 
   // Zera a marca "WhatsApp contatado" de todos (fila recomeça do zero)
@@ -146,6 +147,9 @@ export async function PATCH(req: NextRequest) {
   }
   if (marcarWhatsapp === true) updates.whatsapp_contatado_em = new Date().toISOString();
   if (marcarWhatsapp === false) updates.whatsapp_contatado_em = null;
+  // Auto-cadastro só entra no /mapa depois que a equipe aprova (ver lib/partnerReview.ts).
+  if (aprovar === true) updates.status = APPROVED_STATUS;
+  if (aprovar === false) updates.status = AWAITING_REVIEW_STATUS;
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'nothing to update' }, { status: 400 });

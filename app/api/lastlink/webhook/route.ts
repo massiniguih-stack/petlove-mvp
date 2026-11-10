@@ -67,14 +67,32 @@ async function getPlanTypeFromProductId(
   return data[0].plan_type;
 }
 
-// Find user by email
+// Find user by email. listUsers() is paginated (50 per page by default), so
+// we walk every page — otherwise buyers beyond the first page would pay and
+// never get Premium. Comparison ignores case ("Ana@Gmail.com" == "ana@gmail.com").
+const USERS_PER_PAGE = 1000;
+const MAX_USER_PAGES = 50;
+
 async function getUserByEmail(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
   email: string
 ): Promise<{ id: string } | null> {
-  const { data: { users } } = await supabase.auth.admin.listUsers();
-  return users.find((u: { email?: string }) => u.email === email) || null;
+  const target = email.trim().toLowerCase();
+  for (let page = 1; page <= MAX_USER_PAGES; page++) {
+    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: USERS_PER_PAGE });
+    if (error) throw error;
+    const users: Array<{ id: string; email?: string }> = data?.users || [];
+    const found = users.find((u) => u.email?.trim().toLowerCase() === target);
+    if (found) return found;
+    if (users.length < USERS_PER_PAGE) return null;
+  }
+  return null;
+}
+
+// Escapes LIKE wildcards so an e-mail like "a_b@x.com" only matches itself.
+function exactILike(value: string): string {
+  return value.trim().replace(/[\\%_]/g, (c) => `\\${c}`);
 }
 
 function allowedWebhookTokens(): string[] {
@@ -220,7 +238,7 @@ export async function POST(request: NextRequest) {
       const { error: partnerError, count } = await supabaseAdmin
         .from('partners')
         .update(partnerFlags, { count: 'exact' })
-        .eq('email', buyerEmail);
+        .ilike('email', exactILike(buyerEmail));
       if (partnerError) {
         console.error('Failed to update partner premium status:', partnerError);
       } else if (!count) {
