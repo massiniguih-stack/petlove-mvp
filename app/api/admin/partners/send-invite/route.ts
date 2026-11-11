@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEmailFrom } from '@/lib/emailFrom';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
 import { getAppUrl } from '@/lib/appUrl';
@@ -75,7 +76,7 @@ export async function POST(req: NextRequest) {
 
     try {
       await getResend().emails.send({
-        from: 'Patinha <onboarding@resend.dev>',
+        from: getEmailFrom(),
         to: partner.email,
         subject: 'Patinha - Seja nosso parceiro! 🐾',
         html: buildInviteEmail(partner.nome),

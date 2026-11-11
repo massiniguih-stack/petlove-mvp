@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEmailFrom } from '@/lib/emailFrom';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { sendPushNotification } from '@/lib/push';
 import { getAppUrl } from '@/lib/appUrl';
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     try {
       await resend.emails.send({
-        from: 'Patinha <onboarding@resend.dev>',
+        from: getEmailFrom(),
         to: tutor.email,
         subject: `Lembrete: vacina de ${pet?.nome || 'seu pet'} está chegando`,
         html: `

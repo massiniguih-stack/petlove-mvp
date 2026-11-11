@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEmailFrom } from '@/lib/emailFrom';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { planCategory } from '@/lib/lastlink';
@@ -251,7 +252,7 @@ export async function POST(request: NextRequest) {
       try {
         const planName = planType?.replaceAll('_', ' ') || 'Premium';
         await resend.emails.send({
-          from: 'Patinha <onboarding@resend.dev>',
+          from: getEmailFrom(),
           to: buyerEmail,
           subject: 'Parabéns! Você agora é Premium! 🎉',
           html: `

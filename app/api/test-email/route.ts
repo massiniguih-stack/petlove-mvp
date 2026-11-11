@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEmailFrom } from '@/lib/emailFrom';
 import { ADMIN_EMAILS } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
 import { allowedTestEmail, requireAdmin } from '@/lib/authz';
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Patinha <onboarding@resend.dev>',
+      from: getEmailFrom(),
       to,
       subject: 'Email de teste - Patinha',
       html: `

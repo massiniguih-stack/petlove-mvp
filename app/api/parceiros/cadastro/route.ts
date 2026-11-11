@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEmailFrom } from '@/lib/emailFrom';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { Resend } from 'resend';
@@ -96,7 +97,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: 'Patinha <onboarding@resend.dev>',
+      from: getEmailFrom(),
       to: email,
       subject: 'Patinha - Recebemos seu cadastro! 🐾',
       html: `
@@ -116,7 +117,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: 'Patinha <onboarding@resend.dev>',
+      from: getEmailFrom(),
       to: ADMIN_EMAILS,
       subject: `Novo cadastro de parceiro: ${nome}`,
       html: `<p>${escapeHtml(nome)} (${tipo.join(', ')}) se cadastrou em ${escapeHtml(cidade || '—')}/${escapeHtml(uf || '—')} e está <strong>aguardando aprovação</strong> em /admin/parceiros (fora do mapa até lá). Email: ${escapeHtml(email)}. Telefone: ${escapeHtml(whatsapp || telefone || '—')}.</p>`,
