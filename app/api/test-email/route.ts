@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEmailFrom } from '@/lib/emailFrom';
 import { ADMIN_EMAILS } from '@/lib/supabase/admin';
-import { Resend } from 'resend';
+import { getResend } from '@/lib/resend';
 import { allowedTestEmail, requireAdmin } from '@/lib/authz';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(req: NextRequest) {
   const gate = await requireAdmin();
@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'Patinha <onboarding@resend.dev>',
+    const { data, error } = await getResend().emails.send({
+      from: getEmailFrom(),
       to,
       subject: 'Email de teste - Patinha',
       html: `
