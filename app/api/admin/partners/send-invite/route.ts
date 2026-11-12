@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEmailFrom } from '@/lib/emailFrom';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
-import { Resend } from 'resend';
+import { getResend } from '@/lib/resend';
 import { getAppUrl } from '@/lib/appUrl';
 import { requireAdmin } from '@/lib/authz';
 import { isAwaitingReview } from '@/lib/partnerReview';
-
-function getResend() {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) {
-    throw new Error('RESEND_API_KEY não configurada');
-  }
-  return new Resend(key);
-}
 
 function buildInviteEmail(nome: string) {
   return `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background: #ffffff;">

@@ -3,10 +3,9 @@ import { getEmailFrom } from '@/lib/emailFrom';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { sendPushNotification } from '@/lib/push';
 import { getAppUrl } from '@/lib/appUrl';
-import { Resend } from 'resend';
+import { getResend } from '@/lib/resend';
 import { cronAuthorized } from '@/lib/authz';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Roda uma vez por dia via Vercel Cron (ver vercel.json). Manda um e-mail
 // de lembrete para vacinas pendentes que vencem nos próximos 3 dias (ou já
@@ -53,7 +52,7 @@ export async function GET(req: NextRequest) {
       : '';
 
     try {
-      await resend.emails.send({
+      await getResend().emails.send({
         from: getEmailFrom(),
         to: tutor.email,
         subject: `Lembrete: vacina de ${pet?.nome || 'seu pet'} está chegando`,

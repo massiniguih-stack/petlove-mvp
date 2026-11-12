@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getEmailFrom } from '@/lib/emailFrom';
 import { z } from 'zod';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
-import { Resend } from 'resend';
+import { getResend } from '@/lib/resend';
 import { clientIp, inspectHumanForm, rateLimitShared, verifyTurnstile } from '@/lib/authz';
 import { AWAITING_REVIEW_STATUS } from '@/lib/partnerReview';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'massini.guih@gmail.com').split(',');
 
 const cadastroSchema = z.object({
@@ -96,7 +95,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: getEmailFrom(),
       to: email,
       subject: 'Patinha - Recebemos seu cadastro! 🐾',
@@ -116,7 +115,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: getEmailFrom(),
       to: ADMIN_EMAILS,
       subject: `Novo cadastro de parceiro: ${nome}`,
