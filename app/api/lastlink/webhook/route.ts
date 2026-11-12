@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getEmailFrom } from '@/lib/emailFrom';
 import { createClient } from '@supabase/supabase-js';
-import { Resend } from 'resend';
+import { getResend } from '@/lib/resend';
 import { planCategory } from '@/lib/lastlink';
 import { getAppUrl } from '@/lib/appUrl';
 import { tokenMatches } from '@/lib/authz';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface LastlinkEvent {
   Id: string;
@@ -250,8 +250,8 @@ export async function POST(request: NextRequest) {
     if (event.Event === 'Purchase_Order_Confirmed') {
       try {
         const planName = planType?.replaceAll('_', ' ') || 'Premium';
-        await resend.emails.send({
-          from: 'Patinha <onboarding@resend.dev>',
+        await getResend().emails.send({
+          from: getEmailFrom(),
           to: buyerEmail,
           subject: 'Parabéns! Você agora é Premium! 🎉',
           html: `
