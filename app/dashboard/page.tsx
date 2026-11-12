@@ -17,6 +17,13 @@ import {
   recadoVacinaIndisponivel,
   rotuloObjetivo,
 } from '@/lib/tutor/recadoHoje';
+import { diaISO } from '@/lib/checklist';
+import {
+  legendaProgresso,
+  resumoDoDia,
+  type ItemDoDia,
+  type ProgressoLista,
+} from '@/lib/tutor/resumoDia';
 
 function PetPhoto({
   pet,
@@ -72,14 +79,59 @@ function PetPhoto({
   );
 }
 
-const atalhos = [
-  { href: '/racao', label: 'Ração' },
-  { href: '/atividades', label: 'Atividades' },
-  { href: '/mapa', label: 'Mapa' },
-];
+function CartaoProgresso({
+  titulo,
+  href,
+  progresso,
+  cor,
+}: {
+  titulo: string;
+  href: string;
+  progresso: ProgressoLista;
+  cor: 'amber' | 'sky';
+}) {
+  const barra = cor === 'amber' ? 'bg-amber-500' : 'bg-sky-500';
+  return (
+    <Link
+      href={href}
+      className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
+    >
+      <span className="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
+        {titulo}
+        <span aria-hidden className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-slate-600 dark:group-hover:text-slate-200">→</span>
+      </span>
+      <span className="mt-2 flex items-baseline gap-1.5">
+        <span className="text-3xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">
+          {progresso.total === 0 ? '—' : progresso.feitas}
+        </span>
+        {progresso.total > 0 && (
+          <span className="text-sm text-slate-500 dark:text-slate-400">de {progresso.total}</span>
+        )}
+      </span>
+      <span
+        className="mt-3 block h-1.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"
+        role="progressbar"
+        aria-label={`${titulo} feitas hoje`}
+        aria-valuemin={0}
+        aria-valuemax={progresso.total}
+        aria-valuenow={progresso.feitas}
+      >
+        <span
+          className={`block h-full rounded-full transition-[width] duration-500 ${barra}`}
+          style={{ width: `${progresso.percentual}%` }}
+        />
+      </span>
+      <span className="mt-2.5 block truncate text-xs text-slate-600 dark:text-slate-300">
+        {legendaProgresso(progresso)}
+      </span>
+    </Link>
+  );
+}
 
 export default function DashboardPage() {
   const { pet, updatePet, petsCarregados, isPremium } = usePetStore();
+  const [diaEstado, setDiaEstado] = useState<'carregando' | 'pronto' | 'erro'>('carregando');
+  const [itensDoDia, setItensDoDia] = useState<ItemDoDia[]>([]);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [vacinaEstado, setVacinaEstado] = useState<'carregando' | 'pronta' | 'erro'>('carregando');
@@ -143,7 +195,45 @@ export default function DashboardPage() {
     };
   }, [pet?.id]);
 
+  // Mini painel do dia: só LÊ o que Ração e Atividades já gravaram hoje.
+  // Quem cria a lista padrão do dia são aquelas telas, não o dashboard.
+  useEffect(() => {
+    if (!pet?.id) return;
+    if (pet.id === 'demo-pet-preview') {
+      setItensDoDia([]);
+      setDiaEstado('pronto');
+      return;
+    }
+    let ativo = true;
+    setDiaEstado('carregando');
+    const supabase = createClient();
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('checklist_item')
+          .select('id, lista, hora, nome, detalhe, concluida')
+          .eq('pet_id', pet.id)
+          .eq('dia', diaISO(new Date()))
+          .in('lista', ['refeicao', 'atividade']);
+        if (!ativo) return;
+        if (error) {
+          setDiaEstado('erro');
+          return;
+        }
+        setItensDoDia((data || []) as ItemDoDia[]);
+        setDiaEstado('pronto');
+      } catch {
+        if (ativo) setDiaEstado('erro');
+      }
+    })();
+    return () => {
+      ativo = false;
+    };
+  }, [pet?.id]);
+
   if (!pet || !mounted) return null;
+
+  const resumo = resumoDoDia(itensDoDia);
 
   const handlePhotoChange = (url: string) => {
     updatePet(pet.id, { fotoUrl: url });
@@ -211,35 +301,96 @@ export default function DashboardPage() {
             )}
           </section>
 
-          <nav className="mt-6 flex flex-wrap gap-2" aria-label="Atalhos do pet">
-            {atalhos.map((atalho) => (
-              <Link
-                key={atalho.href}
-                href={atalho.href}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-amber-700"
-              >
-                {atalho.label}
-              </Link>
-            ))}
-          </nav>
+          <section className="mt-6" aria-label="O que já foi feito hoje">
+            {diaEstado === 'carregando' ? (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="h-32 animate-pulse rounded-2xl bg-slate-200/70 dark:bg-slate-800" />
+                <div className="h-32 animate-pulse rounded-2xl bg-slate-200/70 dark:bg-slate-800" />
+              </div>
+            ) : diaEstado === 'erro' ? (
+              <p className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                Não consegui carregar o dia agora. Veja direto em{' '}
+                <Link href="/racao" className="font-semibold text-slate-900 underline underline-offset-4 dark:text-white">Ração</Link>
+                {' '}ou{' '}
+                <Link href="/atividades" className="font-semibold text-slate-900 underline underline-offset-4 dark:text-white">Atividades</Link>.
+              </p>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <CartaoProgresso titulo="Refeições" href="/racao" progresso={resumo.refeicoes} cor="amber" />
+                  <CartaoProgresso titulo="Atividades" href="/atividades" progresso={resumo.atividades} cor="sky" />
+                </div>
+                <div className="mt-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+                  <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400">Já feito hoje</h3>
+                  {resumo.feitos.length === 0 ? (
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                      Nada marcado ainda. O que você concluir em Ração e Atividades aparece aqui.
+                    </p>
+                  ) : (
+                    <ul className="mt-2 divide-y divide-slate-100 dark:divide-slate-800">
+                      {resumo.feitos.map((feito) => (
+                        <li key={feito.id} className="flex items-center gap-3 py-2 text-sm">
+                          <span
+                            aria-hidden
+                            className={`h-2 w-2 shrink-0 rounded-full ${feito.tipo === 'refeicao' ? 'bg-amber-500' : 'bg-sky-500'}`}
+                          />
+                          <span className="min-w-0 flex-1 truncate font-medium text-slate-900 dark:text-white">
+                            {feito.nome}
+                            {feito.detalhe && (
+                              <span className="font-normal text-slate-500 dark:text-slate-400"> · {feito.detalhe}</span>
+                            )}
+                          </span>
+                          <span className="shrink-0 text-xs tabular-nums text-slate-500 dark:text-slate-400">
+                            {feito.tipo === 'refeicao' ? 'Refeição' : 'Atividade'}
+                            {feito.hora ? ` · ${feito.hora}` : ''}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </>
+            )}
+          </section>
 
-          {!isPremium && (
-            <Link
-              href="/planos"
-              className="mt-8 flex items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm transition hover:border-violet-300 dark:border-violet-900 dark:bg-violet-950/40"
-            >
-              <span className="font-semibold text-slate-900 dark:text-white">Premium a partir de R$ 29,49/mês</span>
-              <span className="shrink-0 font-semibold text-violet-700 dark:text-violet-300">Ver planos →</span>
-            </Link>
-          )}
-          <p className={isPremium ? 'mt-8 text-sm' : 'mt-3 text-sm'}>
-            <Link
-              href="/conta/assinatura"
-              className="text-slate-600 underline-offset-4 hover:underline dark:text-slate-300"
-            >
-              Minha conta
-            </Link>
-          </p>
+          <section
+            className="mt-8 flex flex-col gap-4 rounded-2xl bg-slate-900 p-5 text-white sm:flex-row sm:items-center sm:justify-between dark:bg-slate-900 dark:ring-1 dark:ring-slate-800"
+            aria-label="Seu plano"
+          >
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-slate-400">Seu plano</p>
+              <p className="mt-1 flex items-center gap-2 text-lg font-semibold tracking-tight">
+                {isPremium ? 'Premium' : 'Gratuito'}
+                {isPremium && (
+                  <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
+                    Ativo
+                  </span>
+                )}
+              </p>
+              <p className="mt-1 text-sm text-slate-300">
+                {isPremium
+                  ? 'Pets ilimitados, histórico completo e comparação entre pets.'
+                  : 'Premium a partir de R$ 29,49/mês: pets ilimitados e histórico completo.'}
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-4">
+              <Link
+                href={isPremium ? '/conta/assinatura' : '/planos'}
+                className="group inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400 active:scale-[0.98]"
+              >
+                {isPremium ? 'Gerenciar plano' : 'Mudar de plano'}
+                <span aria-hidden className="transition group-hover:translate-x-0.5">→</span>
+              </Link>
+              {!isPremium && (
+                <Link
+                  href="/conta/assinatura"
+                  className="text-sm text-slate-300 underline-offset-4 hover:text-white hover:underline"
+                >
+                  Minha conta
+                </Link>
+              )}
+            </div>
+          </section>
         </div>
       </main>
       <Footer />
