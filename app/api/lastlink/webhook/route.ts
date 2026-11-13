@@ -104,7 +104,11 @@ function allowedWebhookTokens(): string[] {
 }
 
 export async function POST(request: NextRequest) {
-  const webhookToken = request.headers.get('x-webhook-token');
+  // A LastLink envia o token em `x-lastlink-token` (confirmado nos logs de
+  // produção em 13/11/2026). `x-webhook-token` fica como alternativa para
+  // não quebrar integrações/testes que usavam o nome antigo.
+  const webhookToken =
+    request.headers.get('x-lastlink-token') ?? request.headers.get('x-webhook-token');
   if (!tokenMatches(webhookToken, allowedWebhookTokens())) {
     // Diagnóstico temporário (MAS-7): a LastLink está sendo recusada e não
     // sabemos se o token vem errado ou em outro lugar. Registramos só NOMES

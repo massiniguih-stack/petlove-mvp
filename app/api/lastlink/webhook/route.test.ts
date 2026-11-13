@@ -99,6 +99,30 @@ describe('POST /api/lastlink/webhook', () => {
     expect(fromMock).not.toHaveBeenCalled();
   });
 
+  it('accepts the token in x-lastlink-token, the header LastLink actually sends', async () => {
+    setupSupabaseMock();
+    const req = new NextRequest('http://localhost/api/lastlink/webhook', {
+      method: 'POST',
+      headers: { 'x-lastlink-token': 'test-token', 'content-type': 'application/json' },
+      body: JSON.stringify(baseEvent({ IsTest: true })),
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true, test: true });
+  });
+
+  it('rejects a wrong x-lastlink-token even if x-webhook-token is absent', async () => {
+    setupSupabaseMock();
+    const req = new NextRequest('http://localhost/api/lastlink/webhook', {
+      method: 'POST',
+      headers: { 'x-lastlink-token': 'wrong', 'content-type': 'application/json' },
+      body: JSON.stringify(baseEvent()),
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(401);
+    expect(fromMock).not.toHaveBeenCalled();
+  });
+
   it('accepts a token listed in LASTLINK_WEBHOOK_TOKENS', async () => {
     const previous = process.env.LASTLINK_WEBHOOK_TOKENS;
     process.env.LASTLINK_WEBHOOK_TOKENS = 'partner-token';
