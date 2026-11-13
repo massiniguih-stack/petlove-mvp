@@ -106,6 +106,19 @@ function allowedWebhookTokens(): string[] {
 export async function POST(request: NextRequest) {
   const webhookToken = request.headers.get('x-webhook-token');
   if (!tokenMatches(webhookToken, allowedWebhookTokens())) {
+    // Diagnóstico temporário (MAS-7): a LastLink está sendo recusada e não
+    // sabemos se o token vem errado ou em outro lugar. Registramos só NOMES
+    // e tamanhos — nunca o valor de header, token ou parâmetro.
+    console.warn(
+      'lastlink_webhook_401',
+      JSON.stringify({
+        nomesDosHeaders: Array.from(request.headers.keys()).sort(),
+        nomesDosParametros: Array.from(request.nextUrl.searchParams.keys()).sort(),
+        tokenRecebido: webhookToken !== null,
+        tamanhoRecebido: webhookToken?.length ?? 0,
+        tamanhosEsperados: allowedWebhookTokens().map((token) => token.length),
+      })
+    );
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
