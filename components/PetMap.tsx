@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+// Agrupa pinos próximos (o mapeamento põe ~450 lojas só em Maringá).
+// Precisa vir depois do leaflet: o plugin se pendura no `L` global.
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 interface Servico {
   id: string;
@@ -76,6 +80,21 @@ function createUserIcon() {
   });
 }
 
+// Bolinha com o número de lojas do grupo, nas cores do Patinha.
+function createClusterIcon(cluster: L.MarkerCluster) {
+  const total = cluster.getChildCount();
+  const tamanho = total < 10 ? 36 : total < 100 ? 44 : 52;
+  return L.divIcon({
+    className: '',
+    iconSize: [tamanho, tamanho],
+    html: `
+      <div style="width:${tamanho}px;height:${tamanho}px;border-radius:50%;background:rgba(249,115,22,0.25);display:flex;align-items:center;justify-content:center;">
+        <div style="width:${tamanho - 8}px;height:${tamanho - 8}px;border-radius:50%;background:#f97316;color:white;font:700 13px system-ui;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.25);">${total}</div>
+      </div>
+    `,
+  });
+}
+
 function addMarkers(
   layer: L.LayerGroup,
   servicos: Servico[],
@@ -110,7 +129,7 @@ export default function PetMap({
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
-  const markersLayer = useRef<L.LayerGroup | null>(null);
+  const markersLayer = useRef<L.MarkerClusterGroup | null>(null);
   const routeLayer = useRef<L.LayerGroup | null>(null);
   const userMarkerRef = useRef<L.Marker | null>(null);
   const [rotaInfo, setRotaInfo] = useState<RotaInfo | null>(null);
@@ -131,6 +150,8 @@ export default function PetMap({
       const map = L.map(mapRef.current, {
         center,
         zoom: 12,
+        // O agrupador de pinos precisa saber o zoom máximo do mapa.
+        maxZoom: 19,
         zoomControl: false,
       });
 
@@ -142,7 +163,15 @@ export default function PetMap({
       }).addTo(map);
 
       mapInstance.current = map;
-      markersLayer.current = L.layerGroup().addTo(map);
+      markersLayer.current = L.markerClusterGroup({
+        chunkedLoading: true,
+        maxClusterRadius: 50,
+        // De perto (nível de rua) mostra cada loja, mesmo vizinhas.
+        disableClusteringAtZoom: 17,
+        showCoverageOnHover: false,
+        spiderfyOnMaxZoom: true,
+        iconCreateFunction: createClusterIcon,
+      }).addTo(map);
       routeLayer.current = L.layerGroup().addTo(map);
     }
 
