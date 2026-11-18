@@ -474,7 +474,7 @@ export default function MapaPage() {
                     className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-5 py-3.5 transition-all duration-200 ${
                       isActive
                         ? `bg-gradient-to-r ${cores[tipo]} text-white shadow-xl scale-105`
-                        : 'bg-white text-slate-700 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
+                        : 'bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
                     }`}
                   >
                     <Image src={icon3dServico(tipo)} alt="" width={ICONE.titulo} height={ICONE.titulo} unoptimized className="icon-3d" />

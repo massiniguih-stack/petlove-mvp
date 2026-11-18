@@ -22,7 +22,7 @@ export function BackButton({ href, label = 'Voltar', className = '' }: BackButto
   return (
     <button
       onClick={handleClick}
-      className={`group inline-flex items-center gap-2 rounded-2xl bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm ring-1 ring-slate-200/60 backdrop-blur-sm transition-all duration-200 hover:bg-white hover:text-slate-900 hover:shadow-md hover:ring-slate-300/60 hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm ${className}`}
+      className={`group inline-flex items-center gap-2 rounded-2xl bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm ring-1 ring-slate-200/60 backdrop-blur-sm transition-all duration-200 hover:bg-white hover:text-slate-900 hover:shadow-md hover:ring-slate-300/60 hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm dark:bg-slate-900/80 dark:text-slate-300 dark:ring-slate-700/60 dark:hover:bg-slate-800 dark:hover:text-white dark:hover:ring-slate-600 ${className}`}
     >
       <svg
         width="16"

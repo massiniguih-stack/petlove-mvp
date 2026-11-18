@@ -30,11 +30,11 @@ export function NewPassword() {
     return (
       <div className="animate-scale-in text-center space-y-4">
         <div className="text-6xl">✅</div>
-        <h2 className="text-2xl font-bold text-slate-900">Senha redefinida!</h2>
-        <p className="text-slate-600">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Senha redefinida!</h2>
+        <p className="text-slate-600 dark:text-slate-300">
           Sua senha foi atualizada com sucesso.
         </p>
-        <Link href="/dashboard" className="inline-block font-semibold text-amber-600 hover:text-amber-700 transition">
+        <Link href="/dashboard" className="inline-block font-semibold text-amber-600 hover:text-amber-700 transition dark:text-amber-300">
           Ir para o painel agora
         </Link>
       </div>
@@ -44,7 +44,7 @@ export function NewPassword() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="animate-slide-up">
-        <label className="flex items-center gap-2 text-sm font-bold text-slate-700">
+        <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300">
           <span className="text-lg">🔒</span> Nova senha
         </label>
         <input
@@ -54,13 +54,13 @@ export function NewPassword() {
           required
           minLength={6}
           maxLength={128}
-          className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 transition-all duration-200 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:scale-[1.01]"
+          className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 placeholder:text-slate-400 transition-all duration-200 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:scale-[1.01] dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:bg-slate-900"
           placeholder="••••••••"
         />
       </div>
 
       {error && (
-        <div className="animate-scale-in rounded-xl bg-red-50 p-3 text-sm font-medium text-red-600 ring-1 ring-red-100">
+        <div className="animate-scale-in rounded-xl bg-red-50 p-3 text-sm font-medium text-red-600 ring-1 ring-red-100 dark:bg-red-950 dark:text-red-300 dark:ring-red-900">
           {error}
         </div>
       )}
@@ -76,7 +76,7 @@ export function NewPassword() {
       </div>
 
       <div className="animate-slide-up-delay-2 text-center">
-        <Link href="/login" className="text-sm font-medium text-slate-500 hover:text-amber-600 transition-colors duration-200">
+        <Link href="/login" className="text-sm font-medium text-slate-500 hover:text-amber-600 transition-colors duration-200 dark:text-slate-400">
           Voltar para o login
         </Link>
       </div>
