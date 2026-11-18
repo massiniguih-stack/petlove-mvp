@@ -11,6 +11,7 @@ import { calcularMeta } from '@/lib/metaDiaria';
 import { PawIcon3D } from '@/components/Icons3D';
 import { trackMetaEvent } from '@/components/MetaPixel';
 
+import { ICONE } from '@/lib/iconSizes';
 function GraficoComparativo({ titulo, icone, sufixo, dados, cor, unidade }: {
   titulo: string;
   icone: string;
@@ -91,11 +92,11 @@ export default function CompararPage() {
                 A partir de R$ 29,49/mês: comparar pets, pets ilimitados e histórico completo.
               </p>
               <a
-                href="/planos"
+                href="/dashboard#plano"
                 onClick={() => trackMetaEvent('ViewContent', { content_name: 'paywall_comparar_cta' })}
                 className="mt-4 inline-block rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
               >
-                Ver planos →
+                Ver meu plano na tela inicial →
               </a>
             </div>
           ) : pets.length < 2 ? (
@@ -156,7 +157,7 @@ export default function CompararPage() {
                               <img src={pet.fotoUrl} alt={pet.nome} className="h-full w-full object-cover" />
                             ) : (
                               <div className="flex h-full w-full items-center justify-center">
-                                <PawIcon3D size={40} />
+                                <PawIcon3D size={ICONE.atalho} />
                               </div>
                             )}
                           </div>

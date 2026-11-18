@@ -20,6 +20,7 @@ export default function FeedbackWidget() {
   const [comentario, setComentario] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [enviado, setEnviado] = useState(false);
+  const [falhou, setFalhou] = useState(false);
 
   useEffect(() => {
     const ocultarAte = localStorage.getItem(STORAGE_KEY);
@@ -27,8 +28,19 @@ export default function FeedbackWidget() {
     setVisivel(true);
   }, []);
 
+  const ocultarPor30Dias = () => {
+    const ocultarAte = new Date();
+    ocultarAte.setDate(ocultarAte.getDate() + DIAS_OCULTO_APOS_ENVIO);
+    localStorage.setItem(STORAGE_KEY, ocultarAte.toISOString());
+  };
+
   const enviar = async () => {
-    if (!humor || !user) return;
+    if (!humor) return;
+    setFalhou(false);
+    if (!user) {
+      setFalhou(true);
+      return;
+    }
     setEnviando(true);
     const supabase = createClient();
     const { error } = await supabase.from('feedback').insert({
@@ -37,86 +49,104 @@ export default function FeedbackWidget() {
       comentario: comentario.trim() || null,
     });
     setEnviando(false);
-    if (error) return;
+    if (error) {
+      setFalhou(true);
+      return;
+    }
 
     setEnviado(true);
-    const ocultarAte = new Date();
-    ocultarAte.setDate(ocultarAte.getDate() + DIAS_OCULTO_APOS_ENVIO);
-    localStorage.setItem(STORAGE_KEY, ocultarAte.toISOString());
+    ocultarPor30Dias();
     setTimeout(() => setVisivel(false), 2500);
   };
 
   if (!visivel) return null;
 
+  if (enviado) {
+    return (
+      <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-300" role="status">
+        Obrigado! Sua opinião foi registrada.
+      </p>
+    );
+  }
+
   return (
-    <div className="mb-6 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50 p-4 dark:border-violet-900 dark:from-violet-950 dark:to-purple-950">
-      {enviado ? (
-        <p className="text-center text-sm font-bold text-violet-700 dark:text-violet-300">💜 Obrigado pelo feedback! Isso nos ajuda a melhorar.</p>
-      ) : !humor ? (
-        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-          <div>
-            <p className="text-sm font-bold text-slate-900 dark:text-white">Como está sendo sua experiência com o Patinha?</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Sua opinião ajuda a gente a melhorar o app</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {humores.map((h) => (
-              <button
-                key={h.id}
-                onClick={() => setHumor(h.id)}
-                title={h.label}
-                className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-2xl shadow-sm ring-1 ring-slate-200 transition hover:scale-110 hover:shadow-md dark:bg-slate-800 dark:ring-slate-700"
-              >
-                {h.emoji}
-              </button>
-            ))}
+    <section
+      className="mt-6 rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900"
+      aria-label="Pesquisa de satisfação"
+    >
+      <div className="flex items-center gap-3">
+        <p className="min-w-0 flex-1 text-sm font-medium leading-snug text-slate-900 dark:text-white">
+          O que está achando do Patinha?
+        </p>
+        <div className="flex shrink-0 items-center gap-1">
+          {humores.map((h) => (
             <button
-              onClick={() => {
-                const ocultarAte = new Date();
-                ocultarAte.setDate(ocultarAte.getDate() + DIAS_OCULTO_APOS_ENVIO);
-                localStorage.setItem(STORAGE_KEY, ocultarAte.toISOString());
-                setVisivel(false);
-              }}
-              className="ml-1 rounded-lg p-2 text-slate-400 transition hover:bg-white/50 hover:text-slate-600 dark:hover:bg-slate-800"
-              title="Agora não"
+              key={h.id}
+              type="button"
+              onClick={() => setHumor(h.id)}
+              aria-label={h.label}
+              aria-pressed={humor === h.id}
+              title={h.label}
+              className={`flex h-10 w-10 items-center justify-center rounded-full text-xl transition active:scale-95 ${
+                humor === h.id
+                  ? 'bg-amber-100 ring-2 ring-amber-400 dark:bg-amber-950'
+                  : humor
+                    ? 'opacity-40 hover:opacity-100'
+                    : 'hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+              {h.emoji}
             </button>
-          </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => {
+              ocultarPor30Dias();
+              setVisivel(false);
+            }}
+            aria-label="Agora não"
+            title="Agora não"
+            className="ml-1 flex h-10 w-8 items-center justify-center rounded-full text-slate-400 transition hover:text-slate-700 dark:hover:text-slate-200"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
         </div>
-      ) : (
-        <div>
-          <div className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
-            <span className="text-2xl">{humores.find((h) => h.id === humor)?.emoji}</span>
-            Quer contar mais alguma coisa? (opcional)
-          </div>
-          <textarea
+      </div>
+
+      {humor && (
+        <form
+          className="mt-3 flex gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            enviar();
+          }}
+        >
+          <input
+            type="text"
             value={comentario}
             onChange={(e) => setComentario(e.target.value)}
-            placeholder="O que você acha que poderia melhorar?"
-            rows={2}
+            placeholder="Quer contar algo? (opcional)"
             maxLength={1000}
-            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+            aria-label="Comentário opcional"
+            className="min-w-0 flex-1 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/30 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           />
-          <div className="mt-2 flex justify-end gap-2">
-            <button
-              onClick={() => setHumor(null)}
-              className="rounded-lg px-3 py-2 text-xs font-bold text-slate-500 transition hover:bg-white/50 dark:hover:bg-slate-800"
-            >
-              Voltar
-            </button>
-            <button
-              onClick={enviar}
-              disabled={enviando}
-              className="rounded-lg bg-violet-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-violet-700 disabled:opacity-50"
-            >
-              {enviando ? 'Enviando...' : 'Enviar feedback'}
-            </button>
-          </div>
-        </div>
+          <button
+            type="submit"
+            disabled={enviando}
+            className="shrink-0 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 active:scale-[0.98] disabled:opacity-50 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
+          >
+            {enviando ? 'Enviando…' : 'Enviar'}
+          </button>
+        </form>
       )}
-    </div>
+      {falhou && (
+        <p className="mt-2 text-xs text-red-600 dark:text-red-400" role="alert">
+          Não consegui enviar agora. Tente de novo em instantes.
+        </p>
+      )}
+    </section>
   );
 }

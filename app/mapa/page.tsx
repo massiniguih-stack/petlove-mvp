@@ -12,6 +12,7 @@ import { cidades, type Servico } from '@/data/servicos';
 import { icon3dServico } from '@/lib/tiposServico';
 import { usePetStore } from '@/lib/store';
 
+import { ICONE } from '@/lib/iconSizes';
 const PetMap = dynamic(() => import('@/components/PetMap'), { ssr: false });
 
 const labels: Record<string, string> = {
@@ -465,7 +466,7 @@ export default function MapaPage() {
                         : 'bg-white text-slate-700 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
                     }`}
                   >
-                    <Image src={icon3dServico(tipo)} alt="" width={28} height={28} unoptimized className="icon-3d" />
+                    <Image src={icon3dServico(tipo)} alt="" width={ICONE.titulo} height={ICONE.titulo} unoptimized className="icon-3d" />
                     <div className="text-left">
                       <p className={`text-sm font-bold ${isActive ? 'text-white' : 'text-slate-900'}`}>{labels[tipo]}</p>
                       <p className={`text-xs ${isActive ? 'text-white/80' : 'text-slate-500'}`}>{count} encontrado{count !== 1 ? 's' : ''}</p>
@@ -499,7 +500,7 @@ export default function MapaPage() {
           {!carregandoServicos && !erroServicos && listaFiltrada.length === 0 && (
             <div className="rounded-3xl bg-white dark:bg-slate-900 py-16 text-center ring-1 ring-slate-200 dark:ring-slate-800 shadow-sm">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700">
-                <SearchIcon3D size={64} />
+                <SearchIcon3D size={ICONE.destaque} />
               </div>
               <h2 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">
                 {busca ? `Nada encontrado para "${busca}" em ${cidade}` : `Nenhum serviço em ${cidade}`}

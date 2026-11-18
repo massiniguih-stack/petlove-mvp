@@ -10,6 +10,7 @@ import { PremiumIcon3D, PinIcon3D, MedalIcon3D, StarIcon3D } from '@/components/
 import { trackMetaEvent } from '@/components/MetaPixel';
 import type { ComponentType } from 'react';
 
+import { ICONE } from '@/lib/iconSizes';
 type PaidPlanType = 'partner_basic' | 'partner_pro' | 'partner_enterprise';
 
 // Preços alinhados a app/api/admin/dashboard-stats (MRR) e ao que está
@@ -174,7 +175,7 @@ export default function PremiumClient() {
           </div>
           <div className="relative mx-auto max-w-5xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm">
-              <PremiumIcon3D size={28} /> Planos para parceiros
+              <PremiumIcon3D size={ICONE.titulo} /> Planos para parceiros
             </div>
             <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
               Do grátis ao <span className="text-yellow-200">destaque</span> na cidade
@@ -200,7 +201,7 @@ export default function PremiumClient() {
           <div className="mx-auto max-w-6xl">
             <div className="text-center">
               <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-1.5 text-sm font-bold text-white shadow-md">
-                <PremiumIcon3D size={28} /> Grátis · Básico · Profissional · Empresarial
+                <PremiumIcon3D size={ICONE.titulo} /> Grátis · Básico · Profissional · Empresarial
               </div>
               <h2 className="mt-4 text-3xl font-black text-slate-900 dark:text-white">
                 Um plano para cada <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">momento</span>
@@ -323,7 +324,7 @@ export default function PremiumClient() {
               {beneficios.map((b) => (
                 <div key={b.titulo} className="group rounded-3xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white p-6 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/50 dark:border-slate-700 dark:from-slate-800 dark:to-slate-900">
                   <div className="icon-3d-slot h-20 w-20 transition group-hover:scale-110">
-                    <b.Icon size={64} />
+                    <b.Icon size={ICONE.destaque} />
                   </div>
                   <h3 className="mt-4 text-lg font-black text-slate-900 dark:text-white">{b.titulo}</h3>
                   <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{b.descricao}</p>

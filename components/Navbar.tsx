@@ -10,6 +10,7 @@ import { DarkModeToggle } from './DarkModeToggle';
 import { DogIcon3D } from './Icons3D';
 import { BreedDogIcon } from './BreedDogIcon';
 
+import { ICONE } from '@/lib/iconSizes';
 export default function Navbar() {
   const { pet, clearAll } = usePetStore();
   const { user, signOut } = useAuth();
@@ -39,9 +40,9 @@ export default function Navbar() {
             <div className="icon-3d-slot relative h-11 w-11">
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-0 blur-md transition-opacity group-hover:opacity-30" />
               {petData?.raca ? (
-                <BreedDogIcon size={40} raca={petData.raca} peso={petData.peso} alt={petData.raca} />
+                <BreedDogIcon size={ICONE.atalho} raca={petData.raca} peso={petData.peso} alt={petData.raca} />
               ) : (
-                <DogIcon3D size={40} />
+                <DogIcon3D size={ICONE.atalho} />
               )}
             </div>
             <div className="flex flex-col">

@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { BriefcaseIcon3D } from '@/components/Icons3D';
 
+import { ICONE } from '@/lib/iconSizes';
 interface PartnerProfile {
   id: string;
   nome: string;
@@ -214,7 +215,7 @@ export default function ParceiroDashboardPage() {
             <BackButton href="/dashboard" label="Voltar ao app" />
             <div className="mt-10 rounded-3xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
               <div className="icon-3d-slot mx-auto h-16 w-16 rounded-2xl bg-slate-100 dark:bg-slate-800">
-                <BriefcaseIcon3D size={48} />
+                <BriefcaseIcon3D size={ICONE.item} />
               </div>
               <h1 className="mt-4 text-xl font-black text-slate-900 dark:text-white">Essa conta não é de um parceiro</h1>
               <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -250,7 +251,7 @@ export default function ParceiroDashboardPage() {
             <>
               <div className="mt-4 flex items-center gap-3">
                 <div className="icon-3d-slot h-12 w-12 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500">
-                  <BriefcaseIcon3D size={36} />
+                  <BriefcaseIcon3D size={ICONE.atalho} />
                 </div>
                 <div>
                   <h1 className="text-2xl font-black text-slate-900 dark:text-white">{partner.nome}</h1>

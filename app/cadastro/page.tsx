@@ -9,6 +9,7 @@ import { DogIcon3D } from '@/components/Icons3D'
 import { BreedDogIcon } from '@/components/BreedDogIcon'
 import { usePetStore } from '@/lib/store'
 
+import { ICONE } from '@/lib/iconSizes';
 export default function CadastroPage() {
   const [mounted, setMounted] = useState(false)
   const pet = usePetStore((s) => s.pet)
@@ -44,9 +45,9 @@ export default function CadastroPage() {
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 opacity-25 blur-2xl" />
                 <div className="relative flex items-center justify-center p-2">
                   {pet?.raca ? (
-                    <BreedDogIcon size={88} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
+                    <BreedDogIcon size={ICONE.destaque} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
                   ) : (
-                    <DogIcon3D size={88} />
+                    <DogIcon3D size={ICONE.destaque} />
                   )}
                 </div>
               </div>

@@ -74,7 +74,7 @@ export function resumoDoDia(itens: ItemDoDia[]): ResumoDia {
 
 /** Frase curta embaixo do número de cada cartão do painel. */
 export function legendaProgresso(p: ProgressoLista): string {
-  if (p.total === 0) return 'Toque para começar o dia';
+  if (p.total === 0) return 'Toque para começar';
   if (!p.proxima) return 'Tudo feito por hoje';
   return p.proxima.hora ? `Falta: ${p.proxima.nome} · ${p.proxima.hora}` : `Falta: ${p.proxima.nome}`;
 }

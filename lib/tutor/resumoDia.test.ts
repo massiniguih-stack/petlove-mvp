@@ -11,7 +11,7 @@ describe('resumoDoDia', () => {
     expect(r.refeicoes).toEqual({ feitas: 0, total: 0, percentual: 0, proxima: null });
     expect(r.atividades.total).toBe(0);
     expect(r.feitos).toEqual([]);
-    expect(legendaProgresso(r.refeicoes)).toBe('Toque para começar o dia');
+    expect(legendaProgresso(r.refeicoes)).toBe('Toque para começar');
   });
 
   it('conta refeições e atividades separadamente', () => {

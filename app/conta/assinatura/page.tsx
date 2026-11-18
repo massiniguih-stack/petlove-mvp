@@ -9,6 +9,7 @@ import { FileTextIcon3D } from '@/components/Icons3D';
 import { usePetStore } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
 
+import { ICONE } from '@/lib/iconSizes';
 export default function AssinaturaPage() {
   const { isPremium, plan, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd, fetchSubscription, clearAll } = usePetStore();
   const { signOut } = useAuth();
@@ -94,7 +95,7 @@ export default function AssinaturaPage() {
               </>
             ) : (
               <div className="text-center py-8">
-                <FileTextIcon3D size={56} className="mx-auto" />
+                <FileTextIcon3D size={ICONE.item} className="mx-auto" />
                 <h2 className="mt-4 text-lg font-black text-slate-900 dark:text-white">
                   Sem assinatura ativa
                 </h2>
