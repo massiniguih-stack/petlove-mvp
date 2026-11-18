@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import { emojiServico } from '@/lib/tiposServico';
 import { buildPartnerWhatsAppUrl } from '@/lib/partner-invite-messages';
 import { APPROVED_STATUS, isAwaitingReview } from '@/lib/partnerReview';
+import { numeroWhatsappParceiro } from '@/lib/partnerWhatsapp';
 
 interface Partner {
   id: string;
@@ -23,11 +24,20 @@ interface Partner {
   sent_at: string | null;
   email: string | null;
   whatsapp_contatado_em: string | null;
+  // Número de WhatsApp (uso interno, não aparece no mapa) e lote de origem.
+  whatsapp?: string | null;
+  origem?: string | null;
+}
+
+function formatarWhatsapp(numero: string): string {
+  const m = numero.match(/^55(\d{2})(\d{4,5})(\d{4})$/);
+  return m ? `(${m[1]}) ${m[2]}-${m[3]}` : `+${numero}`;
 }
 
 function linkWhatsapp(parceiro: Partner): string | null {
-  if (!parceiro.telefone) return null;
-  return buildPartnerWhatsAppUrl(parceiro.telefone, {
+  const numero = numeroWhatsappParceiro(parceiro);
+  if (!numero) return null;
+  return buildPartnerWhatsAppUrl(numero, {
     nome: parceiro.nome,
     cidade: parceiro.cidade,
   });
@@ -40,6 +50,8 @@ export default function AdminParceirosPage() {
   const [filtroTipo, setFiltroTipo] = useState('todos');
   const [filtroStatus, setFiltroStatus] = useState('todos');
   const [filtroWhatsapp, setFiltroWhatsapp] = useState('todos');
+  const [filtroCidade, setFiltroCidade] = useState('todas');
+  const [importandoMapeamento, setImportandoMapeamento] = useState(false);
   const [editando, setEditando] = useState<Partner | null>(null);
   const [emailEditando, setEmailEditando] = useState('');
   const [salvandoEmail, setSalvandoEmail] = useState(false);
@@ -55,9 +67,14 @@ export default function AdminParceirosPage() {
   const carregarParceiros = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/import-partners?limit=500');
-      const data = await res.json();
-      const todos: Partner[] = Object.values(data.partners || {}).flat() as Partner[];
+      // A base passou de 500 lojas: busca página por página até acabar.
+      const todos: Partner[] = [];
+      for (let page = 1; page <= 20; page++) {
+        const res = await fetch(`/api/admin/import-partners?limit=500&page=${page}`);
+        const data = await res.json();
+        todos.push(...(Object.values(data.partners || {}).flat() as Partner[]));
+        if (!res.ok || page >= (data.totalPages || 1)) break;
+      }
       todos.sort((a, b) => a.nome.localeCompare(b.nome));
       setPartners(todos);
     } catch {
@@ -84,6 +101,77 @@ export default function AdminParceirosPage() {
       setImportando(false);
       carregarParceiros();
     }
+  };
+
+  // A lista do mapeamento não fica no repositório (tem WhatsApp de lojistas):
+  // o admin escolhe o arquivo .json do computador e ele vai direto pro servidor.
+  const importarMapeamento = async (arquivo: File | undefined) => {
+    if (!arquivo) return;
+    setMensagem(null);
+    let lojas: unknown;
+    try {
+      lojas = JSON.parse(await arquivo.text());
+    } catch {
+      setMensagem('Esse arquivo não é um JSON válido.');
+      return;
+    }
+    const total = Array.isArray(lojas) ? lojas.length : 0;
+    if (
+      !confirm(
+        `Importar ${total} lojas do arquivo "${arquivo.name}" para o mapa? Quem já existe não é duplicado, só completado.`
+      )
+    )
+      return;
+    setImportandoMapeamento(true);
+    try {
+      const res = await fetch('/api/admin/import-mapeamento', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lojas),
+      });
+      const data = await res.json().catch(() => ({}));
+      setMensagem(
+        res.ok
+          ? `✓ Mapeamento importado: ${data.inseridos} novas, ${data.atualizados} completadas, ${data.semMudanca} já estavam certas`
+          : data.error || 'Erro ao importar o mapeamento'
+      );
+    } catch {
+      setMensagem('Erro ao importar o mapeamento');
+    } finally {
+      setImportandoMapeamento(false);
+      carregarParceiros();
+    }
+  };
+
+  // Planilha (CSV) da lista filtrada, só de quem tem WhatsApp — para usar
+  // em ferramenta de disparo.
+  const exportarWhatsappCsv = () => {
+    const campo = (v: string | null | undefined) => `"${(v || '').replace(/"/g, '""')}"`;
+    const linhas = parceiros
+      .map((p) => ({ p, numero: numeroWhatsappParceiro(p) }))
+      .filter((x): x is { p: Partner; numero: string } => !!x.numero)
+      .map(({ p, numero }) =>
+        [
+          campo(p.nome),
+          campo(p.tipo),
+          campo(p.cidade),
+          campo(numero),
+          campo(`https://wa.me/${numero}`),
+          campo(p.whatsapp_contatado_em ? 'sim' : 'não'),
+        ].join(';')
+      );
+    if (linhas.length === 0) {
+      setMensagem('Ninguém com WhatsApp na lista filtrada');
+      return;
+    }
+    const csv = ['nome;tipo;cidade;whatsapp;link;ja_contatado', ...linhas].join('\r\n');
+    const url = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `whatsapp-parceiros-${filtroCidade === 'todas' ? 'todas' : filtroCidade}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setMensagem(`✓ ${linhas.length} contato(s) exportado(s)`);
   };
 
   const salvarEmail = async () => {
@@ -140,7 +228,7 @@ export default function AdminParceirosPage() {
     const url = linkWhatsapp(parceiro);
     if (!url) {
       setMensagem(
-        `Telefone inválido em “${parceiro.nome}” (${parceiro.telefone || 'vazio'}). Use só números com DDD (ex.: 11999998888) ou Pular na fila.`
+        `Sem WhatsApp válido em “${parceiro.nome}” (${parceiro.whatsapp || parceiro.telefone || 'vazio'}). Use só números com DDD (ex.: 11999998888) ou Pular na fila.`
       );
       return;
     }
@@ -175,13 +263,25 @@ export default function AdminParceirosPage() {
         (filtroStatus === 'enviado' && p.status === 'sent') ||
         (filtroStatus === 'sem_email' && !p.email) ||
         (filtroStatus === 'aprovacao' && isAwaitingReview(p.status));
+      const temWhatsapp = !!numeroWhatsappParceiro(p);
       const matchWhatsapp =
         filtroWhatsapp === 'todos' ||
+        (filtroWhatsapp === 'com' && temWhatsapp) ||
+        (filtroWhatsapp === 'sem' && !temWhatsapp) ||
         (filtroWhatsapp === 'contatado' && !!p.whatsapp_contatado_em) ||
-        (filtroWhatsapp === 'pendente' && p.telefone && !p.whatsapp_contatado_em);
-      return matchBusca && matchTipo && matchStatus && matchWhatsapp;
+        (filtroWhatsapp === 'pendente' && temWhatsapp && !p.whatsapp_contatado_em);
+      const matchCidade = filtroCidade === 'todas' || p.cidade === filtroCidade;
+      return matchBusca && matchTipo && matchStatus && matchWhatsapp && matchCidade;
     });
-  }, [partners, filtro, filtroTipo, filtroStatus, filtroWhatsapp]);
+  }, [partners, filtro, filtroTipo, filtroStatus, filtroWhatsapp, filtroCidade]);
+
+  const cidadesDisponiveis = useMemo(() => {
+    const contagem = new Map<string, number>();
+    for (const p of partners) {
+      if (p.cidade) contagem.set(p.cidade, (contagem.get(p.cidade) || 0) + 1);
+    }
+    return Array.from(contagem.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [partners]);
 
   const stats = useMemo(() => {
     const total = partners.length;
@@ -193,11 +293,11 @@ export default function AdminParceirosPage() {
     return { total, comEmail, enviados, pendentesComEmail, comTelefone, contatadosWhatsapp };
   }, [partners]);
 
-  // Fila: lista filtrada, telefone com ≥10 dígitos (evita "sadsa"), não contatado.
+  // Fila: lista filtrada, com WhatsApp válido (evita "sadsa" e telefone fixo
+  // do mapeamento), não contatado.
   const filaPendentes = useMemo(() => {
     return parceiros.filter((p) => {
-      const digitos = (p.telefone || '').replace(/\D/g, '');
-      return digitos.length >= 10 && !p.whatsapp_contatado_em && !puladosNaFila.has(p.id);
+      return !!numeroWhatsappParceiro(p) && !p.whatsapp_contatado_em && !puladosNaFila.has(p.id);
     });
   }, [parceiros, puladosNaFila]);
 
@@ -333,6 +433,29 @@ export default function AdminParceirosPage() {
               >
                 {importando ? 'Importando…' : 'Importar dados de exemplo'}
               </button>
+              <label
+                className={`block w-full cursor-pointer px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800 ${importandoMapeamento ? 'pointer-events-none opacity-50' : ''}`}
+              >
+                {importandoMapeamento ? 'Importando…' : 'Importar mapeamento (escolher arquivo .json)…'}
+                <input
+                  type="file"
+                  accept="application/json,.json"
+                  className="hidden"
+                  disabled={importandoMapeamento}
+                  onChange={(e) => {
+                    const arquivo = e.target.files?.[0];
+                    e.target.value = '';
+                    importarMapeamento(arquivo);
+                  }}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={exportarWhatsappCsv}
+                className="block w-full px-4 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                Exportar WhatsApp da lista (CSV)
+              </button>
               <button
                 type="button"
                 onClick={limparMarcasWhatsapp}
@@ -355,6 +478,14 @@ export default function AdminParceirosPage() {
           placeholder="Buscar nome ou cidade…"
           className={`${inputClass} w-full sm:min-w-[200px] sm:flex-1`}
         />
+        <select value={filtroCidade} onChange={(e) => setFiltroCidade(e.target.value)} className={inputClass}>
+          <option value="todas">Cidade</option>
+          {cidadesDisponiveis.map(([nome, total]) => (
+            <option key={nome} value={nome}>
+              {nome} ({total})
+            </option>
+          ))}
+        </select>
         <select value={filtroTipo} onChange={(e) => setFiltroTipo(e.target.value)} className={inputClass}>
           <option value="todos">Tipo</option>
           <option value="veterinario">Veterinário</option>
@@ -362,6 +493,7 @@ export default function AdminParceirosPage() {
           <option value="creche">Creche</option>
           <option value="parque">Parque</option>
           <option value="hotel">Hotel</option>
+          <option value="adestrador">Adestrador</option>
         </select>
         <select value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value)} className={inputClass}>
           <option value="todos">E-mail</option>
@@ -372,6 +504,8 @@ export default function AdminParceirosPage() {
         </select>
         <select value={filtroWhatsapp} onChange={(e) => setFiltroWhatsapp(e.target.value)} className={inputClass}>
           <option value="todos">WhatsApp</option>
+          <option value="com">Tem WhatsApp</option>
+          <option value="sem">Sem WhatsApp</option>
           <option value="pendente">Falta contatar</option>
           <option value="contatado">Já contatado</option>
         </select>
@@ -438,7 +572,13 @@ export default function AdminParceirosPage() {
                     )}
                   </div>
                   <p className="truncate text-xs text-slate-500 dark:text-slate-400">
-                    {[parceiro.cidade, parceiro.email || null].filter(Boolean).join(' · ')}
+                    {[
+                      parceiro.cidade,
+                      numeroWhatsappParceiro(parceiro) ? formatarWhatsapp(numeroWhatsappParceiro(parceiro)!) : null,
+                      parceiro.email || null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
                   </p>
                 </button>
                 <div className="flex shrink-0 items-center gap-1.5">
@@ -452,7 +592,7 @@ export default function AdminParceirosPage() {
                       {aprovandoId === parceiro.id ? 'Aprovando…' : 'Aprovar'}
                     </button>
                   )}
-                  {parceiro.telefone && (
+                  {numeroWhatsappParceiro(parceiro) && (
                     <button
                       type="button"
                       onClick={() => contatarWhatsapp(parceiro)}
@@ -514,6 +654,18 @@ export default function AdminParceirosPage() {
                 <dd className="font-medium text-slate-900 dark:text-white">{editando.telefone || '—'}</dd>
               </div>
               <div className="flex justify-between gap-4">
+                <dt className="text-slate-500">WhatsApp</dt>
+                <dd className="font-medium text-slate-900 dark:text-white">
+                  {numeroWhatsappParceiro(editando) ? formatarWhatsapp(numeroWhatsappParceiro(editando)!) : '—'}
+                </dd>
+              </div>
+              {editando.instagram && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-slate-500">Instagram</dt>
+                  <dd className="font-medium text-slate-900 dark:text-white">@{editando.instagram}</dd>
+                </div>
+              )}
+              <div className="flex justify-between gap-4">
                 <dt className="text-slate-500">Endereço</dt>
                 <dd className="max-w-[60%] text-right font-medium text-slate-900 dark:text-white">
                   {editando.endereco || '—'}
@@ -543,7 +695,7 @@ export default function AdminParceirosPage() {
             </div>
 
             <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-              {editando.telefone && (
+              {numeroWhatsappParceiro(editando) && (
                 <button
                   type="button"
                   onClick={() => contatarWhatsapp(editando)}
@@ -602,7 +754,7 @@ export default function AdminParceirosPage() {
                 <div className="mt-5 rounded-xl bg-slate-50 p-4 text-center dark:bg-slate-800/80">
                   <p className="text-sm font-black text-slate-900 dark:text-white">{filaPendentes[0].nome}</p>
                   <p className="mt-1 text-xs text-slate-500">
-                    {filaPendentes[0].cidade || '—'} · {filaPendentes[0].telefone}
+                    {filaPendentes[0].cidade || '—'} · {formatarWhatsapp(numeroWhatsappParceiro(filaPendentes[0]) || '')}
                   </p>
                 </div>
                 <div className="mt-4 flex gap-2">

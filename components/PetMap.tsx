@@ -8,8 +8,8 @@ interface Servico {
   id: string;
   tipo: string;
   nome: string;
-  endereco: string;
-  bairro: string;
+  endereco: string | null;
+  bairro: string | null;
   avaliacao: number | null;
   lat?: number;
   lng?: number;
@@ -27,6 +27,7 @@ const markerColors: Record<string, string> = {
   hotel: '#3b82f6',
   petsitter: '#f43f5e',
   parque: '#22c55e',
+  adestrador: '#0ea5e9',
 };
 
 const emojis: Record<string, string> = {
@@ -36,7 +37,13 @@ const emojis: Record<string, string> = {
   hotel: '🏨',
   petsitter: '🐾',
   parque: '🌳',
+  adestrador: '🎓',
 };
+
+// O popup é montado como HTML: nome/endereço vêm do banco e precisam de escape.
+function esc(texto: string | null | undefined) {
+  return (texto || '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+}
 
 function createIcon(tipo: string) {
   const color = markerColors[tipo] || '#6366f1';
@@ -80,9 +87,9 @@ function addMarkers(
     marker.on('click', () => onMarkerClick(s));
     marker.bindPopup(`
       <div style="min-width:180px;font-family:system-ui;">
-        <div style="font-weight:700;font-size:14px;color:#1e293b;">${s.nome}</div>
-        <div style="font-size:12px;color:#64748b;margin-top:2px;">${s.endereco}</div>
-        <div style="font-size:12px;color:#64748b;">${s.bairro}</div>
+        <div style="font-weight:700;font-size:14px;color:#1e293b;">${esc(s.nome)}</div>
+        <div style="font-size:12px;color:#64748b;margin-top:2px;">${esc(s.endereco)}</div>
+        <div style="font-size:12px;color:#64748b;">${esc(s.bairro)}</div>
         <div style="margin-top:4px;font-size:12px;color:#f59e0b;">⭐ ${s.avaliacao != null ? s.avaliacao.toLocaleString('pt-BR') : 'Novo'}</div>
       </div>
     `);

@@ -82,6 +82,8 @@ export async function GET(req: NextRequest) {
     .from('partners')
     .select('*')
     .order('estado')
+    // desempate fixo: sem ele, páginas diferentes podem repetir/pular linhas
+    .order('id')
     .range(offset, offset + limit - 1);
 
   if (error) {

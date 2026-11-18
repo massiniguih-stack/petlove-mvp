@@ -16,20 +16,25 @@ const PetMap = dynamic(() => import('@/components/PetMap'), { ssr: false });
 
 const labels: Record<string, string> = {
   veterinario: 'Veterinários', petshop: 'Pet Shop', creche: 'Creche',
-  hotel: 'Hotel', petsitter: 'Pet Sitter', parque: 'Parques',
+  hotel: 'Hotel', petsitter: 'Pet Sitter', adestrador: 'Adestrador', parque: 'Parques',
 };
 
 const cores: Record<string, string> = {
   veterinario: 'from-emerald-500 to-teal-500', petshop: 'from-amber-500 to-orange-500',
   creche: 'from-purple-500 to-pink-500', hotel: 'from-blue-500 to-indigo-500',
   petsitter: 'from-rose-500 to-pink-500', parque: 'from-green-500 to-emerald-500',
+  adestrador: 'from-sky-500 to-cyan-500',
 };
 
 const coresBg: Record<string, string> = {
   veterinario: 'bg-emerald-100 text-emerald-700', petshop: 'bg-amber-100 text-amber-700',
   creche: 'bg-purple-100 text-purple-700', hotel: 'bg-blue-100 text-blue-700',
   petsitter: 'bg-rose-100 text-rose-700', parque: 'bg-green-100 text-green-700',
+  adestrador: 'bg-sky-100 text-sky-700',
 };
+
+// Com o mapeamento, uma cidade passa de 400 lojas: a lista abre aos poucos.
+const CARDS_POR_PAGINA = 30;
 
 // Best-effort, não trava a navegação do tutor se falhar.
 function registrarEvento(partnerId: string, eventType: 'view' | 'whatsapp_click') {
@@ -150,9 +155,9 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
 
           <div className="mt-1.5 flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
             <MapPinIcon size={14} />
-            <span>{servico.endereco}</span>
+            <span>{servico.endereco || 'Endereço não informado'}</span>
           </div>
-          <p className="mt-0.5 text-xs font-medium text-slate-400 dark:text-slate-500">{servico.bairro} · {servico.cidade}</p>
+          <p className="mt-0.5 text-xs font-medium text-slate-400 dark:text-slate-500">{[servico.bairro, servico.cidade].filter(Boolean).join(' · ')}</p>
 
           <div className="mt-2.5 flex items-center gap-2">
             <div className="flex items-center gap-1">
@@ -197,7 +202,7 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
                   Criar rota
                 </button>
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(servico.nome + ' ' + servico.endereco + ' ' + servico.cidade)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([servico.nome, servico.endereco, servico.cidade].filter(Boolean).join(' '))}`}
                   target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 rounded-full bg-blue-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-blue-600 hover:shadow-md"
                 >
@@ -216,7 +221,8 @@ function ServicoCard({ servico, onSelect, onCenterMap }: { servico: Servico; onS
                     💬 WhatsApp
                   </a>
                 )}
-                {servico.instagram && (
+                {/* Instagram e WhatsApp são benefício do plano pago: listagem grátis não mostra. */}
+                {servico.instagram && servico.premium && (
                   <a href={`https://instagram.com/${servico.instagram}`} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:shadow-md">
                     📸 Instagram
@@ -251,6 +257,11 @@ export default function MapaPage() {
   const [servicosDaCidade, setServicosDaCidade] = useState<Servico[]>([]);
   const [carregandoServicos, setCarregandoServicos] = useState(true);
   const [erroServicos, setErroServicos] = useState<string | null>(null);
+  const [cardsVisiveis, setCardsVisiveis] = useState(CARDS_POR_PAGINA);
+
+  useEffect(() => {
+    setCardsVisiveis(CARDS_POR_PAGINA);
+  }, [cidade, filtro, busca, ordenarPor]);
 
   const cidadeSelecionada = cidades.find((c) => c.nome === cidade) || cidades[0];
 
@@ -452,7 +463,7 @@ export default function MapaPage() {
               )}
             </div>
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              {(['veterinario', 'petshop', 'creche', 'hotel', 'petsitter', 'parque'] as const).map((tipo) => {
+              {(['veterinario', 'petshop', 'creche', 'hotel', 'adestrador', 'petsitter', 'parque'] as const).map((tipo) => {
                 const count = servicosDaCidade.filter((s) => s.tipo === tipo).length;
                 const isActive = filtro === tipo;
                 return (
@@ -490,9 +501,20 @@ export default function MapaPage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {listaFiltrada.map((servico) => (
+              {listaFiltrada.slice(0, cardsVisiveis).map((servico) => (
                 <ServicoCard key={servico.id} servico={servico} onSelect={setServicoSelecionado} onCenterMap={setServicoSelecionado} />
               ))}
+            </div>
+          )}
+
+          {!carregandoServicos && listaFiltrada.length > cardsVisiveis && (
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => setCardsVisiveis((n) => n + CARDS_POR_PAGINA)}
+                className="rounded-full bg-white px-6 py-3 text-sm font-bold text-slate-700 shadow-md ring-1 ring-slate-200 transition hover:shadow-lg dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-700"
+              >
+                Ver mais ({listaFiltrada.length - cardsVisiveis} restantes)
+              </button>
             </div>
           )}
 
