@@ -6,7 +6,7 @@ import { useNotifications } from '@/lib/useNotifications';
 // Situação das notificações NESTE aparelho + botão de teste. Fica na página
 // da conta para o tutor (e a equipe) conferir que os lembretes chegam.
 export function NotificacoesCard() {
-  const { permission, suporte, loading, erro, requestPermission, enviarTeste } = useNotifications();
+  const { permission, suporte, token, loading, erro, aparelho, requestPermission, enviarTeste } = useNotifications();
   const [testando, setTestando] = useState(false);
   const [resultado, setResultado] = useState<{ ok: boolean; mensagem: string } | null>(null);
 
@@ -26,9 +26,15 @@ export function NotificacoesCard() {
   if (suporte === 'verificando') situacao = { texto: 'Verificando…', cor: 'text-slate-500 dark:text-slate-400' };
   else if (suporte === 'instalar-no-iphone') situacao = { texto: 'Instale o app para ativar', cor: 'text-amber-700 dark:text-amber-300' };
   else if (suporte === 'nao') situacao = { texto: 'Este navegador não recebe notificações', cor: 'text-slate-500 dark:text-slate-400' };
-  else if (permission === 'granted') situacao = { texto: 'Ativas neste aparelho', cor: 'text-emerald-700 dark:text-emerald-300' };
+  else if (permission === 'granted' && token) situacao = { texto: 'Ativas neste aparelho', cor: 'text-emerald-700 dark:text-emerald-300' };
+  else if (permission === 'granted' && loading) situacao = { texto: 'Conectando…', cor: 'text-slate-500 dark:text-slate-400' };
+  else if (permission === 'granted') situacao = { texto: 'Permitidas, mas não conectadas', cor: 'text-amber-700 dark:text-amber-300' };
   else if (permission === 'denied') situacao = { texto: 'Bloqueadas neste aparelho', cor: 'text-red-600 dark:text-red-300' };
-  else situacao = { texto: 'Desativadas', cor: 'text-slate-500 dark:text-slate-400' };
+  else situacao = { texto: 'Ainda não ativadas', cor: 'text-slate-500 dark:text-slate-400' };
+
+  const conectadas = suporte === 'sim' && permission === 'granted' && !!token;
+  const precisaTentarDeNovo = suporte === 'sim' && permission === 'granted' && !token && !loading;
+  const permissaoTexto = { default: 'ainda não pedida', granted: 'permitida', denied: 'bloqueada' }[permission];
 
   return (
     <section
@@ -56,23 +62,49 @@ export function NotificacoesCard() {
 
       {suporte === 'sim' && permission === 'denied' && (
         <p className="mt-3 text-xs leading-5 text-slate-600 dark:text-slate-300">
-          Para desbloquear, abra as configurações do site no navegador (ícone ao lado do endereço) e permita
-          notificações. Depois recarregue esta página.
+          {aparelho?.ios ? (
+            <>
+              Para desbloquear no iPhone: <strong>Ajustes → Notificações → Patinha</strong> → ative{' '}
+              <strong>Permitir Notificações</strong>. Depois feche e abra o Patinha.
+            </>
+          ) : (
+            <>
+              Para desbloquear, abra as configurações do site no navegador (ícone ao lado do endereço) e permita
+              notificações. Depois recarregue esta página.
+            </>
+          )}
         </p>
       )}
 
       {suporte === 'sim' && permission === 'default' && (
+        <>
+          <p className="mt-3 text-xs leading-5 text-slate-600 dark:text-slate-300">
+            Toque no botão abaixo e escolha <strong>Permitir</strong> na pergunta que aparecer.
+          </p>
+          <button
+            type="button"
+            data-testid="ativar-notificacoes"
+            onClick={requestPermission}
+            disabled={loading}
+            className="mt-3 w-full rounded-xl bg-violet-600 py-3 text-sm font-bold text-white transition hover:bg-violet-700 disabled:opacity-50"
+          >
+            {loading ? 'Ativando…' : 'Ativar notificações'}
+          </button>
+        </>
+      )}
+
+      {precisaTentarDeNovo && (
         <button
           type="button"
+          data-testid="tentar-de-novo"
           onClick={requestPermission}
-          disabled={loading}
-          className="mt-4 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
+          className="mt-4 w-full rounded-xl bg-violet-600 py-3 text-sm font-bold text-white transition hover:bg-violet-700"
         >
-          {loading ? 'Ativando…' : 'Ativar notificações'}
+          Tentar de novo
         </button>
       )}
 
-      {suporte === 'sim' && permission === 'granted' && (
+      {conectadas && (
         <button
           type="button"
           onClick={testar}
@@ -89,6 +121,13 @@ export function NotificacoesCard() {
           className={`mt-2 text-xs ${resultado?.ok ? 'text-emerald-700 dark:text-emerald-300' : 'text-red-600 dark:text-red-300'}`}
         >
           {resultado?.mensagem || erro}
+        </p>
+      )}
+
+      {aparelho && suporte !== 'verificando' && (
+        <p data-testid="notificacoes-diagnostico" className="mt-3 text-[11px] text-slate-400 dark:text-slate-500">
+          {aparelho.ios ? 'iPhone' : 'Este aparelho'} · {aparelho.instalado ? 'aberto pelo app instalado' : 'aberto no navegador'}
+          {'Notification' in globalThis ? ` · permissão: ${permissaoTexto}` : ' · sem suporte a notificações'}
         </p>
       )}
     </section>
