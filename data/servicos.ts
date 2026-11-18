@@ -1,6 +1,6 @@
 export interface Servico {
   id: string;
-  tipo: 'veterinario' | 'parque' | 'hotel' | 'petsitter' | 'creche' | 'petdriver' | 'petshop';
+  tipo: 'veterinario' | 'parque' | 'hotel' | 'petsitter' | 'creche' | 'petdriver' | 'petshop' | 'adestrador';
   nome: string;
   endereco: string;
   bairro: string;
@@ -115,6 +115,9 @@ export const cidades: Cidade[] = [
   { nome: 'Curitiba', uf: 'PR', regiao: 'Sul', lat: -25.428, lng: -49.273 },
   { nome: 'Londrina', uf: 'PR', regiao: 'Sul', lat: -23.304, lng: -51.169 },
   { nome: 'Maringá', uf: 'PR', regiao: 'Sul', lat: -23.421, lng: -51.933 },
+  { nome: 'Sarandi', uf: 'PR', regiao: 'Sul', lat: -23.444, lng: -51.874 },
+  { nome: 'Paiçandu', uf: 'PR', regiao: 'Sul', lat: -23.457, lng: -52.049 },
+  { nome: 'Marialva', uf: 'PR', regiao: 'Sul', lat: -23.485, lng: -51.792 },
   { nome: 'Ponta Grossa', uf: 'PR', regiao: 'Sul', lat: -25.094, lng: -50.163 },
   { nome: 'Cascavel', uf: 'PR', regiao: 'Sul', lat: -24.955, lng: -53.455 },
   { nome: 'São José dos Pinhais', uf: 'PR', regiao: 'Sul', lat: -25.535, lng: -49.205 },

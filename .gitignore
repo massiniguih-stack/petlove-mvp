@@ -60,3 +60,7 @@ videos/**/dist/
 
 # local agent scratch (not product source)
 agent/
+
+# listas de mapeamento com WhatsApp de lojistas: o repositório é público.
+# O admin envia o arquivo pelo botão "Importar mapeamento" (/admin/parceiros).
+/data/mapeamento*.json

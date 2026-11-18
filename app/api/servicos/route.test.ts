@@ -88,6 +88,24 @@ describe('GET /api/servicos', () => {
     expect(body.servicos[0].nome).toBe('Amor Por Patas');
   });
 
+  it('never sends Instagram of free listings to the map, only premium', async () => {
+    eqMock.mockResolvedValue({
+      data: [
+        { id: '1', nome: 'Grátis', premium: false, instagram: 'gratis', telefone: '(44) 3000-0000' },
+        { id: '2', nome: 'Pago', premium: true, instagram: 'pago' },
+      ],
+      error: null,
+    });
+
+    const res = await GET(request('Maringá'));
+    const body = await res.json();
+
+    expect(body.servicos[0].instagram).toBeNull();
+    expect(body.servicos[0].telefone).toBe('(44) 3000-0000');
+    expect(body.servicos[1].instagram).toBe('pago');
+    expect(selectMock.mock.calls[0][0]).not.toMatch(/whatsapp/);
+  });
+
   it('hides self-registered partners that are still awaiting review', async () => {
     eqMock.mockResolvedValue({ data: [], error: null });
 

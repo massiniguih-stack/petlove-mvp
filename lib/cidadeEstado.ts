@@ -20,7 +20,7 @@ const cidadeEstadoMap: Record<string, string> = {
   'Curitiba': 'PR', 'Ponta Grossa': 'PR', 'Cascavel': 'PR',
   'Foz do Iguaçu': 'PR', 'Colombo': 'PR', 'Guarapuava': 'PR', 'Paranaguá': 'PR',
   'Apucarana': 'PR', 'Pinhais': 'PR', 'Campo Largo': 'PR', 'Araucária': 'PR',
-  'Toledo': 'PR',
+  'Toledo': 'PR', 'Sarandi': 'PR', 'Paiçandu': 'PR', 'Marialva': 'PR',
   'Crato': 'CE', 'Maracanaú': 'CE', 'Itapipoca': 'CE', 'Maranguape': 'CE',
   'Iguatu': 'CE', 'Quixadá': 'CE', 'Pacatuba': 'CE', 'Aquiraz': 'CE',
   'Eusébio': 'CE', 'Caucaia': 'CE', 'Canindé': 'CE', 'Russas': 'CE',
