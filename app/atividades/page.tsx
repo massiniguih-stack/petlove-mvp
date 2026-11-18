@@ -232,6 +232,13 @@ function getAtividadesPorPerfil(raca: string, peso: number, idadeEmMeses: number
   });
 }
 
+const OBJETIVO_LABEL: Record<string, string> = {
+  manutencao: 'manutenção',
+  pelagem: 'pelagem',
+  desempenho: 'desempenho',
+  emagrecimento: 'emagrecimento',
+};
+
 function getCategoriaInfo(cat: string) {
   const info: Record<string, { label: string; cor: string; bg: string; icone: string; iconSrc: string }> = {
     caminhada: { label: 'Caminhada', cor: 'text-emerald-700', bg: 'bg-emerald-50', icone: '🐕', iconSrc: '/icons/3d/dog.png' },
@@ -589,324 +596,259 @@ export default function AtividadesPage() {
     return { dia, atividade, catInfo, ehHoje: i === hojeIndiceSemana };
   });
 
+  // Mesmo padrão visual da Ração: coluna única, cartões com borda, títulos
+  // de seção do mesmo tamanho e o checklist do dia no topo.
+  const cartao = 'rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900';
+  const chip = (ativo: boolean) =>
+    `inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold transition ${
+      ativo
+        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
+        : 'border border-slate-200 bg-white text-slate-600 hover:border-blue-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-700'
+    }`;
+
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-4 py-10">
+        <div className="mx-auto max-w-3xl px-4 py-10">
           <header className="mb-8">
             <BackButton href="/dashboard" />
             <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
               Atividades para {pet.nome}
             </h1>
             <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
-              {atividadesFiltradas.length} {atividadesFiltradas.length === 1 ? 'atividade disponível' : 'atividades disponíveis'} · exercícios e dicas pra manter {pet.nome} saudável e ativo
+              {fase} · porte {porte.toLowerCase()} · checklist do dia, exercícios e cuidados
             </p>
           </header>
 
-          <div className="grid gap-6 lg:grid-cols-4">
-            <div className="lg:col-span-3 space-y-6">
-              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Perfil do pet</h2>
-                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <Link href="/racao" className="rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 dark:border-slate-800 dark:hover:border-blue-700">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Raça</p>
-                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.raca}</p>
-                  </Link>
-                  <Link href="/desempenho" className="rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 dark:border-slate-800 dark:hover:border-blue-700">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Peso</p>
-                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.peso} kg</p>
-                  </Link>
-                  <Link href="/vida" className="rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 dark:border-slate-800 dark:hover:border-blue-700">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Fase</p>
-                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{fase}</p>
-                  </Link>
-                  <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Porte</p>
-                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{porte}</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Cuidados do perfil — logo após o resumo do pet, antes de escolher atividade */}
-              <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-                <div className="flex items-start gap-3">
-                  <div className="icon-3d-slot h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-                    <ShieldIcon3D size={ICONE.atalho} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h2 className="text-base font-bold text-slate-900 dark:text-white">
-                      Cuidados para {pet.nome}
-                    </h2>
-                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                      Baseado em {fase.toLowerCase()} · porte {porte.toLowerCase()}
-                      {pet.objetivo ? ` · objetivo ${pet.objetivo}` : ''}
-                    </p>
-                  </div>
-                </div>
-                <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {dicasGerais.map((dica) => (
-                    <li
-                      key={dica.texto}
-                      className="flex items-start gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-100 dark:bg-slate-800/60 dark:ring-slate-700/60"
-                    >
-                      <span className="icon-3d-slot mt-0.5 h-10 w-10 shrink-0">
-                        <dica.Icon size={ICONE.atalho} />
-                      </span>
-                      <span className="text-sm leading-snug text-slate-700 dark:text-slate-200">
-                        {dica.texto}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              <section className="rounded-3xl bg-gradient-to-br from-white to-blue-50/30 p-6 shadow-lg ring-1 ring-slate-100 dark:from-slate-900 dark:to-blue-950/30 dark:ring-slate-800">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-black text-slate-900 dark:text-white">Atividades recomendadas</h2>
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Filtre por categoria e intensidade</p>
-                  </div>
-                  <span className="rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-3 py-1 text-xs font-bold text-white shadow-md">
-                    {atividadesFiltradas.length} {atividadesFiltradas.length === 1 ? 'atividade' : 'atividades'}
-                  </span>
-                </div>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {categorias.map((c) => {
-                    const info = getCategoriaInfo(c);
-                    const isActive = filtroCat === c;
-                    return (
-                      <button
-                        key={c}
-                        onClick={() => setFiltroCat(c)}
-                        className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
-                          isActive
-                            ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105'
-                            : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-700'
-                        }`}
-                      >
-                        <Image src={info.iconSrc} alt="" width={22} height={22} unoptimized className="icon-3d" />
-                        {info.label}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {intensidades.map((i) => {
-                    const info = getIntensidadeInfo(i);
-                    const isActive = filtroIntensidade === i;
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => setFiltroIntensidade(i)}
-                        className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
-                          isActive
-                            ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/30 scale-105'
-                            : 'bg-white text-slate-600 hover:bg-slate-50 hover:scale-105 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:border-slate-700'
-                        }`}
-                      >
-                        {info.label}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-6 space-y-4">
-                  {atividadesFiltradas.map((atividade) => {
-                    const catInfo = getCategoriaInfo(atividade.categoria);
-                    const intInfo = getIntensidadeInfo(atividade.intensidade);
-                    const isExpandida = expandida === atividade.id;
-
-                    return (
-                      <div
-                        key={atividade.id}
-                        className={`group rounded-2xl border transition-all duration-300 ${
-                          isExpandida
-                            ? 'border-blue-200 bg-gradient-to-br from-blue-50/50 to-white shadow-xl ring-2 ring-blue-100 dark:border-blue-800 dark:from-blue-950/50 dark:to-slate-900 dark:ring-blue-900'
-                            : 'border-slate-100 bg-white hover:border-slate-200 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700'
-                        }`}
-                      >
-                        <div
-                          className="flex cursor-pointer items-start gap-4 p-5"
-                          onClick={() => setExpandida(isExpandida ? null : atividade.id)}
-                        >
-                          <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition group-hover:scale-110 ${catInfo.bg}`}>
-                            <Image src={catInfo.iconSrc} alt="" width={ICONE.atalho} height={ICONE.atalho} unoptimized className="icon-3d" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${catInfo.bg} ${catInfo.cor}`}>
-                                {catInfo.label}
-                              </span>
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${intInfo.bg} ${intInfo.cor}`}>
-                                {intInfo.label}
-                              </span>
-                            </div>
-                            <h3 className="mt-2 text-lg font-black text-slate-900 group-hover:text-slate-950 dark:text-white dark:group-hover:text-white">{atividade.nome}</h3>
-                            <p className="mt-1 text-sm text-slate-500 line-clamp-2 dark:text-slate-400">{atividade.descricao}</p>
-                            <div className="mt-2.5 flex flex-wrap items-center gap-2">
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <circle cx="12" cy="12" r="10"/>
-                                  <polyline points="12 6 12 12 16 14"/>
-                                </svg>
-                                {atividade.duracao}
-                              </span>
-                              <button
-                                onClick={(e) => { e.stopPropagation(); adicionarAoDia(atividade); }}
-                                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition ${
-                                  adicionadaId === atividade.id
-                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300'
-                                    : 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900'
-                                }`}
-                              >
-                                {adicionadaId === atividade.id ? `✓ Adicionada ao dia de ${pet.nome}` : `+ Adicionar ao dia de ${pet.nome}`}
-                              </button>
-                            </div>
-                          </div>
-                          <div className="flex flex-shrink-0 flex-col items-center gap-1">
-                            <svg
-                              className={`h-6 w-6 text-slate-400 transition-transform ${isExpandida ? 'rotate-180 text-blue-500' : ''}`}
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                            <span className="text-[9px] font-semibold text-slate-400">{isExpandida ? 'ocultar' : 'detalhes'}</span>
-                          </div>
-                        </div>
-
-                        {isExpandida && (
-                          <div className="border-t border-slate-100 dark:border-slate-800 px-5 pb-5 pt-5 space-y-4 animate-slide-up">
-                            <div className="rounded-xl bg-emerald-50 p-4 dark:bg-emerald-950">
-                              <p className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                                  <polyline points="22 4 12 14.01 9 11.01"/>
-                                </svg>
-                                Benefícios
-                              </p>
-                              <div className="mt-2 flex flex-wrap gap-1.5">
-                                {atividade.beneficios.map((b) => (
-                                  <span key={b} className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">{b}</span>
-                                ))}
-                              </div>
-                            </div>
-                            <div className="rounded-xl bg-amber-50 p-4 dark:bg-amber-950">
-                              <p className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                  <circle cx="12" cy="12" r="10"/>
-                                  <line x1="12" y1="16" x2="12" y2="12"/>
-                                  <line x1="12" y1="8" x2="12.01" y2="8"/>
-                                </svg>
-                                Dicas
-                              </p>
-                              <ul className="mt-2 space-y-1.5">
-                                {atividade.dicas.map((d) => (
-                                  <li key={d} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300">
-                                    <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-amber-400"/>
-                                    {d}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                            {atividade.equipamento && (
-                              <div className="rounded-xl bg-blue-50 p-4 dark:bg-blue-950">
-                                <p className="flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-400">
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                                  </svg>
-                                  Equipamento
-                                </p>
-                                <div className="mt-2 flex flex-wrap gap-1.5">
-                                  {atividade.equipamento.map((e) => (
-                                    <span key={e} className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-900 dark:text-blue-300">{e}</span>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-
-                  {atividadesFiltradas.length === 0 && (
-                    <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 py-12 text-center dark:from-slate-900 dark:to-slate-800">
-                      <SearchIcon3D size={ICONE.destaque} className="mx-auto" />
-                      <p className="mt-4 text-base font-bold text-slate-700 dark:text-slate-300">Nenhuma atividade encontrada</p>
-                      <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Tente outros filtros</p>
-                    </div>
-                  )}
-                </div>
-              </section>
+          <div className="space-y-6">
+            {/* Navegação de dia — compartilhada entre os checklists de todos os pets */}
+            <div className={cartao}>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
+                  {ehHoje ? 'Checklist de hoje' : diaVisualizado.toLocaleDateString('pt-BR')}
+                </h2>
+              </div>
+              <div className="mt-2 flex items-center justify-between">
+                <button
+                  onClick={() => {
+                    if (!isPremium && diaOffset === 0) return;
+                    setDiaOffset((d) => d + 1);
+                  }}
+                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  ← Dia anterior {!isPremium && diaOffset === 0 && <span className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[9px] font-bold text-blue-800 dark:bg-blue-900 dark:text-blue-200">PRO</span>}
+                </button>
+                <button
+                  onClick={() => setDiaOffset((d) => Math.max(0, d - 1))}
+                  disabled={ehHoje}
+                  className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 disabled:opacity-40 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  Próximo dia →
+                </button>
+              </div>
+              {!isPremium && diaOffset === 0 && (
+                <a href="/dashboard#plano" className="mt-1 block text-center text-xs text-blue-700 hover:text-blue-900 hover:underline dark:text-blue-300">
+                  Dias anteriores são do Premium · veja seu plano na tela inicial
+                </a>
+              )}
             </div>
 
-            <div className="space-y-6">
-              {/* Navegação de dia — compartilhada entre os checklists de todos os pets */}
-              <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">{ehHoje ? 'Checklist de Hoje' : diaVisualizado.toLocaleDateString('pt-BR')}</h3>
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => {
-                        if (!isPremium && diaOffset === 0) return;
-                        setDiaOffset((d) => d + 1);
-                      }}
-                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
-                    >
-                      ← {!isPremium && diaOffset === 0 && <span className="rounded-full bg-slate-200 px-1.5 py-0.5 text-[9px] font-bold dark:bg-slate-700">PRO</span>}
+            {/* Um checklist por pet — o selecionado vem primeiro */}
+            {petsOrdenados.map((p) => (
+              <ChecklistDoPet key={p.id} pet={p} diaOffset={diaOffset} diaVisualizado={diaVisualizado} ehHoje={ehHoje} refreshTick={refreshTick} />
+            ))}
+
+            <section className={cartao}>
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Atividades recomendadas</h2>
+                <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                  {atividadesFiltradas.length} {atividadesFiltradas.length === 1 ? 'atividade' : 'atividades'}
+                </span>
+              </div>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Filtre por tipo e intensidade.</p>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {categorias.map((c) => {
+                  const info = getCategoriaInfo(c);
+                  return (
+                    <button key={c} onClick={() => setFiltroCat(c)} className={chip(filtroCat === c)}>
+                      <Image src={info.iconSrc} alt="" width={22} height={22} unoptimized className="icon-3d" />
+                      {info.label}
                     </button>
-                    <button
-                      onClick={() => setDiaOffset((d) => Math.max(0, d - 1))}
-                      disabled={ehHoje}
-                      className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 disabled:opacity-40"
+                  );
+                })}
+              </div>
+
+              <div className="mt-2 flex flex-wrap gap-2">
+                {intensidades.map((i) => (
+                  <button key={i} onClick={() => setFiltroIntensidade(i)} className={chip(filtroIntensidade === i)}>
+                    {getIntensidadeInfo(i).label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {atividadesFiltradas.map((atividade) => {
+                  const catInfo = getCategoriaInfo(atividade.categoria);
+                  const intInfo = getIntensidadeInfo(atividade.intensidade);
+                  const isExpandida = expandida === atividade.id;
+
+                  return (
+                    <div
+                      key={atividade.id}
+                      className={`rounded-xl border transition ${
+                        isExpandida
+                          ? 'border-blue-300 dark:border-blue-700'
+                          : 'border-slate-200 hover:border-blue-300 dark:border-slate-800 dark:hover:border-blue-700'
+                      }`}
                     >
-                      →
-                    </button>
+                      <div
+                        className="flex cursor-pointer items-start gap-3 p-4"
+                        onClick={() => setExpandida(isExpandida ? null : atividade.id)}
+                      >
+                        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${catInfo.bg} dark:bg-slate-800`}>
+                          <Image src={catInfo.iconSrc} alt="" width={ICONE.atalho} height={ICONE.atalho} unoptimized className="icon-3d" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ${catInfo.bg} ${catInfo.cor} dark:bg-slate-800 dark:text-slate-300`}>
+                              {catInfo.label}
+                            </span>
+                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ${intInfo.bg} ${intInfo.cor} dark:bg-slate-800 dark:text-slate-300`}>
+                              {intInfo.label}
+                            </span>
+                            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">· {atividade.duracao}</span>
+                          </div>
+                          <h3 className="mt-1.5 text-sm font-semibold text-slate-900 dark:text-white">{atividade.nome}</h3>
+                          <p className="mt-0.5 line-clamp-2 text-xs text-slate-600 dark:text-slate-400">{atividade.descricao}</p>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); adicionarAoDia(atividade); }}
+                            className={`mt-2.5 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold transition ${
+                              adicionadaId === atividade.id
+                                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300'
+                                : 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:hover:bg-blue-900'
+                            }`}
+                          >
+                            {adicionadaId === atividade.id ? `✓ Adicionada ao dia de ${pet.nome}` : `+ Adicionar ao dia de ${pet.nome}`}
+                          </button>
+                        </div>
+                        <svg
+                          className={`mt-1 h-5 w-5 shrink-0 text-slate-400 transition-transform ${isExpandida ? 'rotate-180 text-blue-500' : ''}`}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-label={isExpandida ? 'Ocultar detalhes' : 'Ver detalhes'}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+
+                      {isExpandida && (
+                        <div className="space-y-4 border-t border-slate-100 px-4 pb-4 pt-4 dark:border-slate-800">
+                          <div>
+                            <p className="text-xs font-semibold text-slate-900 dark:text-white">Benefícios</p>
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                              {atividade.beneficios.map((b) => (
+                                <span key={b} className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">{b}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-slate-900 dark:text-white">Dicas</p>
+                            <ul className="mt-1.5 space-y-1">
+                              {atividade.dicas.map((d) => (
+                                <li key={d} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300">
+                                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+                                  {d}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          {atividade.equipamento && (
+                            <div>
+                              <p className="text-xs font-semibold text-slate-900 dark:text-white">Equipamento</p>
+                              <div className="mt-2 flex flex-wrap gap-1.5">
+                                {atividade.equipamento.map((e) => (
+                                  <span key={e} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">{e}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {atividadesFiltradas.length === 0 && (
+                  <div className="rounded-xl border border-dashed border-slate-300 py-10 text-center dark:border-slate-700">
+                    <SearchIcon3D size={ICONE.destaque} className="mx-auto" />
+                    <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-slate-300">Nenhuma atividade com esses filtros</p>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Tente outro tipo ou intensidade</p>
                   </div>
-                </div>
-                {!isPremium && diaOffset === 0 && (
-                  <a href="/dashboard#plano" className="mt-1 block text-center text-xs text-slate-500 hover:text-slate-700 hover:underline dark:text-slate-400 dark:hover:text-slate-200">
-                    Dias anteriores são do Premium · veja seu plano na tela inicial
-                  </a>
                 )}
               </div>
+            </section>
 
-              {/* Um checklist por pet — o selecionado acima vem primeiro */}
-              {petsOrdenados.map((p) => (
-                <ChecklistDoPet key={p.id} pet={p} diaOffset={diaOffset} diaVisualizado={diaVisualizado} ehHoje={ehHoje} refreshTick={refreshTick} />
-              ))}
+            <section className={cartao}>
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Rotina semanal</h2>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Sugestão para o perfil de {pet.nome}.</p>
+              <ul className="mt-3 divide-y divide-slate-100 dark:divide-slate-800">
+                {rotinaSugerida.map((r) => (
+                  <li key={r.dia} className="flex items-center gap-3 py-2.5">
+                    <span className="w-6 text-center text-lg" aria-hidden>{r.catInfo?.icone || '—'}</span>
+                    <span className="w-9 shrink-0 text-xs font-bold text-slate-500 dark:text-slate-400">{r.dia}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium text-slate-900 dark:text-white">
+                      {r.atividade ? r.atividade.nome : 'Sem sugestão para o perfil'}
+                    </span>
+                    {r.ehHoje && <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">HOJE</span>}
+                    {r.atividade && <span className="shrink-0 text-xs text-slate-500 dark:text-slate-400">{r.atividade.duracao}</span>}
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Rotina semanal</h3>
-                <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">Sugestão personalizada pro perfil de {pet.nome}</p>
-                <div className="mt-4 space-y-2">
-                  {rotinaSugerida.map((r) => (
-                    <div
-                      key={r.dia}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 transition ${
-                        r.catInfo ? `${r.catInfo.bg} ${r.catInfo.cor}` : 'bg-slate-50 text-slate-400 dark:bg-slate-800 dark:text-slate-500'
-                      } ${r.ehHoje ? 'ring-2 ring-blue-400 dark:ring-blue-600' : ''}`}
-                    >
-                      <span className="text-lg">{r.catInfo?.icone || '—'}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="flex items-center gap-1.5 text-xs font-bold">
-                          {r.dia}
-                          {r.ehHoje && <span className="rounded-full bg-blue-500 px-1.5 py-0.5 text-[9px] font-bold text-white">HOJE</span>}
-                        </p>
-                        <p className="text-xs opacity-80 truncate">{r.atividade ? r.atividade.nome : 'Sem sugestão pro perfil'}</p>
-                      </div>
-                      {r.atividade && <span className="text-xs font-medium opacity-70 shrink-0">{r.atividade.duracao}</span>}
-                    </div>
-                  ))}
+            <section className={cartao}>
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Perfil do pet</h2>
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <Link href="/racao" className="rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 dark:border-slate-800 dark:hover:border-blue-700">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Raça</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.raca}</p>
+                </Link>
+                <Link href="/desempenho" className="rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 dark:border-slate-800 dark:hover:border-blue-700">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Peso</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{pet.peso} kg</p>
+                </Link>
+                <Link href="/vida" className="rounded-xl border border-slate-200 p-4 transition hover:border-blue-300 dark:border-slate-800 dark:hover:border-blue-700">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Fase</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{fase}</p>
+                </Link>
+                <div className="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Porte</p>
+                  <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{porte}</p>
                 </div>
               </div>
+            </section>
 
-            </div>
+            {/* Cuidados do perfil (fase/porte/objetivo) */}
+            <section className={cartao}>
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Cuidados para {pet.nome}</h2>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                Baseado em {fase.toLowerCase()} · porte {porte.toLowerCase()}
+                {pet.objetivo ? ` · objetivo ${OBJETIVO_LABEL[pet.objetivo] ?? pet.objetivo}` : ''}
+              </p>
+              <ul className="mt-3 divide-y divide-slate-100 dark:divide-slate-800">
+                {dicasGerais.map((dica) => (
+                  <li key={dica.texto} className="flex items-start gap-3 py-2.5">
+                    <span className="icon-3d-slot h-9 w-9 shrink-0">
+                      <dica.Icon size={ICONE.atalho} />
+                    </span>
+                    <span className="text-sm leading-snug text-slate-700 dark:text-slate-200">{dica.texto}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
         </div>
       </main>
