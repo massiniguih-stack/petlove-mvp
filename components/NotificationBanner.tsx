@@ -21,18 +21,18 @@ export default function NotificationBanner() {
   if (permission === 'granted' || permission === 'denied' || visto) return null;
 
   return (
-    <div className="mb-6 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50 p-4">
+    <div className="mb-6 rounded-2xl border border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50 p-4 dark:border-violet-900 dark:from-violet-950/40 dark:to-purple-950/40">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-900">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-600 dark:text-violet-300">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </div>
           <div>
-            <p className="text-sm font-bold text-slate-900">Ative as notificacoes</p>
-            <p className="text-xs text-slate-500">Receba lembretes de vacinas e consultas</p>
+            <p className="text-sm font-bold text-slate-900 dark:text-white">Ative as notificacoes</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Receba lembretes de vacinas e consultas</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default function NotificationBanner() {
           </button>
           <button
             onClick={esconderPraSempre}
-            className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
