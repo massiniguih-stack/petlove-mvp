@@ -21,6 +21,7 @@ import {
 import { BreedDogIcon } from '@/components/BreedDogIcon';
 import { trackMetaEvent } from '@/components/MetaPixel';
 
+import { ICONE } from '@/lib/iconSizes';
 const benefits = [
   { title: 'Saúde e peso', desc: 'Acompanhe o crescimento do seu pet.', Icon: ChartIcon3D },
   { title: 'Ração certa', desc: 'Sugestões por raça e objetivo.', Icon: BowlIcon3D },
@@ -78,7 +79,7 @@ export default function HomePage() {
         <main className="flex-1">
           <section className="mx-auto max-w-lg px-4 py-16 text-center md:py-24">
             <div className="icon-3d-slot mx-auto">
-              <DogIcon3D size={72} />
+              <DogIcon3D size={ICONE.destaque} />
             </div>
             <h1 className="mt-8 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-4xl">
               Falta só cadastrar seu pet
@@ -151,7 +152,7 @@ export default function HomePage() {
                       className="h-16 w-16 rounded-2xl object-cover md:h-20 md:w-20"
                     />
                   ) : (
-                    <BreedDogIcon size={72} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
+                    <BreedDogIcon size={ICONE.destaque} raca={pet.raca} peso={pet.peso} alt={pet.raca} />
                   )}
                 </span>
                 <span>Olá, {pet.nome}!</span>
@@ -193,7 +194,7 @@ export default function HomePage() {
                   className="rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-amber-700"
                 >
                   <div className="icon-3d-slot flex h-12 w-12 items-center justify-center overflow-visible">
-                    <Icon size={44} />
+                    <Icon size={ICONE.atalho} />
                   </div>
                   <h3 className="mt-3 text-base font-semibold text-slate-900 dark:text-white">{titulo}</h3>
                   <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{desc}</p>
@@ -218,7 +219,7 @@ export default function HomePage() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 opacity-20 blur-2xl" />
                 <div className="icon-3d-slot relative p-2 md:p-3">
-                  <DogIcon3D size={120} />
+                  <DogIcon3D size={ICONE.destaque} />
                 </div>
               </div>
             </div>
@@ -290,7 +291,7 @@ export default function HomePage() {
                 className="rounded-2xl bg-white p-6 text-center ring-1 ring-slate-100 dark:bg-slate-900/90 dark:ring-slate-700/80"
               >
                 <div className="icon-3d-slot mx-auto mb-1 h-16 w-16">
-                  <b.Icon size={56} />
+                  <b.Icon size={ICONE.item} />
                 </div>
                 <h3 className="mt-3 text-sm font-bold text-slate-800 dark:text-slate-100">{b.title}</h3>
                 <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{b.desc}</p>

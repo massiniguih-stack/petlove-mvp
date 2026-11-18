@@ -23,6 +23,7 @@ import {
 } from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';
 
+import { ICONE } from '@/lib/iconSizes';
 type Icon3DComp = typeof DogIcon3D;
 
 interface Atividade {
@@ -412,7 +413,7 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
                 <span className="text-sm font-bold text-slate-900 dark:text-white">{item.atividade}</span>
               </div>
             </div>
-            <Image src="/icons/3d/patinha.png" alt="" width={28} height={28} unoptimized className="icon-3d" />
+            <Image src="/icons/3d/patinha.png" alt="" width={ICONE.titulo} height={ICONE.titulo} unoptimized className="icon-3d" />
             <button
               onClick={() => removerAtividade(item.id)}
               title="Remover atividade"
@@ -631,7 +632,7 @@ export default function AtividadesPage() {
               <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                 <div className="flex items-start gap-3">
                   <div className="icon-3d-slot h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 ring-1 ring-amber-100 dark:from-amber-950 dark:to-orange-950 dark:ring-amber-900">
-                    <ShieldIcon3D size={44} />
+                    <ShieldIcon3D size={ICONE.atalho} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <h2 className="text-base font-bold text-slate-900 dark:text-white">
@@ -650,7 +651,7 @@ export default function AtividadesPage() {
                       className="flex items-start gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-100 dark:bg-slate-800/60 dark:ring-slate-700/60"
                     >
                       <span className="icon-3d-slot mt-0.5 h-10 w-10 shrink-0">
-                        <dica.Icon size={36} />
+                        <dica.Icon size={ICONE.atalho} />
                       </span>
                       <span className="text-sm leading-snug text-slate-700 dark:text-slate-200">
                         {dica.texto}
@@ -732,7 +733,7 @@ export default function AtividadesPage() {
                           onClick={() => setExpandida(isExpandida ? null : atividade.id)}
                         >
                           <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition group-hover:scale-110 ${catInfo.bg}`}>
-                            <Image src={catInfo.iconSrc} alt="" width={40} height={40} unoptimized className="icon-3d" />
+                            <Image src={catInfo.iconSrc} alt="" width={ICONE.atalho} height={ICONE.atalho} unoptimized className="icon-3d" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
@@ -835,7 +836,7 @@ export default function AtividadesPage() {
 
                   {atividadesFiltradas.length === 0 && (
                     <div className="rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 py-12 text-center dark:from-slate-900 dark:to-slate-800">
-                      <SearchIcon3D size={64} className="mx-auto" />
+                      <SearchIcon3D size={ICONE.destaque} className="mx-auto" />
                       <p className="mt-4 text-base font-bold text-slate-700 dark:text-slate-300">Nenhuma atividade encontrada</p>
                       <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Tente outros filtros</p>
                     </div>
@@ -869,8 +870,8 @@ export default function AtividadesPage() {
                   </div>
                 </div>
                 {!isPremium && diaOffset === 0 && (
-                  <a href="/planos" className="mt-1 block text-center text-[10px] text-slate-400 hover:text-slate-600 hover:underline dark:hover:text-slate-300">
-                    Assine Premium para ver dias anteriores
+                  <a href="/dashboard#plano" className="mt-1 block text-center text-xs text-slate-500 hover:text-slate-700 hover:underline dark:text-slate-400 dark:hover:text-slate-200">
+                    Dias anteriores são do Premium · veja seu plano na tela inicial
                   </a>
                 )}
               </div>

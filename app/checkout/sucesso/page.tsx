@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { usePetStore } from '@/lib/store';
 import { CheckIcon3D, PremiumIcon3D } from '@/components/Icons3D';
 
+import { ICONE } from '@/lib/iconSizes';
 export default function CheckoutSuccessPage() {
   const [loading, setLoading] = useState(true);
   const { fetchSubscription, plan: planTutor } = usePetStore();
@@ -53,7 +54,7 @@ export default function CheckoutSuccessPage() {
         <main className="flex-1 flex items-center justify-center px-4 py-12">
           <div className="max-w-md text-center">
             <div className="mx-auto flex items-center justify-center">
-              <PremiumIcon3D size={80} />
+              <PremiumIcon3D size={ICONE.destaque} />
             </div>
             <h1 className="mt-6 text-3xl font-black text-slate-900 dark:text-white">
               Ainda confirmando seu pagamento
@@ -88,7 +89,7 @@ export default function CheckoutSuccessPage() {
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="max-w-md text-center">
           <div className="mx-auto flex items-center justify-center">
-            <CheckIcon3D size={88} />
+            <CheckIcon3D size={ICONE.destaque} />
           </div>
           <h1 className="mt-6 text-3xl font-black text-slate-900 dark:text-white">
             Pagamento confirmado!
@@ -98,7 +99,7 @@ export default function CheckoutSuccessPage() {
           </p>
           {(planTutor || planParceiro) && (
             <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-violet-100 px-4 py-2 text-sm font-bold text-violet-700 dark:bg-violet-950 dark:text-violet-300">
-              <PremiumIcon3D size={28} />
+              <PremiumIcon3D size={ICONE.titulo} />
               Plano: {(planTutor || planParceiro || '').replace('_', ' ')}
             </div>
           )}

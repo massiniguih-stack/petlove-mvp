@@ -10,6 +10,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { trackMetaEvent } from '@/components/MetaPixel';
 
+import { ICONE } from '@/lib/iconSizes';
 // EXP-02A: alertas de vacina existem no produto free (cron não filtra Premium)
 const funcionalidades = [
   { nome: 'Perfil do pet', gratis: true, premium: true },
@@ -124,7 +125,7 @@ export default function PlanosClient() {
             <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8">
               <div className="flex items-center gap-4">
                 <div className="icon-3d-slot h-14 w-14">
-                  <PawIcon3D size={44} />
+                  <PawIcon3D size={ICONE.atalho} />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Gratuito</h3>
@@ -162,7 +163,7 @@ export default function PlanosClient() {
 
               <div className="flex items-center gap-4">
                 <div className="icon-3d-slot h-14 w-14">
-                  <PremiumIcon3D size={44} />
+                  <PremiumIcon3D size={ICONE.atalho} />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Premium</h3>

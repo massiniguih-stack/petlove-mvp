@@ -10,6 +10,7 @@ import { trackMetaEvent } from '@/components/MetaPixel';
 import { Turnstile } from '@/components/Turnstile';
 import { icon3dServico } from '@/lib/tiposServico';
 
+import { ICONE } from '@/lib/iconSizes';
 const tiposServico = [
   { id: 'veterinario', label: 'Veterinário' },
   { id: 'petshop', label: 'Pet Shop' },
@@ -189,7 +190,7 @@ export default function CadastroClient() {
         <main className="flex-1 flex items-center justify-center px-4 py-20">
           <div className="max-w-md text-center">
             <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-2xl shadow-emerald-500/30">
-              <CheckIcon3D size={56} />
+              <CheckIcon3D size={ICONE.item} />
             </div>
             <h1 className="mt-8 text-3xl font-black text-slate-900 dark:text-white">Cadastro Enviado!</h1>
             <p className="mt-3 text-slate-600 dark:text-slate-400">
@@ -239,7 +240,7 @@ export default function CadastroClient() {
             <BackButton href="/" label="Voltar ao início" />
             <div className="mt-4 flex items-center gap-4">
               <div className="icon-3d-slot h-16 w-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-xl shadow-blue-500/30">
-                <BriefcaseIcon3D size={48} />
+                <BriefcaseIcon3D size={ICONE.item} />
               </div>
               <div>
                 <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">

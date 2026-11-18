@@ -22,6 +22,7 @@ import {
   TravelIcon3D,
 } from '@/components/Icons3D';
 
+import { ICONE } from '@/lib/iconSizes';
 interface Momento {
   id: string;
   data: Date;
@@ -416,7 +417,7 @@ function AtalhosSaude({
             className="flex flex-col items-center gap-1 rounded-2xl border border-slate-200 bg-white p-4 text-center transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-amber-700"
           >
             <span className="icon-3d-slot flex h-10 w-10 items-center justify-center overflow-visible">
-              <Icon size={36} />
+              <Icon size={ICONE.atalho} />
             </span>
             <span className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{titulo}</span>
             <span className="text-[11px] text-slate-500 dark:text-slate-400">{sub}</span>
@@ -449,7 +450,7 @@ function ListaMemorias({
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-lg font-black tracking-tight text-slate-900 dark:text-white">
-            <span className="icon-3d-slot"><CalendarIcon3D size={28} /></span>
+            <span className="icon-3d-slot"><CalendarIcon3D size={ICONE.titulo} /></span>
             Memórias
           </h2>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -468,7 +469,7 @@ function ListaMemorias({
       {momentos.length === 0 ? (
         <div className="rounded-3xl bg-white py-14 text-center shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
           <div className="mx-auto flex h-20 w-20 items-center justify-center">
-            <CalendarIcon3D size={72} />
+            <CalendarIcon3D size={ICONE.destaque} />
           </div>
           <p className="mt-4 text-base font-bold text-slate-900 dark:text-white">Nenhuma memória ainda</p>
           <p className="mt-1 text-sm text-slate-500">Registre fotos, vacinas e momentos especiais.</p>
@@ -491,7 +492,7 @@ function ListaMemorias({
               >
                 <div className="icon-3d-slot flex h-14 w-14 shrink-0 items-center justify-center overflow-visible rounded-2xl bg-slate-50 dark:bg-slate-800">
                   {cat?.iconSrc ? (
-                    <Image src={cat.iconSrc} alt="" width={48} height={48} unoptimized className="icon-3d object-contain" />
+                    <Image src={cat.iconSrc} alt="" width={ICONE.item} height={ICONE.item} unoptimized className="icon-3d object-contain" />
                   ) : (
                     <span className="text-2xl">{cat?.emoji || '📌'}</span>
                   )}
@@ -554,7 +555,7 @@ function GaleriaFotos({ fotos, onAdicionar, onAbrir, onFechar }: { fotos: Moment
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
-            <span className="icon-3d-slot"><CheckIcon3D size={28} /></span>
+            <span className="icon-3d-slot"><CheckIcon3D size={ICONE.titulo} /></span>
             Galeria de fotos
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -838,22 +839,21 @@ export default function VidaPage() {
             />
           )}
 
-          {/* Premium upsell */}
+          {/* Aviso de histórico limitado — a troca de plano fica só na tela inicial */}
           {momentosOcultosPorPlano > 0 && (
             <a
-              href="/planos"
-              className="mb-6 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-violet-500 to-purple-500 p-4 text-white shadow-lg shadow-purple-500/20 transition hover:shadow-xl"
+              href="/dashboard#plano"
+              className="mb-6 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
             >
-              <div className="flex items-center gap-3">
-                <Image src="/icons/3d/premium.png" alt="" width={36} height={36} unoptimized className="icon-3d" />
-                <div>
-                  <p className="text-sm font-bold">
-                    {momentosOcultosPorPlano} {momentosOcultosPorPlano === 1 ? 'momento mais antigo' : 'momentos mais antigos'} disponíve{momentosOcultosPorPlano === 1 ? 'l' : 'is'} só no Premium
-                  </p>
-                  <p className="text-xs text-purple-100">Grátis mostra os últimos {DIAS_HISTORICO_GRATIS} dias da linha do tempo</p>
-                </div>
+              <Image src="/icons/3d/premium.png" alt="" width={ICONE.atalho} height={ICONE.atalho} unoptimized className="icon-3d" />
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                  {momentosOcultosPorPlano} {momentosOcultosPorPlano === 1 ? 'momento mais antigo fica' : 'momentos mais antigos ficam'} no Premium
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  O gratuito mostra os últimos {DIAS_HISTORICO_GRATIS} dias. Veja seu plano na tela inicial.
+                </p>
               </div>
-              <span className="shrink-0 rounded-full bg-white/20 px-3 py-1.5 text-xs font-bold backdrop-blur-sm">Assinar →</span>
             </a>
           )}
 
@@ -873,7 +873,7 @@ export default function VidaPage() {
             <div className="mt-4 rounded-3xl bg-gradient-to-br from-amber-50 to-rose-50 p-6 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
               <div className="flex items-center gap-3">
                 <div className="icon-3d-slot flex h-14 w-14 items-center justify-center overflow-visible">
-                  <CameraIcon3D size={48} />
+                  <CameraIcon3D size={ICONE.item} />
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white">Primeira foto registrada</h3>

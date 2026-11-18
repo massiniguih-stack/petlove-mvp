@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { ICONE } from '@/lib/iconSizes';
 
 export interface Icon3DProps {
   size?: number;
@@ -21,7 +22,7 @@ export interface Icon3DProps {
  */
 function IconImage({
   src,
-  size = 56,
+  size = ICONE.item,
   className = '',
   alt = '',
   scale = 1,
@@ -54,159 +55,159 @@ function IconImage({
 // ─── Set principal ───────────────────────────────────────────────────────────
 
 /** Patinha branca Soft 3D — marca e módulos (funciona em fundo claro e laranja). */
-export function PawIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PawIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/patinha.png" alt="Patinha" size={size} className={className} scale={scale} />;
 }
 
-export function CalendarIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function CalendarIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/calendario.png" alt="Linha do tempo" size={size} className={className} scale={scale} />;
 }
 
-export function ActivityIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function ActivityIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/atividades.png" alt="Atividades" size={size} className={className} scale={scale} />;
 }
 
-export function BowlIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function BowlIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/racao.png" alt="Ração" size={size} className={className} scale={scale} />;
 }
 
-export function PinIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PinIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/servicos.png" alt="Serviços" size={size} className={className} scale={scale} />;
 }
 
-export function GearIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function GearIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/perfil.png" alt="Editar perfil" size={size} className={className} scale={scale} />;
 }
 
-export function HealthIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function HealthIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/saude.png" alt="Saúde" size={size} className={className} scale={scale} />;
 }
 
-export function PremiumIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PremiumIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/premium.png" alt="Premium" size={size} className={className} scale={scale} />;
 }
 
 // ─── Pack auxiliar ───────────────────────────────────────────────────────────
 
-export function DogIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function DogIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/dog.png" alt="Mascote Patinha" size={size} className={className} scale={scale} />;
 }
 
-export function MascotTileIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function MascotTileIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/mascote-tile.png" alt="Patinha" size={size} className={className} scale={scale} />;
 }
 
 /** Alias da patinha branca no Dashboard / cards laranja. */
-export function DashboardPawIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function DashboardPawIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/dashboard-paw.png" alt="Dashboard" size={size} className={className} scale={scale} />;
 }
 
-export function ChartIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function ChartIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/chart.png" alt="Progresso" size={size} className={className} scale={scale} />;
 }
 
-export function StarIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function StarIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/premium.png" alt="Destaque" size={size} className={className} scale={scale} />;
 }
 
-export function ScaleIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function ScaleIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/peso.png" alt="Peso" size={size} className={className} scale={scale} />;
 }
 
-export function PorteIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PorteIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/porte.png" alt="Porte" size={size} className={className} scale={scale} />;
 }
 
-export function TargetIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function TargetIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/target.png" alt="Objetivo" size={size} className={className} scale={scale} />;
 }
 
-export function SearchIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function SearchIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/search.png" alt="Busca" size={size} className={className} scale={scale} />;
 }
 
-export function CheckIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function CheckIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/check.png" alt="Sucesso" size={size} className={className} scale={scale} />;
 }
 
-export function FileTextIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function FileTextIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/file-text.png" alt="Documento" size={size} className={className} scale={scale} />;
 }
 
-export function BoneIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function BoneIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/bone.png" alt="Osso" size={size} className={className} scale={scale} />;
 }
 
-export function TrophyIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function TrophyIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/trophy.png" alt="Troféu" size={size} className={className} scale={scale} />;
 }
 
-export function ShieldIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function ShieldIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/shield.png" alt="Proteção" size={size} className={className} scale={scale} />;
 }
 
-export function FireIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function FireIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/fire.png" alt="Energia" size={size} className={className} scale={scale} />;
 }
 
-export function MedalIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function MedalIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/medal.png" alt="Medalha" size={size} className={className} scale={scale} />;
 }
 
-export function CrownIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function CrownIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/crown.png" alt="Coroa" size={size} className={className} scale={scale} />;
 }
 
-export function BriefcaseIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function BriefcaseIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/maleta.png" alt="Parceiro / negócio" size={size} className={className} scale={scale} />;
 }
 
-export function CakeIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function CakeIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/bolo.png" alt="Aniversário" size={size} className={className} scale={scale} />;
 }
 
-export function PartyIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PartyIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/festa.png" alt="Celebração" size={size} className={className} scale={scale} />;
 }
 
 // ─── Pack Thiings (serviços, marcos, espécies) ────────────────────────────────
 
-export function CatIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function CatIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/gato.png" alt="Gato" size={size} className={className} scale={scale} />;
 }
 
-export function VaccineIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function VaccineIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/vacina.png" alt="Vacina" size={size} className={className} scale={scale} />;
 }
 
-export function CameraIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function CameraIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/foto.png" alt="Foto" size={size} className={className} scale={scale} />;
 }
 
-export function TravelIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function TravelIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/viagem.png" alt="Viagem" size={size} className={className} scale={scale} />;
 }
 
-export function PetshopIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PetshopIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/petshop.png" alt="Petshop" size={size} className={className} scale={scale} />;
 }
 
-export function CrecheIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function CrecheIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/creche.png" alt="Creche" size={size} className={className} scale={scale} />;
 }
 
-export function ParqueIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function ParqueIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/parque.png" alt="Parque" size={size} className={className} scale={scale} />;
 }
 
-export function HotelIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function HotelIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/hotel.png" alt="Hotel" size={size} className={className} scale={scale} />;
 }
 
-export function PetsitterIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PetsitterIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/petsitter.png" alt="Petsitter" size={size} className={className} scale={scale} />;
 }
 
-export function PetdriverIcon3D({ size = 56, className = '', scale }: Icon3DProps) {
+export function PetdriverIcon3D({ size = ICONE.item, className = '', scale }: Icon3DProps) {
   return <IconImage src="/icons/3d/petdriver.png" alt="Petdriver" size={size} className={className} scale={scale} />;
 }

@@ -100,7 +100,7 @@ export default function PetSelector() {
           )}
           <div className="border-t border-slate-100 p-3">
             <a
-              href={!isPremium && pets.length >= 1 ? '/planos' : '/onboarding'}
+              href={!isPremium && pets.length >= 1 ? '/dashboard#plano' : '/onboarding'}
               className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition ${
                 isPremium
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-lg'
@@ -114,7 +114,7 @@ export default function PetSelector() {
             </a>
             {!isPremium && pets.length >= 1 && (
               <p className="mt-2 text-center text-[10px] text-slate-400">
-                <a href="/planos" className="text-blue-500 hover:underline">Assine Premium</a> para adicionar mais pets
+                Mais pets é do Premium · <a href="/dashboard#plano" className="text-blue-500 hover:underline">veja seu plano na tela inicial</a>
               </p>
             )}
           </div>

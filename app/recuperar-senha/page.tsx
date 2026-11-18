@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { ShieldIcon3D } from '@/components/Icons3D'
 
+import { ICONE } from '@/lib/iconSizes';
 export default function RecuperarSenhaPage() {
   const [mounted, setMounted] = useState(false)
 
@@ -34,7 +35,7 @@ export default function RecuperarSenhaPage() {
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 opacity-25 blur-2xl" />
                 <div className="relative flex items-center justify-center p-2">
-                  <ShieldIcon3D size={88} />
+                  <ShieldIcon3D size={ICONE.destaque} />
                 </div>
               </div>
             </div>

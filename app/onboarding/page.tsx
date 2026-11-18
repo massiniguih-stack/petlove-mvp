@@ -10,6 +10,7 @@ import { racasCachorros } from '@/data/racas';
 import { DogIcon3D } from '@/components/Icons3D';
 import { BreedDogIcon } from '@/components/BreedDogIcon';
 
+import { ICONE } from '@/lib/iconSizes';
 export default function OnboardingPage() {
   const router = useRouter();
   const { pet, addPet, updatePet, hydrated } = usePetStore();
@@ -206,7 +207,7 @@ export default function OnboardingPage() {
                   alt={form.raca}
                 />
               ) : (
-                <DogIcon3D size={72} />
+                <DogIcon3D size={ICONE.destaque} />
               )}
             </div>
             <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
