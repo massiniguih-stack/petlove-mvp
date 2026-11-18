@@ -8,8 +8,18 @@ import { BackButton } from '@/components/BackButton';
 import { FileTextIcon3D } from '@/components/Icons3D';
 import { usePetStore } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
+import { NotificacoesCard } from '@/components/NotificacoesCard';
 
 import { ICONE } from '@/lib/iconSizes';
+// Status vem da LastLink em inglês; o tutor vê em português.
+const STATUS_LABEL: Record<string, string> = {
+  active: 'Ativa',
+  trialing: 'Em teste',
+  past_due: 'Pagamento atrasado',
+  canceled: 'Cancelada',
+  pending: 'Aguardando pagamento',
+};
+
 export default function AssinaturaPage() {
   const { isPremium, plan, subscriptionStatus, currentPeriodEnd, cancelAtPeriodEnd, fetchSubscription, clearAll } = usePetStore();
   const { signOut } = useAuth();
@@ -73,7 +83,7 @@ export default function AssinaturaPage() {
                 <div className="mt-6 space-y-3">
                   <div className="flex justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
                     <span className="text-sm text-slate-600 dark:text-slate-400">Status</span>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white capitalize">{subscriptionStatus}</span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">{STATUS_LABEL[subscriptionStatus || ''] ?? subscriptionStatus}</span>
                   </div>
                   <div className="flex justify-between rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-800">
                     <span className="text-sm text-slate-600 dark:text-slate-400">Próxima cobrança</span>
@@ -111,6 +121,8 @@ export default function AssinaturaPage() {
               </div>
             )}
           </div>
+
+          <NotificacoesCard />
 
           <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
             <h2 className="text-lg font-black text-slate-900 dark:text-white">Excluir conta</h2>

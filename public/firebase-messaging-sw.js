@@ -21,7 +21,11 @@ const messaging = firebase.messaging();
 // Só dispara quando o app está fechado/em segundo plano — em primeiro
 // plano quem trata a notificação é o onMessage em lib/useNotifications.ts.
 messaging.onBackgroundMessage((payload) => {
-  const notification = payload.notification || {};
+  // Mensagem com `notification` (é o que lib/push.ts manda) o próprio
+  // Firebase já mostra antes de chamar esta função — mostrar aqui de novo
+  // gerava notificação duplicada. Só mensagens só-de-dados chegam até aqui.
+  if (payload.notification) return;
+  const notification = payload.data || {};
   self.registration.showNotification(notification.title || 'Patinha', {
     body: notification.body,
     icon: '/icon-192.png',

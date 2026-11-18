@@ -8,6 +8,10 @@ import { usePetStore } from '@/lib/store';
 import { CheckIcon3D, PremiumIcon3D } from '@/components/Icons3D';
 
 import { ICONE } from '@/lib/iconSizes';
+
+// Confere a assinatura por até ~1 minuto (2s + 19 × 3s) antes de desistir.
+const TENTATIVAS = 20;
+const INTERVALO_MS = 3000;
 export default function CheckoutSuccessPage() {
   const [loading, setLoading] = useState(true);
   const { fetchSubscription, plan: planTutor } = usePetStore();
@@ -15,21 +19,37 @@ export default function CheckoutSuccessPage() {
   const [planParceiro, setPlanParceiro] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelado = false;
     const verify = async () => {
-      await new Promise((r) => setTimeout(r, 2000));
-      // Essa mesma tela recebe tutores E parceiros vindos do checkout —
-      // /api/subscription só enxerga plano de tutor (ver
-      // app/api/subscription/route.ts), então checamos os dois pra não
-      // mostrar "ainda confirmando" pra sempre num pagamento de parceiro.
-      const [, parceiroRes] = await Promise.all([
-        fetchSubscription(),
-        fetch('/api/parceiro/subscription').then((r) => r.json()).catch(() => ({ isPremium: false })),
-      ]);
-      setIsPremium(usePetStore.getState().isPremium || !!parceiroRes.isPremium);
-      setPlanParceiro(parceiroRes.plan || null);
-      setLoading(false);
+      // A LastLink avisa o pagamento em segundo plano (webhook) e isso pode
+      // levar alguns segundos depois do redirecionamento. Em vez de olhar uma
+      // vez só, tenta de TENTATIVAS em INTERVALO_MS antes de dizer "ainda
+      // confirmando".
+      for (let tentativa = 0; tentativa < TENTATIVAS && !cancelado; tentativa++) {
+        await new Promise((r) => setTimeout(r, tentativa === 0 ? 2000 : INTERVALO_MS));
+        if (cancelado) return;
+        // Essa mesma tela recebe tutores E parceiros vindos do checkout —
+        // /api/subscription só enxerga plano de tutor (ver
+        // app/api/subscription/route.ts), então checamos os dois pra não
+        // mostrar "ainda confirmando" pra sempre num pagamento de parceiro.
+        const [, parceiroRes] = await Promise.all([
+          fetchSubscription(),
+          fetch('/api/parceiro/subscription').then((r) => r.json()).catch(() => ({ isPremium: false })),
+        ]);
+        if (cancelado) return;
+        const ok = usePetStore.getState().isPremium || !!parceiroRes.isPremium;
+        setPlanParceiro(parceiroRes.plan || null);
+        if (ok) {
+          setIsPremium(true);
+          break;
+        }
+      }
+      if (!cancelado) setLoading(false);
     };
     verify();
+    return () => {
+      cancelado = true;
+    };
   }, []);
 
   if (loading) {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { STATUS_PREMIUM, statusDaPremium } from '@/lib/assinatura';
 
 export async function GET() {
   try {
@@ -18,7 +19,7 @@ export async function GET() {
       .select('plan_type, status, current_period_end, cancel_at_period_end')
       .eq('user_id', user.id)
       .eq('plan_category', 'tutor')
-      .in('status', ['active', 'trialing'])
+      .in('status', [...STATUS_PREMIUM])
       .order('created_at', { ascending: false })
       .limit(1)
       .single();
@@ -28,7 +29,7 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      isPremium: subscription.status === 'active',
+      isPremium: statusDaPremium(subscription.status),
       plan: subscription.plan_type,
       status: subscription.status,
       currentPeriodEnd: subscription.current_period_end,

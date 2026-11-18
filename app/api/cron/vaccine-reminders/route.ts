@@ -40,23 +40,29 @@ export async function GET(req: NextRequest) {
   }
 
   let enviados = 0;
+  let notificacoes = 0;
   let falhas = 0;
 
+  // E-mail e notificação são canais independentes: se um falhar (ou o tutor
+  // não tiver e-mail), o outro ainda vai. A vacina só é marcada como avisada
+  // se ao menos um canal funcionou — senão tenta de novo amanhã.
   for (const v of vacinas || []) {
     const pet = Array.isArray(v.pet) ? v.pet[0] : v.pet;
     const tutor = pet ? (Array.isArray(pet.tutor) ? pet.tutor[0] : pet.tutor) : null;
-    if (!tutor?.email) continue;
+    if (!tutor) continue;
 
     const dataFormatada = v.data_agendada
       ? new Date(v.data_agendada + 'T00:00:00').toLocaleDateString('pt-BR')
       : '';
+    let avisado = false;
 
-    try {
-      await getResend().emails.send({
-        from: getEmailFrom(),
-        to: tutor.email,
-        subject: `Lembrete: vacina de ${pet?.nome || 'seu pet'} está chegando`,
-        html: `
+    if (tutor.email) {
+      try {
+        await getResend().emails.send({
+          from: getEmailFrom(),
+          to: tutor.email,
+          subject: `Lembrete: vacina de ${pet?.nome || 'seu pet'} está chegando`,
+          html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h1 style="color: #7c3aed;">Lembrete de Vacina 🐾</h1>
             <p>Oi${tutor.nome ? ` ${tutor.nome}` : ''}! A vacina <strong>${v.titulo}</strong> de <strong>${pet?.nome || 'seu pet'}</strong> está agendada para <strong>${dataFormatada}</strong>.</p>
@@ -66,30 +72,38 @@ export async function GET(req: NextRequest) {
             </a>
           </div>
         `,
-      });
-      await supabaseAdmin.from('momento').update({ lembrete_enviado_em: new Date().toISOString() }).eq('id', v.id);
-      enviados++;
-    } catch (err) {
-      console.error('Falha ao enviar lembrete de vacina:', err);
-      falhas++;
-      continue;
+        });
+        enviados++;
+        avisado = true;
+      } catch (err) {
+        console.error('Falha ao enviar lembrete de vacina:', err);
+        falhas++;
+      }
     }
 
     if (tutor.id) {
       const { data: sub } = await supabaseAdmin.from('push_subscriptions').select('token').eq('user_id', tutor.id).maybeSingle();
       if (sub?.token) {
-        const { tokenInvalido } = await sendPushNotification(
+        const { sent, tokenInvalido } = await sendPushNotification(
           sub.token,
           `Vacina de ${pet?.nome || 'seu pet'} está chegando 🐾`,
           `${v.titulo} agendada para ${dataFormatada}`,
           `${getAppUrl()}/vida`
         );
+        if (sent) {
+          notificacoes++;
+          avisado = true;
+        }
         if (tokenInvalido) {
           await supabaseAdmin.from('push_subscriptions').delete().eq('user_id', tutor.id);
         }
       }
     }
+
+    if (avisado) {
+      await supabaseAdmin.from('momento').update({ lembrete_enviado_em: new Date().toISOString() }).eq('id', v.id);
+    }
   }
 
-  return NextResponse.json({ success: true, enviados, falhas, total: (vacinas || []).length });
+  return NextResponse.json({ success: true, enviados, notificacoes, falhas, total: (vacinas || []).length });
 }

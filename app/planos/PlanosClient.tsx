@@ -8,6 +8,7 @@ import { BackButton } from '@/components/BackButton';
 import { PremiumIcon3D, PawIcon3D } from '@/components/Icons3D';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { usePetStore } from '@/lib/store';
 import { trackMetaEvent } from '@/components/MetaPixel';
 
 import { ICONE } from '@/lib/iconSizes';
@@ -38,6 +39,10 @@ export default function PlanosClient() {
   const [erro, setErro] = useState<string | null>(null);
   const router = useRouter();
   const { user } = useAuth();
+  // Quem já é Premium não vê botão de compra: abrir outro checkout não faz
+  // sentido (e o servidor recusa — ver /api/lastlink/checkout).
+  const isPremium = usePetStore((s) => s.isPremium);
+  const jaPremium = !!user && isPremium;
 
   // EXP-01: deslogado → login com retorno; logado → LastLink
   const handleCheckout = async () => {
@@ -64,6 +69,12 @@ export default function PlanosClient() {
         const data = await res.json().catch(() => ({}));
         if (res.status === 401) {
           router.push('/login?next=/planos');
+          return;
+        }
+        if (res.status === 409 && data.jaAssinante) {
+          // A tela estava desatualizada: a pessoa já é Premium.
+          await usePetStore.getState().fetchSubscription();
+          setLoading(false);
           return;
         }
         throw new Error(data.error || 'Erro ao criar checkout');
@@ -211,17 +222,26 @@ export default function PlanosClient() {
                 </div>
               )}
 
-              <button
-                onClick={handleCheckout}
-                disabled={loading}
-                className="mt-8 w-full rounded-xl bg-violet-600 p-4 text-center text-sm font-semibold text-white transition hover:bg-violet-700 disabled:opacity-50"
-              >
-                {loading
-                  ? 'Carregando...'
-                  : periodo === 'anual'
-                    ? 'Liberar histórico e comparar pets (anual)'
-                    : 'Liberar histórico e comparar pets'}
-              </button>
+              {jaPremium ? (
+                <div data-testid="ja-premium" className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-center dark:border-emerald-900 dark:bg-emerald-950/40">
+                  <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">✓ Você já é Premium</p>
+                  <a href="/conta/assinatura" className="mt-1 inline-block text-xs font-medium text-emerald-700 underline underline-offset-4 dark:text-emerald-400">
+                    Gerenciar assinatura
+                  </a>
+                </div>
+              ) : (
+                <button
+                  onClick={handleCheckout}
+                  disabled={loading}
+                  className="mt-8 w-full rounded-xl bg-violet-600 p-4 text-center text-sm font-semibold text-white transition hover:bg-violet-700 disabled:opacity-50"
+                >
+                  {loading
+                    ? 'Carregando...'
+                    : periodo === 'anual'
+                      ? 'Liberar histórico e comparar pets (anual)'
+                      : 'Liberar histórico e comparar pets'}
+                </button>
+              )}
               {/* EXP-07 */}
               <p className="mt-3 text-center text-xs text-slate-500 dark:text-slate-400">
                 Pagamento processado pela LastLink · cancele quando quiser em Gerenciar assinatura

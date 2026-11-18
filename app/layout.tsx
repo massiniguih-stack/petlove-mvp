@@ -28,6 +28,8 @@ export const metadata = {
     ],
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
+  // Instalado na tela de início do iPhone, abre como app (necessário para push no iOS).
+  appleWebApp: { capable: true, title: 'Patinha', statusBarStyle: 'default' },
   openGraph: {
     title: 'Patinha - Cuidados para seu pet',
     description: 'App para cuidar do pet no dia a dia: ração, atividades, linha do tempo e mapa de serviços perto de você.',
