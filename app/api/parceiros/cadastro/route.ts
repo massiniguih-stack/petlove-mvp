@@ -86,6 +86,9 @@ export async function POST(req: NextRequest) {
     horario,
     servicos: Array.isArray(servicos) && servicos.length > 0 ? servicos : null,
     plantao24h: !!plantao24h,
+    // Toda loja nova entra no plano grátis: só o pagamento (webhook LastLink) liga premium/destaque.
+    premium: false,
+    destaque: false,
     status: AWAITING_REVIEW_STATUS,
   });
 

@@ -39,13 +39,14 @@ export async function POST(_req: NextRequest) {
     instagram: s.instagram || null,
     website: s.website || null,
     avaliacao: s.avaliacao || null,
-    premium: s.premium || false,
+    // Toda loja nova entra no plano grátis: só o pagamento (webhook LastLink) liga premium/destaque.
+    premium: false,
     status: 'pending',
     lat: s.lat ?? null,
     lng: s.lng ?? null,
     servicos: s.servicos || null,
     horario: s.horario || null,
-    destaque: s.destaque || false,
+    destaque: false,
     plantao24h: s.plantao24h || false,
   }));
 

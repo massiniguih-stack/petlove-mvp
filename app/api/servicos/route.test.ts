@@ -88,11 +88,27 @@ describe('GET /api/servicos', () => {
     expect(body.servicos[0].nome).toBe('Amor Por Patas');
   });
 
-  it('never sends Instagram of free listings to the map, only premium', async () => {
+  it('sends free-plan shops with location only (no contact, hours, services or rating)', async () => {
+    const completo = {
+      tipo: 'petshop',
+      endereco: 'Av. Brasil, 100',
+      bairro: 'Zona 01',
+      cidade: 'Maringá',
+      lat: -23.42,
+      lng: -51.93,
+      telefone: '(44) 3000-0000',
+      instagram: 'loja',
+      website: 'https://loja.com',
+      horario: '8h-18h',
+      servicos: ['banho'],
+      avaliacao: 4.8,
+      plantao24h: true,
+    };
     eqMock.mockResolvedValue({
       data: [
-        { id: '1', nome: 'Grátis', premium: false, instagram: 'gratis', telefone: '(44) 3000-0000' },
-        { id: '2', nome: 'Pago', premium: true, instagram: 'pago' },
+        { ...completo, id: '1', nome: 'Grátis', premium: false, destaque: false },
+        { ...completo, id: '2', nome: 'Pago', premium: true, destaque: false },
+        { ...completo, id: '3', nome: 'Destaque', premium: false, destaque: true },
       ],
       error: null,
     });
@@ -100,10 +116,33 @@ describe('GET /api/servicos', () => {
     const res = await GET(request('Maringá'));
     const body = await res.json();
 
-    expect(body.servicos[0].instagram).toBeNull();
-    expect(body.servicos[0].telefone).toBe('(44) 3000-0000');
-    expect(body.servicos[1].instagram).toBe('pago');
+    expect(body.servicos[0]).toEqual({
+      id: '1',
+      tipo: 'petshop',
+      nome: 'Grátis',
+      endereco: 'Av. Brasil, 100',
+      bairro: 'Zona 01',
+      cidade: 'Maringá',
+      lat: -23.42,
+      lng: -51.93,
+    });
+    expect(body.servicos[1].telefone).toBe('(44) 3000-0000');
+    expect(body.servicos[1].instagram).toBe('loja');
+    expect(body.servicos[2].horario).toBe('8h-18h');
     expect(selectMock.mock.calls[0][0]).not.toMatch(/whatsapp/);
+  });
+
+  it('keeps parks complete: they are public places, not shops with a plan', async () => {
+    eqMock.mockResolvedValue({
+      data: [{ id: '1', tipo: 'parque', nome: 'Parque do Ingá', premium: false, horario: '6h-22h', avaliacao: 4.9 }],
+      error: null,
+    });
+
+    const res = await GET(request('Maringá'));
+    const body = await res.json();
+
+    expect(body.servicos[0].horario).toBe('6h-22h');
+    expect(body.servicos[0].avaliacao).toBe(4.9);
   });
 
   it('hides self-registered partners that are still awaiting review', async () => {
