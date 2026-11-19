@@ -11,6 +11,12 @@ const TOKEN_ENVIADO_KEY = 'patinha_push_token_enviado';
 
 export type SuporteNotificacao = 'verificando' | 'sim' | 'nao' | 'instalar-no-iphone';
 
+/** Onde o app está rodando — aparece no cartão para ajudar a descobrir problemas. */
+export interface Aparelho {
+  ios: boolean;
+  instalado: boolean;
+}
+
 async function registrarServiceWorker() {
   return navigator.serviceWorker.register(SW_URL);
 }
@@ -24,7 +30,16 @@ async function sincronizarToken(forcar: boolean): Promise<{ token: string | null
   if (!messaging) return { token: null, erro: 'Este navegador não recebe notificações.' };
 
   const serviceWorkerRegistration = await registrarServiceWorker();
-  const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration });
+  let token: string;
+  try {
+    token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration });
+  } catch (err) {
+    // No iPhone a primeira inscrição às vezes falha logo depois de instalar o
+    // service worker ("push service error"). Uma segunda tentativa resolve.
+    console.warn('getToken falhou, tentando de novo:', err);
+    await new Promise((r) => setTimeout(r, 1500));
+    token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration });
+  }
   if (!token) return { token: null, erro: 'Não consegui ativar neste aparelho.' };
 
   let salvo = null;
@@ -54,6 +69,7 @@ export function useNotifications() {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [aparelho, setAparelho] = useState<Aparelho | null>(null);
 
   useEffect(() => {
     let ativo = true;
@@ -62,6 +78,7 @@ export function useNotifications() {
       const standalone =
         window.matchMedia?.('(display-mode: standalone)').matches ||
         (navigator as Navigator & { standalone?: boolean }).standalone === true;
+      if (ativo) setAparelho({ ios: /iPhone|iPad|iPod/i.test(navigator.userAgent), instalado: !!standalone });
       if (precisaInstalarNoIphone(navigator.userAgent, standalone)) {
         if (ativo) setSuporte('instalar-no-iphone');
         return;
@@ -97,11 +114,21 @@ export function useNotifications() {
       // Já permitido antes: confirma em silêncio que o servidor tem o token
       // atual deste aparelho (ele pode ter mudado ou o envio ter falhado).
       if (Notification.permission === 'granted') {
+        setLoading(true);
         sincronizarToken(false)
           .then((r) => {
-            if (ativo && r.token) setToken(r.token);
+            if (!ativo) return;
+            setToken(r.erro ? null : r.token);
+            setErro(r.erro);
           })
-          .catch((err) => console.error('Falha ao sincronizar notificações:', err));
+          .catch((err) => {
+            console.error('Falha ao sincronizar notificações:', err);
+            const motivo = err instanceof Error ? ` (${err.name})` : '';
+            if (ativo) setErro(`Não consegui conectar este aparelho. Toque em "Tentar de novo".${motivo}`);
+          })
+          .finally(() => {
+            if (ativo) setLoading(false);
+          });
       }
     })();
     return () => {
@@ -121,12 +148,12 @@ export function useNotifications() {
       if (result !== 'granted') return null;
 
       const r = await sincronizarToken(true);
-      setToken(r.token);
+      setToken(r.erro ? null : r.token);
       setErro(r.erro);
       return r.erro ? null : r.token;
     } catch (err) {
       console.error('Error requesting notification permission:', err);
-      setErro('Não consegui ativar as notificações. Tente de novo.');
+      setErro(`Não consegui ativar as notificações. Tente de novo. (${err instanceof Error ? err.name : 'erro'})`);
       return null;
     } finally {
       setLoading(false);
@@ -146,5 +173,5 @@ export function useNotifications() {
     return { ok: false, mensagem: data.error || 'Não consegui enviar o teste.' };
   }, []);
 
-  return { permission, suporte, token, loading, erro, requestPermission, enviarTeste };
+  return { permission, suporte, token, loading, erro, aparelho, requestPermission, enviarTeste };
 }
