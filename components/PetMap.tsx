@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 // Precisa vir depois do leaflet: o plugin se pendura no `L` global.
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
+import { soLocalizacaoNoMapa } from '@/lib/partnerPublico';
 
 interface Servico {
   id: string;
@@ -14,7 +15,9 @@ interface Servico {
   nome: string;
   endereco: string | null;
   bairro: string | null;
-  avaliacao: number | null;
+  avaliacao?: number | null;
+  premium?: boolean;
+  destaque?: boolean;
   lat?: number;
   lng?: number;
 }
@@ -34,15 +37,22 @@ const markerColors: Record<string, string> = {
   adestrador: '#0ea5e9',
 };
 
-const emojis: Record<string, string> = {
-  veterinario: '🩺',
-  petshop: '🛁',
-  creche: '🏫',
-  hotel: '🏨',
-  petsitter: '🐾',
-  parque: '🌳',
-  adestrador: '🎓',
-};
+// Ícones 3D (Thiings) em versão pequena (128px, ~20 KB) só para os pinos.
+// Os originais em /icons/3d têm ~1 MB cada — pesado demais para dezenas de pinos.
+const TIPOS_COM_PINO = new Set([
+  'veterinario',
+  'petshop',
+  'creche',
+  'hotel',
+  'petsitter',
+  'parque',
+  'adestrador',
+  'petdriver',
+]);
+
+function pinoSrc(tipo: string) {
+  return `/icons/3d/pins/${TIPOS_COM_PINO.has(tipo) ? tipo : 'patinha'}.png`;
+}
 
 // O popup é montado como HTML: nome/endereço vêm do banco e precisam de escape.
 function esc(texto: string | null | undefined) {
@@ -50,20 +60,19 @@ function esc(texto: string | null | undefined) {
 }
 
 function createIcon(tipo: string) {
-  const color = markerColors[tipo] || '#6366f1';
-  const emoji = emojis[tipo] || '📍';
+  const color = markerColors[tipo] || '#f97316';
+  // Boneco 3D "em pé" no mapa, sem moldura. A bolinha colorida (cor do tipo) marca o
+  // ponto exato do endereço, e a sombra oval no chão dá a sensação de profundidade.
   return L.divIcon({
     className: '',
-    iconSize: [36, 42],
-    iconAnchor: [18, 42],
-    popupAnchor: [0, -42],
+    iconSize: [40, 48],
+    iconAnchor: [20, 40], // centro da bolinha colorida = ponto exato do endereço
+    popupAnchor: [0, -38],
     html: `
-      <div style="position:relative;width:36px;height:42px;">
-        <svg width="36" height="42" viewBox="0 0 36 42" fill="none">
-          <path d="M18 0C8.06 0 0 8.06 0 18c0 12.6 18 24 18 24s18-11.4 18-24C36 8.06 27.94 0 18 0z" fill="${color}"/>
-          <circle cx="18" cy="17" r="10" fill="white" opacity="0.9"/>
-          <text x="18" y="22" text-anchor="middle" font-size="14">${emoji}</text>
-        </svg>
+      <div style="position:relative;width:40px;height:48px;">
+        <div style="position:absolute;left:50%;bottom:0;width:17px;height:5px;border-radius:50%;background:rgba(15,23,42,0.25);transform:translateX(-50%);"></div>
+        <div style="position:absolute;left:50%;bottom:2px;width:8px;height:8px;border-radius:50%;background:${color};border:2px solid #fff;transform:translateX(-50%);"></div>
+        <img src="${pinoSrc(tipo)}" alt="" width="36" height="36" draggable="false" style="position:absolute;top:0;left:2px;width:36px;height:36px;object-fit:contain;pointer-events:auto;filter:drop-shadow(0 3px 5px rgba(15,23,42,0.28));" />
       </div>
     `,
   });
@@ -109,7 +118,12 @@ function addMarkers(
         <div style="font-weight:700;font-size:14px;color:#1e293b;">${esc(s.nome)}</div>
         <div style="font-size:12px;color:#64748b;margin-top:2px;">${esc(s.endereco)}</div>
         <div style="font-size:12px;color:#64748b;">${esc(s.bairro)}</div>
-        <div style="margin-top:4px;font-size:12px;color:#f59e0b;">⭐ ${s.avaliacao != null ? s.avaliacao.toLocaleString('pt-BR') : 'Novo'}</div>
+        ${
+          // Plano grátis: o balão mostra só nome e endereço.
+          soLocalizacaoNoMapa(s)
+            ? ''
+            : `<div style="margin-top:4px;font-size:12px;color:#f59e0b;">⭐ ${s.avaliacao != null ? s.avaliacao.toLocaleString('pt-BR') : 'Novo'}</div>`
+        }
       </div>
     `);
     layer.addLayer(marker);

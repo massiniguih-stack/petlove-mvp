@@ -42,9 +42,9 @@ const planos: {
     cta: 'Cadastrar grátis',
     features: [
       'Cadastro do negócio no app',
-      'Listagem no mapa após aprovação',
-      'Perfil com contato e serviços',
-      'Sem selo Premium, destaque nem WhatsApp no app',
+      'Pino no mapa após aprovação',
+      'Tutor vê nome e endereço ao tocar no pino',
+      'Sem card na lista, contato, selo nem WhatsApp',
     ],
   },
   {
@@ -57,6 +57,7 @@ const planos: {
     cta: 'Assinar Básico',
     features: [
       'Tudo do Grátis',
+      'Card completo na lista: telefone, horário e serviços',
       'Selo Premium no card e no perfil',
       'Sobe na lista da cidade (acima do grátis)',
       'Botão de WhatsApp no perfil do mapa',
@@ -115,8 +116,8 @@ const beneficios: {
   },
   {
     Icon: PinIcon3D,
-    titulo: 'Ordem na busca',
-    descricao: 'Premium e Destaque entram na frente do grátis quando o tutor filtra perto.',
+    titulo: 'Card na lista',
+    descricao: 'Só planos pagos aparecem na lista de resultados. O grátis fica apenas como pino no mapa.',
   },
   {
     Icon: PremiumIcon3D,
@@ -181,7 +182,7 @@ export default function PremiumClient() {
               Do grátis ao <span className="text-yellow-200">destaque</span> na cidade
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-orange-100">
-              Escolha o plano certo pro tamanho do seu negócio: listagem gratuita ou Premium com selo, WhatsApp e prioridade no mapa.
+              Escolha o plano certo pro tamanho do seu negócio: pino grátis no mapa ou Premium com card completo, selo, WhatsApp e prioridade.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <a

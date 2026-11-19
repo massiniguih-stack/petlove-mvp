@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { publicSupabaseFailure, withOneRetry } from '@/lib/supabase/errors';
 import { AWAITING_REVIEW_STATUS } from '@/lib/partnerReview';
-import { ocultarContatosDoPlanoGratis } from '@/lib/partnerPublico';
+import { limitarPlanoGratisAoMapa } from '@/lib/partnerPublico';
 
 // Roda em São Paulo. A função em Ashburn (iad1) estava recebendo
 // Cloudflare 521 ao falar com o Supabase e o mapa ficava vazio.
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
       return fail(error.message);
     }
 
-    return NextResponse.json({ servicos: ocultarContatosDoPlanoGratis(partners || []) });
+    return NextResponse.json({ servicos: limitarPlanoGratisAoMapa(partners || []) });
   } catch (err) {
     return fail(err);
   }
