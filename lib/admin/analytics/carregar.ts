@@ -110,7 +110,7 @@ export async function carregarAnalise(
 
   const periodo = montarPeriodo(chave, agora, maisAntigo(eventos));
 
-  const [pets, uso, assinaturasRes, feedbackRuimRes] = await Promise.all([
+  const [pets, uso, assinaturas, feedbackRuimRes] = await Promise.all([
     buscarEmLotes<{ tutor_id: string; created_at: string | null }>((de, ate) =>
       supabase.from('pet').select('tutor_id, created_at').order('id').range(de, ate),
     ),
@@ -122,13 +122,18 @@ export async function carregarAnalise(
         .order('id')
         .range(de, ate),
     ),
-    supabase
-      .from('subscriptions')
-      .select('plan_type, plan_category, user_id')
-      .in('status', [...STATUS_PREMIUM]),
+    buscarEmLotes<{ plan_type: string; plan_category: string | null; user_id: string }>((de, ate) =>
+      supabase
+        .from('subscriptions')
+        .select('plan_type, plan_category, user_id')
+        .in('status', [...STATUS_PREMIUM])
+        .order('user_id')
+        .order('plan_category')
+        .range(de, ate),
+    ),
     supabase.from('feedback').select('*', { count: 'exact', head: true }).eq('humor', 'ruim'),
   ]);
-  if (assinaturasRes.error) throw assinaturasRes.error;
+  if (feedbackRuimRes.error) throw feedbackRuimRes.error;
 
   const primeiroPet = new Map<string, Date>();
   for (const pet of pets) {
@@ -138,9 +143,7 @@ export async function carregarAnalise(
     if (!atual || quando < atual) primeiroPet.set(pet.tutor_id, quando);
   }
 
-  const assinaturasAtivas = (
-    (assinaturasRes.data ?? []) as Array<{ plan_type: string; plan_category: string | null; user_id: string }>
-  )
+  const assinaturasAtivas = assinaturas
     .filter((s) => !idsTutorEquipe.has(s.user_id))
     .map((s) => ({ planType: s.plan_type, categoria: categoriaDoPlano(s.plan_type, s.plan_category) }));
 

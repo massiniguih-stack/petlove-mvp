@@ -13,7 +13,7 @@ import type { ComponentType } from 'react';
 import { ICONE } from '@/lib/iconSizes';
 type PaidPlanType = 'partner_basic' | 'partner_pro' | 'partner_enterprise';
 
-// Preços alinhados a app/api/admin/dashboard-stats (MRR) e ao que está
+// Preços alinhados a lib/admin/analytics/catalogo.ts (receita mensal) e ao que está
 // configurado de verdade no LastLink (Produto → Ofertas → Planos).
 // Parceiro virou 100% anual a partir de 2026-09: `anual` é o valor à vista
 // (pagamento único) e `parcela` é o valor de cada uma das 12x SE o tutor

@@ -25,6 +25,10 @@ describe('GET /api/admin/analytics', () => {
     requireAdminMock.mockReset();
     carregarMock.mockReset();
     delete process.env.ANALISE_EXEMPLO;
+    delete process.env.OPEN_ACCESS;
+    delete process.env.NEXT_PUBLIC_OPEN_ACCESS;
+    delete process.env.VERCEL_ENV;
+    delete process.env.NEXT_PUBLIC_VERCEL_ENV;
     requireAdminMock.mockResolvedValue({ ok: true, user: { email: 'equipe@example.com' } });
   });
 
@@ -73,5 +77,17 @@ describe('GET /api/admin/analytics', () => {
     });
     const res = await pedir('?periodo=7d');
     expect(res.status).toBe(401);
+  });
+
+  it('modo exemplo ligado devolve dados de exemplo sem exigir admin', async () => {
+    process.env.OPEN_ACCESS = 'true';
+    process.env.ANALISE_EXEMPLO = '1';
+    const res = await pedir('?periodo=7d');
+    expect(res.status).toBe(200);
+    const corpo = await res.json();
+    expect(corpo).toHaveProperty('tutores');
+    expect(corpo).toHaveProperty('empresas');
+    expect(requireAdminMock).not.toHaveBeenCalled();
+    expect(carregarMock).not.toHaveBeenCalled();
   });
 });
