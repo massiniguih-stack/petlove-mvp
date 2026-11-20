@@ -27,10 +27,10 @@ const funcionalidades = [
   { nome: 'Comparação entre pets', gratis: false, premium: true },
 ];
 
-// EXP-18 (aprovado 2026-07-24): mensal R$ 29,49 · anual R$ 238,80
-// (equiv. R$ 19,90/mês). Atualizar produtos LastLink com os mesmos valores.
-const PRECO_MENSAL = 29.49;
-const PRECO_ANUAL = 238.8;
+// Preços de 20/11/2026: mensal R$ 17,90 · anual R$ 118,80 (equiv. R$ 9,90/mês).
+// Atualizar os produtos no LastLink com os mesmos valores.
+const PRECO_MENSAL = 17.9;
+const PRECO_ANUAL = 118.8;
 const DESCONTO_ANUAL_PCT = Math.round((1 - PRECO_ANUAL / (PRECO_MENSAL * 12)) * 100);
 
 export default function PlanosClient() {
