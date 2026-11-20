@@ -7,7 +7,9 @@ import { lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from '
 
 const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || '';
 const SW_URL = '/firebase-messaging-sw.js';
-const TOKEN_ENVIADO_KEY = 'patinha_push_token_enviado';
+// "_v2": desde que o servidor guarda TODOS os aparelhos (antes só o último),
+// cada aparelho precisa se recadastrar uma vez — trocar a chave faz isso.
+const TOKEN_ENVIADO_KEY = 'patinha_push_token_enviado_v2';
 
 export type SuporteNotificacao = 'verificando' | 'sim' | 'nao' | 'instalar-no-iphone';
 
@@ -164,7 +166,10 @@ export function useNotifications() {
   const enviarTeste = useCallback(async (): Promise<{ ok: boolean; mensagem: string }> => {
     const res = await fetch('/api/notifications/teste', { method: 'POST' });
     const data = await res.json().catch(() => ({}));
-    if (res.ok) return { ok: true, mensagem: 'Enviada! Deve chegar em alguns segundos.' };
+    if (res.ok) {
+      const n = Number(data.aparelhos) || 1;
+      return { ok: true, mensagem: `Enviada para ${n} aparelho${n > 1 ? 's' : ''}! Deve chegar em alguns segundos.` };
+    }
     if (data.semToken) {
       try {
         localStorage.removeItem(TOKEN_ENVIADO_KEY);
