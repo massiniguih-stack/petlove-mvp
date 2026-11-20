@@ -86,8 +86,9 @@ Regras:
   procura `partners.id` por `partners.user_id = NEW.user_id`. Se não achar, grava com
   `entidade_id = NEW.user_id` e `detalhe.sem_partner = true` (o webhook às vezes chega
   antes do vínculo).
-- **Origem da empresa:** `cadastro_proprio` quando `NEW.status = 'new_signup'`
-  (`AWAITING_REVIEW_STATUS` de `lib/partnerReview.ts`), senão `importada`.
+- **Origem da empresa:** `cadastro_proprio` quando `NEW.status` é `'new_signup'` ou
+  `'ativo'` (`AWAITING_REVIEW_STATUS` / `APPROVED_STATUS` de `lib/partnerReview.ts`),
+  senão `importada`.
 - **Nunca bloquear a operação principal:** cada função de gatilho envolve o `INSERT` em
   `BEGIN … EXCEPTION WHEN OTHERS THEN RAISE WARNING … END` e sempre retorna `NEW`.
 - Funções `SECURITY DEFINER` com `SET search_path = public`.
@@ -110,12 +111,24 @@ Roda uma vez, no fim da migração, com `estimado = true` e `ON CONFLICT DO NOTH
 A reconstrução só cria eventos de pagamento/cancelamento quando ainda não existe
 nenhum evento desse tipo para a entidade, o que evita duplicar ao rodar de novo.
 
-Pré-requisito a conferir antes de escrever a migração: confirmar no Supabase que
-`partners.created_at` e `tutor.created_at` existem (as duas tabelas foram criadas fora de
-`supabase/migrations/`). Se faltar alguma, a migração adiciona a coluna com
-`DEFAULT now()` e a reconstrução daquele evento é omitida.
+As tabelas `tutor` e `partners` foram criadas fora de `supabase/migrations/`. Por isso a
+migração começa com uma checagem: se faltar alguma coluna usada (por exemplo
+`partners.created_at`, `partners.origem`, `partners.sent_at`), ela para com a mensagem
+"Faltam colunas: …" sem mudar nada. Tudo roda dentro de `BEGIN … COMMIT`.
+
+As assinaturas `canceled`/`expired` também ganham um `virou_pago` estimado (na data de
+criação), porque só se cancela o que já foi pago. A origem das empresas antigas é
+`cadastro_proprio` quando o status é `new_signup` ou `ativo` (cadastro aprovado), senão
+`importada`. O gatilho ao vivo usa a mesma regra.
 
 Arquivo: `supabase/migrations/20261120_admin_eventos.sql`, rodado à mão no SQL editor.
+
+### Modo exemplo (só local)
+
+Para conferir a tela localmente sem as chaves do Supabase, a rota devolve dados
+fictícios quando `isOpenAccess()` e `ANALISE_EXEMPLO=1` estão ligados.
+`isOpenAccess()` é sempre falso em produção na Vercel, então esse modo nunca expõe nada
+lá, e os dados são inventados.
 
 ## Parte B — Tela
 
