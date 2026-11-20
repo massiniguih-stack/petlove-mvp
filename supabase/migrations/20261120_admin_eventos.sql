@@ -220,13 +220,18 @@ BEGIN
           'empresa', 'empresa_ativou_painel', NEW.id, '{}'::jsonb, now(), false
         );
         -- O webhook grava a assinatura antes de ligar o login à empresa:
-        -- aponta esses eventos pendentes para a empresa.
-        UPDATE public.admin_eventos
-           SET entidade_id = NEW.id,
-               detalhe = detalhe - 'sem_partner'
-         WHERE publico = 'empresa'
-           AND entidade_id = NEW.user_id
-           AND detalhe ? 'sem_partner';
+        -- aponta esses eventos pendentes para a empresa. Bloco próprio, para
+        -- uma falha aqui não desfazer o registro de painel ativado acima.
+        BEGIN
+          UPDATE public.admin_eventos
+             SET entidade_id = NEW.id,
+                 detalhe = detalhe - 'sem_partner'
+           WHERE tipo IN ('empresa_virou_paga', 'empresa_cancelou')
+             AND entidade_id = NEW.user_id
+             AND detalhe ? 'sem_partner';
+        EXCEPTION WHEN OTHERS THEN
+          RAISE WARNING 'admin_eventos (partners, sem_partner): %', SQLERRM;
+        END;
       END IF;
     END IF;
   EXCEPTION WHEN OTHERS THEN

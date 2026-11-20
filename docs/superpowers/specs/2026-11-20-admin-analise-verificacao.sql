@@ -16,24 +16,20 @@ SELECT publico, tipo, estimado, count(*) AS total
 -- 3. Empresa: convite por e-mail, 2º contato por WhatsApp (não conta), painel ativado,
 --    pagamento que chegou antes do login ser ligado à empresa.
 -- Esperado (4 itens):
---   RESULTADO (desfeito): empresa_ativou_painel {} | empresa_convidada {"canal": "email"} | empresa_entrou_mapa {"lote": ..., "origem": "importada", "tipo": "petshop"} | empresa_virou_paga {}
+--   RESULTADO (desfeito): empresa_ativou_painel {} | empresa_convidada {"canal": "email"} | empresa_entrou_mapa {"lote": "teste-gatilho", "tipo": "petshop", "origem": "importada"} | empresa_virou_paga {}
 --   (o virou_paga não pode ter "sem_partner"; só um empresa_convidada)
 DO $$
 DECLARE
   v_id constant uuid := '00000000-0000-4000-8000-000000000001';
-  v_user uuid;
+  v_user uuid := gen_random_uuid();
   r text;
 BEGIN
-  SELECT u.id INTO v_user
-    FROM auth.users u
-   WHERE NOT EXISTS (SELECT 1 FROM public.partners p WHERE p.user_id = u.id)
-   LIMIT 1;
-  IF v_user IS NULL THEN
-    RAISE EXCEPTION 'Sem usuário livre para testar (todos os logins já estão ligados a uma empresa).';
-  END IF;
+  -- Login descartável, criado só dentro do teste (o RAISE final desfaz tudo).
+  INSERT INTO auth.users (id, email, raw_user_meta_data)
+  VALUES (v_user, 'teste-gatilho-empresa@example.com', '{"nome": "Teste"}'::jsonb);
 
-  INSERT INTO public.partners (id, nome, tipo, cidade, status, premium, destaque)
-  VALUES (v_id, 'Teste do gatilho', 'petshop', 'Maringá', 'pending', false, false);
+  INSERT INTO public.partners (id, nome, tipo, cidade, status, premium, destaque, origem)
+  VALUES (v_id, 'Teste do gatilho', 'petshop', 'Maringá', 'pending', false, false, 'teste-gatilho');
   UPDATE public.partners SET status = 'sent', sent_at = now() WHERE id = v_id;
   UPDATE public.partners SET whatsapp_contatado_em = now() WHERE id = v_id;
 
@@ -51,23 +47,22 @@ BEGIN
 END $$;
 
 -- 4. Tutor novo gera tutor_entrou.
--- Esperado: RESULTADO (desfeito): tutor_entrou {"utm_source": "teste"}
---   (se não houver usuário livre: "Sem usuário livre para testar tutor_entrou ...")
+-- Esperado: RESULTADO (desfeito): tutor_entrou {}
+--   (o gatilho handle_new_user cria o tutor sozinho, sem origem). Se esse gatilho
+--   não existir no seu banco, o teste cria o tutor e o esperado é
+--   tutor_entrou {"utm_source": "teste"}. As duas respostas estão certas.
 DO $$
 DECLARE
-  v_user uuid;
+  v_user uuid := gen_random_uuid();
   r text;
 BEGIN
-  SELECT u.id INTO v_user
-    FROM auth.users u
-   WHERE NOT EXISTS (SELECT 1 FROM public.tutor t WHERE t.id = u.id)
-   LIMIT 1;
-  IF v_user IS NULL THEN
-    RAISE EXCEPTION 'Sem usuário livre para testar tutor_entrou (normal se todos já são tutores).';
-  END IF;
+  -- Login descartável, criado só dentro do teste (o RAISE final desfaz tudo).
+  INSERT INTO auth.users (id, email, raw_user_meta_data)
+  VALUES (v_user, 'teste-gatilho-tutor@example.com', '{"nome": "Teste"}'::jsonb);
 
   INSERT INTO public.tutor (id, nome, email, utm_source)
-  VALUES (v_user, 'Teste gatilho', 'teste-gatilho@example.com', 'teste');
+  VALUES (v_user, 'Teste gatilho', 'teste-gatilho-tutor@example.com', 'teste')
+  ON CONFLICT (id) DO NOTHING;
 
   SELECT string_agg(tipo || ' ' || detalhe::text, ' | ' ORDER BY tipo)
     INTO r
@@ -119,6 +114,8 @@ DECLARE
   v_eventos int;
   r text;
 BEGIN
+  -- Se a tabela estiver ocupada, desiste em 3s em vez de fazer cadastros esperarem.
+  PERFORM set_config('lock_timeout', '3s', true);
   ALTER TABLE public.admin_eventos ADD CONSTRAINT teste_falha CHECK (false) NOT VALID;
 
   INSERT INTO public.partners (id, nome, tipo, cidade, status, premium, destaque)
