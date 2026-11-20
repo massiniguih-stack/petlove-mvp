@@ -38,7 +38,7 @@ export function CartaoNumero({
         <p className="text-2xl font-semibold tabular-nums tracking-tight text-slate-900 dark:text-white">{valor}</p>
         {variacao && <SeloVariacao variacao={variacao} />}
       </div>
-      {dica && <p className="mt-1 text-xs text-slate-400">{dica}</p>}
+      {dica && <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{dica}</p>}
     </div>
   );
 }
