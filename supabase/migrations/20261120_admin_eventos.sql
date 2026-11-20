@@ -204,7 +204,8 @@ BEGIN
         now(), false
       );
     ELSE
-      IF NEW.status = 'sent' AND OLD.status IS DISTINCT FROM 'sent' THEN
+      IF (NEW.status = 'sent' AND OLD.status IS DISTINCT FROM 'sent')
+         OR (NEW.sent_at IS NOT NULL AND OLD.sent_at IS NULL) THEN
         PERFORM public.admin_eventos_registrar(
           'empresa', 'empresa_convidada', NEW.id, '{"canal": "email"}'::jsonb, now(), false
         );
@@ -218,6 +219,14 @@ BEGIN
         PERFORM public.admin_eventos_registrar(
           'empresa', 'empresa_ativou_painel', NEW.id, '{}'::jsonb, now(), false
         );
+        -- O webhook grava a assinatura antes de ligar o login à empresa:
+        -- aponta esses eventos pendentes para a empresa.
+        UPDATE public.admin_eventos
+           SET entidade_id = NEW.id,
+               detalhe = detalhe - 'sem_partner'
+         WHERE publico = 'empresa'
+           AND entidade_id = NEW.user_id
+           AND detalhe ? 'sem_partner';
       END IF;
     END IF;
   EXCEPTION WHEN OTHERS THEN
@@ -229,7 +238,7 @@ $$;
 
 DROP TRIGGER IF EXISTS admin_eventos_partners ON public.partners;
 CREATE TRIGGER admin_eventos_partners
-  AFTER INSERT OR UPDATE OF status, whatsapp_contatado_em, user_id ON public.partners
+  AFTER INSERT OR UPDATE OF status, sent_at, whatsapp_contatado_em, user_id ON public.partners
   FOR EACH ROW EXECUTE FUNCTION public.admin_eventos_partners();
 
 -- 6. Reconstrução do passado (estimado = true)
@@ -268,14 +277,24 @@ SELECT LEAST(p.sent_at, p.whatsapp_contatado_em), 'empresa', 'empresa_convidada'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO public.admin_eventos (ocorrido_em, publico, tipo, entidade_id, detalhe, estimado)
-SELECT u.created_at, 'empresa', 'empresa_ativou_painel', p.id, '{}'::jsonb, true
+SELECT GREATEST(u.created_at, p.created_at), 'empresa', 'empresa_ativou_painel', p.id, '{}'::jsonb, true
   FROM public.partners p
   JOIN auth.users u ON u.id = p.user_id
 ON CONFLICT DO NOTHING;
 
+-- Eventos de pagamento gravados antes de a empresa ligar o login: aponta para a empresa.
+UPDATE public.admin_eventos e
+   SET entidade_id = p.id,
+       detalhe = e.detalhe - 'sem_partner'
+  FROM public.partners p
+ WHERE e.publico = 'empresa'
+   AND e.detalhe ? 'sem_partner'
+   AND p.user_id = e.entidade_id;
+
 -- Assinaturas: só se cancela o que já foi pago, então canceladas também ganham "virou pago".
 CREATE TEMP TABLE admin_eventos_assinaturas ON COMMIT DROP AS
-SELECT sub.created_at,
+SELECT sub.user_id AS user_id,
+       sub.created_at,
        sub.updated_at,
        sub.status,
        sub.plan_type,
@@ -307,8 +326,8 @@ SELECT a.created_at, a.publico,
  WHERE a.created_at IS NOT NULL
    AND NOT EXISTS (
      SELECT 1 FROM public.admin_eventos e
-      WHERE e.entidade_id = a.entidade
-        AND e.tipo IN ('tutor_virou_pago', 'empresa_virou_paga')
+      WHERE e.entidade_id IN (a.entidade, a.user_id)
+        AND e.tipo = CASE a.publico WHEN 'tutor' THEN 'tutor_virou_pago' ELSE 'empresa_virou_paga' END
    );
 
 INSERT INTO public.admin_eventos (ocorrido_em, publico, tipo, entidade_id, detalhe, estimado)
@@ -323,8 +342,8 @@ SELECT a.updated_at, a.publico,
    AND a.updated_at IS NOT NULL
    AND NOT EXISTS (
      SELECT 1 FROM public.admin_eventos e
-      WHERE e.entidade_id = a.entidade
-        AND e.tipo IN ('tutor_cancelou', 'empresa_cancelou')
+      WHERE e.entidade_id IN (a.entidade, a.user_id)
+        AND e.tipo = CASE a.publico WHEN 'tutor' THEN 'tutor_cancelou' ELSE 'empresa_cancelou' END
    );
 
 COMMIT;

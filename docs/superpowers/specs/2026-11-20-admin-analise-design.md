@@ -72,7 +72,7 @@ acesso para `anon` ou `authenticated`.
 | `tutor_virou_pago` | `AFTER INSERT OR UPDATE OF status ON subscriptions`, categoria tutor, status novo em `('active','trialing')` e antigo fora disso (ou INSERT) | `{plan_type}` |
 | `tutor_cancelou` | mesmo gatilho, status antigo em `('active','trialing')` e novo fora disso | `{plan_type, status}` |
 | `empresa_entrou_mapa` | `AFTER INSERT ON partners` | `{origem: 'cadastro_proprio' \| 'importada', lote: partners.origem, tipo: partners.tipo}` |
-| `empresa_convidada` | `AFTER UPDATE ON partners` quando `status` passa a `'sent'` ou `whatsapp_contatado_em` passa de `NULL` a um valor | `{canal: 'email' \| 'whatsapp'}` |
+| `empresa_convidada` | `AFTER UPDATE ON partners` quando `status` passa a `'sent'`, ou `sent_at` ou `whatsapp_contatado_em` passam de `NULL` a um valor | `{canal: 'email' \| 'whatsapp'}` |
 | `empresa_ativou_painel` | `AFTER UPDATE OF user_id ON partners` quando passa de `NULL` a um valor | `{}` |
 | `empresa_virou_paga` | gatilho de `subscriptions`, categoria partner, mesma regra do tutor | `{plan_type}` |
 | `empresa_cancelou` | gatilho de `subscriptions`, categoria partner, mesma regra do tutor | `{plan_type, status}` |
@@ -85,7 +85,9 @@ Regras:
 - **Empresa nas assinaturas:** `subscriptions.user_id` é o usuário de login. O gatilho
   procura `partners.id` por `partners.user_id = NEW.user_id`. Se não achar, grava com
   `entidade_id = NEW.user_id` e `detalhe.sem_partner = true` (o webhook às vezes chega
-  antes do vínculo).
+  antes do vínculo). Quando a empresa liga o login (`partners.user_id` passa de `NULL` a
+  um valor), o gatilho de `partners` move esses eventos para `partners.id` e remove
+  `sem_partner`.
 - **Origem da empresa:** `cadastro_proprio` quando `NEW.status` é `'new_signup'` ou
   `'ativo'` (`AWAITING_REVIEW_STATUS` / `APPROVED_STATUS` de `lib/partnerReview.ts`),
   senão `importada`.
@@ -106,7 +108,7 @@ Roda uma vez, no fim da migração, com `estimado = true` e `ON CONFLICT DO NOTH
 | `tutor_cancelou` / `empresa_cancelou` | `subscriptions.updated_at` das linhas `canceled`/`expired` | aproximada |
 | `empresa_entrou_mapa` | `partners.created_at` | exata |
 | `empresa_convidada` | o menor entre `partners.sent_at` e `partners.whatsapp_contatado_em` | exata |
-| `empresa_ativou_painel` | `auth.users.created_at` do `partners.user_id` | aproximada |
+| `empresa_ativou_painel` | o maior entre `auth.users.created_at` do `partners.user_id` e `partners.created_at` (`GREATEST`) | aproximada |
 
 A reconstrução só cria eventos de pagamento/cancelamento quando ainda não existe
 nenhum evento desse tipo para a entidade, o que evita duplicar ao rodar de novo.
@@ -236,7 +238,7 @@ agora.
 |---|---|
 | `periodo`, `agrupar`, `funil`, `variacao`, `montar` | Vitest em `lib/admin/analytics/*.test.ts`. Inclui: virada de dia em Brasília (23h30 local ≠ dia seguinte), semana começando na segunda, funil com turma vazia, entidade que pula etapa, período anterior zerado, exclusão da equipe, empresa sem partner (`sem_partner`) |
 | Rota | Teste de que sem admin devolve 401/403 e `periodo` inválido devolve 400 (mesmo padrão de `app/api/lastlink/webhook/route.test.ts`) |
-| Migração | Roteiro `docs/superpowers/specs/2026-11-20-admin-analise-verificacao.sql`: contagem por tipo/estimado, e um bloco `BEGIN … ROLLBACK` que insere um tutor e uma empresa de teste, muda status e confere os eventos criados |
+| Migração | Roteiro `docs/superpowers/specs/2026-11-20-admin-analise-verificacao.sql`: contagem por tipo/estimado, e blocos `DO $$ … $$` (empresa, tutor, assinatura, falha não bloqueia) que fazem o teste e terminam com `RAISE EXCEPTION 'RESULTADO (desfeito): …'`: o erro mostra o resultado no editor e desfaz tudo |
 | Tela | `npm run build && npm run start`, nos temas claro e escuro, em 360px e desktop, nas duas abas e nos 4 períodos |
 | Dados reais | Depois do merge e da migração, conferir os números da aba Tutores contra a página Usuários |
 
