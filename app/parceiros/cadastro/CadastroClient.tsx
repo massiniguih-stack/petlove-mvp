@@ -204,7 +204,7 @@ export default function CadastroClient() {
 
             <div className="mt-8 rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-left text-white shadow-xl shadow-amber-500/30">
               <p className="text-sm font-bold uppercase tracking-wide text-amber-100">Quer mais visibilidade?</p>
-              <h2 className="mt-1 text-xl font-black">Planos pagos a partir de R$ 239,80/ano</h2>
+              <h2 className="mt-1 text-xl font-black">Planos pagos a partir de R$ 20,90/mês</h2>
               <p className="mt-2 text-sm text-amber-50">
                 Básico (selo + WhatsApp), Profissional e Empresarial (badge Destaque no mapa). Ativação após confirmação do pagamento — use o mesmo e-mail deste cadastro.
               </p>
@@ -248,7 +248,7 @@ export default function CadastroClient() {
                 </h1>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Cadastre sua clínica, pet shop ou parque no Patinha</p>
                 <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
-                  Pino grátis no mapa após aprovação · selo Premium a partir de R$ 239,80/ano · destaque no Profissional ·{' '}
+                  Pino grátis no mapa após aprovação · selo Premium a partir de R$ 20,90/mês (plano anual) · destaque no Profissional ·{' '}
                   <a href="/parceiros/premium" className="font-semibold text-blue-600 underline-offset-2 hover:underline dark:text-blue-400">
                     ver planos
                   </a>

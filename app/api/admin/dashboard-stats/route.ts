@@ -5,15 +5,15 @@ import { contarWhatsappPendentes } from '@/lib/admin/filaHoje';
 
 // Preços mensais (BRL) para estimar MRR — só planos com valor estável.
 const PRECO_MENSAL: Record<string, number> = {
-  tutor_monthly: 29.49,
-  tutor_annual: 238.8 / 12,
+  tutor_monthly: 17.9,
+  tutor_annual: 118.8 / 12,
   // Parceiro virou 100% anual a partir de 2026-09 — o valor aqui é o preço
   // à vista dividido por 12 (receita reconhecida por mês), não a parcela
-  // com juros que o tutor vê se optar por parcelar em /parceiros/premium.
-  partner_basic: 239.8 / 12,
-  partner_annual: 238.8 / 12,
-  partner_pro: 596.9 / 12,
-  partner_enterprise: 826.8 / 12,
+  // com juros cobrada pelo LastLink se o lojista parcelar no cartão.
+  partner_basic: 250.8 / 12,
+  partner_annual: 250.8 / 12,
+  partner_pro: 358.8 / 12,
+  partner_enterprise: 478.8 / 12,
 };
 
 function diasAtras(dias: number) {

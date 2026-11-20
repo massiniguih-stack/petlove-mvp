@@ -15,17 +15,16 @@ type PaidPlanType = 'partner_basic' | 'partner_pro' | 'partner_enterprise';
 
 // Preços alinhados a app/api/admin/dashboard-stats (MRR) e ao que está
 // configurado de verdade no LastLink (Produto → Ofertas → Planos).
-// Parceiro virou 100% anual a partir de 2026-09: `anual` é o valor à vista
-// (pagamento único) e `parcela` é o valor de cada uma das 12x SE o tutor
-// optar por parcelar no cartão — o LastLink aplica juros nesse caso, então
-// parcela*12 é sempre maior que `anual`. Confira os dois valores direto em
-// cada oferta no LastLink antes de mudar aqui.
+// Parceiro é 100% anual desde 2026-09. Preços de 20/11/2026: `anual` é o
+// valor do ano à vista; a tela mostra o equivalente por mês (anual / 12).
+// Se o lojista parcelar no cartão, o LastLink cobra juros por conta própria,
+// por isso a tela não promete valor de parcela. Confira o valor de cada
+// oferta no LastLink antes de mudar aqui.
 const planos: {
   id: 'free' | PaidPlanType;
   nome: string;
   descricao: string;
   anual: number | null;
-  parcela: number | null;
   planType: PaidPlanType | null;
   cta: string;
   destaque?: boolean;
@@ -37,7 +36,6 @@ const planos: {
     nome: 'Grátis',
     descricao: 'Entre no mapa e comece a aparecer',
     anual: null,
-    parcela: null,
     planType: null,
     cta: 'Cadastrar grátis',
     features: [
@@ -51,8 +49,7 @@ const planos: {
     id: 'partner_basic',
     nome: 'Básico',
     descricao: 'Selo e WhatsApp na sua cidade',
-    anual: 239.8,
-    parcela: 25.54,
+    anual: 250.8,
     planType: 'partner_basic',
     cta: 'Assinar Básico',
     features: [
@@ -68,8 +65,7 @@ const planos: {
     id: 'partner_pro',
     nome: 'Profissional',
     descricao: 'Destaque no topo + painel',
-    anual: 596.9,
-    parcela: 63.56,
+    anual: 358.8,
     planType: 'partner_pro',
     cta: 'Assinar Profissional',
     destaque: true,
@@ -85,8 +81,7 @@ const planos: {
     id: 'partner_enterprise',
     nome: 'Empresarial',
     descricao: 'Máxima prioridade e canal com o time',
-    anual: 826.8,
-    parcela: 88.05,
+    anual: 478.8,
     planType: 'partner_enterprise',
     cta: 'Assinar Empresarial',
     features: [
@@ -248,15 +243,16 @@ export default function PremiumClient() {
                         </div>
                       ) : (
                         <div className="flex items-baseline gap-1">
-                          <span className="text-sm font-bold text-slate-400">12x de R$</span>
+                          <span className="text-sm font-bold text-slate-400">R$</span>
                           <span className="text-4xl font-black text-slate-900 dark:text-white">
-                            {formatBRL(plano.parcela ?? plano.anual)}
+                            {formatBRL(plano.anual / 12)}
                           </span>
+                          <span className="text-sm text-slate-500">/mês</span>
                         </div>
                       )}
                       <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
                         {isPaid && plano.anual != null
-                          ? `com juros · ou R$ ${formatBRL(plano.anual)} à vista/ano · LastLink`
+                          ? `plano anual: R$ ${formatBRL(plano.anual)} à vista ou em até 12x no cartão (com juros) · LastLink`
                           : 'Sem cartão · aparece no mapa após aprovação'}
                       </p>
                     </div>
@@ -307,7 +303,7 @@ export default function PremiumClient() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-500">
               <span>Pagamento seguro via LastLink</span>
               <span>·</span>
-              <span>Planos anuais em até 12x no cartão, ou à vista com desconto</span>
+              <span>Planos anuais: à vista ou em até 12x no cartão</span>
               <span>·</span>
               <span>Básico: selo e WhatsApp · Pro e Empresarial: também destaque no mapa</span>
             </div>

@@ -404,7 +404,7 @@ export default function DashboardPage() {
                 <p className="text-xs font-medium text-slate-400">Seu plano</p>
                 <p className="mt-1 text-lg font-semibold tracking-tight">Gratuito</p>
                 <p className="mt-1 text-sm text-slate-300">
-                  Premium a partir de R$ 29,49/mês: pets ilimitados e histórico completo.
+                  Premium a partir de R$ 9,90/mês: pets ilimitados e histórico completo.
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-4">

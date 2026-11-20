@@ -89,7 +89,7 @@ export default function CompararPage() {
             <div className="rounded-2xl border border-slate-200 bg-white p-6 text-center dark:border-slate-800 dark:bg-slate-900">
               <h2 className="text-base font-semibold text-slate-900 dark:text-white">Comparação entre pets é um recurso Premium</h2>
               <p className="mx-auto mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">
-                A partir de R$ 29,49/mês: comparar pets, pets ilimitados e histórico completo.
+                A partir de R$ 9,90/mês: comparar pets, pets ilimitados e histórico completo.
               </p>
               <a
                 href="/dashboard#plano"
