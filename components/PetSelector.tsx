@@ -21,7 +21,7 @@ export default function PetSelector() {
         className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200 transition hover:shadow-md dark:bg-slate-900 dark:ring-slate-700"
       >
         <span className="text-xl">{petAtual ? getPetEmoji(petAtual.sexo) : '🐾'}</span>
-        <span className="text-sm font-bold text-slate-900 dark:text-white">{petAtual?.nome || 'Selecionar pet'}</span>
+        <span className="max-w-[6.5rem] truncate text-sm font-bold text-slate-900 dark:text-white sm:max-w-none">{petAtual?.nome || 'Selecionar pet'}</span>
         {pets.length > 1 && (
           <span
             title={`Você tem ${pets.length} pets cadastrados`}
@@ -36,7 +36,7 @@ export default function PetSelector() {
       </button>
 
       {aberto && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
+        <div className="absolute right-0 top-full z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
           <div className="p-3">
             <p className="text-xs font-bold text-slate-500 px-1 dark:text-slate-400">Seus pets</p>
           </div>
@@ -100,7 +100,7 @@ export default function PetSelector() {
           )}
           <div className="border-t border-slate-100 p-3 dark:border-slate-800">
             <a
-              href={!isPremium && pets.length >= 1 ? '/dashboard#plano' : '/onboarding'}
+              href={!isPremium && pets.length >= 1 ? '/dashboard#plano' : '/onboarding?novo=1'}
               className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition ${
                 isPremium
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-lg'

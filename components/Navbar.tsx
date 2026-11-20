@@ -125,6 +125,9 @@ export default function Navbar() {
             </div>
           )}
 
+          <div className="flex items-center gap-2 md:hidden">
+          {/* Trocar de pet no celular — no desktop o seletor fica na barra acima */}
+          {petData && <PetSelector />}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 md:hidden"
@@ -137,6 +140,7 @@ export default function Navbar() {
               )}
             </svg>
           </button>
+          </div>
         </div>
 
         {menuOpen && (
