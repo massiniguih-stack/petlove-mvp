@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { resgatarComprasSemConta } from '@/lib/compraSemConta';
 
 // Espelha app/api/subscription/route.ts (usado pelo tutor), só que filtrado
 // pra plan_category = 'partner' — a mesma conta pode ter as duas assinaturas
@@ -11,6 +13,13 @@ export async function GET() {
 
     if (authError || !user) {
       return NextResponse.json({ isPremium: false, plan: null, status: null });
+    }
+
+    // Compra feita antes de ter conta vira assinatura no primeiro acesso.
+    try {
+      await resgatarComprasSemConta(getSupabaseAdmin(), user);
+    } catch (err) {
+      console.error('compra_sem_conta: falha no resgate', err);
     }
 
     const { data: subscription } = await supabase

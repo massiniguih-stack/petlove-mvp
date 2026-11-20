@@ -41,6 +41,7 @@ interface DashboardStats {
     mrrEstimado: number;
     tutorPremium: number;
     partnerPremium: number;
+    comprasSemConta?: number;
   };
   acesso: {
     mapaViews7dias: number;
@@ -144,6 +145,7 @@ export default function AdminDashboardPage() {
     .sort((a, b) => b.count - a.count);
 
   const fila = montarFilaHoje({
+    comprasSemConta: stats.assinaturas.comprasSemConta ?? 0,
     premiumSemPainel: stats.parceiros.premiumSemPainel,
     pendentesComEmail: stats.parceiros.pendentesComEmail,
     whatsappPendentes: stats.parceiros.whatsappPendentes,

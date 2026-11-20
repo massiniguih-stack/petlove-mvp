@@ -54,6 +54,7 @@ export async function GET() {
     feedbackRes,
     feedback7Res,
     pushRes,
+    comprasSemContaRes,
   ] = await Promise.all([
     supabaseAdmin
       .from('partners')
@@ -104,6 +105,11 @@ export async function GET() {
     supabaseAdmin
       .from('push_subscriptions')
       .select('*', { count: 'exact', head: true }),
+    // Sem a migração 20261120_compras_sem_conta a contagem volta com erro e vira 0.
+    supabaseAdmin
+      .from('compras_sem_conta')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active'),
   ]);
 
   const partners = partnersRes.data || [];
@@ -209,6 +215,7 @@ export async function GET() {
       mrrEstimado: Math.round(mrrEstimado * 100) / 100,
       tutorPremium,
       partnerPremium,
+      comprasSemConta: comprasSemContaRes.count ?? 0,
     },
     acesso: {
       // Proxy de uso real do app (não temos pageview global; usamos sinais do produto)

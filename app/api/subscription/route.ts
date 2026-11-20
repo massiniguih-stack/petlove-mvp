@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { STATUS_PREMIUM, statusDaPremium } from '@/lib/assinatura';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { resgatarComprasSemConta } from '@/lib/compraSemConta';
 
 export async function GET() {
   try {
@@ -9,6 +11,14 @@ export async function GET() {
 
     if (authError || !user) {
       return NextResponse.json({ isPremium: false, plan: null, status: null });
+    }
+
+    // Compra feita na LastLink antes de a pessoa ter conta (ou com o e-mail
+    // dela antes de se cadastrar) vira assinatura aqui, no primeiro acesso.
+    try {
+      await resgatarComprasSemConta(getSupabaseAdmin(), user);
+    } catch (err) {
+      console.error('compra_sem_conta: falha no resgate', err);
     }
 
     // Uma conta pode ter uma assinatura de tutor e outra de parceiro ao
