@@ -11,6 +11,7 @@ const fromMock = vi.fn();
 const upsertMock = vi.fn();
 const partnersUpdateMock = vi.fn();
 const partnersEqMock = vi.fn();
+const comprasUpsertMock = vi.fn();
 
 vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => ({
@@ -34,6 +35,7 @@ interface SupabaseMockOptions {
   upsertError?: unknown;
   partnerCount?: number | null;
   partnerError?: unknown;
+  comprasError?: unknown;
 }
 
 function setupSupabaseMock({
@@ -42,9 +44,11 @@ function setupSupabaseMock({
   upsertError = null,
   partnerCount = 1,
   partnerError = null,
+  comprasError = null,
 }: SupabaseMockOptions = {}) {
   listUsersMock.mockResolvedValue({ data: { users } });
   upsertMock.mockResolvedValue({ error: upsertError });
+  comprasUpsertMock.mockResolvedValue({ error: comprasError });
   partnersEqMock.mockResolvedValue({ error: partnerError, count: partnerCount });
   partnersUpdateMock.mockImplementation(() => ({ ilike: partnersEqMock }));
 
@@ -57,6 +61,9 @@ function setupSupabaseMock({
     }
     if (table === 'partners') {
       return { update: partnersUpdateMock };
+    }
+    if (table === 'compras_sem_conta') {
+      return { upsert: comprasUpsertMock };
     }
     throw new Error(`Unexpected table: ${table}`);
   });
@@ -150,12 +157,53 @@ describe('POST /api/lastlink/webhook', () => {
     expect(res.status).toBe(400);
   });
 
-  it('acknowledges but does not upsert when no matching user is found', async () => {
-    setupSupabaseMock({ users: [] });
+  it('guarda a compra de quem ainda não tem conta, em vez de descartar', async () => {
+    setupSupabaseMock({
+      users: [],
+      products: [{ plan_type: 'tutor_monthly', price: 17.9 }],
+    });
     const res = await POST(buildRequest(baseEvent()));
     const json = await res.json();
-    expect(json).toEqual({ received: true });
+    expect(res.status).toBe(200);
+    expect(json).toEqual({ received: true, semConta: true });
     expect(upsertMock).not.toHaveBeenCalled();
+    expect(comprasUpsertMock).toHaveBeenCalledTimes(1);
+    const [linha, opcoes] = comprasUpsertMock.mock.calls[0];
+    expect(linha).toMatchObject({
+      plan_type: 'tutor_monthly',
+      plan_category: 'tutor',
+      status: 'active',
+      ultimo_evento: 'Purchase_Order_Confirmed',
+    });
+    expect(linha.email).toBe(linha.email.trim().toLowerCase());
+    expect(opcoes).toEqual({ onConflict: 'email,plan_category' });
+    // Avisa a pessoa para criar a conta com o mesmo e-mail.
+    expect(sendMock).toHaveBeenCalledTimes(1);
+    expect(sendMock.mock.calls[0][0].subject).toMatch(/esperando/);
+  });
+
+  it('responde 500 quando não consegue guardar a compra sem conta (a LastLink reenvia)', async () => {
+    setupSupabaseMock({
+      users: [],
+      products: [{ plan_type: 'tutor_monthly', price: 17.9 }],
+      comprasError: { message: 'falhou' },
+    });
+    const res = await POST(buildRequest(baseEvent()));
+    expect(res.status).toBe(500);
+    expect(sendMock).not.toHaveBeenCalled();
+  });
+
+  it('liga o selo do parceiro no mapa mesmo sem conta, sem gravar user_id', async () => {
+    setupSupabaseMock({
+      users: [],
+      products: [{ plan_type: 'partner_pro', price: 358.8 }],
+    });
+    const res = await POST(buildRequest(baseEvent()));
+    expect(res.status).toBe(200);
+    expect(partnersUpdateMock).toHaveBeenCalledWith(
+      { premium: true, destaque: true },
+      { count: 'exact' }
+    );
   });
 
   it('activates a tutor subscription on Purchase_Order_Confirmed and sends the welcome email', async () => {
