@@ -17,7 +17,7 @@ export function Funil({ etapas, grupos }: { etapas: EtapaFunil[]; grupos?: Serie
                 <span className="shrink-0 tabular-nums">
                   <strong className="font-semibold text-slate-900 dark:text-white">{etapa.total}</strong>
                   {i > 0 && etapa.pctDoAnterior !== null && (
-                    <span className="ml-2 text-xs text-slate-400">{etapa.pctDoAnterior}% da etapa anterior</span>
+                    <span className="ml-2 text-xs text-slate-500 dark:text-slate-400">{etapa.pctDoAnterior}% da etapa anterior</span>
                   )}
                 </span>
               </div>
