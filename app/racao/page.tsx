@@ -9,6 +9,10 @@ import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
 import { FireIcon3D, BowlIcon3D, CalendarIcon3D } from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';
+import { extrasDaRotina } from '@/lib/lembretes';
+import { buscarLembretes, prepararAvisos, useLembretesRotina } from '@/lib/useLembretesRotina';
+import { useNotifications } from '@/lib/useNotifications';
+import { RecadoLembrete, SinoLembrete } from '@/components/SinoLembrete';
 import { formatarIdade, idadeEmMeses as calcularIdadeEmMeses } from '@/lib/pet';
 
 import { ICONE } from '@/lib/iconSizes';
@@ -73,6 +77,9 @@ function getDicasDesenvolvimento(idadeEmMeses: number, objetivo: string) {
 
 export default function RacaoPage() {
   const { pet, hydrated, isPremium } = usePetStore();
+  const notif = useNotifications();
+  const lembretes = useLembretesRotina(pet?.id, 'refeicao');
+  const [recado, setRecado] = useState<{ texto: string; ok: boolean } | null>(null);
   const [objetivo, setObjetivo] = useState(pet?.objetivo ?? 'manutencao');
 
   // pet só fica disponível depois que o store hidrata a partir do
@@ -126,6 +133,12 @@ export default function RacaoPage() {
           { hora: '12:00', tipo: 'Almoço', quantidade: `${Math.round(pet.peso * 7)}g` },
           { hora: '18:00', tipo: 'Jantar', quantidade: `${Math.round(pet.peso * 7)}g` },
         ];
+        // Refeições com sino ligado fazem parte da rotina: entram todo dia.
+        const extras = extrasDaRotina(
+          padrao.map((p) => ({ nome: p.tipo, hora: p.hora })),
+          await buscarLembretes(pet.id, 'refeicao')
+        );
+        padrao.push(...extras.map((l) => ({ hora: l.hora, tipo: l.nome, quantidade: l.detalhe || '' })));
         const rows = padrao.map((p) => ({
           id: crypto.randomUUID(),
           pet_id: pet.id,
@@ -171,6 +184,8 @@ export default function RacaoPage() {
   };
 
   const removerRefeicao = (id: string) => {
+    const item = refeicoes.find((r) => r.id === id);
+    if (item) lembretes.remover(item.tipo, item.hora);
     setRefeicoes((prev) => prev.filter((r) => r.id !== id));
     const supabase = createClient();
     supabase.from('checklist_item').delete().eq('id', id).then();
@@ -229,6 +244,16 @@ export default function RacaoPage() {
 
   const pendentes = refeicoes.filter((r) => !r.concluida);
   const concluidas = refeicoes.filter((r) => r.concluida);
+
+  const alternarSino = async (r: Refeicao) => {
+    const ligando = !lembretes.ligado(r.tipo, r.hora);
+    // Pede a permissão antes de qualquer outra espera (exigência do iPhone).
+    const preparo = ligando ? await prepararAvisos(notif) : null;
+    const ficouLigado = await lembretes.alternar({ nome: r.tipo, hora: r.hora, detalhe: r.quantidade });
+    if (ligando && !ficouLigado) setRecado({ texto: 'Não consegui salvar o lembrete. Tente de novo.', ok: false });
+    else setRecado(preparo ? { texto: preparo.recado, ok: preparo.ok } : { texto: `Lembrete de ${r.tipo} desligado.`, ok: true });
+    setTimeout(() => setRecado(null), 6000);
+  };
 
   if (!pet) {
     return (
@@ -317,6 +342,7 @@ export default function RacaoPage() {
                     </div>
                     <p className="text-xs text-slate-500 dark:text-slate-400">{r.quantidade}</p>
                   </div>
+                  <SinoLembrete nome={r.tipo} ligado={lembretes.ligado(r.tipo, r.hora)} onClick={() => alternarSino(r)} />
                   <button
                     onClick={() => removerRefeicao(r.id)}
                     className="text-slate-400 transition hover:text-slate-600 dark:hover:text-slate-200"
@@ -354,6 +380,8 @@ export default function RacaoPage() {
                 </div>
               )}
             </div>
+
+            <RecadoLembrete recado={recado?.texto ?? null} ok={recado?.ok ?? true} />
 
             {ehHoje && (
               <button
