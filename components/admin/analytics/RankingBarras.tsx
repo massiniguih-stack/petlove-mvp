@@ -19,8 +19,8 @@ export function RankingBarras({
             <div className="flex items-baseline justify-between gap-3 text-sm">
               <span className="truncate text-slate-700 dark:text-slate-200">{item.rotulo}</span>
               <span className="shrink-0 tabular-nums text-slate-900 dark:text-white">
-                {item.total}
-                <span className="ml-1.5 text-xs text-amber-700 dark:text-amber-400">
+                {item.total}{' '}
+                <span className="ml-1 text-xs text-amber-700 dark:text-amber-400">
                   · {item.destaque} {nomeDestaque.toLowerCase()}
                 </span>
               </span>
