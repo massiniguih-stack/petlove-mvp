@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { REENVIO_TOKEN_MS, chaveVapidValida, lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from './notificacoes';
+import { REENVIO_TOKEN_MS, chaveVapidValida, motivoDoErro, lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from './notificacoes';
 
 describe('precisaReenviarToken', () => {
   it('envia quando nunca enviou', () => {
@@ -51,5 +51,16 @@ describe('chaveVapidValida', () => {
     expect(chaveVapidValida(`"${publica}"`)).toBe(false);
     expect(chaveVapidValida('AIzaSyA3Y8P61m--wEXNE3rkYxjeSN2iFadYjGI')).toBe(false);
     expect(chaveVapidValida('')).toBe(false);
+  });
+});
+
+describe('motivoDoErro', () => {
+  it('mostra o código do Firebase quando existe', () => {
+    const e = Object.assign(new Error('x'), { name: 'FirebaseError', code: 'installations/request-failed' });
+    expect(motivoDoErro(e)).toBe('installations/request-failed');
+  });
+  it('cai para o nome do erro do navegador', () => {
+    expect(motivoDoErro(new DOMException('x', 'InvalidAccessError'))).toBe('InvalidAccessError');
+    expect(motivoDoErro('???')).toBe('erro');
   });
 });
