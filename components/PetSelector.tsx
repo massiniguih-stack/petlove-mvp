@@ -18,14 +18,14 @@ export default function PetSelector() {
     <div className="relative">
       <button
         onClick={() => setAberto(!aberto)}
-        className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200 transition hover:shadow-md"
+        className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 shadow-sm ring-1 ring-slate-200 transition hover:shadow-md dark:bg-slate-900 dark:ring-slate-700"
       >
         <span className="text-xl">{petAtual ? getPetEmoji(petAtual.sexo) : '🐾'}</span>
-        <span className="text-sm font-bold text-slate-900">{petAtual?.nome || 'Selecionar pet'}</span>
+        <span className="max-w-[6.5rem] truncate text-sm font-bold text-slate-900 dark:text-white sm:max-w-none">{petAtual?.nome || 'Selecionar pet'}</span>
         {pets.length > 1 && (
           <span
             title={`Você tem ${pets.length} pets cadastrados`}
-            className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-600"
+            className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-bold text-blue-600 dark:bg-blue-900 dark:text-blue-300"
           >
             {pets.length}
           </span>
@@ -36,9 +36,9 @@ export default function PetSelector() {
       </button>
 
       {aberto && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+        <div className="absolute right-0 top-full z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
           <div className="p-3">
-            <p className="text-xs font-bold text-slate-500 px-1">Seus pets</p>
+            <p className="text-xs font-bold text-slate-500 px-1 dark:text-slate-400">Seus pets</p>
           </div>
           <div className="max-h-64 overflow-y-auto">
             {pets.map((pet) => (
@@ -46,7 +46,7 @@ export default function PetSelector() {
                 key={pet.id}
                 className={`flex items-center gap-3 px-3 py-2.5 transition hover:bg-slate-50 ${
                   pet.id === selectedPetId ? 'bg-blue-50' : ''
-                }`}
+                } dark:hover:bg-slate-800`}
               >
                 <button
                   onClick={() => { selectPet(pet.id); setAberto(false); }}
@@ -54,8 +54,8 @@ export default function PetSelector() {
                 >
                   <span className="text-2xl">{getPetEmoji(pet.sexo)}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-slate-900 truncate">{pet.nome}</p>
-                    <p className="text-xs text-slate-500 truncate">{pet.raca} · {pet.peso}kg</p>
+                    <p className="text-sm font-bold text-slate-900 truncate dark:text-white">{pet.nome}</p>
+                    <p className="text-xs text-slate-500 truncate dark:text-slate-400">{pet.raca} · {pet.peso}kg</p>
                   </div>
                   {pet.id === selectedPetId && (
                     <span className="text-blue-500">✓</span>
@@ -77,7 +77,7 @@ export default function PetSelector() {
                       confirmDelete === pet.id
                         ? 'bg-red-100 text-red-600'
                         : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
-                    }`}
+                    } dark:hover:bg-slate-800`}
                   >
                     {confirmDelete === pet.id ? 'Confirmar' : '✕'}
                   </button>
@@ -86,21 +86,21 @@ export default function PetSelector() {
             ))}
           </div>
           {pets.length >= 2 && (
-            <div className="border-t border-slate-100 p-3">
+            <div className="border-t border-slate-100 p-3 dark:border-slate-800">
               <a
                 href="/comparar"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-50 py-2.5 text-sm font-bold text-violet-600 transition hover:bg-violet-100"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-50 py-2.5 text-sm font-bold text-violet-600 transition hover:bg-violet-100 dark:bg-violet-950 dark:text-violet-300 dark:hover:bg-violet-900"
               >
                 📊 Comparar pets
                 {!isPremium && (
-                  <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-600">PRO</span>
+                  <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-600 dark:bg-amber-900 dark:text-amber-300">PRO</span>
                 )}
               </a>
             </div>
           )}
-          <div className="border-t border-slate-100 p-3">
+          <div className="border-t border-slate-100 p-3 dark:border-slate-800">
             <a
-              href={!isPremium && pets.length >= 1 ? '/dashboard#plano' : '/onboarding'}
+              href={!isPremium && pets.length >= 1 ? '/dashboard#plano' : '/onboarding?novo=1'}
               className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition ${
                 isPremium
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:shadow-lg'
@@ -109,7 +109,7 @@ export default function PetSelector() {
             >
               <span>+</span> Adicionar pet
               {!isPremium && pets.length >= 1 && (
-                <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-600">PRO</span>
+                <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-600 dark:bg-amber-900 dark:text-amber-300">PRO</span>
               )}
             </a>
             {!isPremium && pets.length >= 1 && (

@@ -6,7 +6,7 @@ import { format, differenceInMonths, differenceInDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BackButton } from '@/components/BackButton';
@@ -16,7 +16,6 @@ import {
   PartyIcon3D,
   TrophyIcon3D,
   ShieldIcon3D,
-  CheckIcon3D,
   CameraIcon3D,
   VaccineIcon3D,
   TravelIcon3D,
@@ -145,8 +144,8 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 p-8 shadow-2xl">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{editando ? '✏️ Editar momento' : '📸 Novo momento'}</h2>
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{editando ? '✏️ Editar momento' : '📸 Novo momento'}</h2>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Registre um momento especial na vida do seu pet</p>
         
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
@@ -174,7 +173,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
                   onClick={() => setCategoria(cat.id as Momento['categoria'])}
                   className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition ${
                     categoria === cat.id
-                      ? `${cat.cor} text-white shadow-md`
+                      ? `${cat.cor} text-white`
                       : ' bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                   }`}
                 >
@@ -187,10 +186,10 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
 
           {/* Campos específicos para Vacinas */}
           {categoria === 'vacina' && (
-            <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
+            <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950/40">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-lg">💉</span>
-                <span className="text-sm font-bold text-blue-800">Tipo de Vacina</span>
+                <span className="text-sm font-bold text-blue-800 dark:text-blue-300">Tipo de vacina</span>
               </div>
               
               <div className="flex gap-2 mb-4">
@@ -199,8 +198,8 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
                   onClick={() => setStatusVacina('tomada')}
                   className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition ${
                     statusVacina === 'tomada'
-                      ? 'bg-emerald-500 text-white shadow-md'
-                      : 'bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-emerald-500 text-white'
+                      : 'bg-white text-slate-600 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                   }`}
                 >
                   ✅ Já tomou
@@ -210,8 +209,8 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
                   onClick={() => setStatusVacina('pendente')}
                   className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition ${
                     statusVacina === 'pendente'
-                      ? 'bg-amber-500 text-white shadow-md'
-                      : 'bg-white text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-amber-500 text-white'
+                      : 'bg-white text-slate-600 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                   }`}
                 >
                   📅 Ainda vai tomar
@@ -244,16 +243,16 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
 
               {statusVacina === 'pendente' && (
                 <div className="mt-4">
-                  <label className="flex items-center gap-2 text-sm font-bold text-amber-700">
+                  <label className="flex items-center gap-2 text-sm font-bold text-amber-700 dark:text-amber-300">
                     <span className="text-lg">⏰</span> Data agendada
                   </label>
                   <input
                     type="date"
                     value={dataAgendada}
                     onChange={(e) => setDataAgendada(e.target.value)}
-                    className="mt-2 w-full rounded-xl border border-amber-200 bg-white dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                    className="mt-2 w-full rounded-xl border border-amber-200 bg-white dark:border-amber-800 dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
                   />
-                  <p className="mt-2 text-xs text-amber-600">
+                  <p className="mt-2 text-xs text-amber-600 dark:text-amber-400">
                     📲 Você receberá um lembrete antes da data agendada
                   </p>
                 </div>
@@ -302,11 +301,11 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
               </button>
               {fotoUrl && (
                 <div className="relative">
-                  <img src={fotoUrl} alt="Preview" className="h-16 w-16 rounded-xl object-cover shadow-md" />
+                  <img src={fotoUrl} alt="Prévia" className="h-16 w-16 rounded-xl object-cover" />
                   <button
                     type="button"
                     onClick={() => setFotoUrl('')}
-                    className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white shadow-md hover:bg-red-600"
+                    className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs text-white hover:bg-red-600"
                   >
                     ×
                   </button>
@@ -326,7 +325,7 @@ function NovoMomentoForm({ onClose, onSave, editando, dataNascimento, categoriaP
             <button type="button" onClick={onClose} className="rounded-xl border-2 border-slate-200 dark:border-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-800">
               Cancelar
             </button>
-            <button type="submit" className="rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-rose-500/30 transition hover:shadow-xl hover:shadow-rose-500/40">
+            <button type="submit" className="rounded-xl px-6 py-2.5 text-sm font-semibold bg-slate-900 text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
               {editando ? '💾 Salvar' : '✨ Adicionar'}
             </button>
           </div>
@@ -404,17 +403,17 @@ function AtalhosSaude({
   ];
 
   return (
-    <section className="mb-8">
-      <h2 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+      <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
         O que você quer fazer?
       </h2>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {atalhos.map(({ id, titulo, sub, Icon }) => (
           <button
             key={id}
             type="button"
             onClick={() => onAtalho(id)}
-            className="flex flex-col items-center gap-1 rounded-2xl border border-slate-200 bg-white p-4 text-center transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-amber-700"
+            className="flex flex-col items-center gap-1 rounded-xl border border-slate-200 p-3 text-center transition hover:border-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-slate-800 dark:hover:border-amber-700"
           >
             <span className="icon-3d-slot flex h-10 w-10 items-center justify-center overflow-visible">
               <Icon size={ICONE.atalho} />
@@ -446,51 +445,48 @@ function ListaMemorias({
   onNovo: () => void;
 }) {
   return (
-    <section id="memorias" className="mb-8 scroll-mt-24">
-      <div className="mb-4 flex items-end justify-between gap-3">
+    <section id="memorias" className="scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="flex items-center gap-2 text-lg font-black tracking-tight text-slate-900 dark:text-white">
-            <span className="icon-3d-slot"><CalendarIcon3D size={ICONE.titulo} /></span>
-            Memórias
-          </h2>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Memórias</h2>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             {petNome} · {totalMeses} {totalMeses === 1 ? 'mês' : 'meses'} · {momentos.length} momento{momentos.length !== 1 ? 's' : ''}
           </p>
         </div>
         <button
           type="button"
           onClick={onNovo}
-          className="shrink-0 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-4 py-2 text-xs font-bold text-white shadow-md shadow-rose-500/20"
+          className="shrink-0 rounded-xl px-4 py-2 text-xs font-semibold bg-slate-900 text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
         >
           + Momento
         </button>
       </div>
 
       {momentos.length === 0 ? (
-        <div className="rounded-3xl bg-white py-14 text-center shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+        <div className="mt-4 rounded-xl border border-dashed border-slate-300 py-10 text-center dark:border-slate-700">
           <div className="mx-auto flex h-20 w-20 items-center justify-center">
             <CalendarIcon3D size={ICONE.destaque} />
           </div>
-          <p className="mt-4 text-base font-bold text-slate-900 dark:text-white">Nenhuma memória ainda</p>
-          <p className="mt-1 text-sm text-slate-500">Registre fotos, vacinas e momentos especiais.</p>
+          <p className="mt-3 text-sm font-semibold text-slate-900 dark:text-white">Nenhuma memória ainda</p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Registre fotos, vacinas e momentos especiais.</p>
           <button
             type="button"
             onClick={onNovo}
-            className="mt-5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-5 py-2.5 text-sm font-bold text-white"
+            className="mt-4 rounded-xl px-5 py-2.5 text-sm font-semibold bg-slate-900 text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
           >
             Adicionar primeiro momento
           </button>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="mt-3 divide-y divide-slate-100 dark:divide-slate-800">
           {momentos.map((m) => {
             const cat = categorias.find((c) => c.id === m.categoria);
             return (
               <article
                 key={m.id}
-                className="flex gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+                className="flex gap-3 py-3"
               >
-                <div className="icon-3d-slot flex h-14 w-14 shrink-0 items-center justify-center overflow-visible rounded-2xl bg-slate-50 dark:bg-slate-800">
+                <div className="icon-3d-slot flex h-12 w-12 shrink-0 items-center justify-center overflow-visible rounded-xl bg-slate-50 dark:bg-slate-800">
                   {cat?.iconSrc ? (
                     <Image src={cat.iconSrc} alt="" width={ICONE.item} height={ICONE.item} unoptimized className="icon-3d object-contain" />
                   ) : (
@@ -502,10 +498,10 @@ function ListaMemorias({
                     <h3 className="truncate text-sm font-bold text-slate-900 dark:text-white">{m.titulo}</h3>
                     <CategoriaBadge categoria={m.categoria} />
                     {m.categoria === 'vacina' && m.statusVacina === 'pendente' && (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">Pendente</span>
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900 dark:text-amber-300">Pendente</span>
                     )}
                   </div>
-                  <p className="mt-0.5 text-xs text-slate-400">
+                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                     {format(m.data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                   </p>
                   {m.descricao && (
@@ -519,7 +515,7 @@ function ListaMemorias({
                       <button
                         type="button"
                         onClick={() => onMarcarTomada(m.id)}
-                        className="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-100"
+                        className="rounded-lg bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900"
                       >
                         Marcar como tomada
                       </button>
@@ -534,7 +530,7 @@ function ListaMemorias({
                     <button
                       type="button"
                       onClick={() => onDelete(m.id)}
-                      className="rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-600 ring-1 ring-red-100"
+                      className="rounded-lg bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-600 ring-1 ring-red-100 dark:bg-red-950 dark:text-red-300 dark:ring-red-900"
                     >
                       Excluir
                     </button>
@@ -551,13 +547,10 @@ function ListaMemorias({
 
 function GaleriaFotos({ fotos, onAdicionar, onAbrir, onFechar }: { fotos: Momento[]; onAdicionar: () => void; onAbrir: (m: Momento) => void; onFechar: () => void }) {
   return (
-    <div id="galeria" className="mb-8 rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
+    <div id="galeria" className="scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
-            <span className="icon-3d-slot"><CheckIcon3D size={ICONE.titulo} /></span>
-            Galeria de fotos
-          </h2>
+          <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Galeria de fotos</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {fotos.length > 0 ? `${fotos.length} foto${fotos.length !== 1 ? 's' : ''}, em ordem cronológica` : 'Nenhuma foto ainda'}
           </p>
@@ -565,7 +558,7 @@ function GaleriaFotos({ fotos, onAdicionar, onAbrir, onFechar }: { fotos: Moment
         <div className="flex items-center gap-2">
           <button
             onClick={onAdicionar}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 px-4 py-2 text-xs font-bold text-white shadow-md transition hover:shadow-lg"
+            className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold bg-slate-900 text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
           >
             📷 Adicionar foto
           </button>
@@ -584,7 +577,7 @@ function GaleriaFotos({ fotos, onAdicionar, onAbrir, onFechar }: { fotos: Moment
       {fotos.length === 0 ? (
         <button
           onClick={onAdicionar}
-          className="mt-4 flex w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 py-10 text-slate-500 dark:text-slate-400 transition hover:border-rose-400 hover:text-rose-600"
+          className="mt-4 flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 py-10 text-slate-500 dark:text-slate-400 transition hover:border-rose-400 hover:text-rose-600"
         >
           <span className="text-3xl">📷</span>
           <span className="text-sm font-semibold">Adicionar a primeira foto</span>
@@ -597,7 +590,7 @@ function GaleriaFotos({ fotos, onAdicionar, onAbrir, onFechar }: { fotos: Moment
               onClick={() => onAbrir(foto)}
               className="group flex shrink-0 flex-col items-center gap-1.5"
             >
-              <div className="relative h-24 w-24 overflow-hidden rounded-2xl shadow-md ring-1 ring-slate-200 dark:ring-slate-800 transition group-hover:ring-2 group-hover:ring-rose-300">
+              <div className="relative h-24 w-24 overflow-hidden rounded-xl border border-slate-200 transition group-hover:border-amber-300 dark:border-slate-800">
                 <img src={foto.fotoUrl} alt={foto.titulo} className="h-full w-full object-cover transition group-hover:scale-105" />
               </div>
               <span className="max-w-[96px] truncate text-[11px] font-semibold text-slate-600 dark:text-slate-400">{foto.titulo}</span>
@@ -614,7 +607,7 @@ function FotoAmpliada({ momento, onClose, onEdit, onDelete }: { momento: Momento
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 shadow-2xl"
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900"
         onClick={(e) => e.stopPropagation()}
       >
         <img src={momento.fotoUrl} alt={momento.titulo} className="w-full object-cover" style={{ maxHeight: '420px' }} />
@@ -747,7 +740,7 @@ export default function VidaPage() {
     <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar />
       <main className="flex-1">
-        <div className="mx-auto max-w-5xl px-4 py-10">
+        <div className="mx-auto max-w-3xl px-4 py-10">
           {/* Header */}
           <div className="mb-8">
             <BackButton href="/dashboard" />
@@ -774,6 +767,7 @@ export default function VidaPage() {
             </div>
           </div>
 
+          <div className="space-y-6">
           {/* Atalhos grandes — cada ícone = uma situação */}
           <AtalhosSaude
             contagens={{
@@ -843,7 +837,7 @@ export default function VidaPage() {
           {momentosOcultosPorPlano > 0 && (
             <a
               href="/dashboard#plano"
-              className="mb-6 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
+              className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
             >
               <Image src="/icons/3d/premium.png" alt="" width={ICONE.atalho} height={ICONE.atalho} unoptimized className="icon-3d" />
               <div className="min-w-0">
@@ -870,30 +864,31 @@ export default function VidaPage() {
 
           {/* Primeira Foto */}
           {primeiraFoto && (
-            <div className="mt-4 rounded-3xl bg-gradient-to-br from-amber-50 to-rose-50 p-6 shadow-sm ring-1 ring-rose-100 dark:ring-rose-900">
+            <section className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
               <div className="flex items-center gap-3">
-                <div className="icon-3d-slot flex h-14 w-14 items-center justify-center overflow-visible">
+                <div className="icon-3d-slot flex h-12 w-12 items-center justify-center overflow-visible">
                   <CameraIcon3D size={ICONE.item} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white">Primeira foto registrada</h3>
+                  <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Primeira foto registrada</h2>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     {format(primeiraFoto.data, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                   </p>
                 </div>
               </div>
               {primeiraFoto.fotoUrl && (
-                <div className="mt-4 overflow-hidden rounded-2xl">
+                <div className="mt-4 overflow-hidden rounded-xl">
                   <img
                     src={primeiraFoto.fotoUrl}
                     alt={primeiraFoto.titulo}
-                    className="w-full object-cover shadow-md"
+                    className="w-full object-cover"
                     style={{ maxHeight: '300px' }}
                   />
                 </div>
               )}
-            </div>
+            </section>
           )}
+          </div>
         </div>
       </main>
       <Footer />

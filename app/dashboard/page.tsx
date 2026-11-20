@@ -10,6 +10,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NotificationBanner from '@/components/NotificationBanner';
 import FeedbackWidget from '@/components/FeedbackWidget';
+import { PremiumIcon3D } from '@/components/Icons3D';
+import { ICONE } from '@/lib/iconSizes';
 import { createClient } from '@/lib/supabase/client';
 import {
   idadeDoPet,
@@ -270,9 +272,22 @@ export default function DashboardPage() {
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
             <PetPhoto pet={pet} onPhotoChange={handlePhotoChange} />
             <div className="min-w-0 flex-1 text-center sm:text-left">
-              <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
-                {pet.nome}
-              </h1>
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+                  {pet.nome}
+                </h1>
+                {isPremium && (
+                  <Link
+                    href="/conta/assinatura"
+                    data-testid="selo-premium"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 py-1 pl-1.5 pr-3 text-xs font-semibold text-amber-800 transition hover:border-amber-400 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
+                    title="Sua assinatura Premium está ativa"
+                  >
+                    <PremiumIcon3D size={ICONE.titulo} />
+                    Premium
+                  </Link>
+                )}
+              </div>
               <p className="mt-2 flex flex-wrap items-center justify-center gap-x-1.5 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:justify-start">
                 {fatos.map((fato, i) => (
                   <span key={`${fato.label}-${i}`} className="inline-flex items-center gap-1.5">
@@ -363,45 +378,52 @@ export default function DashboardPage() {
 
           <FeedbackWidget />
 
-          <section
-            id="plano"
-            className="mt-8 scroll-mt-24 flex flex-col gap-4 rounded-2xl bg-slate-900 p-5 text-white sm:flex-row sm:items-center sm:justify-between dark:bg-slate-900 dark:ring-1 dark:ring-slate-800"
-            aria-label="Seu plano"
-          >
-            <div className="min-w-0">
-              <p className="text-xs font-medium text-slate-400">Seu plano</p>
-              <p className="mt-1 flex items-center gap-2 text-lg font-semibold tracking-tight">
-                {isPremium ? 'Premium' : 'Gratuito'}
-                {isPremium && (
-                  <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
-                    Ativo
-                  </span>
-                )}
-              </p>
-              <p className="mt-1 text-sm text-slate-300">
-                {isPremium
-                  ? 'Pets ilimitados, histórico completo e comparação entre pets.'
-                  : 'Premium a partir de R$ 29,49/mês: pets ilimitados e histórico completo.'}
-              </p>
-            </div>
-            <div className="flex shrink-0 items-center gap-4">
+          {isPremium ? (
+            // Premium não vê mais oferta de plano: só uma linha discreta para
+            // gerenciar (e poder cancelar) a assinatura.
+            <p
+              id="plano"
+              data-testid="plano-premium"
+              className="mt-8 scroll-mt-24 text-center text-sm text-slate-500 dark:text-slate-400"
+            >
+              Premium ativo ·{' '}
               <Link
-                href={isPremium ? '/conta/assinatura' : '/planos'}
-                className="group inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400 active:scale-[0.98]"
+                href="/conta/assinatura"
+                className="font-medium text-slate-700 underline-offset-4 hover:text-slate-900 hover:underline dark:text-slate-300 dark:hover:text-white"
               >
-                {isPremium ? 'Gerenciar plano' : 'Mudar de plano'}
-                <span aria-hidden className="transition group-hover:translate-x-0.5">→</span>
+                Gerenciar assinatura
               </Link>
-              {!isPremium && (
+            </p>
+          ) : (
+            <section
+              id="plano"
+              className="mt-8 scroll-mt-24 flex flex-col gap-4 rounded-2xl bg-slate-900 p-5 text-white sm:flex-row sm:items-center sm:justify-between dark:bg-slate-900 dark:ring-1 dark:ring-slate-800"
+              aria-label="Seu plano"
+            >
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-slate-400">Seu plano</p>
+                <p className="mt-1 text-lg font-semibold tracking-tight">Gratuito</p>
+                <p className="mt-1 text-sm text-slate-300">
+                  Premium a partir de R$ 29,49/mês: pets ilimitados e histórico completo.
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-4">
+                <Link
+                  href="/planos"
+                  className="group inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-amber-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400 active:scale-[0.98]"
+                >
+                  Mudar de plano
+                  <span aria-hidden className="transition group-hover:translate-x-0.5">→</span>
+                </Link>
                 <Link
                   href="/conta/assinatura"
                   className="text-sm text-slate-300 underline-offset-4 hover:text-white hover:underline"
                 >
                   Minha conta
                 </Link>
-              )}
-            </div>
-          </section>
+              </div>
+            </section>
+          )}
         </div>
       </main>
       <Footer />

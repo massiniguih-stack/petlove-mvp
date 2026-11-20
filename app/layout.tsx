@@ -22,12 +22,14 @@ export const metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32' },
-      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon-32.png?v=2', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png?v=2', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png?v=2', sizes: '512x512', type: 'image/png' },
     ],
-    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    apple: [{ url: '/apple-touch-icon.png?v=2', sizes: '180x180', type: 'image/png' }],
   },
+  // Instalado na tela de início do iPhone, abre como app (necessário para push no iOS).
+  appleWebApp: { capable: true, title: 'Patinha', statusBarStyle: 'default' },
   openGraph: {
     title: 'Patinha - Cuidados para seu pet',
     description: 'App para cuidar do pet no dia a dia: ração, atividades, linha do tempo e mapa de serviços perto de você.',

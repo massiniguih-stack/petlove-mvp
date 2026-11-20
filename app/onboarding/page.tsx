@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { usePetStore } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
 import Navbar from '@/components/Navbar';
@@ -11,9 +11,33 @@ import { DogIcon3D } from '@/components/Icons3D';
 import { BreedDogIcon } from '@/components/BreedDogIcon';
 
 import { ICONE } from '@/lib/iconSizes';
+// /onboarding          → cadastra o primeiro pet, ou edita o pet selecionado
+// /onboarding?novo=1   → cadastra MAIS UM pet (nunca sobrescreve o atual)
 export default function OnboardingPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+        </div>
+      }
+    >
+      <OnboardingConteudo />
+    </Suspense>
+  );
+}
+
+function OnboardingConteudo() {
   const router = useRouter();
-  const { pet, addPet, updatePet, hydrated } = usePetStore();
+  const novoPet = useSearchParams().get('novo') === '1';
+  const { pet: petSelecionado, addPet, updatePet, hydrated } = usePetStore();
+  // Em modo "novo pet" o formulário começa vazio e o envio sempre cria um pet
+  // novo. Antes, "Adicionar pet" caía aqui no modo edição e o pet novo
+  // sobrescrevia o pet selecionado — o primeiro pet "sumia".
+  const pet = novoPet ? null : petSelecionado;
+  // Dados do tutor são da conta, não do pet: reaproveita mesmo ao cadastrar
+  // outro pet, senão o envio apagaria telefone/endereço já salvos.
+  const tutorAtual = petSelecionado?.tutor;
   const { user, loading: authLoading } = useAuth();
   const [erro, setErro] = useState('');
   const [mostrarOpcionais, setMostrarOpcionais] = useState(false);
@@ -26,24 +50,33 @@ export default function OnboardingPage() {
     peso: pet?.peso?.toString() ?? '',
     sexo: pet?.sexo ?? 'macho',
     objetivo: pet?.objetivo ?? 'manutencao',
-    tutorTelefone: pet?.tutor?.telefone ?? '',
-    tutorEndereco: pet?.tutor?.endereco ?? '',
-    consentimentoMarketing: pet?.tutor?.consentimentoMarketing ?? false,
-    consentimentoLocalizacao: pet?.tutor?.consentimentoLocalizacao ?? false,
+    tutorTelefone: tutorAtual?.telefone ?? '',
+    tutorEndereco: tutorAtual?.endereco ?? '',
+    consentimentoMarketing: tutorAtual?.consentimentoMarketing ?? false,
+    consentimentoLocalizacao: tutorAtual?.consentimentoLocalizacao ?? false,
   });
 
   // Preenche telefone/endereço se já existirem no pet
   useEffect(() => {
-    if (pet?.tutor?.telefone || pet?.tutor?.endereco) {
+    if (tutorAtual?.telefone || tutorAtual?.endereco) {
       setMostrarOpcionais(true);
     }
-  }, [pet]);
+  }, [tutorAtual]);
 
   // pet só fica disponível depois que o store hidrata a partir do
   // localStorage (ver lib/store.ts); os useState acima capturam o valor
   // inicial (vazio) antes disso, então re-sincroniza o formulário assim
   // que a hidratação terminar, se houver um pet existente para editar.
   useEffect(() => {
+    if (hydrated && novoPet && tutorAtual) {
+      setForm((prev) => ({
+        ...prev,
+        tutorTelefone: tutorAtual.telefone ?? '',
+        tutorEndereco: tutorAtual.endereco ?? '',
+        consentimentoMarketing: tutorAtual.consentimentoMarketing ?? false,
+        consentimentoLocalizacao: tutorAtual.consentimentoLocalizacao ?? false,
+      }));
+    }
     if (hydrated && pet) {
       setForm({
         nome: pet.nome,
@@ -59,7 +92,7 @@ export default function OnboardingPage() {
       });
       setBuscaRaca(pet.raca ?? '');
     }
-  }, [hydrated]);
+  }, [hydrated, pet?.id]);
 
   const racasFiltradas = buscaRaca.trim()
     ? racasCachorros.filter((r) => r.toLowerCase().includes(buscaRaca.toLowerCase())).slice(0, 20)
@@ -90,7 +123,7 @@ export default function OnboardingPage() {
     user?.email?.split('@')[0] ||
     'Tutor';
 
-  const tutorEmail = user?.email ?? pet?.tutor?.email ?? '';
+  const tutorEmail = user?.email ?? tutorAtual?.email ?? '';
 
   const [salvando, setSalvando] = useState(false);
 
@@ -130,6 +163,7 @@ export default function OnboardingPage() {
     };
 
     setSalvando(true);
+    const novoId = crypto.randomUUID();
     const resultado = pet
       ? await updatePet(pet.id, {
           nome: form.nome.trim(),
@@ -141,7 +175,7 @@ export default function OnboardingPage() {
           tutor,
         })
       : await addPet({
-          id: crypto.randomUUID(),
+          id: novoId,
           nome: form.nome.trim(),
           raca: form.raca.trim(),
           dataNascimento: form.dataNascimento,
@@ -157,6 +191,12 @@ export default function OnboardingPage() {
     // (uma próxima sincronização tenta de novo automaticamente), então não
     // travamos o fluxo — só avisamos.
     if (resultado?.error) {
+      // Se o pet nem chegou a ser salvo localmente (ex.: limite do plano
+      // grátis), mostra o erro em vez de seguir como se tivesse dado certo.
+      if (!pet && !usePetStore.getState().pets.some((p) => p.id === novoId)) {
+        setErro(resultado.error);
+        return;
+      }
       console.warn(resultado.error);
     }
 

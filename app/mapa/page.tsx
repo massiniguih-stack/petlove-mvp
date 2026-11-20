@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { SearchIcon3D } from '@/components/Icons3D';
 import { cidades, type Servico } from '@/data/servicos';
 import { icon3dServico } from '@/lib/tiposServico';
+import { soLocalizacaoNoMapa } from '@/lib/partnerPublico';
 import { usePetStore } from '@/lib/store';
 
 import { ICONE } from '@/lib/iconSizes';
@@ -337,6 +338,11 @@ export default function MapaPage() {
       return (b.avaliacao ?? 0) - (a.avaliacao ?? 0);
     });
 
+  // Plano grátis: a loja vira só pino no mapa (nome e endereço no balão).
+  // A lista de cards é vitrine do plano pago (e dos parques).
+  const listaCards = listaFiltrada.filter((s) => !soLocalizacaoNoMapa(s));
+  const soNoMapa = listaFiltrada.length - listaCards.length;
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -474,7 +480,7 @@ export default function MapaPage() {
                     className={`flex shrink-0 items-center gap-2.5 rounded-2xl px-5 py-3.5 transition-all duration-200 ${
                       isActive
                         ? `bg-gradient-to-r ${cores[tipo]} text-white shadow-xl scale-105`
-                        : 'bg-white text-slate-700 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
+                        : 'bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-300 shadow-md ring-1 ring-slate-200 dark:ring-slate-800 hover:shadow-lg hover:ring-slate-300 dark:hover:ring-slate-600 hover:scale-105'
                     }`}
                   >
                     <Image src={icon3dServico(tipo)} alt="" width={ICONE.titulo} height={ICONE.titulo} unoptimized className="icon-3d" />
@@ -501,20 +507,28 @@ export default function MapaPage() {
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
             </div>
           ) : (
+            <>
+            {soNoMapa > 0 && (
+              <p className="mb-4 flex items-center gap-2 rounded-2xl bg-white px-4 py-3 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-800">
+                <MapPinIcon size={14} />
+                {listaCards.length > 0 ? 'Mais ' : ''}{soNoMapa} {soNoMapa === 1 ? 'local aparece' : 'locais aparecem'} só no mapa: toque no pino para ver nome e endereço.
+              </p>
+            )}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {listaFiltrada.slice(0, cardsVisiveis).map((servico) => (
+              {listaCards.slice(0, cardsVisiveis).map((servico) => (
                 <ServicoCard key={servico.id} servico={servico} onSelect={setServicoSelecionado} onCenterMap={setServicoSelecionado} />
               ))}
             </div>
+            </>
           )}
 
-          {!carregandoServicos && listaFiltrada.length > cardsVisiveis && (
+          {!carregandoServicos && listaCards.length > cardsVisiveis && (
             <div className="mt-6 text-center">
               <button
                 onClick={() => setCardsVisiveis((n) => n + CARDS_POR_PAGINA)}
                 className="rounded-full bg-white px-6 py-3 text-sm font-bold text-slate-700 shadow-md ring-1 ring-slate-200 transition hover:shadow-lg dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-700"
               >
-                Ver mais ({listaFiltrada.length - cardsVisiveis} restantes)
+                Ver mais ({listaCards.length - cardsVisiveis} restantes)
               </button>
             </div>
           )}
