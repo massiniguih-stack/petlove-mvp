@@ -8,7 +8,7 @@ importScripts('https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/12.16.0/firebase-messaging-compat.js');
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyA3Y8P61m--wEXNE3rkYxjeSN2iFadYjGI',
+  apiKey: 'AIzaSyA3Y8P61m_-wEXNE3rkYxjeSN2iFadYjGI',
   authDomain: 'petlove-notifications.firebaseapp.com',
   projectId: 'petlove-notifications',
   storageBucket: 'petlove-notifications.firebasestorage.app',

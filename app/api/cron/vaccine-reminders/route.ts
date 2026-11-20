@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEmailFrom } from '@/lib/emailFrom';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
-import { sendPushNotification } from '@/lib/push';
+import { enviarParaTutor } from '@/lib/pushTutor';
 import { getAppUrl } from '@/lib/appUrl';
 import { getResend } from '@/lib/resend';
 import { cronAuthorized } from '@/lib/authz';
@@ -82,21 +82,16 @@ export async function GET(req: NextRequest) {
     }
 
     if (tutor.id) {
-      const { data: sub } = await supabaseAdmin.from('push_subscriptions').select('token').eq('user_id', tutor.id).maybeSingle();
-      if (sub?.token) {
-        const { sent, tokenInvalido } = await sendPushNotification(
-          sub.token,
-          `Vacina de ${pet?.nome || 'seu pet'} está chegando 🐾`,
-          `${v.titulo} agendada para ${dataFormatada}`,
-          `${getAppUrl()}/vida`
-        );
-        if (sent) {
-          notificacoes++;
-          avisado = true;
-        }
-        if (tokenInvalido) {
-          await supabaseAdmin.from('push_subscriptions').delete().eq('user_id', tutor.id);
-        }
+      const { enviados: entregues } = await enviarParaTutor(
+        supabaseAdmin,
+        tutor.id,
+        `Vacina de ${pet?.nome || 'seu pet'} está chegando 🐾`,
+        `${v.titulo} agendada para ${dataFormatada}`,
+        `${getAppUrl()}/vida`
+      );
+      if (entregues > 0) {
+        notificacoes++;
+        avisado = true;
       }
     }
 

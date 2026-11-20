@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 export async function POST(req: NextRequest) {
   const supabase = createClient();
@@ -17,13 +18,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing token' }, { status: 400 });
   }
 
-  // Use the regular client - RLS will handle access.
-  // Um aparelho por pessoa: o último que ativou é o que recebe.
-  const { error } = await supabase.from('push_subscriptions').upsert({
+  // Um registro por APARELHO (token): a pessoa recebe em todos os que
+  // ativou (celular, computador...). Service role porque o mesmo aparelho
+  // pode ter sido de outra conta antes (trocou de login) — aí o registro
+  // passa para quem está logado agora, e o RLS não deixaria mexer nele.
+  const { error } = await getSupabaseAdmin().from('push_subscriptions').upsert({
     user_id: user.id,
     token,
     created_at: new Date().toISOString(),
-  }, { onConflict: 'user_id' });
+  }, { onConflict: 'token' });
 
   if (error) {
     // Antes respondia sucesso mesmo sem salvar — o app achava que estava

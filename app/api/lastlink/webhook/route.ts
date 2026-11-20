@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getResend } from '@/lib/resend';
 import { planCategory } from '@/lib/lastlink';
 import { getAppUrl } from '@/lib/appUrl';
+import { guardarCompraSemConta, type DadosAssinatura } from '@/lib/compraSemConta';
 import { tokenMatches } from '@/lib/authz';
 
 
@@ -95,6 +96,47 @@ function exactILike(value: string): string {
   return value.trim().replace(/[\\%_]/g, (c) => `\\${c}`);
 }
 
+// Ligamos o pagamento ao perfil do parceiro no /mapa casando o e-mail
+// de quem pagou com partners.email (o mesmo e-mail cadastrado em
+// /parceiros/cadastro) — e, quando a conta já existe, gravamos user_id, que é
+// o que dá acesso ao painel em /parceiro/dashboard.
+//
+// Escada de planos no mapa:
+// - free (sem pagamento): premium=false, destaque=false
+// - partner_basic: selo Premium, sem “Destaque” no topo
+// - partner_pro / partner_enterprise / partner_annual: Premium + Destaque
+async function atualizarParceiroPorEmail(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabaseAdmin: any,
+  planType: string | null,
+  status: string,
+  buyerEmail: string,
+  userId: string | null
+) {
+  if (!planType?.startsWith('partner_')) return;
+  const ativo = status === 'active';
+  const isTopTier =
+    planType === 'partner_pro' ||
+    planType === 'partner_enterprise' ||
+    planType === 'partner_annual';
+  const partnerFlags: Record<string, unknown> = {
+    premium: ativo,
+    destaque: ativo && isTopTier,
+  };
+  // Sem conta ainda: liga o selo no mapa e deixa o vínculo do painel para
+  // quando a pessoa entrar (o resgate em /api/subscription não mexe aqui).
+  if (userId) partnerFlags.user_id = userId;
+  const { error: partnerError, count } = await supabaseAdmin
+    .from('partners')
+    .update(partnerFlags, { count: 'exact' })
+    .ilike('email', exactILike(buyerEmail));
+  if (partnerError) {
+    console.error('Failed to update partner premium status:', partnerError);
+  } else if (!count) {
+    console.error(`Payment confirmed for ${buyerEmail} but no partners row matches this email — premium not activated on the map.`);
+  }
+}
+
 function allowedWebhookTokens(): string[] {
   const primary = process.env.LASTLINK_WEBHOOK_TOKEN || '';
   const extra = process.env.LASTLINK_WEBHOOK_TOKENS || '';
@@ -110,19 +152,6 @@ export async function POST(request: NextRequest) {
   const webhookToken =
     request.headers.get('x-lastlink-token') ?? request.headers.get('x-webhook-token');
   if (!tokenMatches(webhookToken, allowedWebhookTokens())) {
-    // Diagnóstico temporário (MAS-7): a LastLink está sendo recusada e não
-    // sabemos se o token vem errado ou em outro lugar. Registramos só NOMES
-    // e tamanhos — nunca o valor de header, token ou parâmetro.
-    console.warn(
-      'lastlink_webhook_401',
-      JSON.stringify({
-        nomesDosHeaders: Array.from(request.headers.keys()).sort(),
-        nomesDosParametros: Array.from(request.nextUrl.searchParams.keys()).sort(),
-        tokenRecebido: webhookToken !== null,
-        tamanhoRecebido: webhookToken?.length ?? 0,
-        tamanhosEsperados: allowedWebhookTokens().map((token) => token.length),
-      })
-    );
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -142,13 +171,6 @@ export async function POST(request: NextRequest) {
     const buyerEmail = event.Data.Buyer?.Email;
     if (!buyerEmail) {
       return NextResponse.json({ error: 'No buyer email' }, { status: 400 });
-    }
-
-    // Find user
-    const user = await getUserByEmail(supabaseAdmin, buyerEmail);
-    if (!user) {
-      console.error('User not found for email:', buyerEmail);
-      return NextResponse.json({ received: true });
     }
 
     // Get product ID and price from event
@@ -193,7 +215,6 @@ export async function POST(request: NextRequest) {
     // Get subscription ID from LastLink
     const lastlinkSubscriptionId = event.Data.Subscriptions?.[0]?.Id;
 
-    // Upsert subscription
     const resolvedPlanType = planType || 'unknown';
     // partner_basic/pro/enterprise viraram planos anuais em 2026-09 (cobrados
     // em 12x); tutor_annual e partner_annual já eram anuais. Todo o resto
@@ -205,17 +226,67 @@ export async function POST(request: NextRequest) {
       resolvedPlanType === 'partner_pro' ||
       resolvedPlanType === 'partner_enterprise';
     const periodDays = isAnnualPlan ? 365 : 30;
-    const subscriptionData = {
-      user_id: user.id,
-      provider_subscription_id: lastlinkSubscriptionId || `lastlink_${event.Id}`,
-      provider_price_id: resolvedPlanType,
-      status,
+    const dadosAssinatura: DadosAssinatura = {
       plan_type: resolvedPlanType,
       plan_category: planCategory(resolvedPlanType),
+      status,
+      provider_subscription_id: lastlinkSubscriptionId || `lastlink_${event.Id}`,
       cancel_at_period_end: cancelAtPeriodEnd,
       current_period_end: event.Data.Purchase?.PaymentDate
         ? new Date(Date.now() + periodDays * 24 * 60 * 60 * 1000).toISOString() // Estimate
         : null,
+    };
+
+    // Find user
+    const user = await getUserByEmail(supabaseAdmin, buyerEmail);
+    if (!user) {
+      // Pagou com um e-mail sem conta no app (comprou antes de se cadastrar,
+      // ou usou outro e-mail no checkout). Antes isso era descartado e a
+      // pessoa ficava grátis; agora a compra fica guardada e vira assinatura
+      // quando alguém entrar com esse e-mail (ver /api/subscription).
+      const { error: guardarError } = await guardarCompraSemConta(
+        supabaseAdmin,
+        buyerEmail,
+        dadosAssinatura,
+        event.Event,
+      );
+      if (guardarError) {
+        console.error('compra_sem_conta: falha ao guardar', guardarError);
+        // 500 faz a LastLink reenviar o aviso depois.
+        return NextResponse.json({ error: 'Failed to save purchase' }, { status: 500 });
+      }
+      console.warn('compra_sem_conta: pagamento guardado até a pessoa criar conta com esse e-mail');
+      await atualizarParceiroPorEmail(supabaseAdmin, planType, status, buyerEmail, null);
+      if (event.Event === 'Purchase_Order_Confirmed') {
+        try {
+          await getResend().emails.send({
+            from: getEmailFrom(),
+            to: buyerEmail,
+            subject: 'Seu Premium do Patinha está esperando por você',
+            html: `
+              <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h1 style="color: #7c3aed; font-size: 24px;">Pagamento confirmado! 🎉</h1>
+                <p style="color: #333; font-size: 16px;">Para usar o Premium, crie sua conta no Patinha com <strong>este mesmo e-mail</strong>. O Premium liga sozinho assim que você entrar.</p>
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${getAppUrl()}/cadastro" style="display: inline-block; background: linear-gradient(to right, #7c3aed, #9333ea); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                    Criar minha conta
+                  </a>
+                </div>
+                <p style="color: #666; font-size: 14px;">Já tem conta com outro e-mail? Escreva para contato@patinha.app.br e a gente passa o Premium para ela.</p>
+              </div>
+            `,
+          });
+        } catch (emailErr) {
+          console.error('Failed to send email:', emailErr);
+        }
+      }
+      return NextResponse.json({ received: true, semConta: true });
+    }
+
+    const subscriptionData = {
+      user_id: user.id,
+      provider_price_id: resolvedPlanType,
+      ...dadosAssinatura,
       updated_at: new Date().toISOString(),
     };
 
@@ -228,40 +299,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 });
     }
 
-    // Ligamos o pagamento ao perfil do parceiro no /mapa casando o e-mail
-    // de quem pagou com partners.email (o mesmo e-mail cadastrado em
-    // /parceiros/cadastro) — e aproveitamos pra gravar user_id, que é o
-    // que dá acesso ao painel em /parceiro/dashboard.
-    //
-    // Escada de planos no mapa:
-    // - free (sem pagamento): premium=false, destaque=false
-    // - partner_basic: selo Premium, sem “Destaque” no topo
-    // - partner_pro / partner_enterprise / partner_annual: Premium + Destaque
-    if (planType?.startsWith('partner_')) {
-      const ativo = status === 'active';
-      const isTopTier =
-        planType === 'partner_pro' ||
-        planType === 'partner_enterprise' ||
-        planType === 'partner_annual';
-      const partnerFlags = {
-        premium: ativo,
-        destaque: ativo && isTopTier,
-        user_id: user.id,
-      };
-      // O checkout de /parceiros/premium já exige login (mesma conta de
-      // tutor), então `user` (achado acima por e-mail) é a conta que
-      // comprou — gravamos o vínculo aqui pra habilitar o painel do
-      // parceiro em /parceiro/dashboard sem precisar de convite separado.
-      const { error: partnerError, count } = await supabaseAdmin
-        .from('partners')
-        .update(partnerFlags, { count: 'exact' })
-        .ilike('email', exactILike(buyerEmail));
-      if (partnerError) {
-        console.error('Failed to update partner premium status:', partnerError);
-      } else if (!count) {
-        console.error(`Payment confirmed for ${buyerEmail} but no partners row matches this email — premium not activated on the map.`);
-      }
-    }
+    await atualizarParceiroPorEmail(supabaseAdmin, planType, status, buyerEmail, user.id);
 
     // Send email for first payment
     if (event.Event === 'Purchase_Order_Confirmed') {

@@ -52,6 +52,24 @@ describe('carregarAnalise', () => {
     await expect(carregarAnalise(supabase, '7d', agora, [])).rejects.toBeInstanceOf(TabelaAusenteError);
   });
 
+  it('compras sem conta entram na fila, e a tabela ausente não derruba a análise', async () => {
+    const comCompras = await carregarAnalise(
+      fakeSupabase({ compras_sem_conta: { count: 2 } }),
+      '7d',
+      agora,
+      [],
+    );
+    expect(comCompras.fila.find((i) => i.id === 'compras-sem-conta')?.titulo).toBe('2 compras sem conta no app');
+
+    const semTabela = await carregarAnalise(
+      fakeSupabase({ compras_sem_conta: { count: null, error: { code: '42P01' } } }),
+      '7d',
+      agora,
+      [],
+    );
+    expect(semTabela.fila.some((i) => i.id === 'compras-sem-conta')).toBe(false);
+  });
+
   it('tira a equipe dos números, mas a fila ainda conta a empresa da equipe', async () => {
     const supabase = fakeSupabase({
       admin_eventos: {

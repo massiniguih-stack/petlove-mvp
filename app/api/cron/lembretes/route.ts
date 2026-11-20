@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cronAuthorized } from '@/lib/authz';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
-import { sendPushNotification } from '@/lib/push';
+import { enviarParaTutor } from '@/lib/pushTutor';
 import { getAppUrl } from '@/lib/appUrl';
 import { agoraNoFuso, chaveLembrete, minutosParaAvisar, textoLembrete, type ListaRotina } from '@/lib/lembretes';
 
@@ -67,11 +67,6 @@ async function rodar(req: NextRequest) {
     .in('pet_id', petIds);
   const jaFeito = new Set((feitos || []).map((f) => `${f.pet_id}|${f.lista}|${chaveLembrete(f.nome, f.hora)}`));
 
-  const tutorIds = Array.from(new Set(agora.map((l) => l.pet.tutor_id)));
-  const { data: subs } = await admin.from('push_subscriptions').select('user_id, token').in('user_id', tutorIds);
-  const tokenDo = new Map((subs || []).map((s) => [s.user_id as string, s.token as string]));
-  const tokensInvalidos = new Set<string>();
-
   let enviados = 0;
   let pulados = 0;
   let falhas = 0;
@@ -87,19 +82,18 @@ async function rodar(req: NextRequest) {
       .select('id');
     if (!reservado || reservado.length === 0) continue;
 
-    const token = tokenDo.get(l.pet.tutor_id);
-    if (jaFeito.has(`${l.pet_id}|${l.lista}|${chaveLembrete(l.nome, l.hora)}`) || !token || tokensInvalidos.has(token)) {
+    if (jaFeito.has(`${l.pet_id}|${l.lista}|${chaveLembrete(l.nome, l.hora)}`)) {
       pulados++;
       continue;
     }
 
+    // Vai para todos os aparelhos do tutor (celular, computador...).
     const t = textoLembrete({ lista: l.lista, nome: l.nome, hora: l.hora, petNome: l.pet.nome, faltam: l.faltam });
-    const { sent, tokenInvalido } = await sendPushNotification(token, t.titulo, t.corpo, `${getAppUrl()}${t.caminho}`);
-    if (sent) {
+    const r = await enviarParaTutor(admin, l.pet.tutor_id, t.titulo, t.corpo, `${getAppUrl()}${t.caminho}`);
+    if (r.enviados > 0) {
       enviados++;
-    } else if (tokenInvalido) {
-      tokensInvalidos.add(token);
-      await admin.from('push_subscriptions').delete().eq('user_id', l.pet.tutor_id);
+    } else if (r.aparelhos === r.vencidos) {
+      // Sem aparelho (ou todos vencidos): não há para onde mandar hoje.
       pulados++;
     } else {
       // Falha passageira (Firebase fora do ar): libera para tentar de novo

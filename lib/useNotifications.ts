@@ -3,11 +3,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMessagingInstance } from '@/lib/firebase';
 import { getToken, onMessage } from 'firebase/messaging';
-import { lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from '@/lib/notificacoes';
+import { chaveVapidValida, lerTokenEnviado, motivoDoErro, precisaInstalarNoIphone, precisaReenviarToken } from '@/lib/notificacoes';
 
-const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || '';
+const VAPID_KEY = (process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || '').trim();
 const SW_URL = '/firebase-messaging-sw.js';
-const TOKEN_ENVIADO_KEY = 'patinha_push_token_enviado';
+// "_v2": desde que o servidor guarda TODOS os aparelhos (antes só o último),
+// cada aparelho precisa se recadastrar uma vez — trocar a chave faz isso.
+const TOKEN_ENVIADO_KEY = 'patinha_push_token_enviado_v2';
 
 export type SuporteNotificacao = 'verificando' | 'sim' | 'nao' | 'instalar-no-iphone';
 
@@ -26,6 +28,10 @@ async function registrarServiceWorker() {
 // (usado no clique em "Ativar").
 async function sincronizarToken(forcar: boolean): Promise<{ token: string | null; erro: string | null }> {
   if (!VAPID_KEY) return { token: null, erro: 'Notificações não configuradas neste site.' };
+  if (!chaveVapidValida(VAPID_KEY)) {
+    console.error('NEXT_PUBLIC_FIREBASE_VAPID_KEY inválida: use a chave PÚBLICA de "Certificados push da Web" no Firebase.');
+    return { token: null, erro: 'As notificações do site estão mal configuradas. Avise o suporte do Patinha.' };
+  }
   const messaging = await getMessagingInstance();
   if (!messaging) return { token: null, erro: 'Este navegador não recebe notificações.' };
 
@@ -123,7 +129,7 @@ export function useNotifications() {
           })
           .catch((err) => {
             console.error('Falha ao sincronizar notificações:', err);
-            const motivo = err instanceof Error ? ` (${err.name})` : '';
+            const motivo = ` (${motivoDoErro(err)})`;
             if (ativo) setErro(`Não consegui conectar este aparelho. Toque em "Tentar de novo".${motivo}`);
           })
           .finally(() => {
@@ -153,7 +159,7 @@ export function useNotifications() {
       return r.erro ? null : r.token;
     } catch (err) {
       console.error('Error requesting notification permission:', err);
-      setErro(`Não consegui ativar as notificações. Tente de novo. (${err instanceof Error ? err.name : 'erro'})`);
+      setErro(`Não consegui ativar as notificações. Tente de novo. (${motivoDoErro(err)})`);
       return null;
     } finally {
       setLoading(false);
@@ -164,7 +170,10 @@ export function useNotifications() {
   const enviarTeste = useCallback(async (): Promise<{ ok: boolean; mensagem: string }> => {
     const res = await fetch('/api/notifications/teste', { method: 'POST' });
     const data = await res.json().catch(() => ({}));
-    if (res.ok) return { ok: true, mensagem: 'Enviada! Deve chegar em alguns segundos.' };
+    if (res.ok) {
+      const n = Number(data.aparelhos) || 1;
+      return { ok: true, mensagem: `Enviada para ${n} aparelho${n > 1 ? 's' : ''}! Deve chegar em alguns segundos.` };
+    }
     if (data.semToken) {
       try {
         localStorage.removeItem(TOKEN_ENVIADO_KEY);

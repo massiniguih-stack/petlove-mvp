@@ -3,7 +3,6 @@ import { NextRequest } from 'next/server';
 
 const vacinas = vi.fn();
 const marcarEnviado = vi.fn();
-const tokenSalvo = vi.fn();
 const sendEmail = vi.fn();
 const sendPush = vi.fn();
 
@@ -11,7 +10,7 @@ vi.mock('@/lib/authz', () => ({ cronAuthorized: () => true }));
 vi.mock('@/lib/emailFrom', () => ({ getEmailFrom: () => 'Patinha <oi@patinha.test>' }));
 vi.mock('@/lib/appUrl', () => ({ getAppUrl: () => 'https://patinha.test' }));
 vi.mock('@/lib/resend', () => ({ getResend: () => ({ emails: { send: sendEmail } }) }));
-vi.mock('@/lib/push', () => ({ sendPushNotification: (...a: unknown[]) => sendPush(...a) }));
+vi.mock('@/lib/pushTutor', () => ({ enviarParaTutor: (...a: unknown[]) => sendPush(...a) }));
 vi.mock('@/lib/supabase/admin', () => ({
   getSupabaseAdmin: () => ({
     from: (tabela: string) =>
@@ -20,10 +19,7 @@ vi.mock('@/lib/supabase/admin', () => ({
             select: () => ({ eq: () => ({ eq: () => ({ is: () => ({ gte: () => ({ lte: vacinas }) }) }) }) }),
             update: () => ({ eq: marcarEnviado }),
           }
-        : {
-            select: () => ({ eq: () => ({ maybeSingle: tokenSalvo }) }),
-            delete: () => ({ eq: vi.fn() }),
-          },
+        : {},
   }),
 }));
 
@@ -39,9 +35,8 @@ describe('GET /api/cron/vaccine-reminders', () => {
   beforeEach(() => {
     vacinas.mockReset().mockResolvedValue({ data: [vacina('ana@x.com')], error: null });
     marcarEnviado.mockReset().mockResolvedValue({ error: null });
-    tokenSalvo.mockReset().mockResolvedValue({ data: { token: 'tok' } });
     sendEmail.mockReset().mockResolvedValue({});
-    sendPush.mockReset().mockResolvedValue({ sent: true });
+    sendPush.mockReset().mockResolvedValue({ aparelhos: 1, enviados: 1, vencidos: 0 });
   });
 
   it('manda e-mail e notificação e marca como enviado', async () => {
@@ -69,7 +64,7 @@ describe('GET /api/cron/vaccine-reminders', () => {
 
   it('não marca como enviado se nenhum canal funcionou (tenta amanhã)', async () => {
     sendEmail.mockRejectedValue(new Error('resend fora'));
-    sendPush.mockResolvedValue({ sent: false });
+    sendPush.mockResolvedValue({ aparelhos: 1, enviados: 0, vencidos: 0 });
     await rodar();
     expect(marcarEnviado).not.toHaveBeenCalled();
   });

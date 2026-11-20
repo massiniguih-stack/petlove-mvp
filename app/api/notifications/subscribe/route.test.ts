@@ -5,7 +5,10 @@ const getUser = vi.fn();
 const upsertMock = vi.fn();
 
 vi.mock('@/lib/supabase/server', () => ({
-  createClient: () => ({ auth: { getUser }, from: () => ({ upsert: upsertMock }) }),
+  createClient: () => ({ auth: { getUser } }),
+}));
+vi.mock('@/lib/supabase/admin', () => ({
+  getSupabaseAdmin: () => ({ from: () => ({ upsert: upsertMock }) }),
 }));
 
 const { POST } = await import('./route');
@@ -25,6 +28,11 @@ describe('POST /api/notifications/subscribe', () => {
     const res = await salvar({ token: 'abc123' });
     expect(res.status).toBe(200);
     expect(upsertMock.mock.calls[0][0]).toMatchObject({ user_id: 'u1', token: 'abc123' });
+  });
+
+  it('guarda um registro por aparelho (celular e computador recebem)', async () => {
+    await salvar({ token: 'abc123' });
+    expect(upsertMock.mock.calls[0][1]).toEqual({ onConflict: 'token' });
   });
 
   it('recusa token vazio, que não é texto ou gigante', async () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { REENVIO_TOKEN_MS, lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from './notificacoes';
+import { REENVIO_TOKEN_MS, chaveVapidValida, motivoDoErro, lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from './notificacoes';
 
 describe('precisaReenviarToken', () => {
   it('envia quando nunca enviou', () => {
@@ -35,5 +35,32 @@ describe('precisaInstalarNoIphone', () => {
   });
   it('Android não precisa', () => {
     expect(precisaInstalarNoIphone('Mozilla/5.0 (Linux; Android 14)', false)).toBe(false);
+  });
+});
+
+describe('chaveVapidValida', () => {
+  const publica = 'BMI45NMbo6sImh15XeefDM65zOInZ7fDDGZz81NJjephmMk2cXG9Fu_XWjswqcIFEIP8P4RstOxthBwRq3QU_AQ';
+  it('aceita a chave pública do Firebase, mesmo com espaço sobrando', () => {
+    expect(chaveVapidValida(publica)).toBe(true);
+    expect(chaveVapidValida(` ${publica}\n`)).toBe(true);
+  });
+  it('recusa a chave privada (32 bytes) colada no lugar', () => {
+    expect(chaveVapidValida('x'.repeat(43))).toBe(false);
+  });
+  it('recusa lixo, aspas e vazio', () => {
+    expect(chaveVapidValida(`"${publica}"`)).toBe(false);
+    expect(chaveVapidValida('AIzaSyA3Y8P61m--wEXNE3rkYxjeSN2iFadYjGI')).toBe(false);
+    expect(chaveVapidValida('')).toBe(false);
+  });
+});
+
+describe('motivoDoErro', () => {
+  it('mostra o código do Firebase quando existe', () => {
+    const e = Object.assign(new Error('x'), { name: 'FirebaseError', code: 'installations/request-failed' });
+    expect(motivoDoErro(e)).toBe('installations/request-failed');
+  });
+  it('cai para o nome do erro do navegador', () => {
+    expect(motivoDoErro(new DOMException('x', 'InvalidAccessError'))).toBe('InvalidAccessError');
+    expect(motivoDoErro('???')).toBe('erro');
   });
 });

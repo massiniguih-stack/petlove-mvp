@@ -3,7 +3,7 @@
 // é da cidade inteira; a tela de Parceiros ainda respeita o filtro da lista.
 
 export type FilaItem = {
-  id: 'premium-sem-painel' | 'email' | 'whatsapp' | 'feedback-ruim';
+  id: 'compras-sem-conta' | 'premium-sem-painel' | 'email' | 'whatsapp' | 'feedback-ruim';
   href: string;
   titulo: string;
   detalhe: string;
@@ -16,6 +16,7 @@ type PartnerContato = {
 };
 
 type FilaEntrada = {
+  comprasSemConta?: number;
   premiumSemPainel: number;
   pendentesComEmail: number;
   whatsappPendentes: number;
@@ -38,6 +39,21 @@ function frase(count: number, um: string, varios: string) {
 
 export function montarFilaHoje(entrada: FilaEntrada): FilaItem[] {
   const itens: FilaItem[] = [];
+
+  if ((entrada.comprasSemConta ?? 0) > 0) {
+    itens.push({
+      id: 'compras-sem-conta',
+      href: '/admin/usuarios',
+      titulo: frase(
+        entrada.comprasSemConta ?? 0,
+        'compra sem conta no app',
+        'compras sem conta no app',
+      ),
+      detalhe:
+        'Pagou na LastLink com um e-mail que não tem conta. O Premium liga quando a pessoa entrar com esse e-mail (tabela compras_sem_conta no Supabase).',
+      atencao: true,
+    });
+  }
 
   if (entrada.premiumSemPainel > 0) {
     itens.push({

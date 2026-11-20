@@ -34,3 +34,32 @@ export function precisaInstalarNoIphone(userAgent: string, standalone: boolean):
   const ehIos = /iPhone|iPad|iPod/i.test(userAgent);
   return ehIos && !standalone;
 }
+
+/**
+ * A chave pública do push (VAPID) precisa ser um ponto P-256 de 65 bytes em
+ * base64url (~87 caracteres, começa com "B"). Com outra coisa (ex.: a chave
+ * PRIVADA colada no lugar) o navegador recusa com um "InvalidAccessError"
+ * que ninguém entende — melhor detectar antes e explicar.
+ */
+/**
+ * Motivo curto de um erro para mostrar ao tutor/suporte. O FirebaseError tem
+ * um `code` ("installations/request-failed", "messaging/token-subscribe-failed"...)
+ * que diz muito mais que o nome genérico "FirebaseError".
+ */
+export function motivoDoErro(err: unknown): string {
+  const code = (err as { code?: unknown } | null)?.code;
+  if (typeof code === 'string' && code) return code;
+  return err instanceof Error ? err.name : 'erro';
+}
+
+export function chaveVapidValida(chave: string): boolean {
+  const k = chave.trim().replace(/=+$/, '');
+  if (!/^[A-Za-z0-9_-]+$/.test(k)) return false;
+  try {
+    const b64 = k.replace(/-/g, '+').replace(/_/g, '/');
+    const bin = atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4));
+    return bin.length === 65 && bin.charCodeAt(0) === 4;
+  } catch {
+    return false;
+  }
+}

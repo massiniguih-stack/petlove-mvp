@@ -110,7 +110,7 @@ export async function carregarAnalise(
 
   const periodo = montarPeriodo(chave, agora, maisAntigo(eventos));
 
-  const [pets, uso, assinaturas, feedbackRuimRes] = await Promise.all([
+  const [pets, uso, assinaturas, feedbackRuimRes, comprasSemContaRes] = await Promise.all([
     buscarEmLotes<{ tutor_id: string; created_at: string | null }>((de, ate) =>
       supabase.from('pet').select('tutor_id, created_at').order('id').range(de, ate),
     ),
@@ -131,6 +131,9 @@ export async function carregarAnalise(
         .range(de, ate),
     ),
     supabase.from('feedback').select('*', { count: 'exact', head: true }).eq('humor', 'ruim'),
+    // Sem a migração 20261120_compras_sem_conta a contagem volta com erro e vira 0:
+    // é só um aviso na fila, não pode derrubar a análise.
+    supabase.from('compras_sem_conta').select('*', { count: 'exact', head: true }).eq('status', 'active'),
   ]);
   if (feedbackRuimRes.error) throw feedbackRuimRes.error;
 
@@ -147,6 +150,7 @@ export async function carregarAnalise(
     .map((s) => ({ planType: s.plan_type, categoria: categoriaDoPlano(s.plan_type, s.plan_category) }));
 
   const fila = montarFilaHoje({
+    comprasSemConta: comprasSemContaRes.error ? 0 : comprasSemContaRes.count ?? 0,
     premiumSemPainel: partners.filter((p) => p.premium && !p.user_id).length,
     pendentesComEmail: partners.filter((p) => p.email && p.status !== 'sent').length,
     whatsappPendentes: contarWhatsappPendentes(partners),
