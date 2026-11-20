@@ -127,8 +127,7 @@ export async function carregarAnalise(
         .from('subscriptions')
         .select('plan_type, plan_category, user_id')
         .in('status', [...STATUS_PREMIUM])
-        .order('user_id')
-        .order('plan_category')
+        .order('id')
         .range(de, ate),
     ),
     supabase.from('feedback').select('*', { count: 'exact', head: true }).eq('humor', 'ruim'),

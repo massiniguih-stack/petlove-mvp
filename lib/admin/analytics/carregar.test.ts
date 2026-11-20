@@ -79,7 +79,7 @@ describe('carregarAnalise', () => {
     expect(email?.titulo).toContain('2');
   });
 
-  it('usa o pet mais antigo de cada tutor e conta o tutor uma vez no funil', async () => {
+  it('tutor com dois pets conta uma vez no funil', async () => {
     const supabase = fakeSupabase({
       admin_eventos: { data: [ev('tutor_entrou', 'tutor', 't1')] },
       pet: {
