@@ -94,6 +94,12 @@ Regras:
 - **Nunca bloquear a operação principal:** cada função de gatilho envolve o `INSERT` em
   `BEGIN … EXCEPTION WHEN OTHERS THEN RAISE WARNING … END` e sempre retorna `NEW`.
 - Funções `SECURITY DEFINER` com `SET search_path = public`.
+- **Conta apagada some do diário:** ao apagar um tutor ou uma empresa, um gatilho
+  `AFTER DELETE` remove os eventos dela (`entidade_id = OLD.id`). Sem isso,
+  `tutor_entrou` e `tutor_virou_pago` ficariam para sempre (o cancelamento por exclusão
+  em cascata não gera `tutor_cancelou`) e "Cadastrados"/"Pagantes" ficariam inflados.
+  Também respeita a exclusão de conta pedida pelo titular (LGPD) e bate com o painel
+  antigo, que contava linhas reais.
 - Contas da equipe **são** registradas. A exclusão acontece na leitura (Parte C), como já
   é feito hoje.
 

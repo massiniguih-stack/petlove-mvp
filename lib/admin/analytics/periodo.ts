@@ -23,7 +23,7 @@ export function montarPeriodo(chave: PeriodoChave, agora: Date, maisAntigo: Date
   return {
     chave,
     atual: { inicio, fim: agora },
-    anterior: { inicio: somarDias(inicio, -dias), fim: inicio },
+    anterior: { inicio: somarDias(inicio, -dias), fim: somarDias(agora, -dias) },
     granularidade: chave === '90d' ? 'semana' : 'dia',
   };
 }

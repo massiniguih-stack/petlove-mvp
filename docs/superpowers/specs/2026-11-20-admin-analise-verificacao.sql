@@ -126,3 +126,23 @@ BEGIN
   r := 'empresas gravadas = ' || v_partners || ', eventos gravados = ' || v_eventos;
   RAISE EXCEPTION 'RESULTADO (desfeito): %', r;
 END $$;
+
+-- 7. Apagar tutor ou empresa apaga também os eventos dela.
+-- Esperado: RESULTADO (desfeito): eventos antes = 1, depois = 0
+DO $$
+DECLARE
+  v_id constant uuid := '00000000-0000-4000-8000-000000000003';
+  v_antes int;
+  v_depois int;
+  r text;
+BEGIN
+  INSERT INTO public.partners (id, nome, tipo, cidade, status, premium, destaque)
+  VALUES (v_id, 'Teste de exclusão', 'petshop', 'Maringá', 'pending', false, false);
+
+  SELECT count(*) INTO v_antes FROM public.admin_eventos WHERE entidade_id = v_id;
+  DELETE FROM public.partners WHERE id = v_id;
+  SELECT count(*) INTO v_depois FROM public.admin_eventos WHERE entidade_id = v_id;
+
+  r := 'eventos antes = ' || v_antes || ', depois = ' || v_depois;
+  RAISE EXCEPTION 'RESULTADO (desfeito): %', r;
+END $$;

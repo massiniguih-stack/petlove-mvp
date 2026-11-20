@@ -9,7 +9,7 @@ describe('montarPeriodo', () => {
     expect(p.atual.inicio.toISOString()).toBe('2026-11-14T03:00:00.000Z');
     expect(p.atual.fim).toBe(agora);
     expect(p.anterior?.inicio.toISOString()).toBe('2026-11-07T03:00:00.000Z');
-    expect(p.anterior?.fim.toISOString()).toBe('2026-11-14T03:00:00.000Z');
+    expect(p.anterior?.fim.toISOString()).toBe('2026-11-13T15:00:00.000Z');
     expect(p.granularidade).toBe('dia');
   });
 

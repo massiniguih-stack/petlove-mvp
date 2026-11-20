@@ -246,6 +246,34 @@ CREATE TRIGGER admin_eventos_partners
   AFTER INSERT OR UPDATE OF status, sent_at, whatsapp_contatado_em, user_id ON public.partners
   FOR EACH ROW EXECUTE FUNCTION public.admin_eventos_partners();
 
+-- 5b. Gatilho: tutor ou empresa apagados levam seus eventos junto
+-- (conta apagada não pode continuar contando em "Cadastrados" / "Pagantes").
+CREATE OR REPLACE FUNCTION public.admin_eventos_apagar()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  BEGIN
+    DELETE FROM public.admin_eventos WHERE entidade_id = OLD.id;
+  EXCEPTION WHEN OTHERS THEN
+    RAISE WARNING 'admin_eventos (apagar): %', SQLERRM;
+  END;
+  RETURN OLD;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS admin_eventos_tutor_apagado ON public.tutor;
+CREATE TRIGGER admin_eventos_tutor_apagado
+  AFTER DELETE ON public.tutor
+  FOR EACH ROW EXECUTE FUNCTION public.admin_eventos_apagar();
+
+DROP TRIGGER IF EXISTS admin_eventos_partners_apagado ON public.partners;
+CREATE TRIGGER admin_eventos_partners_apagado
+  AFTER DELETE ON public.partners
+  FOR EACH ROW EXECUTE FUNCTION public.admin_eventos_apagar();
+
 -- 6. Reconstrução do passado (estimado = true)
 
 INSERT INTO public.admin_eventos (ocorrido_em, publico, tipo, entidade_id, detalhe, estimado)
