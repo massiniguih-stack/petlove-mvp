@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMessagingInstance } from '@/lib/firebase';
 import { getToken, onMessage } from 'firebase/messaging';
-import { lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from '@/lib/notificacoes';
+import { chaveVapidValida, lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from '@/lib/notificacoes';
 
-const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || '';
+const VAPID_KEY = (process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || '').trim();
 const SW_URL = '/firebase-messaging-sw.js';
 // "_v2": desde que o servidor guarda TODOS os aparelhos (antes só o último),
 // cada aparelho precisa se recadastrar uma vez — trocar a chave faz isso.
@@ -28,6 +28,10 @@ async function registrarServiceWorker() {
 // (usado no clique em "Ativar").
 async function sincronizarToken(forcar: boolean): Promise<{ token: string | null; erro: string | null }> {
   if (!VAPID_KEY) return { token: null, erro: 'Notificações não configuradas neste site.' };
+  if (!chaveVapidValida(VAPID_KEY)) {
+    console.error('NEXT_PUBLIC_FIREBASE_VAPID_KEY inválida: use a chave PÚBLICA de "Certificados push da Web" no Firebase.');
+    return { token: null, erro: 'As notificações do site estão mal configuradas. Avise o suporte do Patinha.' };
+  }
   const messaging = await getMessagingInstance();
   if (!messaging) return { token: null, erro: 'Este navegador não recebe notificações.' };
 
