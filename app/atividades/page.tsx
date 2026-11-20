@@ -22,6 +22,10 @@ import {
   HealthIcon3D,
 } from '@/components/Icons3D';
 import { diaISO } from '@/lib/checklist';
+import { extrasDaRotina } from '@/lib/lembretes';
+import { buscarLembretes, prepararAvisos, useLembretesRotina } from '@/lib/useLembretesRotina';
+import { useNotifications } from '@/lib/useNotifications';
+import { RecadoLembrete, SinoLembrete } from '@/components/SinoLembrete';
 
 import { ICONE } from '@/lib/iconSizes';
 type Icon3DComp = typeof DogIcon3D;
@@ -263,8 +267,10 @@ function getIntensidadeInfo(int: string) {
 // Checklist do dia de UM pet — extraído pra poder mostrar o de todos os
 // pets ao mesmo tempo (em vez de só o pet selecionado no topo), já que a
 // navegação de dia (diaOffset) é compartilhada entre eles.
-function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }: { pet: Pet; diaOffset: number; diaVisualizado: Date; ehHoje: boolean; refreshTick: number }) {
+function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick, notif }: { pet: Pet; diaOffset: number; diaVisualizado: Date; ehHoje: boolean; refreshTick: number; notif: ReturnType<typeof useNotifications> }) {
   const [checklist, setChecklist] = useState<CheckItem[]>([]);
+  const lembretes = useLembretesRotina(pet.id, 'atividade');
+  const [recado, setRecado] = useState<{ texto: string; ok: boolean } | null>(null);
   const [novaAtividade, setNovaAtividade] = useState(false);
   const [editandoHoraId, setEditandoHoraId] = useState<string | null>(null);
 
@@ -296,6 +302,12 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
           { hora: '14:00', atividade: 'Treino de obediência', icone: '🎯' },
           { hora: '17:00', atividade: 'Passeio vespertino', icone: '🦴' },
         ];
+        // Compromissos com sino ligado fazem parte da rotina: entram todo dia.
+        const extras = extrasDaRotina(
+          padrao.map((p) => ({ nome: p.atividade, hora: p.hora })),
+          await buscarLembretes(pet.id, 'atividade')
+        );
+        padrao.push(...extras.map((l) => ({ hora: l.hora, atividade: l.nome, icone: l.detalhe || '🐾' })));
         const rows = padrao.map((p) => ({
           id: crypto.randomUUID(),
           pet_id: pet.id,
@@ -337,6 +349,8 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
   }, [refreshTick]);
 
   const alterarHora = (id: string, hora: string) => {
+    const antes = checklist.find((c) => c.id === id);
+    if (antes) lembretes.mudarHora(antes.atividade, antes.hora, hora);
     setChecklist((prev) => prev.map((c) => (c.id === id ? { ...c, hora } : c)));
     const supabase = createClient();
     supabase.from('checklist_item').update({ hora }).eq('id', id).then();
@@ -355,6 +369,8 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
   };
 
   const removerAtividade = (id: string) => {
+    const item = checklist.find((c) => c.id === id);
+    if (item) lembretes.remover(item.atividade, item.hora);
     setChecklist((prev) => prev.filter((c) => c.id !== id));
     const supabase = createClient();
     supabase.from('checklist_item').delete().eq('id', id).then();
@@ -376,6 +392,16 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
 
   const pendentes = checklist.filter((c) => !c.concluida);
   const concluidas = checklist.filter((c) => c.concluida);
+
+  const alternarSino = async (item: CheckItem) => {
+    const ligando = !lembretes.ligado(item.atividade, item.hora);
+    // Pede a permissão antes de qualquer outra espera (exigência do iPhone).
+    const preparo = ligando ? await prepararAvisos(notif) : null;
+    const ficouLigado = await lembretes.alternar({ nome: item.atividade, hora: item.hora, detalhe: item.icone });
+    if (ligando && !ficouLigado) setRecado({ texto: 'Não consegui salvar o lembrete. Tente de novo.', ok: false });
+    else setRecado(preparo ? { texto: preparo.recado, ok: preparo.ok } : { texto: `Lembrete de ${item.atividade} desligado.`, ok: true });
+    setTimeout(() => setRecado(null), 6000);
+  };
 
   return (
     <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5 dark:border-blue-900 dark:bg-blue-950/40">
@@ -420,6 +446,7 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
                 <span className="text-sm font-bold text-slate-900 dark:text-white">{item.atividade}</span>
               </div>
             </div>
+            <SinoLembrete nome={item.atividade} ligado={lembretes.ligado(item.atividade, item.hora)} onClick={() => alternarSino(item)} />
             <Image src="/icons/3d/patinha.png" alt="" width={ICONE.titulo} height={ICONE.titulo} unoptimized className="icon-3d" />
             <button
               onClick={() => removerAtividade(item.id)}
@@ -464,6 +491,8 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
         )}
       </div>
 
+      <RecadoLembrete recado={recado?.texto ?? null} ok={recado?.ok ?? true} />
+
       {ehHoje && (
         <button
           onClick={() => setNovaAtividade(true)}
@@ -498,6 +527,8 @@ function ChecklistDoPet({ pet, diaOffset, diaVisualizado, ehHoje, refreshTick }:
 
 export default function AtividadesPage() {
   const { pet, pets, isPremium } = usePetStore();
+  // Uma vez só por página (cada uso escuta as notificações com o app aberto).
+  const notif = useNotifications();
   const [filtroCat, setFiltroCat] = useState<string>('caminhada');
   const [filtroIntensidade, setFiltroIntensidade] = useState<string>('baixa');
   const [expandida, setExpandida] = useState<string | null>(null);
@@ -656,7 +687,7 @@ export default function AtividadesPage() {
 
             {/* Um checklist por pet — o selecionado vem primeiro */}
             {petsOrdenados.map((p) => (
-              <ChecklistDoPet key={p.id} pet={p} diaOffset={diaOffset} diaVisualizado={diaVisualizado} ehHoje={ehHoje} refreshTick={refreshTick} />
+              <ChecklistDoPet key={p.id} pet={p} diaOffset={diaOffset} diaVisualizado={diaVisualizado} ehHoje={ehHoje} refreshTick={refreshTick} notif={notif} />
             ))}
 
             <section className={cartao}>
