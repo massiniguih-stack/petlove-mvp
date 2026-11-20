@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMessagingInstance } from '@/lib/firebase';
 import { getToken, onMessage } from 'firebase/messaging';
-import { chaveVapidValida, lerTokenEnviado, precisaInstalarNoIphone, precisaReenviarToken } from '@/lib/notificacoes';
+import { chaveVapidValida, lerTokenEnviado, motivoDoErro, precisaInstalarNoIphone, precisaReenviarToken } from '@/lib/notificacoes';
 
 const VAPID_KEY = (process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || '').trim();
 const SW_URL = '/firebase-messaging-sw.js';
@@ -129,7 +129,7 @@ export function useNotifications() {
           })
           .catch((err) => {
             console.error('Falha ao sincronizar notificações:', err);
-            const motivo = err instanceof Error ? ` (${err.name})` : '';
+            const motivo = ` (${motivoDoErro(err)})`;
             if (ativo) setErro(`Não consegui conectar este aparelho. Toque em "Tentar de novo".${motivo}`);
           })
           .finally(() => {
@@ -159,7 +159,7 @@ export function useNotifications() {
       return r.erro ? null : r.token;
     } catch (err) {
       console.error('Error requesting notification permission:', err);
-      setErro(`Não consegui ativar as notificações. Tente de novo. (${err instanceof Error ? err.name : 'erro'})`);
+      setErro(`Não consegui ativar as notificações. Tente de novo. (${motivoDoErro(err)})`);
       return null;
     } finally {
       setLoading(false);
